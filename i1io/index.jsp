@@ -3033,7 +3033,7 @@ public static class App {
 
 		if(tl.usr==null){try{//tl.o("version 2016.05.04 08:36");
 			//pageContext.include("flat-login-form/index.html");
-			tl.o("<script>location=\"login.html\"</script>");
+			tl.o("<script>location=\"../login.html\"</script>");
 		}catch(Exception x){tl.error(x,"eu059s.App.init2");}
 			tl.logo("index:8:end");
 			return;

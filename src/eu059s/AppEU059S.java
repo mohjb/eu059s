@@ -1,59 +1,74 @@
-<%@ page import=" java.io.IOException,
- java.io.ObjectInputStream,
- java.io.OutputStream,
- java.io.OutputStreamWriter,
- java.io.PipedInputStream,
- java.io.PipedOutputStream,
- java.io.PrintWriter,
- java.io.StringWriter,
- java.io.Writer,
- java.io.File,
- java.lang.reflect.Array,
- java.lang.reflect.Field,
- java.net.URL,
- java.sql.Connection,
- java.sql.PreparedStatement,
- java.sql.ResultSet,
- java.sql.ResultSetMetaData,
- java.sql.SQLException,
- java.sql.Statement,
- java.util.Collection,
- java.util.Date,
- java.util.Enumeration,
- java.util.HashMap,
- java.util.Iterator,
- java.util.LinkedList,
- java.util.List,
- java.util.Map,
- javax.servlet.ServletConfig,
- javax.servlet.ServletContext,
- javax.servlet.http.Cookie,
- javax.servlet.http.HttpServletRequest,
- javax.servlet.http.HttpSession,
- com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource,
- org.apache.commons.fileupload.FileItem,
- org.apache.commons.fileupload.disk.DiskFileItemFactory,
- org.apache.commons.fileupload.servlet.ServletFileUpload"
-%><%App.jsp(request, response, session, out, pageContext);%><%!
+package eu059s;
 
+import java.io.File;
+import java.sql.SQLException;
+import java.util.Map;
+import java.util.List;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.Date;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.JspWriter;
+
+
+import java.io.ObjectInputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.io.File;
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+//%><%AppEU059S.jsp(request, response, session, out, pageContext);%><%!
+
+public class AppEU059S {//
 public static class TL {
 	enum context{ROOT(
-					  "/public_html/theblueone/eu059s/v1/"
-					  ,"/Users/moh/apache-tomcat-8.0.30/webapps/ROOT/"
+					  "/public_html/i1io/EU059S/"
 					  ,"D:\\apache-tomcat-8.0.15\\webapps\\ROOT/"
-					  ,"C:\\Users\\mbohamad\\WebApplicationEU059S\\web/"
+					  ,"/Users/moh/Google Drive/air/apache-tomcat-8.0.30/webapps/ROOT/"
 					  );
 		String str,a[];context(String...p){str=p[0];a=p;}
 		enum DB{
 			pool("dbpool-eu059s")
 			,reqCon("javax.sql.PooledConnection")
-			,server("216.227.216.46","216.227.220.84","localhost")
+			,server("216.227.216.46","localhost")//,"216.227.220.84"
 			,dbName("js4d00_eu059s","eu059s")
 			,un("js4d00_theblue","root")
-			,pw("theblue","qwerty","root","");
-			String str,a[];DB(String...p){str=p[0];a=p;}
+			,pw("theblue","qwerty","","root")/*
+			,root( "/public_html/i1io/EU059S/"
+				,"D:\\apache-tomcat-8.0.15\\webapps\\ROOT/"
+				,"/Users/moh/Google Drive/air/apache-tomcat-8.0.30/webapps/ROOT/")*/
+			;String str,a[];DB(String...p){str=p[0];a=p;}
 		}
-
 
 		static String getRealPath(TL t,String path){
 			String real=t.getServletContext().getRealPath(path);
@@ -70,6 +85,18 @@ public static class TL {
 				t.error(ex,"eu059s.TL.context.getRealPath:",path);}
 			return real==null?"./"+path:real;}
 
+		static int getContextIndex(TL t){
+			try{File f=null;
+				int i=ROOT.a.length-1;
+				while( i>=0 )
+				{	f=new File(ROOT.a[i]);
+					if(f!=null && f.exists())
+						return i;i--;
+				}
+			}catch(Exception ex){
+				t.error(ex,"AppEU059S.TL.context.getContextIndex:",path);}
+			return -1;}
+		//***/static Map<DB,String> getContextPack(TL t,List<Map<DB,String>>a){return null;}
 	}//context
 
 	//TL member variables
@@ -87,9 +114,10 @@ public static class TL {
 	public boolean logOut=LogOut;
 	public static final String CommentHtml[]={"\n<!--","-->\n"},CommentJson[]={"\n/*","\n*/"};
 	public String comments[]=CommentJson;
-	public HttpServletRequest req;
-	//public HttpServletResponse rspns;//JspWriter out;
-	//PageContext pc;//GenericServlet srvlt;
+	public HttpServletRequest req;AppEU059S a;
+	public HttpServletResponse rspns;//JspWriter out;
+	javax.servlet.jsp.PageContext pc;//GenericServlet srvlt;
+	javax.servlet.http.HttpSession session;
 
 	//public TL(GenericServlet s,HttpServletRequest r,HttpServletResponse n,PrintWriter o){_srvlt=s;req=r;rspns=n;out=o;}
 	public TL(HttpServletRequest r,Writer o){//HttpServletResponse n,
@@ -98,19 +126,27 @@ public static class TL {
 	public Json.Output jo(){if(jo==null)try{jo=new Json.Output();}catch(Exception x){error(x,"moh.TL.jo:IOEx:");}return jo;}
 	public Json.Output getOut() throws IOException{return out;}//JspWriter//if(out==null)out=rspns.getWriter();
 	public HttpServletRequest getRequest(){return req;}
-	public HttpSession getSession(){return req.getSession();}
-	public ServletContext getServletContext(){return getSession().getServletContext();}//srvlt.getServletContext();
+	public HttpSession getSession(){return session;}//req.getSession();
+	public ServletContext getServletContext(){return session.getServletContext();}//srvlt.getServletContext();
 	/**sets a new TL-instance to the localThread*/
 
 	//public static TL Enter(GenericServlet s,HttpServletRequest r,HttpServletResponse n,PrintWriter o)throws IOException{TL p;tl.set(p=new TL(s,r,n,o));p.onEnter();return p;}
 	//public static TL Enter(ServletContext p)throws IOException {TL t;tl.set(t=new TL(p.	,p.getOut()));t.onEnter();return t;}
 
-	public static TL Enter(
-						   HttpServletRequest r,
-						   //HttpServletResponse s,
-						   Writer o)
+	public static TL Enter(//HttpServletRequest r,HttpServletResponse s,Writer o
+	HttpServletRequest r
+	 ,HttpServletResponse response
+	 ,javax.servlet.http.HttpSession session
+	 ,JspWriter o
+	 ,javax.servlet.jsp.PageContext pc
+	)
 	throws IOException
-	{TL p;tl.set(p=new TL(r,o));p.onEnter();return p;}
+	{TL p;tl.set(p=new TL(r,o));
+		p.rspns=response;
+		p.session=session;
+		p.pc=pc;
+		p.onEnter();
+		return p;}
 
 	private void onEnter()throws IOException
 	{ip=getRequest().getRemoteAddr();
@@ -146,7 +182,7 @@ public static class TL {
 			//upload.setFileSizeMax(MaxFileSize);
 			//upload.setSizeMax(MaxRequestSize);
 			//final String pth="",UploadDirectory="sheetUploads";
-			String path=App.app(this).getUploadPath();
+			String path=AppEU059S.app(this).getUploadPath();
 			String real=TL.context.getRealPath(this, path);//getServletContext().getRealPath(path);
 			File f=null,uploadDir;
 			/*if(real==null){int i=0; boolean b=false;
@@ -438,34 +474,33 @@ public static class TL {
 		 when first time called, all next calls uses this context.DB.pool.str*/
 		public static synchronized Connection c()throws SQLException
 		{ TL t=tl();Connection r=(Connection)t.r(context.DB.reqCon.str);if(r!=null)return r;
+			Object[]a={0,0,0};
 			MysqlConnectionPoolDataSource d=(MysqlConnectionPoolDataSource)t.a(context.DB.pool.str);
 			r=d==null?null:d.getPooledConnection().getConnection();
 			if(r!=null)//changed 2016.07.18
 				t.r(context.DB.reqCon.str,r);
 			else try
-			{String s="",ss=null;
-				context.DB db=context.DB.dbName,sr=context.DB.server,un=context.DB.un,pw=context.DB.pw;
-				String[]dba=db.a,sra=sr.a,una=un.a,pwa=pw.a;//CHANGED: 2016.02.18.10.32
+			{try{int x=context.getContextIndex(t);
+					if(x!=-1)
+					{	a=c(t,x,x,x,x);
+						r=(Connection)a[1];
+						return r;}
+				}catch(Exception e){t.log("TL.DB.MysqlConnectionPoolDataSource:1:",e);}
+				String[]dba=context.DB.dbName.a
+					,sra=context.DB.server.a
+					,una=context.DB.un.a
+					,pwa=context.DB.pw.a;//CHANGED: 2016.02.18.10.32
 				for(int idb=0;r==null&&idb<dba.length;idb++)
 					for(int iun=0;r==null&&iun<una.length;iun++)
 						for(int ipw=0;r==null&&ipw<pwa.length;ipw++)//n=context.DB.len()
 							for(int isr=0;r==null&&isr<sra.length;isr++)try
-							{	d=new MysqlConnectionPoolDataSource();
-								s=dba[Math.min(dba.length-1,idb)];if(t.logOut)ss="\ndb:"+s;
-								d.setDatabaseName(s);d.setPort(3306);
-								s=sra[Math.min(sra.length-1,isr)];if(t.logOut)ss+="\nsrvr:"+s;
-								d.setServerName(s);
-								s=una[Math.min(una.length-1,iun)];if(t.logOut)ss+="user:"+s;
-								d.setUser(s);
-								s=pwa[Math.min(pwa.length-1,ipw)];if(t.logOut)ss+="\npw:"+s;
-								d.setPassword(s);
-								r=d.getPooledConnection().getConnection();
-								t.a(context.DB.pool.str,d);
-								t.r(context.DB.reqCon.str,r);
-								if(t.logOut)t.log("new "+context.DB.pool.str+":"+d);
-							}catch(Exception e){t.log("TL.DB.MysqlConnectionPoolDataSource:",idb,",",isr,",",iun,ipw,t.logOut?ss:"",",",e);}
+							{	a=c(t,idb,iun,ipw,isr);
+								//d=(MysqlConnectionPoolDataSource)a[0];ss=(String)a[2];
+								r=(Connection)a[1];//t.a(context.DB.pool.str,a[0]);t.r(context.DB.reqCon.str,a[1]);
+								if(t.logOut)t.log("new "+context.DB.pool.str+":"+a[0]);
+							}catch(Exception e){t.log("TL.DB.MysqlConnectionPoolDataSource:",idb,",",isr,",",iun,ipw,t.logOut?a[2]:"",",",e);}
 			}catch(Throwable e){t.error(e,"TL.DB.MysqlConnectionPoolDataSource:throwable:");}//ClassNotFoundException
-			if(t.logOut)t.log(context.DB.pool.str+":"+d);
+			if(t.logOut)t.log(context.DB.pool.str+":"+a[0]);
 			if(r==null)try
 			{r=java.sql.DriverManager.getConnection
 				("jdbc:mysql://"+context.DB.server.str
@@ -474,9 +509,27 @@ public static class TL {
 				 );
 				t.r(context.DB.reqCon.str,r);
 			}catch(Throwable e){t.error(e,"TL.DB.DriverManager:");}
-			return r;
-		}
+			return r;}
 
+		public static synchronized Object[]c(TL t,int idb,int iun,int ipw,int isr)
+		throws SQLException{
+			MysqlConnectionPoolDataSource d=new MysqlConnectionPoolDataSource();
+			String ss=null,s=context.DB.dbName.a[Math.min(context.DB.dbName.a.length-1,idb)];
+			if(t.logOut)ss="\ndb:"+s;
+			d.setDatabaseName(s);d.setPort(3306);
+			s=context.DB.server.a[Math.min(context.DB.server.a.length-1,isr)];
+			if(t.logOut)ss+="\nsrvr:"+s;
+			d.setServerName(s);
+			s=context.DB.un.a[Math.min(context.DB.un.a.length-1,iun)];if(t.logOut)ss+="user:"+s;
+			d.setUser(s);
+			s=context.DB.pw.a[Math.min(context.DB.pw.a.length-1,ipw)];if(t.logOut)ss+="\npw:"+s;
+			d.setPassword(s);
+			r=d.getPooledConnection().getConnection();
+			t.a(context.DB.pool.str,d);
+			t.r(context.DB.reqCon.str,r);
+			Object[]a={d,r,ss};
+			return a;}
+		
 		/**returns a jdbc-PreparedStatement, setting the variable-length-arguments parameters-p, calls dbP()*/
 		public static PreparedStatement p(String sql,Object...p)throws SQLException{return P(sql,p);}
 
@@ -619,7 +672,7 @@ public static class TL {
 			.o(s);
 		}catch (IOException e) {e.printStackTrace();}}
 			finally{closeRS(s);TL t=tl();if(t.logOut)try{t.log(t.jo().o(
-																		"TL.DB.L:q2json=").o(sql).w(",prms=").o(p).toStrin_());
+				"TL.DB.L:q2json=").o(sql).w(",prms=").o(p).toStrin_());
 			}catch(IOException x){t.error(x,"TL.DB.q1json:",sql);}}}
 
 		/**return a list of maps , each map has as a key a string the name of the column, and value obj*/
@@ -1381,8 +1434,7 @@ public static class TL {
 				@Override public Object pkv(){return no;}
 				@Override public C[]columns(){return C.values();}
 
-				public static int log(Entity e
-									  ,Integer pk,Act act,Map val){return log(TL.tl(),e,pk,act,val);}
+				public static int log(Entity e,Integer pk,Act act,Map val){return log(TL.tl(),e,pk,act,val);}
 
 				public static int log(TL t,Entity e
 									  ,Integer pk,Act act,Map val){//,Map old
@@ -2673,8 +2725,7 @@ public static class TL {
 
 }//class TL //TL tl=null;try{tl=TL.Enter(request,out);
 
-public static class App {
-
+//public class AppEU059S 
 	enum Prm{screen(Screen.class),op(Op.class)
 		,projNo(Integer.class)
 		,buildingNo(Integer.class)
@@ -2693,13 +2744,6 @@ public static class App {
 			,ConfigMenu
 			,Search
 		}//Screen
-
-		enum Op{none,login,logout
-			,newProject,newBuilding,newFloor,newSheet,newUser
-			,deleteProject,deleteBuilding,deleteFloor
-			,deleteSheet,deleteUser,userChngPw,query
-			,xhrEdit,saveSheet//,getImg
-		}//enum Op
 
 		enum UserLevel{Manage,Edit,View ,Suspended}
 
@@ -2728,27 +2772,29 @@ public static class App {
 		return dst;
 	}
 
-	static final String SsnNm="EU059S.App"
+	static final String SsnNm="AppEU059S"
 	,UploadPth="/eu059sUploads/";
 	Project proj=new Project();
 	Building bld=new Building();
 	Floor flr=new Floor();
 	Sheet sheet=new Sheet();
+	Storage storage=new Storage();
 	Prm.Screen screen;
 	TL tl;
 
-	public static App app(){return app(TL.tl());}
-	public static App app(TL tl){
+	public static AppEU059S app(){return app(TL.tl());}
+	public static AppEU059S app(TL tl){
 		Object o=tl.s(SsnNm);
-		if(o==null || !(o instanceof App))
-			tl.s(SsnNm,o=new App());
-		App e=(App)o;e.tl=tl;
+		if(o==null || !(o instanceof AppEU059S))
+			tl.s(SsnNm,o=new AppEU059S());
+		AppEU059S e=(AppEU059S)o;e.tl=tl;tl.a=e;
 		if(tl.usr==null && tl.a(SsnNm+".checkDBTCreation")==null
 		   ){
 			e.proj.checkDBTCreation(tl);
 			e.bld .checkDBTCreation(tl);
 			e.flr .checkDBTCreation(tl);
 			e.sheet.checkDBTCreation(tl);
+			e.storage.checkDBTCreation(tl);
 			new TL.DB.Tbl.Json().checkDBTCreation(tl);
 			new TL.DB.Tbl.Usr().checkDBTCreation(tl);
 			new TL.DB.Tbl.Ssn().checkDBTCreation(tl);
@@ -2758,7 +2804,7 @@ public static class App {
 
 	/**path to the uploaded files for Sheet (the sheet stored in the session)*/
 	public String getUploadPath(){
-		readVars();//if(proj.no!=sheet.p)proj.no=sheet.p;
+		//readVars();//if(proj.no!=sheet.p)proj.no=sheet.p;
 		if(bld.no==-1)//sheet.b
 			bld.no=sheet.b;
 		if(flr.no==-1)//!=sheet.f
@@ -2766,14 +2812,7 @@ public static class App {
 		return UploadPth//+proj.no+'/'+bld.no+'/'+flr.no+'/'+sheet.no+'/'
 		+sheet.p+'/'+sheet.b+'/'+sheet.f+'/'+sheet.no+'/';}
 
-	App readVars(){return init();/*
-								  proj.no	=tl.var(Prm.projNo.toString(),-1).intValue();
-								  bld.no	=tl.var(Prm.buildingNo.toString(),-1).intValue();
-								  flr.no	=tl.var(Prm.floorNo.toString(),-1).intValue();
-								  sheet.no=tl.var(Prm.sheetNo.toString(),-1).intValue();
-								  return this;*/}
-
-	App init(){try{
+	AppEU059S appInit(){try{
 		screen=tl.var(Prm.screen.toString(),Prm.Screen.ProjectsList);
 		if( tl.s(SsnNm)!=this )
 			tl.s( SsnNm , this );
@@ -2801,10 +2840,10 @@ public static class App {
 		}
 		if(sheet!=null && sheet.no!=null && sheet.jsonRef==null)
 			sheet.jsonRef=TL.DB.q1int(
-									  "select `"+Sheet.C.jsonRef
-									  +"` from `"+sheet.getName()
-									  +"` where `"+Sheet.C.no
-									  +"`=?", -1, sheet.no);
+				"select `"+Sheet.C.jsonRef
+				+"` from `"+sheet.getName()
+				+"` where `"+Sheet.C.no
+				+"`=?", -1, sheet.no);
 
     	/*sheet=(Sheet)tl.s("sheet");
 		 if(sheet==null)
@@ -2830,9 +2869,9 @@ public static class App {
 		 if(flr!=null && bld!=null && flr.no!=null && bld.no!=null && flr.b!=-1 && flr.b!=bld.no)bld.load(flr.b);
 		 if( bld!=null && proj!=null && bld.no!=null && proj.no!=null && bld.p!=-1 && bld.p!=proj.no)proj.load(bld.p);*/
 	}catch(Exception ex){
-		tl.error(ex,SsnNm,".init");}
+		tl.error(ex,SsnNm,".appInit");}
 		return this;
-	}//init
+	}//appInit
 
 	String title(TL.DB.Tbl t){Map j=getJ(t);
 		Object ttl=j==null?null:j.get("title");
@@ -2844,202 +2883,46 @@ public static class App {
 		TL.DB.Tbl.Usr author=null;
 		Object a=j==null?null:j.get("author");
 		if(a!=null)try{author=usr(a);}
-		catch(Exception ex){tl.error(ex,"eu059s.App.author");}
+		catch(Exception ex){tl.error(ex,"AppEU059S.author");}
 		Object authorName=author!=null && author.json!=null?author.json.get("name"):author!=null?author.un:null;
 		String r= authorName==null?"author:"+t:authorName.toString();
         return r;}
 
-	void saveSheet() throws Exception{
-		tl.log("op-saveSheet");
-		TL.DB.Tbl.Json json=sheet.json();
-		Map old=sheet.m,j=sheet.m=(Map)
-		(json.json=tl.json.get("json"));
-		//sheet.fromMap(j);
-		for(int i=0;i<4;i++)try{
-			String n="img"+(i+1);
-			Object o=tl.json.get(n);//Map m=(Map)tl.json.get(n);
-			if(o==null && old!=null)
-				o=old.get(n);
-			if(o!=null &&(!(o instanceof String) || o.toString().trim().length()>0))
-				j.put(n, o);
-		}catch(Exception ex){
-			tl.error(ex,"EU049C.App.saveSheet");}
-		j.put("no", sheet.no);
-		json.save();
-		sheet.save();
-	}//saveSheet
+	void authenticate(Op op) throws Exception{
 
-	void deleteImages(){try{
-		//delete folder//Integer jsonRef=sheet.jsonRef;	 //App app=app(t);app.
-		String path=getUploadPath()
-		,real=TL.context.getRealPath(tl,path);//t.getServletContext().getRealPath(path);
-		File f=new File(real);
-		if(f.exists())
-			f.delete();
-	}catch(Exception ex){tl.error(ex,"deleteImages");}
-	}//deleteImages
-
-	void doOp(Prm.Op op){
-		try{
-			if(op!=null)
-				switch(op){
-					case newProject:
-						proj.no=null;//TL.DB.q1int("select max(`no`)+1 from projects;", 1);
-						proj.json=TL.Util.mapCreate("title","Project "+tl.now
-													, "date",TL.Util.formatDate( tl.now )
-													, "shortDesc","short Desc"//"avatar","avatar.jpg"
-													, "author",tl.usr.uid, "desc","description" );
-						proj.save();
-						tl.s(Prm.projNo.toString(),proj.no);
-						tl.s(Prm.screen.toString(),screen=Prm.Screen.ProjectScreen);
-						break;
-
-					case deleteProject:
-						proj.delete();tl.s(Prm.projNo.toString(),proj.no=-1);
-						screen=Prm.Screen.ProjectsList;break;
-						//case getJsonProject:break;
-
-					case newBuilding:
-						bld.no=null;bld.p=proj.no;
-						bld.json=TL.Util.mapCreate("date",TL.Util.formatDate( tl.now )
-												   , "author",tl.usr.uid , "title","Building "+tl.now );//"avatar","avatar.jpg"
-						bld.save();
-						tl.s(Prm.buildingNo.toString(),bld.no);
-						tl.s(Prm.screen.toString(), Prm.Screen.BuildingScreen);
-						break;
-
-					case deleteBuilding:
-						bld.delete();tl.s(Prm.buildingNo.toString(),bld.no=-1);
-						screen=Prm.Screen.ProjectScreen;break;
-
-					case newFloor:
-						flr.no=null;flr.b=bld.no;flr.p=proj.no;
-						flr.json=TL.Util.mapCreate("date", TL.Util.formatDate( tl.now )
-												   , "author",tl.usr.uid , "title","Floor "+tl.now);//"avatar","avatar.jpg"
-						flr.save();
-						tl.s(Prm.floorNo.toString(),flr.no);
-						tl.s(Prm.screen.toString(), Prm.Screen.FloorScreen);
-						break;
-
-					case deleteFloor:
-						flr.delete();tl.s(Prm.floorNo.toString(),flr.no=-1);
-						screen=Prm.Screen.BuildingScreen;break;
-						//case listSheets:break;
-					case newSheet:{
-						sheet.no=null;
-						sheet.dt=tl.now;sheet.u=tl.usr.uid;sheet.p=proj.no;sheet.b=bld.no;sheet.f=flr.no;
-						sheet.jsonRef=TL.DB.Tbl.Json.jrmp1();
-						sheet.m=sheet.asMap();
-						sheet.m.put("datetime", TL.Util.formatDate(sheet.dt ));
-						TL.DB.Tbl.Json j=sheet.json();sheet.m.put(j.Jr,j.jsonRef);
-						//sheet.jsonRef=j.jsonRef=j.jrmp1();//((Number)sheet.m.get(TL.DB.Tbl.Json.Jr)).intValue();
-						sheet.save();
-						sheet.m.put("no", sheet.no);
-						j.save(sheet.m);
-						tl.s(Prm.sheetNo.toString(), sheet.no);
-						tl.s(Prm.screen.toString(), screen=Prm.Screen.Sheet);
-					}break;
-					case saveSheet:saveSheet();break;
-					case deleteSheet:
-						deleteImages();
-						sheet.delete();
-						tl.s(Prm.sheetNo.toString(), sheet.no=-1);
-						screen=Prm.Screen.FloorScreen;
-						break;
-
-						//case sheetImg:break;
-						//case uploadSheetImg:break;
-						//case listUsers:break;
-					case newUser:
-						TL.DB.Tbl.Usr u=new TL.DB.Tbl.Usr();
-						u.readReq("");//u .j=TL.Util.mapCreate name tel gender address email tel-ext id cid	"avatar","avatar.jpg"
-						u.uid=null;
-						u.save();
-						tl.s(Prm.screen.toString(), Prm.Screen.User);
-						break;
-						//case editUser	:u=new TL.DB.Tbl.Usr();u.readReq_save();break;
-					case deleteUser:
-						u=new TL.DB.Tbl.Usr();u.readReq("");
-						u.delete();
-						tl.s(Prm.screen.toString(),screen=Prm.Screen.UsersList);break;
-					case xhrEdit:{
-						tl.log("eu059s/index.jsp : op==xhrEdit");
-						if(tl.response==null)tl.response=TL.Util.mapCreate();
-						TL.Util.mapSet(tl.response,"msg","um...");
-						String entity=tl.req("entity");
-						Map v=(Map)tl.json.get("v");
-						Integer pk=tl.req("pk",-1);
-						TL.DB.Tbl t="project".equals(entity)?proj
-						:"building".equals(entity)?bld
-						:"floor".equals(entity)?flr:null;
-						tl.log("eu059s/index.jsp : op==xhrEdit: entity=",entity," ,pk=",pk," ,v=",v ," ,t=",t);
-						if(t!=null && pk!=-1)
-						{t.load(pk);tl.log("eu059s/index.jsp : op==xhrEdit: t!=null && pk!=-1");
-							Map j=getJ(t);
-							merge(j,v);
-							tl.log("eu059s/index.jsp : op==xhrEdit: merge:",t);
-							t.save();
-							tl.log("eu059s/index.jsp : op==xhrEdit: save");
-						}else tl.log("eu059s/index.jsp : op==xhrEdit: else: t!=null && pk!=-1");
-						tl.getOut().o(tl.response);
-						tl.log("eu059s/index.jsp : op==xhrEdit: return");
-					}return;
-
-					case query:
-						/*
-						 * search
-						 * proj
-						 * title
-						 * short desc
-						 * desc
-						 * building title
-						 * floor title
-						 * sheet
-						 * notes
-						 * other txt,txt,txt
-						 * usr full-name ,user-id , desc
-						 * */
-						break;
-					case none:default:
-				}
-		}catch(Exception ex){tl.error(ex,"/adoqs/eu059s/index.jsp:do op:ex:");}
-	}//doOp
-
-	void init2(Prm.Op op) throws Exception{
-
-		if(tl.usr==null&&op==Prm.Op.login){tl.logo("index:4:login");
+		if(tl.usr==null&&op==Op.login){tl.logo("index:4:login");
 			TL.DB.Tbl.Usr u=TL.DB.Tbl.Usr.login();tl.logo("index:5:login");
 			if(u!=null){u.onLogin();
 				TL.DB.Tbl.Log.log(TL.DB.Tbl.Log.Entity.usr
-								  , tl.usr.uid
-								  , TL.DB.Tbl.Log.Act.Login
-								  ,TL.Util.mapCreate("usr",tl.usr,"request",tl.req));
+					, tl.usr.uid
+					, TL.DB.Tbl.Log.Act.Login
+					,TL.Util.mapCreate("usr",tl.usr,"request",tl.req));
 			}else// msg="incorrect login";
 				TL.DB.Tbl.Log.log(TL.DB.Tbl.Log.Entity.usr
-								  , tl.usr.uid, TL.DB.Tbl.Log.Act.Log
-								  ,TL.Util.mapCreate("msg","incorrect login","request",tl.req));
+					, tl.usr.uid, TL.DB.Tbl.Log.Act.Log
+					,TL.Util.mapCreate("msg","incorrect login","request",tl.req));
 			//tl.logo("index:6:login:msg=",msg);
 		}
 
 		if(tl.usr==null && tl.getSession().isNew())
 			TL.DB.Tbl.Log.log(TL.DB.Tbl.Log.Entity.ssn, -1, TL.DB.Tbl.Log.Act.Log,
-							  TL.Util.mapCreate("msg","new Connection","request",tl.req));
+				TL.Util.mapCreate("msg","new Connection","request",tl.req));
 
-		if(tl.usr!=null&&op==Prm.Op.logout)
+		if(tl.usr!=null&&op==Op.logout)
 		{ TL.DB.Tbl.Log.log(TL.DB.Tbl.Log.Entity.usr, tl.usr.uid
-							, TL.DB.Tbl.Log.Act.Logout
-							,TL.Util.mapCreate("usr",tl.usr));
+				, TL.DB.Tbl.Log.Act.Logout
+				,TL.Util.mapCreate("usr",tl.usr));
 			tl.ssn.onLogout();}
 
 		if(tl.usr==null){try{//tl.o("version 2016.05.04 08:36");
 			//pageContext.include("flat-login-form/index.html");
 			tl.o("<script>location=\"login.html\"</script>");
-		}catch(Exception x){tl.error(x,"eu059s.App.init2");}
+		}catch(Exception x){tl.error(x,"AppEU059S.authenticate");}
 			tl.logo("index:8:end");
 			return;
 		}tl.logo("index:9");
-	}//init2
-
+	}//authenticate
+/*
 	void jsp01() throws IOException {
 		tl.o("<!DOCTYPE HTML>\r\n"
 			 ,"<html>\r\n"
@@ -3051,7 +2934,7 @@ public static class App {
 			 ,"\t\t<link rel=\"stylesheet\" href=\"assets/css/main.css\" />\r\n"
 			 ,"\t\t<!--[if lte IE 9]><link rel=\"stylesheet\" href=\"assets/css/ie9.css\" /><![endif]-->\r\n"
 			 ,"\t\t<!--[if lte IE 8]><link rel=\"stylesheet\" href=\"assets/css/ie8.css\" /><![endif]-->\r\n"
-			 ,"<script src=\"app.js\"></script><script>App.clkEdit=clkEdit=\r\n"
+			 ,"<script src=\"app.js\"></script><script>AppEU059S.clkEdit=clkEdit=\r\n"
 			 ,"function clkEdit(evt){\r\n"
 			 ,"\tvar src=evt.target||event.srcElement\r\n"
 			 ,"\t//,p=src;//console.log(\"clkEdit\",evt,src)\r\n"
@@ -3102,7 +2985,7 @@ public static class App {
 			 ,"\t\t\t\t\t\t\t<ul>\r\n"
 			 ,"\t\t\t\t\t\t\t\t<li class=\"search\">\r\n"
 			 ,"\t\t\t\t\t\t\t\t\t<a class=\"fa-search\" href=\"#search\">Search</a>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t<form id=\"search\" method=\"get\" action=\"?",Prm.screen,'=',Prm.Screen.Search,'&',Prm.op,'=',Prm.Op.query
+			 ,"\t\t\t\t\t\t\t\t\t<form id=\"search\" method=\"get\" action=\"?",Prm.screen,'=',Prm.Screen.Search,'&',Prm.op,'=',Op.query
 			 ,"\">\r\n"
 			 ,"\t\t\t\t\t\t\t\t\t\t<input type=\"text\" name=\"",Prm.query
 			 ,"\" placeholder=\"Search\" />\r\n"
@@ -3121,7 +3004,7 @@ public static class App {
 			 ,"\r\n"
 			 ,"\t\t\t\t\t\t<!-- Search -->\r\n"
 			 ,"\t\t\t\t\t\t\t<section>\r\n"
-			 ,"\t\t\t\t\t\t\t\t<form id=\"search\" method=\"get\" action=\"?",Prm.screen,'=',Prm.Screen.Search,'&',Prm.op,'=',Prm.Op.query
+			 ,"\t\t\t\t\t\t\t\t<form id=\"search\" method=\"get\" action=\"?",Prm.screen,'=',Prm.Screen.Search,'&',Prm.op,'=',Op.query
 			 ,"\">\r\n"
 			 ,"\t\t\t\t\t\t\t\t\t\t<input type=\"text\" name=\"",Prm.query
 			 ,"\" placeholder=\"Search\" />\r\n"
@@ -3158,14 +3041,14 @@ public static class App {
 	}//jsp01
 
 	void jspMenu() throws IOException{
-		App e=this;
+		AppEU059S e=this;
 		if(e.screen==Prm.Screen.UsersList){
 			tl.o("\r\n"
 				 ,"\t\t\t\t\t\t\t\t\t<li>\r\n"
 				 ,"\t\t\t\t\t\t\t\t\t\t<a href=\"#\">\r\n"
 				 ,"\t\t\t\t\t\t\t\t\t\t\t<h3>New User</h3>\r\n"
 				 ,"\t\t\t\t\t\t\t\t\t\t\t<p><form method=\"post\"><input type=\"hidden\" name=\"",Prm.op
-				 ,"\" value=\"",Prm.Op.newUser
+				 ,"\" value=\"",Op.newUser
 				 ,"\"/><input type=\"submit\" value=\"Create\"/></form></p>\r\n"
 				 ,"\t\t\t\t\t\t\t\t\t\t</a>\r\n"
 				 ,"\t\t\t\t\t\t\t\t\t</li>");
@@ -3175,7 +3058,7 @@ public static class App {
 				 ,"\t\t\t\t\t\t\t\t\t\t<a href=\"#\">\r\n"
 				 ,"\t\t\t\t\t\t\t\t\t\t\t<h3>Delete User</h3>\r\n"
 				 ,"\t\t\t\t\t\t\t\t\t\t\t<p><form method=\"post\"><input type=\"hidden\" name=\"",Prm.op
-				 ,"\" value=\"",Prm.Op.deleteUser
+				 ,"\" value=\"",Op.deleteUser
 				 ,"\"/><input type=\"submit\" value=\"Delete\"/></form></p>\r\n"
 				 ,"\t\t\t\t\t\t\t\t\t\t</a>\r\n"
 				 ,"\t\t\t\t\t\t\t\t\t</li>");
@@ -3185,7 +3068,7 @@ public static class App {
 				 ,"\t\t\t\t\t\t\t\t\t\t<a href=\"#\">\r\n"
 				 ,"\t\t\t\t\t\t\t\t\t\t\t<h3>New Project</h3>\r\n"
 				 ,"\t\t\t\t\t\t\t\t\t\t\t<p><form method=\"post\"><input type=\"hidden\" name=\"",Prm.op
-				 ,"\" value=\"",Prm.Op.newProject
+				 ,"\" value=\"",Op.newProject
 				 ,"\"/><input type=\"submit\" value=\"Create\"/></form></p>\r\n"
 				 ,"\t\t\t\t\t\t\t\t\t\t</a>\r\n"
 				 ,"\t\t\t\t\t\t\t\t\t</li>");
@@ -3195,7 +3078,7 @@ public static class App {
 				 ,"\t\t\t\t\t\t\t\t\t\t<a href=\"#\">\r\n"
 				 ,"\t\t\t\t\t\t\t\t\t\t\t<h3>Delete Project</h3>\r\n"
 				 ,"\t\t\t\t\t\t\t\t\t\t\t<p><form method=\"post\"><input type=\"hidden\" name=\"",Prm.op
-				 ,"\" value=\"",Prm.Op.deleteProject
+				 ,"\" value=\"",Op.deleteProject
 				 ,"\"/><input type=\"submit\" value=\"Delete\"/></form></p>\r\n"
 				 ,"\t\t\t\t\t\t\t\t\t\t</a>\r\n"
 				 ,"\t\t\t\t\t\t\t\t\t</li>\r\n"
@@ -3203,7 +3086,7 @@ public static class App {
 				 ,"\t\t\t\t\t\t\t\t\t\t<a href=\"#\">\r\n"
 				 ,"\t\t\t\t\t\t\t\t\t\t\t<h3>New Building</h3>\r\n"
 				 ,"\t\t\t\t\t\t\t\t\t\t\t<p><form method=\"post\"><input type=\"hidden\" name=\"",Prm.op
-				 ,"\" value=\"",Prm.Op.newBuilding
+				 ,"\" value=\"",Op.newBuilding
 				 ,"\"/><input type=\"submit\" value=\"Create\"/></form></p>\r\n"
 				 ,"\t\t\t\t\t\t\t\t\t\t</a>\r\n"
 				 ,"\t\t\t\t\t\t\t\t\t</li>");
@@ -3213,7 +3096,7 @@ public static class App {
 				 ,"\t\t\t\t\t\t\t\t\t<a href=\"#\">\r\n"
 				 ,"\t\t\t\t\t\t\t\t\t\t<h3>Delete Building</h3>\r\n"
 				 ,"\t\t\t\t\t\t\t\t\t\t<p><form method=\"post\"><input type=\"hidden\" name=\"",Prm.op
-				 ,"\" value=\"",Prm.Op.deleteBuilding
+				 ,"\" value=\"",Op.deleteBuilding
 				 ,"\"/><input type=\"submit\" value=\"Delete\"/></form></p>\r\n"
 				 ,"\t\t\t\t\t\t\t\t\t</a>\r\n"
 				 ,"\t\t\t\t\t\t\t\t</li>\r\n"
@@ -3221,7 +3104,7 @@ public static class App {
 				 ,"\t\t\t\t\t\t\t\t\t<a href=\"#\">\r\n"
 				 ,"\t\t\t\t\t\t\t\t\t\t<h3>New Floor</h3>\r\n"
 				 ,"\t\t\t\t\t\t\t\t\t\t<p><form method=\"post\"><input type=\"hidden\" name=\"",Prm.op
-				 ,"\" value=\"",Prm.Op.newFloor
+				 ,"\" value=\"",Op.newFloor
 				 ,"\"/><input type=\"submit\" value=\"Create\"/></form></p>\r\n"
 				 ,"\t\t\t\t\t\t\t\t\t</a>\r\n"
 				 ,"\t\t\t\t\t\t\t\t</li>");
@@ -3231,7 +3114,7 @@ public static class App {
 				 ,"\t\t\t\t\t\t\t\t\t\t<a href=\"#\">\r\n"
 				 ,"\t\t\t\t\t\t\t\t\t\t\t<h3>Delete Floor</h3>\r\n"
 				 ,"\t\t\t\t\t\t\t\t\t\t\t<p><form method=\"post\"><input type=\"hidden\" name=\"",Prm.op
-				 ,"\" value=\"",Prm.Op.deleteFloor
+				 ,"\" value=\"",Op.deleteFloor
 				 ,"\"/><input type=\"submit\" value=\"Delete\"/></form></p>\r\n"
 				 ,"\t\t\t\t\t\t\t\t\t\t</a>\r\n"
 				 ,"\t\t\t\t\t\t\t\t\t</li>\r\n"
@@ -3239,14 +3122,14 @@ public static class App {
 				 ,"\t\t\t\t\t\t\t\t\t\t<a href=\"#\">\r\n"
 				 ,"\t\t\t\t\t\t\t\t\t\t\t<h3>New Sheet</h3>\r\n"
 				 ,"\t\t\t\t\t\t\t\t\t\t\t<p><form method=\"post\"><input type=\"hidden\" name=\"",Prm.op
-				 ,"\" value=\"",Prm.Op.newSheet
+				 ,"\" value=\"",Op.newSheet
 				 ,"\"/><input type=\"submit\" value=\"Create\"/></form></p>\r\n"
 				 ,"\t\t\t\t\t\t\t\t\t\t</a>\r\n"
 				 ,"\t\t\t\t\t\t\t\t\t</li>");
 		}else if(e.screen==Prm.Screen.Sheet){
 			tl.o("<li><a href=\"#\"><h3>Delete Sheet</h3>\r\n"
 				 ,"<p><form method=\"post\"><input type=\"hidden\" name=\"",Prm.op
-				 ,"\" value=\"",Prm.Op.deleteSheet
+				 ,"\" value=\"",Op.deleteSheet
 				 ,"\"/><input type=\"submit\" value=\"Delete\"/></form></p>\r\n"
 				 ,"</a></li>\r\n");
 		}
@@ -3257,7 +3140,7 @@ public static class App {
 			 ,"\t\t\t\t\t\t<!-- Actions -->\r\n"
 			 ,"\t\t\t\t\t\t\t<section>\r\n"
 			 ,"\t\t\t\t\t\t\t\t<ul class=\"actions vertical\">\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t<li><a href=\"?",Prm.op,'=',Prm.Op.logout
+			 ,"\t\t\t\t\t\t\t\t\t<li><a href=\"?",Prm.op,'=',Op.logout
 			 ,"\" class=\"button big fit\">Logout</a></li>\r\n"
 			 ,"\t\t\t\t\t\t\t\t</ul>\r\n"
 			 ,"\t\t\t\t\t\t\t</section>\r\n"
@@ -3273,7 +3156,7 @@ public static class App {
 		tl.o("\r\n"
 			 ,"<h1>Users</h1><table><tr>User-Name</tr><tr>User-Level</tr><\r\n"
 			 );
-		tl.o("</table><a href=\"?",Prm.op,'=',Prm.Op.newUser,"\">New User</a>","\r\n");
+		tl.o("</table><a href=\"?",Prm.op,'=',Op.newUser,"\">New User</a>","\r\n");
 	}//jspScreenUsersList
 
 	void jspScreenConfig() throws IOException{
@@ -3281,7 +3164,7 @@ public static class App {
 	}//jspScreenConfig
 
 	void jspScreenProjectsList() throws IOException{
-		App e=this;int serialNo=0;//Project p=new Project();
+		AppEU059S e=this;int serialNo=0;//Project p=new Project();
 		tl.o("<h1>Projects</h1><table><tr><th>sn</th><th>Title</th><th>Desc</th><th>Created</th><th>by</th><th>Description</th><th>#Buildings</th><th>#Sheets</th></tr>");
 		for(TL.DB.Tbl row:e.proj.query(TL.DB.Tbl.where( )))try
 		{TL.DB.Tbl.Usr author=null; if(e.proj.json==null)e.proj.json=TL.Util.mapCreate();
@@ -3317,11 +3200,11 @@ public static class App {
 		}catch(Exception ex){tl.error(ex,"eu059s : Projects list for-loop ,proj=",e.proj);}
 		tl.o("</table><a href=\"?"
 			 ,Prm.screen,'=',Prm.Screen.ProjectScreen
-			 ,'&',Prm.op,'=',Prm.Op.newProject,"\">New Project</a>");
+			 ,'&',Prm.op,'=',Op.newProject,"\">New Project</a>");
 	}//jspScreenProjectsList
 
 	void jspScreenProject() throws IOException, SQLException {
-		App e=this;int serialNo=1;
+		AppEU059S e=this;int serialNo=1;
 		serialNo=1;//if(e.proj.json==null)e.proj.json=TL.Util.mapCreate();TL.DB.Tbl.Usr author=null;try{author=usr(e.proj.json.get("author"));}catch(Exception ex){tl.error(ex,"eu059s : project-selected:author");}Object avatar=e.proj.json.get("avatar"),pTtl=e.proj.json.get("title"),uAvatar=author!=null && author.json!=null?author.json.get("avatar"):null,authorName=author!=null && author.json!=null?author.json.get("name"):author!=null?author.un:"-";
 
 		tl.o("<h1>Project</h1><table><tr><th>Title</th><th>Desc</th><th>Created</th><th>by</th><th>Description</th><th>Actions</th><th>#Buildings</th><th>#Sheets</th></tr>");
@@ -3355,10 +3238,10 @@ public static class App {
 			tl.o("<a onclick=\"clkEdit(event)\" class=\"button big\">Edit</a>\r\n"
 				 ,"<a onclick=\"confirm('delete project ",pTtl," ?')\" href=\"?"
 				 ,Prm.screen,'=',Prm.Screen.ProjectsList,'&'
-				 ,Prm.op,'=',Prm.Op.deleteProject,'&',Prm.projNo,'=',e.proj.no
+				 ,Prm.op,'=',Op.deleteProject,'&',Prm.projNo,'=',e.proj.no
 				 ,"\" class=\"button big\">Delete Project</a>"
 				 ,"<a href=\"?",Prm.screen,'=',Prm.Screen.BuildingScreen
-				 ,'&',Prm.op,'=',Prm.Op.newBuilding,'&',Prm.projNo,'=',e.proj.no
+				 ,'&',Prm.op,'=',Op.newBuilding,'&',Prm.projNo,'=',e.proj.no
 				 ,"\" class=\"button big\">New Building</a>");
 
 			tl.o("</td>"
@@ -3389,7 +3272,7 @@ public static class App {
 	}//jspIntro
 
 	void jspScreenBuildingList() throws IOException, SQLException{
-		App e=this;int serialNo=0;
+		AppEU059S e=this;int serialNo=0;
 
 		tl.o("<h1>Buildings</h1><table><tr><th>sn</th><th>Title</th><th>Notes</th><th>Created</th><th>by</th><th>#Floors</th><th>#Sheets</th></tr>");
 
@@ -3425,7 +3308,7 @@ public static class App {
 	}//jspScreenBuildingList    //jspScreenProject
 
 	void jspScreenBuilding()throws IOException, SQLException{
-		App e=this;int serialNo=1;
+		AppEU059S e=this;int serialNo=1;
 		TL.DB.Tbl.Usr author=usr(e.bld.json.get("author"));
 		Object avatar=e.bld.json.get("avatar")
 		, uAvatar = author != null && author . json != null
@@ -3455,9 +3338,9 @@ public static class App {
 		//if(e.screen==Prm.Screen.BuildingScreen)
 		{
 			tl.o("<button onclick=\"clkEdit(event)\">EDIT</button>\r\n"
-				 ,"\t\t\t\t<button ><a href=\"?",Prm.op,'=',Prm.Op.newFloor
+				 ,"\t\t\t\t<button ><a href=\"?",Prm.op,'=',Op.newFloor
 				 ,"\">New Floor</a></button>\r\n"
-				 ,"\t\t\t\t<button ><a href=\"?",Prm.op,'=',Prm.Op.deleteBuilding
+				 ,"\t\t\t\t<button ><a href=\"?",Prm.op,'=',Op.deleteBuilding
 				 ,"\">Delete Building</a></button>");
 		}
 		tl.o("</td>"
@@ -3498,7 +3381,7 @@ public static class App {
 	}//jspNonBld
 
 	void jspScreenFloor() throws IOException,SQLException{
-		App e=this;
+		AppEU059S e=this;
 		tl.o("<h1>Floor</h1><table><tr><th>Title</th><th>Notes</th><th>Created</th><th>by</th><th>Action</th><th>#Sheets</th></tr>"
 
 			 ,"<tr"// xclass=\"mini-post floor");
@@ -3522,11 +3405,11 @@ public static class App {
 
 			 ,"<td><button onclick=\"clkEdit(event)\">EDIT</button>\r\n"
 			 ,"<form method=\"post\"><input type=\"hidden\" name=\""
-			 ,Prm.op,"\" value=\"",Prm.Op.deleteFloor
+			 ,Prm.op,"\" value=\"",Op.deleteFloor
 			 ,"\"/><input type=\"submit\" value=\"Delete Floor\"/></form>\r\n"
 
 			 ,"<form method=\"post\"><input type=\"hidden\" name=\""
-			 ,Prm.op,"\" value=\"",Prm.Op.newSheet
+			 ,Prm.op,"\" value=\"",Op.newSheet
 			 ,"\"/><input type=\"submit\" value=\"New Sheet\"/></form></td>\r\n"
 
 			 ,"<td class=\"stats\"><a title=\"number of sheets in this floor\" href=\"#\" class=\"icon fa-comment\" name=\"comment\">"
@@ -3546,7 +3429,7 @@ public static class App {
 	}//jspPosts
 
 	void jspSheets()throws IOException, SQLException{//,int sIx
-		App e=this;int serialNo=0,sIx=screen.ordinal();
+		AppEU059S e=this;int serialNo=0,sIx=screen.ordinal();
 		//final int i0=Prm.Screen.ProjectScreen.ordinal(),i1=Prm.Screen.BuildingScreen.ordinal();
 		for(TL.DB.Tbl row:e.sheet.query(TL.DB.Tbl.where(
 														sIx==0?Sheet.C.p
@@ -3609,7 +3492,7 @@ public static class App {
 	}//jspAbout_Footer
 
 	void jspSheet()throws IOException, SQLException{
-		App e=this;
+		AppEU059S e=this;
 		if(e.sheet!=null && e.sheet.no!=null && (e.sheet.jsonRef==null || e.sheet.m==null || e.sheet.m.get(TL.DB.Tbl.Json.Jr)==null))
 			try{	if(e.sheet.jsonRef==null)
 				e.sheet.jsonRef=TL.DB.q1int(
@@ -3623,7 +3506,7 @@ public static class App {
 					e.sheet.m.put(TL.DB.Tbl.Json.Jr, e.sheet.jsonRef);
 				//e.sheet.m=TL.DB.Tbl.Json.LoadRef(e.sheet.m);
 			}catch(Exception ex){
-				tl.error(ex,"eu059s.App:SheetScreen:load Sheet and Json map");}
+				tl.error(ex,"AppEU059S:SheetScreen:load Sheet and Json map");}
 		Object ft="-";
 		try{
 			e.sheet.m=TL.DB.Tbl.Json.LoadRef(e.sheet.m);
@@ -3673,7 +3556,7 @@ public static class App {
 			 ,"\t\t\t<script src=\"assets/js/main.js\"></script>\r\n");
 	}
 
-	public static void jsp
+	public static void jspOld
 	(HttpServletRequest request
 	 ,HttpServletResponse response
 	 ,javax.servlet.http.HttpSession session
@@ -3681,11 +3564,11 @@ public static class App {
 	 ,javax.servlet.jsp.PageContext pageContext)
     throws IOException, javax.servlet.ServletException
     {TL tl=null;try{tl=TL.Enter(request,out);
-		Prm.Op op=tl.req(Prm.op.toString(),Prm.Op.none);tl.logo("index:1:",op);
+		Op op=tl.req(Prm.op.toString(),Op.none);tl.logo("index:1:",op);
 		response.setContentType("text/html; charset=UTF-8");
 		tl.logOut=tl.var("logOut",false);
-		App e=App.app(tl).init();
-		e.init2(op);
+		AppEU059S e=AppEU059S.app(tl).appInit();
+		e.authenticate(op);
 		e.doOp(op);
 		int sIx=e.screen==Prm.Screen.ProjectScreen?0
         :e.screen==Prm.Screen.BuildingScreen?1
@@ -3746,7 +3629,34 @@ public static class App {
             TL.Exit();
         }
 		out.write("</body></html>");
-	}//jsp
+	}//jspOld
+*/
+	public static void jsp(HttpServletRequest request
+	,HttpServletResponse response
+	,javax.servlet.http.HttpSession session
+	,JspWriter out
+	,javax.servlet.jsp.PageContext pageContext)
+	throws IOException, javax.servlet.ServletException
+	{TL tl=null;try{tl=TL.Enter(request,response,session,out,pageContext);
+		tl.r("contentType","text/json");
+		tl.logOut=tl.var("logOut",false);
+		Op op=tl.req(Prm.op.toString(),Op.none);
+		if(tl.usr!=null || op==Op.login || op==Op.none)
+			op.doOp(AppEU059S.app(tl),tl.json);
+		else TL.Util.mapSet(tl.response,"msg","Operation not authorized ,or not applicable","return",false);
+		if(tl.r("responseDone")==null)
+		{if(tl.r("responseContentTypeDone")==null)
+			response.setContentType(String.valueOf(tl.r("contentType")));
+			tl.getOut().o(tl.response);
+			tl.log("AppEU059S:xhr-response:",tl.jo().o(tl.response).toString());}
+		out.flush();
+	}catch(Exception x){
+		if(tl!=null){
+			tl.error(x,"AppEU059S.jsp:");
+			tl.getOut().o(x);
+		}else
+			x.printStackTrace();
+	}finally{TL.Exit();}}//jsp
 
 
 	public static class Project extends TL.DB.Tbl {//implements Serializable
@@ -3776,122 +3686,6 @@ public static class App {
 			 PRIMARY KEY (`no`)
 			 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-			 */
-
-			/*
-			 create database eu059s;
-			 use eu059s;
-			 create table projects(no int(11) primary key,title varchar(255),j json);
-			 create table usr(no int(11)primary key,un varchar(255),pw varchar(255),j json);
-			 create table sheets(no int(11)primary key,p int(11),b int(11),f int(11), n int(11),j json);
-			 create table imgs(no int(11)primary key,p int(11),b int(11),f int(11), n int(11),j json,img blob);
-			 create table j(no int(18) primary key,refNo int(15),p varchar(255),typ enum
-			 ('bool','str','int','dbl','dt','refNo','javaObjectDataStream'
-			 ),v blob,unique (refNo,p),key(typ,v(64)),key(p,typ,v(64)));
-			 -- refNo=0 is the global object , has props: users , projects, sheets, protos, pages,
-
-			 insert into projects values(1,'first','{labels:{shortDesc:"-",date:"-",author:"-",avatar:"avatar.jpg",desc:"=",heart:"_",comment:"_"}}');
-			 insert into projects values(1,'first','{"labels":{"shortDesc":"-","date":"-","author":"-","avatar":"avatar.jpg","desc":"=","heart":"_","comment":"_"}}');
-			 insert into usr values(0,'m',password('12tffs'),'{"1stName":"moh","level":1}');
-
-
-			 projects,sheets,imgs
-
-
-
-
-			 CREATE TABLE `usr` (
-			 `uid` int(11) NOT NULL,
-			 `un` varchar(255) DEFAULT NULL,
-			 `pw` varchar(255) DEFAULT NULL,
-			 `json` json NOT NULL,
-			 PRIMARY KEY (`uid`)
-			 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-			 INSERT INTO `usr` VALUES (0,'m','*D996E6FF9F559AFBBFAC9443D58CA1F06F77A0B0','{\"level\": 1, \"1stName\": \"moh\"}');
-
-			 CREATE TABLE `ssn` (
-			 `sid` int(6) NOT NULL AUTO_INCREMENT,
-			 `uid` int(6) NOT NULL,
-			 `dt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-			 `auth` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-			 `last` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-			 PRIMARY KEY (`sid`),
-			 KEY `kDt` (`dt`),
-			 KEY `kAuth` (`auth`),
-			 KEY `kLast` (`last`)
-			 ) ENGINE=MyISAM AUTO_INCREMENT=97 DEFAULT CHARSET=utf8;
-
-
-
-			 CREATE TABLE `projects` (
-			 `no` int(11) NOT NULL,
-			 `title` varchar(255) DEFAULT NULL,
-			 `j` json DEFAULT NULL,
-			 PRIMARY KEY (`no`)
-			 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
-			 insert into projects values();
-
-			 CREATE TABLE `projects` (
-			 `no` int(6) NOT NULL AUTO_INCREMENT,
-			 `json` json NOT NULL,
-			 PRIMARY KEY (`no`)
-			 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
-
-			 CREATE TABLE `buildings` (
-			 `no` int(11) NOT NULL,
-			 `p` int(11) NOT NULL,
-			 `json` json NOT NULL,
-			 PRIMARY KEY (`no`),
-			 KEY `p` (`p`)
-			 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-			 CREATE TABLE `floors` (
-			 `no` int(11) NOT NULL,
-			 `p` int(11) NOT NULL,
-			 `b` int(11) NOT NULL,
-			 `json` json NOT NULL,
-			 PRIMARY KEY (`no`),
-			 KEY `p` (`p`,`b`)
-			 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-			 CREATE TABLE `sheets` (
-			 `no` int(11) NOT NULL,
-			 `p` int(11) DEFAULT NULL,
-			 `b` int(11) DEFAULT NULL,
-			 `f` int(11) DEFAULT NULL,
-			 `j` json DEFAULT NULL,
-			 `dt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-			 `u` int(11) DEFAULT NULL,
-			 PRIMARY KEY (`no`)
-			 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-			 CREATE TABLE `json` (
-			 `no` int(24) NOT NULL AUTO_INCREMENT,
-			 `jsonRef` int(18) NOT NULL,
-			 `path` text NOT NULL,
-			 `typ` enum('Int','dbl','str','bool','dt','jsonRef','javaObjectDataStream') NOT NULL,
-			 `json` blob,
-			 PRIMARY KEY (`no`),
-			 UNIQUE KEY `jsonRef` (`jsonRef`,`path`(64)),
-			 KEY `typ` (`typ`,`json`(64)),
-			 KEY `path` (`path`(64),`typ`,`json`(64))
-			 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-			 CREATE TABLE `log` (
-			 `no` int(24) NOT NULL AUTO_INCREMENT,
-			 `dt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-			 `uid` int(11) NOT NULL,
-			 `entity` enum('projects','usr','sheets','imgs','ssn','log','buildings','floors') DEFAULT NULL,
-			 `pk` int(11) DEFAULT NULL,
-			 `act` enum('New','Update','Delete','Login','Logout','Log','Error') DEFAULT NULL,
-			 `json` text,
-			 PRIMARY KEY (`no`),
-			 KEY `uid` (`uid`,`dt`),
-			 KEY `dt` (`dt`),
-			 KEY `entity` (`entity`,`act`,`dt`),
-			 KEY `entity_2` (`entity`,`pk`,`dt`)
-			 ) ENGINE=InnoDB AUTO_INCREMENT=173 DEFAULT CHARSET=utf8;
 			 */}
 		@Override public String getName(){return dbtName;}//public	Ssn(){super(Name);}
 		@TL.Form.F public Integer no;
@@ -3967,20 +3761,20 @@ public static class App {
 
 		@Override public List creationDBTIndices(TL tl){
 			return TL.Util.lst(
-							   TL.Util.lst("int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT"//no
-										   ,"int(11) NOT NULL"//p
-										   ,"int(11) NOT NULL"//b
-										   ,"text"//json
-										   ),TL.Util.lst(TL.Util.lst(C.p,C.b)));/*
-																				 CREATE TABLE `floors` (
-																				 `no` int(11) NOT NULL primary key,
-																				 `p` int(11) NOT NULL,
-																				 `b` int(11) NOT NULL,
-																				 `j` json DEFAULT NULL,
-																				 KEY (`p`,`b`)
-																				 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
-																				 insert into floors values();
-																				 */}
+				TL.Util.lst("int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT"//no
+				   ,"int(11) NOT NULL"//p
+				   ,"int(11) NOT NULL"//b
+				   ,"text"//json
+				   ),TL.Util.lst(TL.Util.lst(C.p,C.b)));/*
+				 CREATE TABLE `floors` (
+				 `no` int(11) NOT NULL primary key,
+				 `p` int(11) NOT NULL,
+				 `b` int(11) NOT NULL,
+				 `j` json DEFAULT NULL,
+				 KEY (`p`,`b`)
+				 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
+				 insert into floors values();
+				 */}
 
 		@Override public String getName(){return dbtName;}//public	Ssn(){super(Name);}
 		@TL.Form.F public Integer no,p,b;
@@ -4059,52 +3853,322 @@ public static class App {
 
 		@Override public List creationDBTIndices(TL tl){
 			return TL.Util.lst(
-							   TL.Util.lst("int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT"//no
-										   ,"int(11) NOT NULL"//p
-										   ,"int(11) NOT NULL"//b
-										   ,"int(11) NOT NULL"//f
-										   ,"int(11) NOT NULL"//u
-										   ,"int(18) NOT NULL"//jsonRef
-										   ,"timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP "//dt
-										   ),TL.Util.lst(C.p,C.b,C.f,C.u,C.jsonRef,C.dt));/*
-																						   CREATE TABLE `sheets` (
-																						   `no` int(11) NOT NULL,
-																						   `p` int(11) DEFAULT NULL,
-																						   `b` int(11) DEFAULT NULL,
-																						   `f` int(11) DEFAULT NULL,
-																						   `jsonRef` int(18) NOT NULL,
-																						   `dt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-																						   `u` int(11) DEFAULT NULL,
-																						   PRIMARY KEY (`no`)
-																						   ) ENGINE=InnoDB DEFAULT CHARSET=utf8
+				TL.Util.lst("int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT"//no
+					,"int(11) NOT NULL"//p
+					,"int(11) NOT NULL"//b
+					,"int(11) NOT NULL"//f
+					,"int(11) NOT NULL"//u
+					,"int(18) NOT NULL"//jsonRef
+					,"timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP "//dt
+					),TL.Util.lst(C.p,C.b,C.f,C.u,C.jsonRef,C.dt));/*
+			CREATE TABLE `sheets` (
+			`no` int(11) NOT NULL,
+			`p` int(11) DEFAULT NULL,
+			`b` int(11) DEFAULT NULL,
+			`f` int(11) DEFAULT NULL,
+			`jsonRef` int(18) NOT NULL,
+			`dt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+			`u` int(11) DEFAULT NULL,
+			PRIMARY KEY (`no`)
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8
 
 
-																						   public static void checkTableCreation(TL tl){
-																						   String sql="CREATE TABLE `"+dbtName+"` (\n" +
-																						   "`"+C.no+"` int(11) NOT NULL primary key,\n" +
-																						   "`"+C.p+"` int(11) NOT NULL,\n" +
-																						   "`"+C.b+"` int(11) NOT NULL,\n" +
-																						   "`"+C.f+"` int(11) NOT NULL,\n" +
-																						   "`"+C.u+"` int(11) NOT NULL,\n" +
-																						   "`"+C.jsonRef+"` int(24) NOT NULL,\n" +
-																						   "`"+C.dt+"` timestamp NOT NULL,\n" +
-																						   "KEY (`"+C.p+"`,`"+C.b+"`,`"+C.f+"`),\n" +
-																						   "KEY (`"+C.jsonRef+"`)\n" +
-																						   "KEY (`"+C.dt+"`)\n" +
-																						   ") ENGINE=InnoDB DEFAULT CHARSET=utf8 ;";
-																						   try {
-																						   Object o=TL.DB.q("desc "+dbtName,0);
-																						   if(o==null){
-																						   int x=TL.DB.x(sql);
-																						   tl.log("eu059s.App.Sheet.checkTableCreation:",x,sql);
-																						   }
-																						   } catch (SQLException ex) {
-																						   tl.error(ex, "eu059s.App.Sheet.checkTableCreation");}
-																						   }//checkTableCreation*/}
-
+			public static void checkTableCreation(TL tl){
+			String sql="CREATE TABLE `"+dbtName+"` (\n" +
+			"`"+C.no+"` int(11) NOT NULL primary key,\n" +
+			"`"+C.p+"` int(11) NOT NULL,\n" +
+			"`"+C.b+"` int(11) NOT NULL,\n" +
+			"`"+C.f+"` int(11) NOT NULL,\n" +
+			"`"+C.u+"` int(11) NOT NULL,\n" +
+			"`"+C.jsonRef+"` int(24) NOT NULL,\n" +
+			"`"+C.dt+"` timestamp NOT NULL,\n" +
+			"KEY (`"+C.p+"`,`"+C.b+"`,`"+C.f+"`),\n" +
+			"KEY (`"+C.jsonRef+"`)\n" +
+			"KEY (`"+C.dt+"`)\n" +
+			") ENGINE=InnoDB DEFAULT CHARSET=utf8 ;";
+			try {
+			Object o=TL.DB.q("desc "+dbtName,0);
+			if(o==null){
+			int x=TL.DB.x(sql);
+			tl.log("AppEU059S.Sheet.checkTableCreation:",x,sql);
+			}
+			} catch (SQLException ex) {
+			tl.error(ex, "AppEU059S.Sheet.checkTableCreation");}
+			}//checkTableCreation*/}
 	}//class Sheet
 
+public static class Storage extends TL.DB.Tbl {//implements Serializable
+	public static final String dbtName="Storage";
 
-}//class App
+	@Override public String getName(){return dbtName;}//public	Ssn(){super(Name);}
+	@TL.Form.F public Integer no;
+	@TL.Form.F public String path,data,contentType;
+	@TL.Form.F public Date lastModified;
 
-%>
+	public enum C implements TL.DB.Tbl.CI{no,path,data,contentType,lastModified;
+		@Override public Class<? extends TL.DB.Tbl>cls(){return Storage.class;}
+		@Override public Class<? extends TL.Form>clss(){return cls();}
+		@Override public String text(){return name();}
+		@Override public Field f(){return TL.DB.Tbl.Cols.f(name(), cls());}
+		@Override public TL.DB.Tbl tbl(){return TL.DB.Tbl.tbl(cls());}
+		@Override public void save(){tbl().save(this);}
+		@Override public Object load(){return tbl().load(this);}
+		@Override public Object value(){return val(tbl());}
+		@Override public Object value(Object v){return val(tbl(),v);}
+		@Override public Object val(TL.Form f){return f.v(this);}
+		@Override public Object val(TL.Form f,Object v){return f.v(this,v);}
+	}//C
+
+	@Override public TL.DB.Tbl.CI pkc(){return C.no;}
+	@Override public Object pkv(){return no;}
+	@Override public C[]columns(){return C.values();}
+
+	@Override public List creationDBTIndices(TL tl){
+		return TL.Util.lst(
+			TL.Util.lst("int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT"//no
+				,"varchar(255) NOT NULL"//path
+				,"text NOT NULL"//data
+				,"varchar(255) NOT NULL"//contentType
+				,"timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP "//lastModified
+				,"varchar(255) NOT NULL"//
+			), TL.Util.lst(
+				TL.Util.lst(C.path,C.lastModified),
+				TL.Util.lst(C.lastModified,C.path)));/*
+CREATE TABLE `Storage` (
+  `no` int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  `path` varchar(255) NOT NULL,
+  `data` text NOT NULL,
+  `contentType` text NOT NULL,
+  `lastModified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+   key(`path`,`lastModified`),
+   key(`lastModified`,`path`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+*/}
+
+// Map vals(C except){}
+
+}//class Storage
+
+ void respond(String contentType,String content){
+	try{tl.r("responseDone",true);
+	tl.rspns.setContentType(contentType);
+	tl.o(content);}catch(Exception ex){tl.error(ex,"AppEU059S.respond:");}}
+
+ enum Op{
+	 /**none is equivelant to bootstrapping the web-application system to Storage:key=app*/
+ none{@Override void doOp(AppEU059S a,Map prms){
+	a.respond("text/html","<html><head><script src=\"sys.js\"></script></head><body></body></html>");}}
+ ,login{@Override void doOp(AppEU059S a,Map prms){try{
+	TL.DB.Tbl.Usr u=TL.DB.Tbl.Usr.login();TL tl=a.tl;
+	if(u!=null){u.onLogin();
+		TL.DB.Tbl.Log.log(TL.DB.Tbl.Log.Entity.usr
+			, tl.usr.uid
+			, TL.DB.Tbl.Log.Act.Login
+			,TL.Util.mapCreate("usr",tl.usr,"request",tl.req));}
+	else// msg="incorrect login";
+		TL.DB.Tbl.Log.log(TL.DB.Tbl.Log.Entity.usr
+			, tl!=null&&tl.usr!=null?tl.usr.uid:-1
+			, TL.DB.Tbl.Log.Act.Log
+			,TL.Util.mapCreate(
+				"msg","incorrect login"
+				,"request",tl.req));}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.login:");}}}
+ ,logout{@Override void doOp(AppEU059S a,Map prms)
+	{try{TL.DB.Tbl.Log.log(TL.DB.Tbl.Log.Entity.usr, a.tl.usr.uid,TL.
+		DB.Tbl.Log.Act.Logout,TL.Util.mapCreate("usr",a.tl.usr));
+		a.tl.ssn.onLogout();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.logout:");}}}
+ ,newProject{@Override void doOp(AppEU059S a,Map prms){
+	a.proj.no=null;//TL.DB.q1int("select max(`no`)+1 from projects;", 1);
+	a.proj.json=TL.Util.mapCreate("title","Project "+a.tl.now
+		, "date",TL.Util.formatDate( a.tl.now )
+		, "shortDesc","short Desc"//"avatar","avatar.jpg"
+		, "author",a.tl.usr.uid, "desc","description" );
+	try{a.proj.save();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.newProject:");}
+	a.tl.s(Prm.projNo.toString(),a.proj.no);
+	a.tl.s(Prm.screen.toString(),a.screen=Prm.Screen.ProjectScreen);}}
+
+ ,newBuilding{@Override void doOp(AppEU059S a,Map prms){
+	a.bld.no=null;a.bld.p=a.proj.no;
+	a.bld.json=TL.Util.mapCreate("date",TL.Util.formatDate( a.tl.now )
+		, "author",a.tl.usr.uid , "title","Building "+a.tl.now );//"avatar","avatar.jpg"
+	try{a.bld.save();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.newBuilding:");}
+	a.tl.s(Prm.buildingNo.toString(),a.bld.no);
+	a.tl.s(Prm.screen.toString(), Prm.Screen.BuildingScreen);}}
+
+ ,newFloor{@Override void doOp(AppEU059S a,Map prms){
+	a.flr.no=null;a.flr.b=a.bld.no;a.flr.p=a.proj.no;
+	a.flr.json=TL.Util.mapCreate("date", TL.Util.formatDate( a.tl.now )
+		, "author",a.tl.usr.uid , "title","Floor "+a.tl.now);//"avatar","avatar.jpg"
+	try{a.flr.save();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.newFloor:");}
+	a.tl.s(Prm.floorNo.toString(),a.flr.no);
+	a.tl.s(Prm.screen.toString(), Prm.Screen.FloorScreen);}}
+
+ ,newSheet{@Override void doOp(AppEU059S a,Map prms){
+	a.sheet.no=null;
+	a.sheet.dt=a.tl.now;a.sheet.u=a.tl.usr.uid;
+	a.sheet.p=a.proj.no;a.sheet.b=a.bld.no;a.sheet.f=a.flr.no;
+	a.sheet.jsonRef=TL.DB.Tbl.Json.jrmp1();
+	a.sheet.m=a.sheet.asMap();
+	a.sheet.m.put("datetime", TL.Util.formatDate(a.sheet.dt ));
+	TL.DB.Tbl.Json j=a.sheet.json();
+	a.sheet.m.put(j.Jr,j.jsonRef);
+	//sheet.jsonRef=j.jsonRef=j.jrmp1();//((Number)sheet.m.get(TL.DB.Tbl.Json.Jr)).intValue();
+	try{a.sheet.save();
+	a.sheet.m.put("no", a.sheet.no);
+	j.save(a.sheet.m);}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.newSheet:");}
+	a.tl.s(Prm.sheetNo.toString(), a.sheet.no);
+	a.tl.s(Prm.screen.toString(), a.screen=Prm.Screen.Sheet);}}
+
+ ,newUser{@Override void doOp(AppEU059S a,Map prms){
+	TL.DB.Tbl.Usr u=new TL.DB.Tbl.Usr();
+	u.readReq("");//u .j=TL.Util.mapCreate name tel gender address email tel-ext id cid	"avatar","avatar.jpg"
+	u.uid=null;
+	try{u.save();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.newUser:");}
+	a.tl.s(Prm.screen.toString(), Prm.Screen.User);}}
+
+ ,deleteProject{@Override void doOp(AppEU059S a,Map prms){
+	try{a.proj.delete();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.deleteProject:");}
+	a.tl.s(Prm.projNo.toString(),a.proj.no=-1);
+	a.screen=Prm.Screen.ProjectsList;}}
+
+ ,deleteBuilding{@Override void doOp(AppEU059S a,Map prms){
+	try{a.bld.delete();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.deleteBuilding:");}
+	a.tl.s(Prm.buildingNo.toString(),a.bld.no=-1);
+	a.screen=Prm.Screen.ProjectScreen;}}
+
+ ,deleteFloor{@Override void doOp(AppEU059S a,Map prms){
+	try{a.flr.delete();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.deleteFloor:");}
+	a.tl.s(Prm.floorNo.toString(),a.flr.no=-1);
+	a.screen=Prm.Screen.BuildingScreen;}}
+
+ ,deleteSheet{@Override void doOp(AppEU059S a,Map prms){
+	/*deleteImages();
+		void deleteImages(){try{
+			//delete folder//Integer jsonRef=sheet.jsonRef;	 //AppEU059S app=app(t);app.
+			String path=getUploadPath()
+			,real=TL.context.getRealPath(tl,path);//t.getServletContext().getRealPath(path);
+			File f=new File(real);
+			if(f.exists())
+				f.delete();
+		}catch(Exception ex){tl.error(ex,"deleteImages");}
+		}//deleteImages*/
+	try{a.sheet.delete();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.deleteSheet:");}
+	a.tl.s(Prm.sheetNo.toString(), a.sheet.no=-1);
+	a.screen=Prm.Screen.FloorScreen;}}
+
+ ,deleteUser{@Override void doOp(AppEU059S a,Map prms){
+	TL.DB.Tbl.Usr u=new TL.DB.Tbl.Usr();u.readReq("");
+	try{u.delete();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.deleteUser:");}
+	a.tl.s(Prm.screen.toString(),a.screen=Prm.Screen.UsersList);}}
+/*/,userChngPw{@Override void doOp(AppEU059S a,Map prms){}}
+,query{@Override void doOp(AppEU059S a,Map prms){/*
+	* search
+	* proj
+	* title
+	* short desc
+	* desc
+	* building title
+	* floor title
+	* sheet
+	* notes
+	* other txt,txt,txt
+	* usr full-name ,user-id , desc
+	* * /}}*/
+
+ ,xhrEdit{@Override void doOp(AppEU059S a,Map prms){try{
+	a.tl.log("AppEU059S.Op.xhrEdit : op==xhrEdit");
+	if(a.tl.response==null)a.tl.response=TL.Util.mapCreate();
+	TL.Util.mapSet(a.tl.response,"msg","um...");
+	String entity=a.tl.req("entity");
+	Map v=(Map)a.tl.json.get("v");
+	Integer pk=a.tl.req("pk",-1);
+	TL.DB.Tbl t="project".equals(entity)?a.proj
+	:"building".equals(entity)?a.bld
+	:"floor".equals(entity)?a.flr:null;
+	a.tl.log("AppEU059S.Op.xhrEdit : entity=",entity," ,pk=",pk," ,v=",v ," ,t=",t);
+	if(t!=null && pk!=-1)
+	{t.load(pk);a.tl.log("AppEU059S.Op.xhrEdit : t!=null && pk!=-1");
+		Map j=a.getJ(t);
+		a.merge(j,v);
+		a.tl.log("AppEU059S.Op.xhrEdit : merge:",t);
+		t.save();
+		a.tl.log("AppEU059S.Op.xhrEdit : save");
+	}else a.tl.log("AppEU059S.Op.xhrEdit : else: t!=null && pk!=-1");
+	a.tl.getOut().o(a.tl.response);
+	a.tl.log("AppEU059S.Op.xhrEdit : return");
+	}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.xhrEdit:");}}}
+
+ ,saveSheet{@Override void doOp(AppEU059S a,Map prms){try{
+	a.tl.log("op-saveSheet");
+	TL.DB.Tbl.Json json=a.sheet.json();
+	Map old=a.sheet.m,j=a.sheet.m=(Map)
+	(json.json=a.tl.json.get("json"));
+	//a.sheet.fromMap(j);
+	for(int i=0;i<4;i++)try{
+		String n="img"+(i+1);
+		Object o=a.tl.json.get(n);//Map m=(Map)tl.json.get(n);
+		if(o==null && old!=null)
+			o=old.get(n);
+		if(o!=null &&(!(o instanceof String) || o.toString().trim().length()>0))
+			j.put(n, o);
+	}catch(Exception ex){
+		a.tl.error(ex,"AppEU059S.saveSheet");}
+	j.put("no", a.sheet.no);
+	json.save();
+	a.sheet.save();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.saveSheet:");}
+	}}
+ //,getImg
+
+ ,StorageList{@Override void doOp(AppEU059S a,Map prms){
+	Storage.C[]x={Storage.C.no,Storage.C.path,Storage.C.contentType,Storage.C.lastModified};
+	StringBuilder sql=new StringBuilder("select ");
+	TL.DB.Tbl.Cols.generate(sql,x).append(" from ").append(Storage.dbtName);
+	List<Object>l=TL.Util.lst(x),r;
+	a.tl.response.put("return",l);
+	for (TL.DB.ItTbl.ItRow i:TL.DB.ItTbl.it(sql.toString())) {
+		l.add(r=TL.Util.lst());
+		for (Storage.C c:x)
+			r.add(i.next());}}}
+
+ ,StorageGet{@Override void doOp(AppEU059S a,Map prms){
+	try{a.storage.readReq("");a.storage.load();prms.put("return",a);} catch (Exception e) {
+		a.tl.error(e,"AppEU059S.Op.StorageGet");}}}
+
+ ,StorageContent{@Override void doOp(AppEU059S a,Map prms){
+	try{a.storage.readReq("");a.storage.load();//prms.put("return",a);
+	//set response headers: lastModified,
+	a.respond(a.storage.contentType,a.storage.data);
+	} catch (Exception e) {
+		a.tl.error(e,"Storage.Op.StorageContent");}}}/*
+
+ ,StorageScript{@Override void doOp(AppEU059S a,Map prms){
+	try{a.storage.readReq("");a.storage.load();//prms.put("return",a);
+	//set response headers: lastModified,
+	a.respond(a.storage.contentType,a.storage.data);
+	} catch (Exception e) {
+		a.tl.error(e,"AppEU059S.Op.get");}}}
+
+ ,StorageCss{@Override void doOp(AppEU059S a,Map prms){
+	try{a.storage.readReq("");a.storage.load();prms.put("return",a);} catch (Exception e) {
+		a.tl.error(e,"AppEU059S.Op.get");}}}
+
+ ,StorageImg{@Override void doOp(AppEU059S a,Map prms){
+	try{a.storage.readReq("");a.storage.load();prms.put("return",a);} catch (Exception e) {
+		a.tl.error(e,"AppEU059S.Op.get");}}}*/
+
+ ,StorageSet{@Override void doOp(AppEU059S a,Map prms) {
+	try{a.storage.readReq_save();} catch (Exception e) {
+		a.tl.error(e,"AppEU059S.Op.StorageSet");}}}
+
+ ,StorageNew{@Override void doOp(AppEU059S a,Map prms) {
+	try{a.storage.no=a.storage.maxPlus1(Storage.C.no);
+	prms.put("return",a.storage.no);
+	a.storage.readReq("");
+	a.storage.save();} catch (Exception e) {
+		a.tl.error(e,"AppEU059S.Op.StorageNew");}}}
+ //,StorageDelete,StorageSyncOffline{@Override void doOp(TL tl,Map prms){}}
+ ;
+ void doOp(AppEU059S a,Map params){params.put("msg","op not implemented");}
+ }//enum Op
+
+}//class AppEU059S
