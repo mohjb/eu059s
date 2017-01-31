@@ -43,7 +43,7 @@ sys=window.sys=
 	if(p.chng)n.onchange=p.chng;
 	if(p.s)for(var i in p.s)n.style[i]=p.s[i];
 	if(p.a)for(var i in p.a)n[i]=p.a[i];
-	if(p.c){if(p.n&&p.n.toLowerCase()=='select')t.bldSlct(p.c,n,p);
+	if(p.c){if(p.n&&p.n.toLowerCase()=='select')t.bldSlct(p,n);
 		else if(p.n&&p.n.toLowerCase()=='table')t.bldTbl (p,n);
 		else for(var i=0;i<p.c.length;i++)
 		 if(typeof(p.c[i])=='string')//t.dct(p.c[i],n);
@@ -68,7 +68,9 @@ sys=window.sys=
 	, pr:parent dom-element , based-on/uses dce
 	*/
  bldTbl:function sys_BuildHtmlTable(params,pr){
-	var tbl=pr&&pr.nodeName=='TABLE'?pr:sys.dce('table',pr,null,params?params.id:0),tb=tbl?tbl.tBodies[0]:0;
+	var tbl=pr&&pr.nodeName=='TABLE'?pr
+		:sys.dce('table',pr,null,params?params.id:0)
+		,tb=tbl?tbl.tBodies[0]:0;
 	if(params.headings){
 		var ht=tbl.tHead,a=params.headings,tr,th;
 		if(!ht)ht=tbl.createTHead();
@@ -111,11 +113,106 @@ sys=window.sys=
 				sys.bld(a[i],td);}}
 	return tbl;}
 
-,bldSlct:function sys_BuildSelect(a,pr,params){
-	var c=params.c,i,n,t,v,s=params.selected||params.a.selected;
-	for(i=0;c&&i<c.length;i++){pr.options[pr.options.length]=n=typeof(c[i])=='string'
-		||!((c[i] instanceof Array&&c[i].length>1)||c[i].value)?new Option(t=v=c[i])
-		:new Option(t=(c[i].text||c[i][0]),v=(c[i].value||c[i][1]));if(s==t||s==v)n.selected=true;}}
+,bldSlct:function sys_BuildSelect(params,pr){
+	var i,n,t,v,found=0
+		,c=params.c
+		,s=params.selected||params.a.selected;
+	if(!pr||!pr.nodeName||pr.nodeName!='SELECT')
+		pr=sys.dce('SELECT',pr)
+	for(i=0;c&&i<c.length;i++){
+		pr.options[pr.options.length]=n=
+			typeof(c[i])=='string'
+			||!((c[i] instanceof Array&&c[i].length>1)||c[i].value)
+			?new Option(t=v=c[i])
+			:new Option(
+				t=(c[i].text||c[i][0])
+			 ,	v=(c[i].value||c[i][1])
+			 );
+		if(s==t||s==v)
+			found=n.selected=true;
+	}if(s && !found)
+	{pr.options[pr.options.length]=n=new Option(s)
+		n.selected=true;}
+	return pr;}
+
+		
+,/**
+params:(obj)
+	c:array ,like bld
+	,form:optional:to call bldForm contained in this modal
+	,title:str(optional)
+	,btns:{close:<str:(default:'Close') or if null then wont show 'close'-btn>
+		,<key:str:button-title> : <return value when clicked, 
+			or func that is called when btn is clicked(args:btn,key,modalDialog,paramObj) >
+		,,,
+	}//btns	
+*/bldModal:function(params,pr)
+{var div=sys.dce('div',pr),r;
+	div.style.cssText="position:absolute;top:0px;left:0px;width:100%;height:100%;background-color:#00001010;";
+	return r;
+}
+
+,/**params:
+	modal:(boolean:optional:default false)
+	h:fields:array
+		,if item string,label of field and text-data-type
+		,if item array then ix0 is label and remaining are enums of a drop-down-select
+		,if object: t:label , type:('text','textarea','number','regex','datetime',,,ect)
+			other props are to be written as attributes in the generated element
+	a:1d-array of field values
+	clss:(defaults to 'data')className used for input or select or textarea
+	depricated:orientation:(h or v ,default v, v:vertical , h:horizontal )
+	modules:int for number of fields per column,not implemented, two approaches, 
+		1:(default) going down a column then next column 
+		2: going horizontally then next row
+	btns:array for buttons, not implemented yet
+
+ returns params with added props:
+	dataNodes:obj : prop-key field-name, prop-value is data-element(input or select or textarea)
+	getJson:func returns as json-obj values in the dataNodes
+*/bldForm:function(params,pr)
+{	if(!params||!params.h||!params.a)
+		return;
+	var p=params
+	,tbl=p.tbl= ((pr&&pr.nodeName=='TABLE')?
+		pr:sys.dce('table',pr,null,p.id))
+	,tb=tbl?tbl.tBodies[0]:0
+	,h=p.h,a=p.a
+	,hi,ht,ai,tr,td,th;
+	p.dataNodes=[];
+	for(var i in h){
+		tr=tb.insertRow();
+		hi=h[i];ht=typeof(hi)
+		ai=a[i]
+		th=sys.dce('th',tr);
+		td=tr.insertCell();
+		if(ht=='string')
+		{	sys.bld(hi,th);
+			p.dataNodes.push(
+				ai!=undefined && ai!=null
+				?sys.dci(td,ai,hi)
+				:a[i]);
+		}
+		else if(hi instanceof Array){
+			sys.bld(hi[0],th);
+			var c=sys.util.copy(hi);c.splice(0,1)
+			sys.bldSlct({clss:p.clss||'data',c:c,selected:ai},td)
+		}else{
+			//textarea
+			//select
+			//hidden
+			//password
+			//radio
+			//checkbox
+			//date,datetime
+			//number
+			//regex
+			//file
+			//slider
+		}
+	}
+	return p;
+}//bldForm
 
 ,/**primary key is the first column, url of json crud,
 	url params:datagrid=<tbl-name> 
@@ -148,6 +245,39 @@ fset:function sys_fset(ttl,a,args){
 	p.s.border='0px solid while';
 	if(!p.s.width)p.s.width='100%';
 	return fset(ttl,p,arguments);}
+
+,util:{
+	copy:function(o,deep){//deep:optional, array ,which is list of copied items
+		var t=typeof(o),p=sys.util.isPrimitive(v,t)
+		,r=p?o:o instanceof Array?[]:{};
+		if(p)return r;
+		if(!deep)
+			for(var i in o)
+				r[i]=o[i]
+		else{
+			deep.push([o,r])
+			for(var i in o)
+			{var v=o[i],t=typeof(v)
+				if(sys.util.isPrimitive(v,t))
+					r[i]=v;
+				else if(v&&v.cloneNode)
+					r[i]=v.cloneNode(deep)
+				else{
+					r[i]=sys.util.copy(v,deep)
+				}
+			}
+		}
+		return r;
+	}//copy
+	,isPrimitive:function primitive(v,t){if(!t)t=typeof(v);return 
+		v==null||v==undefined||t=='string'||t=='number'||t=='boolean';}
+	,extend:function(dst,src){
+		for(var i in src)
+		{var v=dst[i];if(v==undefined)
+			dst[i]=src[i];
+		}
+		return dst;}
+}//sys.util
 
 ,/**
  * parameter p attributes
@@ -197,8 +327,8 @@ xhr:function sys_xhr(p){//data,callBack,asText)
 ,isIE:(typeof XMLHttpRequest === "undefined")
 
 
-,toJsonBld:
-{toJb:function(o,stack){
+,toJsonBld:{
+ toJb:function(o,stack){
 	var n=o&&o.constructor&&o.constructor.name
 	,f=sys.toJsonBld[n]
 	return f?f(o):sys.toJsonBld.props(o);}
@@ -473,24 +603,29 @@ lastModified based synchronisation between client-LocalStorage and server-DB
 		]
 		*/if(!a)a=[['Storage.C.no' , 'Storage.C.path' , 'Storage.C.contentType' , 'Storage.C.lastModified','Storage.C.data']]
 		if(!p)p=document.body
-		var h=a.splice(0,1),b=
+		sys.dce('h1',p,'sys.bootStrap.introspection.storageEntriesTable')
+		var h=a.splice(0,1)[0],b=
 			[	{	t:'Reload all Storage entries'
 					,req:{	'op':sys.Op.StorageList
 						,onload:sys.bootStrap.introspection.init
 					}
 				}
 				,{	t:'New Storage entry'
-					,req:{'op':sys.Op.StorageNew
-						,onload:function(){
-							console.log('Op.StorageNew:xhr.onload-ok',arguments
-								,'TODO:need to implement js-onxhr-ok for gui/dom '
-							);
+					,c:function(){var req=
+						{'op':sys.Op.StorageNew
+							,onload:function(){
+								console.log('Op.StorageNew:xhr.onload-ok',arguments
+									,'TODO:need to implement js-onxhr-ok for gui/dom '
+								);
+								
+							}
 						}
+						var path=sys.bldModal({})
+						sys.xhr(req)
 					}
 				}
 			]
-		b.map(function(o,i){sys.dcbx(p,o.t,o.req);})
-		sys.dce('h1',p,'sys.bootStrap.introspection.storageEntriesTable')
+		b.map(function(o,i){if(o.req)sys.dcbx(p,o.t,o.req);sys.dcb(p,o.t,o.req);})
 		sys.bootStrap.introspection.storageEntriesTable=sys.bldTbl(
 			{	c:a
 				,headings:h[0]
