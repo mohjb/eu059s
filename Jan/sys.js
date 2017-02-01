@@ -1,23 +1,8 @@
 sys=window.sys=
-{$:function sys$(p){if(sys.$.isLoaded)
-		return sys.did(p);
-	else{	if(!sys.$.onloadQ)sys.$.onloadQ=[p];
-		else sys.$.onloadQ.push(p);}}
-
-,onload:window.onload=function sysOnload(e){
-	sys.$.isLoaded=true;//sys.parseDomOnLoad();
-	if(sys.$.onloadQ)
-		for(var i in sys.$.onloadQ)try{
-			sys.$.onloadQ[i](e)}
-		catch(ex){console.log('sys.$.onloadQ,i=',i,',ex=',ex);}}
-
-//2015-06-09-13-30
-//console.log('sys.js loaded.');
-
-,did:function sys_did(id,n){if(!n)return document.getElementById(id);
+{//2015-06-09-13-30
+did:function sys_did(id,n){if(!n)return document.getElementById(id);
 	var r=n;n=n.firstChild;while(n)if(n.id==id)return n;else n=n.nextSibling;
 	n=r.firstChild;while(n)if(r=did(id,n))return r;else n=n.nextSibling;}
-
 
 ,dce:function sys_dce(n,p,t,i){var r=document.createElement(n);if(i)r.id=i;if(t)sys.dct(t,r);if(p)p.appendChild(r);return r;}
 
@@ -32,7 +17,43 @@ sys=window.sys=
 ,dci:function sys_dci(p,val,id,c,typ){var r=document.createElement('input');r.type=typ||'text';
 	if(id)r.id=id;if(val)r.value=val;if(p)p.appendChild(r);if(c)r.onchange=c;return r;}
 
-,bld:function sys_bld(params,parent){//BuildDomTree params::= id ,n:nodeName ,t:text ,clk:onclick-function ,chng:onchange-function ,a:jsobj-attributes ,c:jsarray-children-recursive-params ,s:jsobj-style ,clpsbl:string-title:collapsable; or params canbe string, or array:call bldTbl ; parent: domElement
+,/**The Legendary "bld" function
+ recursively build DomElements from json:params
+ parent is optional
+ if params is a string , then createTextNode under parent DomElement parent
+ if params is an array , then bldTbl is called
+ otherwise if params isnt a string(it is assumed that params is an object)
+ where params should have properties:
+ 	n:string : name of element
+ 	t:(optional) string , create child text node and set the text to t
+ 	id:(optional)
+ 	name(optional)
+ 	clk:(optional) a ref to a function which will be a onclick handler
+ 	chng:(optional) a ref to a function which will be a onchange handler
+ 	s:(optional) object , where properties are set into the created-node's style
+ 	a:(optional) object , where properties are set into the created-node's properties and attributes
+ 	c:(optional) array
+ 		, recursive function call to this bld function 
+ 		, but with items of c as the param and this node as a parent
+ 		, Hence The POWER of this bld-function
+
+ when params.n is "select" or "table", the internal implementation uses the functions bldSlct or bldTbl 
+ when params.n is "bldForm" or "bldModal" or "bldDataGrid", the named-function is called on params
+ 
+ 
+ BuildDomTree params::= id 
+	,n:nodeName 
+	,t:text 
+	,clk:onclick-function 
+	,chng:onchange-function 
+	,a:jsobj-attributes 
+	,c:jsarray-children-recursive-params 
+	,s:jsobj-style 
+	,(depricated)clpsbl:string-title:collapsable
+	
+	; or params canbe string, or array:call bldTbl 
+	; parent: domElement */
+bld:function sys_bld(params,parent){
  var t=sys;try{if(typeof(params)=='string')return t.dct(params,parent);
  var p=params,n=p.n?document.createElement(p.n):p.t!=undefined?document.createTextNode(p.t):p;
 	if(p.n&&(p.t!=undefined))n.appendChild(document.createTextNode(p.t));
@@ -113,10 +134,18 @@ sys=window.sys=
 				sys.bld(a[i],td);}}
 	return tbl;}
 
-,bldSlct:function sys_BuildSelect(params,pr){
+,/**create a select tag,
+	pr is the parent DomElement
+		, if Select, then uses this element
+		, if pr is not select, then a child select is created
+	params.select:the selected optional
+	params.c:array of options in select
+		each item in array-c can be a string 
+		or an object with (two properties:text and value )*/
+bldSlct:function sys_BuildSelect(params,pr){
 	var i,n,t,v,found=0
 		,c=params.c
-		,s=params.selected||params.a.selected;
+		,s=params.selected//||params.a.selected;
 	if(!pr||!pr.nodeName||pr.nodeName!='SELECT')
 		pr=sys.dce('SELECT',pr)
 	for(i=0;c&&i<c.length;i++){
@@ -135,7 +164,7 @@ sys=window.sys=
 		n.selected=true;}
 	return pr;}
 
-		
+
 ,/**
 params:(obj)
 	c:array ,like bld
@@ -146,18 +175,23 @@ params:(obj)
 			or func that is called when btn is clicked(args:btn,key,modalDialog,paramObj) >
 		,,,
 	}//btns	
-*/bldModal:function(params,pr)
-{var div=sys.dce('div',pr),r;
-	div.style.cssText="position:absolute;top:0px;left:0px;width:100%;height:100%;background-color:#00001010;";
-	return r;
-}
+	
+	example:
+	div=sys.bldModal({n:'p',c:[{n:'h1',t:'Modal Dialog'},'inp:',{n:'select',selected:3,c:[8,5,3,'yea','joe']}]},document.body)
+	*/
+bldModal:function(params,pr){
+	var div=sys.dce('div',pr),r;
+	div.style.cssText="position: absolute; top: 25%; left: 25%; width: 50%; height: 50%; border: 3px solid blue; border-radius: 10px; padding: 15px; box-shadow: 10px 10px 5px #888888,10px 10px 15px #8888f8 inset,-10px -10px 15px #8888f8 inset;";
+	sys.dcb(div,'x',0,function(){div.parentNode.removeChild(div);})
+	sys.bld(params,div)
+	return div;}
 
 ,/**params:
 	modal:(boolean:optional:default false)
 	h:fields:array
-		,if item string,label of field and text-data-type
-		,if item array then ix0 is label and remaining are enums of a drop-down-select
-		,if object: t:label , type:('text','textarea','number','regex','datetime',,,ect)
+		,if item string,label and name-of-field and text-data-type
+		,if item array then ix0 is label and name-of-field, and remaining are enums of a drop-down-select
+		,if object: name:name-of-field, t:label , type:('text','textarea','number','regex','datetime',,,ect)
 			other props are to be written as attributes in the generated element
 	a:1d-array of field values
 	clss:(defaults to 'data')className used for input or select or textarea
@@ -170,15 +204,43 @@ params:(obj)
  returns params with added props:
 	dataNodes:obj : prop-key field-name, prop-value is data-element(input or select or textarea)
 	getJson:func returns as json-obj values in the dataNodes
-*/bldForm:function(params,pr)
-{	if(!params||!params.h||!params.a)
+	
+ example:
+ x=sys.bldForm(
+	{	h:[
+			{t:'no'
+				,name:'no',readonly:true}
+			,'path'
+			,['contentType','text/plain'
+				,'text/html','text/json'
+				,'text/javascript'
+				,'image/png','text/css']
+			,{t:'lastModified'
+				,name:'lastModified'
+				,type:'date-time'}
+			,{t:'data',name:'data',type:'textarea'}
+		]
+	 ,a:[5
+		,'testPath'
+		,'text/plain'
+		,1000
+		,'x'
+		]
+	}
+  ,
+  div=sys.bldModal({n:'h1',t:'Modal Dialog &amp; bldForm'},document.body)
+  )
+	
+*/
+bldForm:function(params,pr){
+	if(!params||!params.h||!params.a)
 		return;
 	var p=params
 	,tbl=p.tbl= ((pr&&pr.nodeName=='TABLE')?
 		pr:sys.dce('table',pr,null,p.id))
-	,tb=tbl?tbl.tBodies[0]:0
+	,tb=tbl?(tbl.tBodies[0]||tbl.createTBody()):0
 	,h=p.h,a=p.a
-	,hi,ht,ai,tr,td,th;
+	,hi,ht,ai,tr,td,th,x;
 	p.dataNodes=[];
 	for(var i in h){
 		tr=tb.insertRow();
@@ -187,30 +249,61 @@ params:(obj)
 		th=sys.dce('th',tr);
 		td=tr.insertCell();
 		if(ht=='string')
-		{	sys.bld(hi,th);
+		{	sys.bld(hi,th);x=0
 			p.dataNodes.push(
 				ai!=undefined && ai!=null
-				?sys.dci(td,ai,hi)
+				?x=sys.dci(td,ai,hi)
 				:a[i]);
+			if(x){x.name=hi;x.className=p.clss||'data';}
 		}
 		else if(hi instanceof Array){
 			sys.bld(hi[0],th);
 			var c=sys.util.copy(hi);c.splice(0,1)
-			sys.bldSlct({clss:p.clss||'data',c:c,selected:ai},td)
-		}else{
-			//textarea
-			//select
-			//hidden
-			//password
-			//radio
-			//checkbox
-			//date,datetime
-			//number
-			//regex
-			//file
-			//slider
+			p.dataNodes.push(
+				x=sys.bldSlct({clss:p.clss||'data'
+					,c:c,selected:ai},td))
+			x.name=hi[0]
+		}else{sys.bld(hi.t,th);switch(hi.type){
+			case 'textarea':
+				p.dataNodes.push(x=sys.dce('TEXTAREA',td));
+				x.className=p.clss||'data';//hi.clss||
+				x.name=hi.name;
+				x.value=ai
+				break;
+			case 'select':
+				p.dataNodes.push(x=sys.bldSlct({selected:ai,c:p.c||p.a},td));
+				x.className=hi.clss||'data';
+				x.name=p.name;
+				break;
+			case 'hidden':tr.style.display='none';
+			default: //case 'password':case 'radio':case 'checkbox':case 'date':case 'datetime':case 'number':case 'regex':case 'file':case 'slider':
+				p.dataNodes.push(x=sys.dci(td));
+				x.type=hi.type;
+				x.name=hi.name;
+				var cr=hi.type=='checkbox'||hi.type=='radio'
+				if((cr&&hi.value)||ai!=undefined)//
+					x.value=cr?hi.value:ai
+				x.className=p.clss||'data';//hi.clss||
+				if(cr&& ai==hi.value)
+					x.checked=x.selected=(hi.value||true);
+			}for(var j in hi)if(j!='clss')
+				x.setAttribute(j,x[j]=hi[j])
 		}
 	}
+	p.getJson=function(){var p=this.p||p||this,d=this.dataNodes||(p&&p.dataNodes)||[],r={};
+		for(var i in d){
+			var x=d[i];
+			if(x.nodeName=='SELECT')
+			{var j=x.selectedIndex;if(j!=-1){
+				var o=x.options[j],v=o.value;
+				r[x.name]=v!=undefined&&v!=null?v:o.text;}}
+			else if(x.type=='checkbox'||x.type=='radio')
+			{if(x.checked||x.selected)
+				r[x.name]=x.value;}
+			else 
+				r[x.name]=x.value;
+		}return r;}
+	p.getJson.p=p
 	return p;
 }//bldForm
 
