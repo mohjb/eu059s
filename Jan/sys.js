@@ -6,9 +6,9 @@ did:function sys_did(id,n){if(!n)return document.getElementById(id);
 
 ,dce:function sys_dce(n,p,t,i){var r=document.createElement(n);if(i)r.id=i;if(t)sys.dct(t,r);if(p)p.appendChild(r);return r;}
 
-,dcb:function sys_dcb(p,t,i,c){var r=sys.dce('button',p,t,i);r.onclick=c;return r;}
+,dcb:function sys_dcb(p,t,c,i){var r=sys.dce('button',p,t,i);r.onclick=c;return r;}//,dcb:function sys_dcb(p,t,i,c){var r=sys.dce('button',p,t,i);r.onclick=c;return r;}
 
-,dcbx:function sys_dcb(p,txt,req,id){var r=sys.dce('button',p,txt,id);
+,dcbx:function sys_dcbx(p,txt,req,id){var r=sys.dce('button',p,txt,id);
 	r.onclick=function(){sys.xhr(req);}
 	return r;}
 
@@ -91,7 +91,7 @@ bld:function sys_bld(params,parent){
  bldTbl:function sys_BuildHtmlTable(params,pr){
 	var tbl=pr&&pr.nodeName=='TABLE'?pr
 		:sys.dce('table',pr,null,params?params.id:0)
-		,tb=tbl?tbl.tBodies[0]:0;
+		,tb=tbl?(tbl.tBodies[0]||tbl.createTBody()):0;
 	if(params.headings){
 		var ht=tbl.tHead,a=params.headings,tr,th;
 		if(!ht)ht=tbl.createTHead();
@@ -181,8 +181,8 @@ params:(obj)
 	*/
 bldModal:function(params,pr){
 	var div=sys.dce('div',pr),r;
-	div.style.cssText="position: absolute; top: 25%; left: 25%; width: 50%; height: 50%; border: 3px solid blue; border-radius: 10px; padding: 15px; box-shadow: 10px 10px 5px #888888,10px 10px 15px #8888f8 inset,-10px -10px 15px #8888f8 inset;";
-	sys.dcb(div,'x',0,function(){div.parentNode.removeChild(div);})
+	div.style.cssText="position: absolute; top: 25%; left: 25%; width: 50%; height: 50%;background-color:#f0f0ff; border: 3px solid blue; border-radius: 10px; padding: 15px; box-shadow: 10px 10px 5px #888888,10px 10px 15px #8888f8 inset,-10px -10px 15px #8888f8 inset;";
+	sys.dcb(div,'x',function(){div.parentNode.removeChild(div);})
 	sys.bld(params,div)
 	return div;}
 
@@ -190,7 +190,7 @@ bldModal:function(params,pr){
 	modal:(boolean:optional:default false)
 	h:fields:array
 		,if item string,label and name-of-field and text-data-type
-		,if item array then ix0 is label and name-of-field, and remaining are enums of a drop-down-select
+		,if item array then ix0 is label and name-of-field, and 2nd-item is array of enums of a drop-down-select
 		,if object: name:name-of-field, t:label , type:('text','textarea','number','regex','datetime',,,ect)
 			other props are to be written as attributes in the generated element
 	a:1d-array of field values
@@ -211,10 +211,10 @@ bldModal:function(params,pr){
 			{t:'no'
 				,name:'no',readonly:true}
 			,'path'
-			,['contentType','text/plain'
+			,['contentType',['text/plain'
 				,'text/html','text/json'
 				,'text/javascript'
-				,'image/png','text/css']
+				,'image/png','text/css']]
 			,{t:'lastModified'
 				,name:'lastModified'
 				,type:'date-time'}
@@ -258,28 +258,28 @@ bldForm:function(params,pr){
 		}
 		else if(hi instanceof Array){
 			sys.bld(hi[0],th);
-			var c=sys.util.copy(hi);c.splice(0,1)
+			var c=hi[1];
 			p.dataNodes.push(
 				x=sys.bldSlct({clss:p.clss||'data'
 					,c:c,selected:ai},td))
 			x.name=hi[0]
-		}else{sys.bld(hi.t,th);switch(hi.type){
+		}else{var nm=hi.name||hi.t,ttl=hi.t||nm;sys.bld(ttl,th);switch(hi.type){
 			case 'textarea':
 				p.dataNodes.push(x=sys.dce('TEXTAREA',td));
 				x.className=p.clss||'data';//hi.clss||
-				x.name=hi.name;
+				x.name=nm;
 				x.value=ai
 				break;
 			case 'select':
 				p.dataNodes.push(x=sys.bldSlct({selected:ai,c:p.c||p.a},td));
 				x.className=hi.clss||'data';
-				x.name=p.name;
+				x.name=nm;
 				break;
 			case 'hidden':tr.style.display='none';
 			default: //case 'password':case 'radio':case 'checkbox':case 'date':case 'datetime':case 'number':case 'regex':case 'file':case 'slider':
 				p.dataNodes.push(x=sys.dci(td));
 				x.type=hi.type;
-				x.name=hi.name;
+				x.name=nm;
 				var cr=hi.type=='checkbox'||hi.type=='radio'
 				if((cr&&hi.value)||ai!=undefined)//
 					x.value=cr?hi.value:ai
@@ -374,8 +374,9 @@ fset:function sys_fset(ttl,a,args){
 
 ,/**
  * parameter p attributes
- *	data: body data of the xhr request sent tot the server ,default null
+ *	data: body data of the xhr request sent to the server ,default null, if not string then will be JSON.stringify(data)
  *	headers: json-object of name/value , set as request headers, defaults to null
+ *	responseType:(optional)  "arraybuffer", "blob", "document", "json", or "text" , xhr defaults to "text"
  *	onload: reference to a function that is called in asynchronous mode 
 		(defaults to null which is synchronise mode), when the server successfully responds, the func is given as a param the xhr obj and second param p
  *	onprogress: reference to a function that is called in asynchronous mode (defaults to null )
@@ -394,13 +395,12 @@ fset:function sys_fset(ttl,a,args){
 		(defaults to null which is synchronise mode), when the server or xhr fails
  *	method: string , POST, GET, defaults to POST
  *	url: the url of xhr , defaults to empty string
- *	asJson:boolean, if true returns JSON.parse(xhr.responseText) else returns xhr.responseText
- * //as: string 'text' , 'json' , defaults to text //'html', 'xml' 
  * */
-xhr:function sys_xhr(p){//data,callBack,asText)
+xhr:function sys_xhr(p){
  if(!p)return p;
- var ct='Content-Type',cs='charset',x=sys.isIE?new 
-		ActiveXObject("microsoft.XMLHTTP")
+ var ct='Content-Type',cs='charset'
+		,x=typeof XMLHttpRequest === "undefined"
+		?new ActiveXObject("microsoft.XMLHTTP")
 		:new XMLHttpRequest();x.p=p;p.xhr=x;
 	x.open(p.method||'POST',p.url||'', p.onload );
 	if(p.headers)for(var i in p.headers)
@@ -410,15 +410,11 @@ xhr:function sys_xhr(p){//data,callBack,asText)
 	if(p.onload)x.onload=p.onload
 	if(p.onprogress)x.onprogress=p.onprogress
 	if(p.onerror)x.onerror=p.onerror
-	
-	x.send((typeof p.data)=='string'?p.data:JSON.stringify(p.data));//console.log('scriptedReq:response:'+ajax.responseText);
-	//return asText?x.responseText:async?0:eval('('+x.responseText+')');
-	console.log('xhr:',p,x);
-	return p.asJson?JSON.parse ( x . responseText ) : x . responseText ;
+	if(p.responseType)x.responseType=p.responseType
+	x.send((typeof p.data)=='string'?p.data:JSON.stringify(p.data));
+	console.log('xhr:response:',x.response,p,x);
+	return x.response;//p.asJson?JSON.parse ( x . responseText ) : x . responseText ;
 	}//function xhr
-
-,isIE:(typeof XMLHttpRequest === "undefined")
-
 
 ,toJsonBld:{
  toJb:function(o,stack){
@@ -535,16 +531,27 @@ dom2json:function dom2json(n,meta,stack){
 				r.s[m]=v;
 	}}}
 	if(n.nodeName=='LINK'){
-		//z.css=sys.toJsonBld.toJb(document.styleSheets)
-		//var tsf=stk[0],top=tsf[0].meta;
-		//if(!top)top=tsf[0].meta={links:[]};
-		//if(!top.links)top.links=[];
-		//top.links.push(sf)
 		if(!meta.links)meta.links=[];meta.links.push(sf)
 		console.log('stackFrame:links:stackFrame=',sf,',meta=',meta,',stack=',stk,',currentObj=',r,n);
 	}else if(n.nodeName=='SCRIPT'){
 		if(!meta.scripts)meta.scripts=[];meta.scripts.push(sf)
 		console.log('stackFrame:scripts:stackFrame=',sf,',meta=',meta,',stack=',stk,',currentObj=',r,n);
+	}else if(n.nodeName=='IMG'){
+		if(!meta.imgs)meta.imgs=[];meta.imgs.push(sf)
+		if(!meta.imgsBase64)meta.imgsBase64={}
+		var src=n.src,z=meta.imgsBase64[src];
+		if(z)
+			console.log('dom2json:img:repeated-src:previous result:',z,', current-img:',n);
+		else{z=meta.imgsBase64[src]={src:src}
+			var canvas = document.createElement('CANVAS');
+			var ctx = canvas.getContext('2d');
+			canvas.height = n.height;
+			canvas.width = n.width;
+			ctx.drawImage(n, 0, 0);
+			z.base64 = canvas.toDataURL('png');}
+
+		console.log('dom2json:imgs:stackFrame=',sf,',meta=',meta
+			,',stack=',stk,',currentObj=',r,n,',meta.imgsBase64[',src,']=',z);
 	}if(n.src){
 		if(!meta.src)meta.src=[];meta.src.push(sf)
 		console.log('stackFrame:src:stackFrame=',sf,',meta=',meta,',stack=',stk,',currentObj=',r,n);
@@ -643,33 +650,34 @@ lastModified based synchronisation between client-LocalStorage and server-DB
 */
 
 ,bootStrap:{
-	init:function(){/*
-	call StorageList ,asking for all Storage-entries past client-side-value lastModifies //depricated::check if firstTime-run, if so, then load application 
-		( files( html(,,,) , css(,,,) 
-			, js(sys.js 
-				, app.js(db)
-				, each screen 
-				, each component
-				) 
+	init:function(){
+		/*call StorageList 
+		,asking for all Storage-entries past client-side-value lastModifies //depricated::check if     firstTime-run, if so, then load application 
+			( files( html(,,,) , css(,,,) 
+				, js(sys.js 
+					, app.js(db)
+					, each screen 
+					, each component
+					) 
+				)
+			 ,db(projectsList , proj/bld/flr , not sheets)
+			 ,uploads,users
 			)
-		 ,db(projectsList , proj/bld/flr , not sheets)
-		 ,uploads,users
-		)
-	check storage howMuch up-to-date lastModified
-		prepare the list of lastModified entities
-			files
-			db
-	*/
+		check storage howMuch up-to-date lastModified
+			prepare the list of lastModified entities
+				files
+				db
+		*/
 
-	/*files:
-	eu059s.file.login.html	// todo:include all login dependencies
-	eu059s.file.main.html
-	eu059s.file.main.css
-	eu059s.file.sheet.html
-	eu059s.file.
+		/*files:
+		eu059s.file.login.html	// todo:include all login dependencies
+		eu059s.file.main.html
+		eu059s.file.main.css
+		eu059s.file.sheet.html
+		eu059s.file.
 
-	*/
-	sys.bootStrap.introspection.init()
+		*/
+		sys.bootStrap.introspection.init()
 	}//init
 
 	,introspection:{
@@ -696,39 +704,82 @@ lastModified based synchronisation between client-LocalStorage and server-DB
 		]
 		*/if(!a)a=[['Storage.C.no' , 'Storage.C.path' , 'Storage.C.contentType' , 'Storage.C.lastModified','Storage.C.data']]
 		if(!p)p=document.body
-		sys.dce('h1',p,'sys.bootStrap.introspection.storageEntriesTable')
+		var ttl='sys.bootStrap.introspection.storageEntriesTable';sys.dce('h1',p,ttl)
 		var h=a.splice(0,1)[0],b=
-			[	{	t:'Reload all Storage entries'
-					,req:{	'op':sys.Op.StorageList
-						,onload:sys.bootStrap.introspection.init
-					}
+		[	{	t:'Reload all Storage entries'
+				,req:{	'op':sys.Op.StorageList
+					,onload: //sys.bootStrap.introspection.init
+					function(){console.log(ttl,'Reload all Storage entries','xhr-onload',arguments);}
 				}
-				,{	t:'New Storage entry'
-					,c:function(){var req=
-						{'op':sys.Op.StorageNew
-							,onload:function(){
-								console.log('Op.StorageNew:xhr.onload-ok',arguments
-									,'TODO:need to implement js-onxhr-ok for gui/dom '
-								);
-								
-							}
+			}
+			,{	t:'New Storage entry'
+				,c:function(){
+					var sc=sys.dbSchema.storage
+					,formH=[{t:sc[0].name,readonly:true}
+						,sc[1]
+						,[sc[2].name,sc[2].type]
+						,sc[3],sc[4]]
+					form=sys.bldForm(
+						{	h:formH
+						 ,a:[5
+							,'testPath'
+							,'text/plain'
+							,1000
+							,'x'
+							]
 						}
-						var path=sys.bldModal({})
+						,
+						div=sys.bldModal({n:'h1',t:'New Storage Entry Form'},document.body)
+					)// form=sys.bldForm
+					sys.dcb(div,'Create new entry',function(){
+						var reqData=form.getJson();reqData.op=sys.Op.StorageNew
+						var req=
+						{data:reqData,responseType:'json',
+							onload:function(rsp,x){
+								console.log('Op.StorageNew:xhr.onload',arguments
+									,'TODO:need to implement js-onxhr-ok for gui/dom '
+								);//console.log
+								var tb,tbl=sys.bootStrap.introspection.storageEntriesTable
+								if(!tbl)
+									return;
+								tb=(tbl.tBodies[0]||tbl.createTBody())//if(!tb)return;
+								var tr=tb.insertRow(),x=rsp['return'];
+								//five columns:no,path, contentType, lastModified, data
+								for(var i in formH)
+								{var td=tr.insertCell();
+									sys.bld(reqData[formH[i].name],td);
+								}
+							},
+							onprogress:function(e){
+								console.log('Op.StorageNew:xhr.onprogress',arguments
+									,'TODO:need to implement js-onxhr for gui/dom '
+									,e.loaded,e.total,Math.round(100*e.loaded/e.total),'%'
+								);//console.log
+							},
+							onerror:function(){
+								console.log('Op.StorageNew:xhr.onerror',arguments
+									,'TODO:need to implement js-onxhr for gui/dom '
+								);//console.log
+							}
+						}//req
 						sys.xhr(req)
-					}
-				}
-			]
-		b.map(function(o,i){if(o.req)sys.dcbx(p,o.t,o.req);sys.dcb(p,o.t,o.req);})
+					 }//function onclick:button:'Create new entry'
+					)//dcb
+					//sys.xhr(req)
+				}//function onlick
+			}//button:new Entry
+		]//array b
+		b.map(function(o,i){if(o.req)sys.dcbx(p,o.t,o.req);else sys.dcb(p,o.t,o.c);})
 		sys.bootStrap.introspection.storageEntriesTable=sys.bldTbl(
 			{	c:a
-				,headings:h[0]
+				,headings:h
 				//,onDoneRow:function(tr,rObj,rIx,bObj)
 				,onDoneCell:function(td,cellObj,rowIx,cellIx,rObj,bObj)
 				{var obj={td:td,cellObj:cellObj,cellIx:cellIx,rowObj:rObj,rowIx:rowIx,tbodyParam:bObj}
 				,str='sys.bootStrap.introspection.init.bldTbl.cell:Storage.C.'
 				// console.log('sys.bootStrap.introspection.init.bldTbl.onDoneCell:td,cellObj,rowIx,cellIx,rObj,bObj:',obj)
 					if(cellIx==0){//Storage.C.no //primary-key
-						sys.dcb(td,'delete',null,function(){
+						sys.dcb(td,'delete',function(){
 							console.log(str,'no:td.onclick:',obj)
 							if(confirm('Please confirm deletion of:',obj)){
 								console.log(str,'no:td.onclick:confirmed delete',obj)
@@ -736,7 +787,7 @@ lastModified based synchronisation between client-LocalStorage and server-DB
 							}
 						})
 					}else if(cellIx==1){//Storage.C.path
-						sys.dcb(td,'rename-path',null,function(){
+						sys.dcb(td,'rename-path',function(){
 							var x=prompt('Please enter new path:',obj.cellObj[1]);//console.log(str,'path:td.onclick:',obj)
 							if(x){
 								console.log(str,'path:td.onclick:confirmed rename:',x,obj)
@@ -744,11 +795,11 @@ lastModified based synchronisation between client-LocalStorage and server-DB
 							}
 						})
 					}else if(cellIx==2){//Storage.C.contentType
-						sys.dcb(td,'change-contentType(drop-down-select)',null,function(){
+						sys.dcb(td,'change-contentType(drop-down-select)',function(){
 							console.log(str,'contentType:td.onclick:',obj)
 						})
 					}else if(cellIx==3){//Storage.C.lastModified
-						sys.dcb(td,'load-data/reload',null,function(){
+						sys.dcb(td,'load-data/reload',function(){
 							console.log(str,'lastModified:td.onclick:',obj)
 						})
 					}
@@ -835,7 +886,20 @@ lastModified based synchronisation between client-LocalStorage and server-DB
 	}//props 
 	}//introspection
 }//bootStrap
-
+,dbSchema:{//server-side database tables
+	storage:[//columns
+		 {name:'no',type:'integer'}
+		,{name:'path',type:'text'}
+		,{name:'contentType',type:['text/plain','text/html'
+			,'text/json','text/javascript','image/png','text/css']}
+		,{name:'lastModified',type:'date-time'}
+		,{name:'data',type:'textarea'}
+	  ]//dbTbl storage
+	,project:[]
+	,building:[]
+	,floor:[]
+	,sheet:[]
+}//dbSchema
 ,storageLib:{//methods for LocalStorage , and sync-ing with server
 
 	files:{//css + html + js
@@ -892,4 +956,4 @@ lastModified based synchronisation between client-LocalStorage and server-DB
 
 console.log('sys.js loaded.');
 
-sys.bootStrap.init()
+window.onload=sys.bootStrap.init
