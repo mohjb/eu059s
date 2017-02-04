@@ -529,7 +529,7 @@ public static class TL {
 			t.r(context.DB.reqCon.str,r);
 			Object[]a={d,r,ss};
 			return a;}
-		
+
 		/**returns a jdbc-PreparedStatement, setting the variable-length-arguments parameters-p, calls dbP()*/
 		public static PreparedStatement p(String sql,Object...p)throws SQLException{return P(sql,p);}
 
@@ -2174,13 +2174,13 @@ public static class TL {
 			try{return p.get(this);}
 			catch (Exception ex) {//IllegalArgumentException,IllegalAccessException
 				tl().error(ex,"TL.Form.v(",this,",",p,")");return null;}}
-		
-		
+
+
 		/**Field annotation to designate a java member for use in a Html-Form-field/parameter*/
 		@java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
 		public @interface F{	boolean prmPw() default false;boolean json() default false; }
-		
-		
+
+
 		/**Interface for enum-items from different forms and sql-tables ,
 		 * the enum items represent a reference Column Fields for identifing the column and selection.*/
 		public interface FI{//<T>
@@ -2195,8 +2195,8 @@ public static class TL {
 		}//interface I
 
 	}//public abstract static class Form
-	
-	
+
+
 	public Json.Output o(Object...a)throws IOException{if(out!=null&&out.w!=null)for(Object s:a)out.w.write(s instanceof String?(String)s:String.valueOf(s));return out;}
 
 	public static class Json
@@ -2725,7 +2725,7 @@ public static class TL {
 
 }//class TL //TL tl=null;try{tl=TL.Enter(request,out);
 
-//public class AppEU059S 
+//public class AppEU059S
 	enum Prm{screen(Screen.class),op(Op.class)
 		,projNo(Integer.class)
 		,buildingNo(Integer.class)
@@ -4131,7 +4131,7 @@ CREATE TABLE `Storage` (
 			r.add(i.next());}}}
 
  ,StorageGet{@Override void doOp(AppEU059S a,Map prms){
-	try{a.storage.readReq("");a.storage.load();prms.put("return",a);} catch (Exception e) {
+	try{a.storage.readReq("");a.storage.load();prms.put("return",a.storage);} catch (Exception e) {
 		a.tl.error(e,"AppEU059S.Op.StorageGet");}}}
 
  ,StorageContent{@Override void doOp(AppEU059S a,Map prms){
@@ -4157,14 +4157,13 @@ CREATE TABLE `Storage` (
 		a.tl.error(e,"AppEU059S.Op.get");}}}*/
 
  ,StorageSet{@Override void doOp(AppEU059S a,Map prms) {
-	try{a.storage.readReq_save();} catch (Exception e) {
+	try{a.storage.readReq_save();prms.put("return",true);} catch (Exception e) {
 		a.tl.error(e,"AppEU059S.Op.StorageSet");}}}
 
  ,StorageNew{@Override void doOp(AppEU059S a,Map prms) {
-	try{a.storage.no=a.storage.maxPlus1(Storage.C.no);
-	prms.put("return",a.storage.no);
-	a.storage.readReq("");
-	a.storage.save();} catch (Exception e) {
+	try{int no=a.storage.no=a.storage.maxPlus1(Storage.C.no);
+	prms.put("return",no);
+	a.storage.readReq_save();} catch (Exception e) {
 		a.tl.error(e,"AppEU059S.Op.StorageNew");}}}
  //,StorageDelete,StorageSyncOffline{@Override void doOp(TL tl,Map prms){}}
  ;
