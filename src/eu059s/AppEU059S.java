@@ -3631,13 +3631,15 @@ public static class TL {
 		out.write("</body></html>");
 	}//jspOld
 */
-	public static void jsp(HttpServletRequest request
+
+ public static void jsp(HttpServletRequest request
 	,HttpServletResponse response
 	,javax.servlet.http.HttpSession session
 	,JspWriter out
 	,javax.servlet.jsp.PageContext pageContext)
-	throws IOException, javax.servlet.ServletException
-	{TL tl=null;try{tl=TL.Enter(request,response,session,out,pageContext);
+	throws IOException, javax.servlet.ServletException{
+	TL tl=null;try
+	{tl=TL.Enter(request,response,session,out,pageContext);
 		tl.r("contentType","text/json");
 		tl.logOut=tl.var("logOut",false);
 		Op op=tl.req(Prm.op.toString(),Op.none);
@@ -3957,8 +3959,9 @@ CREATE TABLE `Storage` (
 
  enum Op{
 	 /**none is equivelant to bootstrapping the web-application system to Storage:key=app*/
- none{@Override void doOp(AppEU059S a,Map prms){
+ none{@Override void doOp(AppEU059S a,Map prms){//TODO: after the development stage of bootstrapping , change the respond to get from dbTbl-storage the js code path: "eu059s.bootStrap" ::= raw minimal js code to load LocalStorage "eu059s.BootStrap" and execute or do a xhr of xhr-op:eu059s.BootStrap
 	a.respond("text/html","<html><head><script src=\"sys.js\"></script></head><body></body></html>");}}
+
  ,login{@Override void doOp(AppEU059S a,Map prms){try{
 	TL.DB.Tbl.Usr u=TL.DB.Tbl.Usr.login();TL tl=a.tl;
 	if(u!=null){u.onLogin();
@@ -3972,11 +3975,15 @@ CREATE TABLE `Storage` (
 			, TL.DB.Tbl.Log.Act.Log
 			,TL.Util.mapCreate(
 				"msg","incorrect login"
-				,"request",tl.req));}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.login:");}}}
+				,"request",tl.req));}catch(Exception ex){
+					a.tl.error(ex,"AppEU059S.Op.login:");}}}
+
  ,logout{@Override void doOp(AppEU059S a,Map prms)
 	{try{TL.DB.Tbl.Log.log(TL.DB.Tbl.Log.Entity.usr, a.tl.usr.uid,TL.
 		DB.Tbl.Log.Act.Logout,TL.Util.mapCreate("usr",a.tl.usr));
-		a.tl.ssn.onLogout();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.logout:");}}}
+		a.tl.ssn.onLogout();}catch(Exception ex){
+			a.tl.error(ex,"AppEU059S.Op.logout:");}}}
+
  ,newProject{@Override void doOp(AppEU059S a,Map prms){
 	a.proj.no=null;//TL.DB.q1int("select max(`no`)+1 from projects;", 1);
 	a.proj.json=TL.Util.mapCreate("title","Project "+a.tl.now
@@ -4121,11 +4128,16 @@ CREATE TABLE `Storage` (
 
  ,StorageList{@Override void doOp(AppEU059S a,Map prms){
 	Storage.C[]x={Storage.C.no,Storage.C.path,Storage.C.contentType,Storage.C.lastModified};
+	a.storage.readReq("");
 	StringBuilder sql=new StringBuilder("select ");
-	TL.DB.Tbl.Cols.generate(sql,x).append(" from ").append(Storage.dbtName);
+	TL.DB.Tbl.Cols.generate(sql,x)
+		.append(" from ").append(Storage.dbtName)
+		.append(" where `").append(Storage.C.lastModified).append("`>?");
 	List<Object>l=TL.Util.lst(x),r;
+
 	a.tl.response.put("return",l);
-	for (TL.DB.ItTbl.ItRow i:TL.DB.ItTbl.it(sql.toString())) {
+	for (TL.DB.ItTbl.ItRow i:TL.DB.ItTbl.it( sql.toString()
+		,a.storage.lastModified)) {
 		l.add(r=TL.Util.lst());
 		for (Storage.C c:x)
 			r.add(i.next());}}}
@@ -4165,7 +4177,13 @@ CREATE TABLE `Storage` (
 	prms.put("return",no);
 	a.storage.readReq_save();} catch (Exception e) {
 		a.tl.error(e,"AppEU059S.Op.StorageNew");}}}
- //,StorageDelete,StorageSyncOffline{@Override void doOp(TL tl,Map prms){}}
+
+ ,StorageDelete{@Override void doOp(AppEU059S a,Map prms) {
+	try{a.storage.readReq("");
+	prms.put("return",a.storage.delete());} catch (Exception e) {
+		a.tl.error(e,"AppEU059S.Op.StorageDelete");}}}
+
+ //,StorageSyncOffline{@Override void doOp(TL tl,Map prms){}}
  ;
  void doOp(AppEU059S a,Map params){params.put("msg","op not implemented");}
  }//enum Op

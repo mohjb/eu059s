@@ -33,25 +33,25 @@ did:function sys_did(id,n){if(!n)return document.getElementById(id);
  	s:(optional) object , where properties are set into the created-node's style
  	a:(optional) object , where properties are set into the created-node's properties and attributes
  	c:(optional) array
- 		, recursive function call to this bld function 
+ 		, recursive function call to this bld function
  		, but with items of c as the param and this node as a parent
  		, Hence The POWER of this bld-function
 
- when params.n is "select" or "table", the internal implementation uses the functions bldSlct or bldTbl 
+ when params.n is "select" or "table", the internal implementation uses the functions bldSlct or bldTbl
  when params.n is "bldForm" or "bldModal" or "bldDataGrid", the named-function is called on params
- 
- 
- BuildDomTree params::= id 
-	,n:nodeName 
-	,t:text 
-	,clk:onclick-function 
-	,chng:onchange-function 
-	,a:jsobj-attributes 
-	,c:jsarray-children-recursive-params 
-	,s:jsobj-style 
+
+
+ BuildDomTree params::= id
+	,n:nodeName
+	,t:text
+	,clk:onclick-function
+	,chng:onchange-function
+	,a:jsobj-attributes
+	,c:jsarray-children-recursive-params
+	,s:jsobj-style
 	,(depricated)clpsbl:string-title:collapsable
-	
-	; or params canbe string, or array:call bldTbl 
+
+	; or params canbe string, or array:call bldTbl
 	; parent: domElement */
 bld:function sys_bld(params,parent){
  var t=sys;try{if(typeof(params)=='string')return t.dct(params,parent);
@@ -69,19 +69,19 @@ bld:function sys_bld(params,parent){
 		else for(var i=0;i<p.c.length;i++)
 		 if(typeof(p.c[i])=='string')//t.dct(p.c[i],n);
 			n.appendChild(document.createTextNode(p.c[i]));
-		else 
+		else
 			t.bld(p.c[i],n);
 	}
-	//if(p.clpsbl)n=t.createCollapsable(p.clpsbl,parent,p.id,n);else 
+	//if(p.clpsbl)n=t.createCollapsable(p.clpsbl,parent,p.id,n);else
 	if(parent)parent.appendChild(n);
 	}catch(ex){console.error('sys.bld:ex',ex);}return n;
 }//function bld
 
 ,/** params: same as bld.params
 		.columnsHidden integer count of the first columns that should not generate html
-		, .c  2 dimensional array of elements ,this method will nest each elem in a TD 
+		, .c  2 dimensional array of elements ,this method will nest each elem in a TD
 			, and the elem is same as bld.params,recursive
-		, .headings 1dim array , this method nests each elem in a TH, and the elem is same as bld.params 
+		, .headings 1dim array , this method nests each elem in a TH, and the elem is same as bld.params
 		, .footer ,same as headings ,but for footer of table
 		, onDoneCell : func called when td/th done ,args to func:td/th , paramObj-for-cell , rowIndex , cellIndex , paramObj-for-row , paramObj-for-body
 		, onDoneRow  : func called when tr done  ,args to func:tr , paramObj-for-row , rowIndex , paramObj-for-body
@@ -140,7 +140,7 @@ bld:function sys_bld(params,parent){
 		, if pr is not select, then a child select is created
 	params.select:the selected optional
 	params.c:array of options in select
-		each item in array-c can be a string 
+		each item in array-c can be a string
 		or an object with (two properties:text and value )*/
 bldSlct:function sys_BuildSelect(params,pr){
 	var i,n,t,v,found=0
@@ -171,11 +171,11 @@ params:(obj)
 	,form:optional:to call bldForm contained in this modal
 	,title:str(optional)
 	,btns:{close:<str:(default:'Close') or if null then wont show 'close'-btn>
-		,<key:str:button-title> : <return value when clicked, 
+		,<key:str:button-title> : <return value when clicked,
 			or func that is called when btn is clicked(args:btn,key,modalDialog,paramObj) >
 		,,,
-	}//btns	
-	
+	}//btns
+
 	example:
 	div=sys.bldModal({n:'p',c:[{n:'h1',t:'Modal Dialog'},'inp:',{n:'select',selected:3,c:[8,5,3,'yea','joe']}]},document.body)
 	*/
@@ -196,15 +196,15 @@ bldModal:function(params,pr){
 	a:1d-array of field values
 	clss:(defaults to 'data')className used for input or select or textarea
 	depricated:orientation:(h or v ,default v, v:vertical , h:horizontal )
-	modules:int for number of fields per column,not implemented, two approaches, 
-		1:(default) going down a column then next column 
+	modules:int for number of fields per column,not implemented, two approaches,
+		1:(default) going down a column then next column
 		2: going horizontally then next row
 	btns:array for buttons, not implemented yet
 
  returns params with added props:
 	dataNodes:obj : prop-key field-name, prop-value is data-element(input or select or textarea)
 	getJson:func returns as json-obj values in the dataNodes
-	
+
  example:
  x=sys.bldForm(
 	{	h:[
@@ -230,7 +230,7 @@ bldModal:function(params,pr){
   ,
   div=sys.bldModal({n:'h1',t:'Modal Dialog &amp; bldForm'},document.body)
   )
-	
+
 */
 bldForm:function(params,pr){
 	if(!params||!params.h||!params.a)
@@ -300,7 +300,7 @@ bldForm:function(params,pr){
 			else if(x.type=='checkbox'||x.type=='radio')
 			{if(x.checked||x.selected)
 				r[x.name]=x.value;}
-			else 
+			else
 				r[x.name]=x.value;
 		}return r;}
 	p.getJson.p=p
@@ -308,15 +308,15 @@ bldForm:function(params,pr){
 }//bldForm
 
 ,/**primary key is the first column, url of json crud,
-	url params:datagrid=<tbl-name> 
-		& <optional:limit> 
-		& <optional:cursor=<refInt>> 
+	url params:datagrid=<tbl-name>
+		& <optional:limit>
+		& <optional:cursor=<refInt>>
 		& op=query , update , insert , delete
 			query :cols(seq of col-names),where(seq of key-value pairs)
 			update:cols(seq of key-value pairs), where(seq of key-value pairs)
 			insert:cols(seq of key-value pairs)
 			delete:where(seq of key-value pairs)
-			
+
  build a table that has event handlers along with xhr
  */
  bldDataGrid:function sys_BuildDataGrid(url,pr){
@@ -362,7 +362,7 @@ fset:function sys_fset(ttl,a,args){
 		}
 		return r;
 	}//copy
-	,isPrimitive:function primitive(v,t){if(!t)t=typeof(v);return 
+	,isPrimitive:function primitive(v,t){if(!t)t=typeof(v);return
 		v==null||v==undefined||t=='string'||t=='number'||t=='boolean';}
 	,extend:function(dst,src){
 		for(var i in src)
@@ -377,7 +377,7 @@ fset:function sys_fset(ttl,a,args){
  *	data: body data of the xhr request sent to the server ,default null, if not string then will be JSON.stringify(data)
  *	headers: json-object of name/value , set as request headers, defaults to null
  *	responseType:(optional)  "arraybuffer", "blob", "document", "json", or "text" , xhr defaults to "text"
- *	onload: reference to a function that is called in asynchronous mode 
+ *	onload: reference to a function that is called in asynchronous mode
 		(defaults to null which is synchronise mode), when the server successfully responds, the func is given as a param the xhr obj and second param p
  *	onprogress: reference to a function that is called in asynchronous mode (defaults to null )
 		, when the server successfully responds
@@ -390,8 +390,8 @@ fset:function sys_fset(ttl,a,args){
 			// Unable to compute progress information since the total size is unknown
 		  }
 		}
- 
- *	onerror: reference to a function that is called in asynchronous mode 
+
+ *	onerror: reference to a function that is called in asynchronous mode
 		(defaults to null which is synchronise mode), when the server or xhr fails
  *	method: string , POST, GET, defaults to POST
  *	url: the url of xhr , defaults to empty string
@@ -436,7 +436,7 @@ xhr:function sys_xhr(p){
 			if(x[i]==o)
 				console.log('inLoop',o);
  }}
- ,props:function(o,stack){ 
+ ,props:function(o,stack){
 	var classNames=[
 	'CSSStyleRule'
 	,'CSSImportRule'
@@ -495,7 +495,7 @@ xhr:function sys_xhr(p){
 	,n=sys.toJsonBld.isInStack(o,stack);
 	if(n)return n;stk.push(sf)
 	x=o.cssText;if(x!=undefined&&x!='')
-		a.t=x// this is a string that has packed 
+		a.t=x// this is a string that has packed
 	//selectorText and braces encompassing o.style.cssText
 	for(var i=0,k;i<n;i++)
 	{k=o[i]
@@ -526,7 +526,7 @@ dom2json:function dom2json(n,meta,stack){
 		  for(var i in a){
 			z=a[i].split(':');m=z[0];v=z[1];
 			if( m && m.trim) m=m.trim();
-			if( v && v.trim) v=v.trim();			
+			if( v && v.trim) v=v.trim();
 			if(v!=undefined && (v.length==undefined || v.length>0))//&& (!v.trim || v.trim()))
 				r.s[m]=v;
 	}}}
@@ -559,10 +559,10 @@ dom2json:function dom2json(n,meta,stack){
 		if(!meta.href)meta.href=[];meta.href.push(sf)
 		console.log('stackFrame:href:stackFrame=',sf,',meta=',meta,',stack=',stk,',currentObj=',r,n);
 	}
-		
+
 	x=n.firstChild;
 	if(x&&!x.nextSibling&&x.nodeType==Node.TEXT_NODE)
-	{var v=x.value||x.data;if(v.trim())	
+	{var v=x.value||x.data;if(v.trim())
 		r.t=v;}
 	else if(x )//&& x.nodeName!='SCRIPT')
 	{r.c=[];while(x)
@@ -595,7 +595,7 @@ dom2json:function dom2json(n,meta,stack){
 		css
 		Html
 			login
-				
+
 			enum Screen
 				ProjectsList
 				,ProjectScreen
@@ -608,7 +608,7 @@ dom2json:function dom2json(n,meta,stack){
 				,LogMenu
 				,ConfigMenu
 				,Search
-			
+
 		js
 
 	dbTables
@@ -626,7 +626,7 @@ Screens
 	ProjectsList
 		Buildings
 	Buildings
-	Floor	
+	Floor
 	UsersList
 	Config
 	Report
@@ -651,14 +651,14 @@ lastModified based synchronisation between client-LocalStorage and server-DB
 
 ,bootStrap:{
 	init:function(){
-		/*call StorageList 
-		,asking for all Storage-entries past client-side-value lastModifies //depricated::check if     firstTime-run, if so, then load application 
-			( files( html(,,,) , css(,,,) 
-				, js(sys.js 
+		/*call StorageList
+		,asking for all Storage-entries past client-side-value lastModifies //depricated::check if     firstTime-run, if so, then load application
+			( files( html(,,,) , css(,,,)
+				, js(sys.js
 					, app.js(db)
-					, each screen 
+					, each screen
 					, each component
-					) 
+					)
 				)
 			 ,db(projectsList , proj/bld/flr , not sheets)
 			 ,uploads,users
@@ -766,7 +766,7 @@ lastModified based synchronisation between client-LocalStorage and server-DB
 					 }//function onclick:button:'Create new entry'
 					)//dcb
 					//sys.xhr(req)
-				}//function onlick
+				}//function onclick
 			}//button:new Entry
 		]//array b
 		b.map(function(o,i){if(o.req)sys.dcbx(p,o.t,o.req);else sys.dcb(p,o.t,o.c);})
@@ -839,8 +839,8 @@ lastModified based synchronisation between client-LocalStorage and server-DB
 							}
 						}
 						,{	t:'change-contentType'/*drop-down-select:
-								plain-text 
-								, wysiwyg-html 
+								plain-text
+								, wysiwyg-html
 								, img upload/drag-n-drop
 								, css introspection
 								, json tree* /,param:obj,clk:function(){t:''
@@ -880,10 +880,10 @@ lastModified based synchronisation between client-LocalStorage and server-DB
 	,props:{//json-props introspection (build gui/dom) , basically used with jsonRef=0
 		init:function(o,p){
 			/*
-			
+
 			*/
 		}//props.init
-	}//props 
+	}//props
 	}//introspection
 }//bootStrap
 ,dbSchema:{//server-side database tables
@@ -913,7 +913,7 @@ lastModified based synchronisation between client-LocalStorage and server-DB
 
 ,Op:{//client facade reflection of server-Op,
  getAppBootStrap:function(){//, includes screens( jsonBld of html +css) and js app-lib
-	
+
 	}//getAppBootStrap:function
  ,login:function(){}
  ,logout:function(){}
@@ -924,9 +924,9 @@ lastModified based synchronisation between client-LocalStorage and server-DB
  ,StorageImg:'StorageImg'
  ,StorageSet:'StorageSet'
  ,StorageNew:'StorageNew'
- 
+
  /*,StorageDelete:'StorageDelete',StorageSyncOffline:'StorageSyncOffline'
- 
+
  ,getDbProjBdlngFlr:function(){}  //,each project is loaded seperatly (packaged with proj are all buildings and Floors)
  ,getDbSheets:function(){}	//sheets are loaded seperatly based on each dbTblFloor //must pageanate 1MBytes
  ,getSheetUploadsInfo:function(){}//info like lastModified , as for the content, just use http-get to get the content
