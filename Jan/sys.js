@@ -895,10 +895,30 @@ lastModified based synchronisation between client-LocalStorage and server-DB
 		,{name:'lastModified',type:'date-time'}
 		,{name:'data',type:'textarea'}
 	  ]//dbTbl storage
-	,project:[]
-	,building:[]
-	,floor:[]
-	,sheet:[]
+	,project:[
+		{name:'no',type:'Integer'}
+		,{name:'json',type:'json'}
+	]//dbTbl Project
+	,building:[
+		{name:'no',type:'Integer'}
+		,{name:'p',type:'Integer'}
+		,{name:'json',type:'json'}
+	]//dbTbl Building
+	,floor:[
+		{name:'no',type:'Integer'}
+		,{name:'p',type:'Integer'}
+		,{name:'b',type:'Integer'}
+		,{name:'json',type:'json'}
+	]//dbTbl Floor
+	,sheet:[
+		{name:'no',type:'Integer'}
+		,{name:'p',type:'Integer'}
+		,{name:'b',type:'Integer'}
+		,{name:'f',type:'Integer'}
+		,{name:'u',type:'Integer'}
+		,{name:'dt',type:'date-time'}
+		,{name:'json',type:'json'}
+	]//dbTbl Sheet
 }//dbSchema
 ,storageLib:{//methods for LocalStorage , and sync-ing with server
 
