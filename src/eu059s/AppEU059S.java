@@ -52,10 +52,10 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 public class AppEU059S {//
 public static class TL {
 	enum context{ROOT(
-					  "/public_html/i1io/EU059S/"
-					  ,"D:\\apache-tomcat-8.0.15\\webapps\\ROOT/"
-					  ,"/Users/moh/Google Drive/air/apache-tomcat-8.0.30/webapps/ROOT/"
-					  );
+		"/public_html/i1io/EU059S/"
+		,"D:\\apache-tomcat-8.0.15\\webapps\\ROOT/"
+		,"/Users/moh/Google Drive/air/apache-tomcat-8.0.30/webapps/ROOT/"
+		);
 		String str,a[];context(String...p){str=p[0];a=p;}
 		enum DB{
 			pool("dbpool-eu059s")
@@ -94,7 +94,7 @@ public static class TL {
 						return i;i--;
 				}
 			}catch(Exception ex){
-				t.error(ex,"AppEU059S.TL.context.getContextIndex:",path);}
+				t.error(ex,"AppEU059S.TL.context.getContextIndex:");}
 			return -1;}
 		//***/static Map<DB,String> getContextPack(TL t,List<Map<DB,String>>a){return null;}
 	}//context
@@ -130,10 +130,7 @@ public static class TL {
 	public ServletContext getServletContext(){return session.getServletContext();}//srvlt.getServletContext();
 	/**sets a new TL-instance to the localThread*/
 
-	//public static TL Enter(GenericServlet s,HttpServletRequest r,HttpServletResponse n,PrintWriter o)throws IOException{TL p;tl.set(p=new TL(s,r,n,o));p.onEnter();return p;}
-	//public static TL Enter(ServletContext p)throws IOException {TL t;tl.set(t=new TL(p.	,p.getOut()));t.onEnter();return t;}
-
-	public static TL Enter(//HttpServletRequest r,HttpServletResponse s,Writer o
+	public static TL Enter(
 	HttpServletRequest r
 	 ,HttpServletResponse response
 	 ,javax.servlet.http.HttpSession session
@@ -157,7 +154,7 @@ public static class TL {
 			:o.toString().contains("part")?getMultiParts():null;
 			json=o instanceof Map<?, ?>?(Map<String, Object>)o:null;//req.getParameterMap() ;
 			response=TL.Util.mapCreate(//"msg",0 ,
-									   "return",false , "op",req("op"),"req",o);
+				"return",false , "op",req("op"),"req",o);
 			DB.Tbl.Ssn.onEnter();
 		}catch(Exception ex){error(ex,"TL.onEnter");}
 		//if(pages==null){rsp.setHeader("Retry-After", "60");rsp.sendError(503,"pages null");throw new Exception("pages null");}
@@ -220,11 +217,11 @@ public static class TL {
 								f=new File(uploadDir,(count++)+'.'+nm);
 							//String path=pth+f.getCanonicalPath().substring(real.length());
 							m.put(fieldNm,Util.mapCreate(//"name",fieldNm,
-														 "contentType",ct,"size",sz
-														 ,"fileName",path+f.getName()
-														 //,"isInMemory",mem//,"isFormField",fld
-														 //,"data",item.get()//byt[](sz,item.getInputStream())
-														 ));
+								"contentType",ct,"size",sz
+								,"fileName",path+f.getName()
+								//,"isInMemory",mem//,"isFormField",fld
+								//,"data",item.get()//byt[](sz,item.getInputStream())
+								));
 							item.write(f);
 						}//if sz > 0
 					}//if isField else
@@ -234,7 +231,7 @@ public static class TL {
 			error(ex,"TL.getMultiParts");}
 		//if(ServletFileUpload.isMultipartContent(req))
 		return m;
-	}
+	}//Map getMultiParts()
 
 	public static class Util{//utility methods
 
@@ -438,7 +435,7 @@ public static class TL {
 				if(logOut){out.flush().
 					w(comments[0]//"\n/*"
 					  ).w(s).w(comments[1]//"*/\n"
-							   );}}catch(Exception ex){ex.printStackTrace();}return s;}
+						);}}catch(Exception ex){ex.printStackTrace();}return s;}
 
 	/**calls the servlet log method*/
 	public void log(Object...s){logA(s);}
@@ -454,9 +451,9 @@ public static class TL {
 		String s=jo().clrSW().w("error:").o(p,x).toString();
 		getServletContext().log(s);
 		if(logOut)out.w(comments[0]//"\n/*
-						).w("error:").w(s.replaceAll("<", "&lt;"))
+			).w("error:").w(s.replaceAll("<", "&lt;"))
 			.w("\n---\n").o(x).w(comments[1]//"*/\n"
-								 );if(x!=null)x.printStackTrace();}
+			);if(x!=null)x.printStackTrace();}
 		catch(Exception ex){ex.printStackTrace();}}
 
 	/**get a pooled jdbc-connection for the current Thread, calling the function dbc()*/
@@ -524,7 +521,7 @@ public static class TL {
 			d.setUser(s);
 			s=context.DB.pw.a[Math.min(context.DB.pw.a.length-1,ipw)];if(t.logOut)ss+="\npw:"+s;
 			d.setPassword(s);
-			r=d.getPooledConnection().getConnection();
+			Connection r=d.getPooledConnection().getConnection();
 			t.a(context.DB.pool.str,d);
 			t.r(context.DB.reqCon.str,r);
 			Object[]a={d,r,ss};
@@ -601,7 +598,7 @@ public static class TL {
 		/**returns an integer or df, which the result of executing sql,
 		 calls dpR() to set the variable-length-arguments parameters-p*/
 		public static int q1int(String sql,int df,Object
-								...p)throws SQLException{return q1Int(sql,df,p);}
+			...p)throws SQLException{return q1Int(sql,df,p);}
 
 		public static int q1Int(String sql,int df,Object[]p)throws SQLException
 		{ResultSet s=null;try{s=R(sql,p);return s.next()?s.getInt(1):df;}finally{closeRS(s);}}//CHANGED:2015.10.23.16.06:closeRS ;
@@ -633,14 +630,14 @@ public static class TL {
 				for(int i=0;i<cc;i++){a[i]=s.getObject(i+1);
 				}}return r;}finally{closeRS(s);//CHANGED:2015.10.23.16.06:closeRS ;
 					if(t.logOut)try{t.log(t.jo().o("TL.DB.L:sql=")
-										  .o(sql).w(",prms=").o(p).w(",return=").o(r).toStrin_());}catch(IOException x){t.error(x,"TL.DB.List:",sql);}}}
+	.o(sql).w(",prms=").o(p).w(",return=").o(r).toStrin_());}catch(IOException x){t.error(x,"TL.DB.List:",sql);}}}
 
 		public static List<Object> q1colList(String sql,Object...p)throws SQLException
 		{ResultSet s=null;List<Object> r=null;try{s=R(sql,p);r=new LinkedList<Object>();
 			while(s.next())r.add(s.getObject(1));return r;}
 			finally{closeRS(s);TL t=tl();if(t.logOut)
 				try{t.log(t.jo().o("TL.DB.q1colList:sql=")//CHANGED:2015.10.23.16.06:closeRS ;
-						  .o(sql).w(",prms=").o(p).w(",return=").o(r).toStrin_());}catch(IOException x){t.error(x,"TL.DB.q1colList:",sql);}}}
+	.o(sql).w(",prms=").o(p).w(",return=").o(r).toStrin_());}catch(IOException x){t.error(x,"TL.DB.q1colList:",sql);}}}
 
 		public static Object[] q1col(String sql,Object...p)throws SQLException
 		{List<Object> l=q1colList(sql,p);Object r[]=new Object[l.size()];l.toArray(r);l.clear();return r;}
@@ -2774,13 +2771,13 @@ public static class TL {
 
 	static final String SsnNm="AppEU059S"
 	,UploadPth="/eu059sUploads/";
-	Project proj=new Project();
-	Building bld=new Building();
-	Floor flr=new Floor();
-	Sheet sheet=new Sheet();
-	Storage storage=new Storage();
-	Prm.Screen screen;
-	TL tl;
+	public Project proj=new Project();
+public Building bld=new Building();
+public Floor flr=new Floor();
+public Sheet sheet=new Sheet();
+public Storage storage=new Storage();
+public Prm.Screen screen;
+public TL tl;
 
 	public static AppEU059S app(){return app(TL.tl());}
 	public static AppEU059S app(TL tl){
@@ -2834,18 +2831,18 @@ public static class TL {
 		if(n!=sheet.no){if( n!=-1)
 		{	sheet.load(n);
 			TL.DB.Tbl.Json j=sheet.json();
-			j.json=sheet.m=j.LoadRef(j.jsonRef);
+			//j.json=sheet.m=j.LoadRef(j.jsonRef);
 			//if(sheet.f!=flr.no)flr.load(sheet.f);
 		}//else sheet.m=null;
 		}
-		if(sheet!=null && sheet.no!=null && sheet.jsonRef==null)
+		/*if(sheet!=null && sheet.no!=null && sheet.jsonRef==null)
 			sheet.jsonRef=TL.DB.q1int(
 				"select `"+Sheet.C.jsonRef
 				+"` from `"+sheet.getName()
 				+"` where `"+Sheet.C.no
 				+"`=?", -1, sheet.no);
 
-    	/*sheet=(Sheet)tl.s("sheet");
+		/*sheet=(Sheet)tl.s("sheet");
 		 if(sheet==null)
 		 {//sheet=new;
 		 sheet.no=tl.var(Prm.sheetNo.toString(),-1).intValue();
@@ -2876,7 +2873,7 @@ public static class TL {
 	String title(TL.DB.Tbl t){Map j=getJ(t);
 		Object ttl=j==null?null:j.get("title");
 		String r=ttl==null?"title"+t:ttl.toString();
-        return r;}
+		return r;}
 
 	String author(TL.DB.Tbl t){
 		Map j=getJ(t);
@@ -2885,8 +2882,8 @@ public static class TL {
 		if(a!=null)try{author=usr(a);}
 		catch(Exception ex){tl.error(ex,"AppEU059S.author");}
 		Object authorName=author!=null && author.json!=null?author.json.get("name"):author!=null?author.un:null;
-		String r= authorName==null?"author:"+t:authorName.toString();
-        return r;}
+		String retVal= authorName==null?"author:"+t : authorName.toString();
+		return retVal;}
 
 	void authenticate(Op op) throws Exception{
 
@@ -2922,7 +2919,8 @@ public static class TL {
 			return;
 		}tl.logo("index:9");
 	}//authenticate
-/*
+
+	/*
 	void jsp01() throws IOException {
 		tl.o("<!DOCTYPE HTML>\r\n"
 			 ,"<html>\r\n"
@@ -3305,7 +3303,7 @@ public static class TL {
 				 ,"<td><a title=\"number of sheets in this building\" href=\"#\" class=\"icon fa-comment\" name=\"comment\">",TL.DB.q1int("select count(*) from sheets where b=?",-1,e.bld.no)
 				 ,"</a></td></tr>\r\n");
 		}tl.o("</table>");
-	}//jspScreenBuildingList    //jspScreenProject
+	}//jspScreenBuildingList	//jspScreenProject
 
 	void jspScreenBuilding()throws IOException, SQLException{
 		AppEU059S e=this;int serialNo=1;
@@ -3562,8 +3560,8 @@ public static class TL {
 	 ,javax.servlet.http.HttpSession session
 	 ,JspWriter out
 	 ,javax.servlet.jsp.PageContext pageContext)
-    throws IOException, javax.servlet.ServletException
-    {TL tl=null;try{tl=TL.Enter(request,out);
+	throws IOException, javax.servlet.ServletException
+	{TL tl=null;try{tl=TL.Enter(request,out);
 		Op op=tl.req(Prm.op.toString(),Op.none);tl.logo("index:1:",op);
 		response.setContentType("text/html; charset=UTF-8");
 		tl.logOut=tl.var("logOut",false);
@@ -3571,7 +3569,7 @@ public static class TL {
 		e.authenticate(op);
 		e.doOp(op);
 		int sIx=e.screen==Prm.Screen.ProjectScreen?0
-        :e.screen==Prm.Screen.BuildingScreen?1
+		:e.screen==Prm.Screen.BuildingScreen?1
 		:e.screen==Prm.Screen.FloorScreen?2
 		:e.screen==Prm.Screen.Sheet?3
 		:-1;
@@ -3615,22 +3613,22 @@ public static class TL {
 		}//! e.sheet
 		e.jsp03();
 	}
-        catch(Exception x){
-            if(tl!=null)
-                tl.error(x,"/adoqs/index.jsp:");
-            else
-                x.printStackTrace();}
-        finally{try{
-            List l=tl!=null && tl.response!=null?(
+		catch(Exception x){
+			if(tl!=null)
+				tl.error(x,"/adoqs/index.jsp:");
+			else
+				x.printStackTrace();}
+		finally{try{
+			List l=tl!=null && tl.response!=null?(
 												  List)tl.response.get(TL.DB.ItTbl.ErrorsList):null;
-            if(l!=null)//errors from TL.DB.ItTbl iterator
-                tl.o("<!--",l,"-->");
-        }catch(Exception ex){}
-            TL.Exit();
-        }
+			if(l!=null)//errors from TL.DB.ItTbl iterator
+				tl.o("<!--",l,"-->");
+		}catch(Exception ex){}
+			TL.Exit();
+		}
 		out.write("</body></html>");
 	}//jspOld
-*/
+	*/
 
  public static void jsp(HttpServletRequest request
 	,HttpServletResponse response
@@ -3808,131 +3806,130 @@ public static class TL {
 		public static final String dbtName="sheets";
 
 		@Override public String getName(){return dbtName;}//public	Ssn(){super(Name);}
-		enum Checkbox{f,on}
-		enum Radio1_2{v1,v2}
-		enum Radio1_3{v1,v2,v3}
-		enum Radio1_4{v1,v2,v3,v4}
-
+		public enum Checkbox{f,on}
+		public enum Radio1_2{v1,v2}
+		public enum Radio1_3{v1,v2,v3}
+		public enum Radio1_4{v1,v2,v3,v4}
 
 		@TL.Form.F public Integer no,p,b,f,u;
-		@TL.Form.F public Date dt,datetime;
+		@TL.Form.F public Date dt;//,datetime;
 
-		@F Checkbox TypeofMemberBeam;//on
-		@F Checkbox TypeofMemberColunm;//on
-		@F Checkbox TypeofMemberSlab;//on
-		@F Checkbox TypeofMemberStairs;//on
-		@F Checkbox TypeofMemberMansory;//on
-		@F Checkbox TypeofMemberRC;//on
-		@F Checkbox TypeofMemberFoundation;//on
-		@F Checkbox TypeofMemberOther;//on
+		@TL.Form.F public Checkbox TypeofMemberBeam
+		,TypeofMemberColunm
+,TypeofMemberSlab
+,TypeofMemberStairs
+,TypeofMemberMansory
+,TypeofMemberRC
+,TypeofMemberFoundation
+,TypeofMemberOther;//on
 		@TL.Form.F public String TypeofMemberOtherText,location;
-		@F Checkbox exposure_wetDry;//1
-		@F Checkbox exposure_chemical;//2
-		@F Checkbox exposure_erosion;//3
-		@F Checkbox exposure_elec;//4
-		@F Checkbox exposure_heat;//5
-		@F Checkbox LoadingCondition_Dead;//1
-		@F Checkbox LoadingCondition_Live;//2
-		@F Checkbox LoadingCondition_Impact;//3
-		@F Checkbox LoadingCondition_Vibration;//4
-		@F Checkbox LoadingCondition_Traffic;//5
-		@F Checkbox LoadingCondition_Seismic;//6
-		@F Checkbox LoadingCondition_Other;//7
+		@TL.Form.F public Checkbox exposure_wetDry
+,exposure_chemical
+,exposure_erosion
+,exposure_elec
+,exposure_heat
+,LoadingCondition_Dead
+,LoadingCondition_Live
+,LoadingCondition_Impact
+,LoadingCondition_Vibration
+,LoadingCondition_Traffic
+,LoadingCondition_Seismic
+,LoadingCondition_Other;//7
 		@TL.Form.F public String LoadingConditionOther;
-		@F Radio1_3 GeneralCondition;
-		@F Checkbox Distress_Cracking;//on
-		@F Checkbox Distress_Staining;//on
-		@F Checkbox Distress_Surface;//on
-		@F Checkbox Distress_Leaking;//on
-		@F Checkbox Cracking_Checking;//on
-		@F Checkbox Cracking_Craze;//on
-		@F Checkbox Cracking_D;//on----------------------------- replace the dash : -cracks // done/fixed
-		@F Checkbox Cracking_Diagnol;//on
-		@F Checkbox Cracking_Hairline;//on
-		@F Checkbox Cracking_Longitudinal;//on
-		@F Checkbox Cracking_Map;//on
-		@F Checkbox Cracking_Pattern;//on
-		@F Checkbox Cracking_Plastic;//on
-		@F Checkbox Cracking_Random;//on
-		@F Checkbox Cracking_Shrinkage;//on
-		@F Checkbox Cracking_Temperature;//on
-		@F Checkbox Cracking_Transverse;//on
-@F Double width;// steps of 0.05, minimum is 0
-@F Checkbox Leaching;//on
-@F Radio1_2 WorkingOrDormant;//2
-@F Checkbox Textural_AirVoid;//on
-@F Checkbox Textural_Blistering;//on
-@F Checkbox Textural_Bugholes;//on
-@F Checkbox Textural_ColdJoints;//on
-@F Checkbox Textural_ColdLines;//on
-@F Checkbox Textural_Discoloration;//on
-@F Checkbox Textural_Honeycomb;//on
-@F Checkbox Textural_Incrustation;//on
-@F Checkbox Textural_Laitance;//on
-@F Checkbox Textural_SandPocket;//on
-@F Checkbox Textural_SandStreak;//on
-@F Checkbox Textural_Segregation;//on
-@F Checkbox Textural_Staining;//on
-@F Checkbox Textural_Stalactite;//on
-@F Checkbox Textural_Stalagmite;//on
-@F Checkbox Textural_Stratification;//on
-@F Checkbox Distresses_Chalking;//on
-@F Checkbox Distresses_Deflection;//on
-@F Checkbox Distresses_Delamination;//on
-@F Checkbox Distresses_Distortion;//on
-@F Checkbox Distresses_Dusting;//on
-@F Checkbox Distresses_Exfoliation;//on
-@F Checkbox Distresses_Leakage;//on
-@F Checkbox Distresses_Peeling;//on
-@F Checkbox Distresses_Warping;//on
-@F Checkbox Distresses_Curling;//on
-@F Checkbox Distresses_Deformation;//on
-@F Checkbox Distresses_Disintegration;//on
-@F Checkbox Distresses_DrummyArea;//on
-@F Checkbox Distresses_Efflorescence;//on
-@F Checkbox Distresses_Exudation;//on
-@F Checkbox Distresses_MortarFlaking;//on
-@F Checkbox Distresses_Pitting;//on
-@F Checkbox JointDeficiencies;//on
-@F Checkbox Spall;//on
-@F Checkbox SealantFailure;//on
-@F Checkbox Leakage;//on
-@F Checkbox Fault;//on
-@F Checkbox Popout;//on
-@F Radio1_3 PopoutSize;//3
-@F Checkbox isScaling;//on
-@F Radio1_4 Scaling;//4
-@F Checkbox Exposed;//on
-@F Checkbox Corroded;//on
-@F Checkbox Snapped;//on
-@F Checkbox isSpall;//on
-@F Radio1_2 SpallSize;//2
+		@TL.Form.F public Radio1_3 GeneralCondition;
+		@TL.Form.F public Checkbox Distress_Cracking
+,Distress_Staining
+,Distress_Surface
+,Distress_Leaking
+,Cracking_Checking
+,Cracking_Craze
+,Cracking_D//on----------------------------- replace the dash : -cracks // done/fixed
+,Cracking_Diagnol
+,Cracking_Hairline
+,Cracking_Longitudinal
+,Cracking_Map
+,Cracking_Pattern
+,Cracking_Plastic
+,Cracking_Random
+,Cracking_Shrinkage
+,Cracking_Temperature
+,Cracking_Transverse;//on
+@TL.Form.F public Double width;// steps of 0.05, minimum is 0
+@TL.Form.F public Checkbox Leaching;//on
+@TL.Form.F public Radio1_2 WorkingOrDormant;//2
+@TL.Form.F public Checkbox Textural_AirVoid
+,Textural_Blistering
+,Textural_Bugholes
+,Textural_ColdJoints
+,Textural_ColdLines
+,Textural_Discoloration
+,Textural_Honeycomb
+,Textural_Incrustation
+,Textural_Laitance
+,Textural_SandPocket
+,Textural_SandStreak
+,Textural_Segregation
+,Textural_Staining
+,Textural_Stalactite
+,Textural_Stalagmite
+,Textural_Stratification
+,Distresses_Chalking
+,Distresses_Deflection
+,Distresses_Delamination
+,Distresses_Distortion
+,Distresses_Dusting
+,Distresses_Exfoliation
+,Distresses_Leakage
+,Distresses_Peeling
+,Distresses_Warping
+,Distresses_Curling
+,Distresses_Deformation
+,Distresses_Disintegration
+,Distresses_DrummyArea
+,Distresses_Efflorescence
+,Distresses_Exudation
+,Distresses_MortarFlaking
+,Distresses_Pitting
+,JointDeficiencies
+,Spall
+,SealantFailure
+,Leakage
+,Fault
+,Popout;//on
+public @TL.Form.F Radio1_3 PopoutSize;//3
+@TL.Form.F public Checkbox isScaling;//on
+@TL.Form.F public Radio1_4 Scaling;//4
+@TL.Form.F public Checkbox Exposed
+,Corroded
+,Snapped
+,isSpall;//on
+@TL.Form.F public Radio1_2 SpallSize;//2
 
+		@TL.Form.F(json=true) public Map json;
 
-		public Map get() {
-			if(m==null)m=TL.Util.mapCreate("title","-");
-			return m;}
+		public Map get() {//if(m==null)m=TL.Util.mapCreate("title","-");return m;
+			return null;}
 
-		public TL.DB.Tbl.Json json() {
+		public TL.DB.Tbl.Json json() {/*
 			TL.DB.Tbl.Json j=new TL.DB.Tbl.Json();
 			j.jsonRef=jsonRef;
 			j.json=get();
 			if(jsonRef==null)
 				j.jsonRef=jsonRef=TL.DB.Tbl.Json.jrn(j.json);//(Integer)j.mv().get(j.Jr);
-			return j;}
+			return j;*/return null;}
 
 		public Object get(String p) {
 			return get().get(p);}
 
-		public Map set(TL.DB.Tbl.Json p) throws Exception{
+		public Map set(TL.DB.Tbl.Json p) throws Exception{/*
 			if(p!=null){ if(jsonRef!=p.jsonRef)
 			{jsonRef=p.jsonRef;
 				save();
 			}	m=p.mv();
-			}
+			}*/
 			return get();}
 
-		public enum C implements TL.DB.Tbl.CI{no,p,b,f,u,dt,datetime
+		public enum C implements TL.DB.Tbl.CI{no,p,b,f,u,dt//,datetime
 
 			,TypeofMemberBeam,TypeofMemberColunm,TypeofMemberSlab,TypeofMemberStairs
 			,TypeofMemberMansory,TypeofMemberRC,TypeofMemberFoundation,TypeofMemberOther
@@ -3990,6 +3987,7 @@ public static class TL {
 			,Snapped
 
 			,isSpall//1_2
+			,json
 			;
 
 			@Override public Class<? extends TL.DB.Tbl>cls(){return Sheet.class;}
@@ -4010,7 +4008,10 @@ public static class TL {
 		@Override public C[]columns(){return C.values();}
 
 		@Override public List creationDBTIndices(TL tl){
-			final String cb="enum('f','on') NOT NULL DEFAULT 'f'";
+			final String cb="enum('f','on') NOT NULL DEFAULT 'f'"
+			,r1_2="enum('v1','v2') NOT NULL DEFAULT 'f'"
+			,r1_3="enum('v1','v2','v3') NOT NULL DEFAULT 'v1'"
+			,r1_4="enum('v1','v2','v3','v4') NOT NULL DEFAULT 'v1'";
 			return TL.Util.lst(
 				TL.Util.lst("int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT"//no
 ,"int(11) NOT NULL"//p
@@ -4018,7 +4019,7 @@ public static class TL {
 ,"int(11) NOT NULL"//f
 ,"int(11) NOT NULL"//u
 ,"timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP "//dt
-,"timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP "//datetime
+//,"timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP "//datetime
 ,cb//TypeofMemberBeam;
 ,cb//TypeofMemberColunm;
 ,cb//TypeofMemberSlab;
@@ -4043,7 +4044,7 @@ public static class TL {
 ,cb// LoadingCondition_Seismic;
 ,cb//LoadingCondition_Other;//7
 ,"text"// LoadingConditionOther;
-					@F Radio1_3 GeneralCondition;
+,r1_3//					@F Radio1_3 GeneralCondition;
 ,cb// Distress_Cracking;
 ,cb//Distress_Staining;
 ,cb//Distress_Surface;
@@ -4063,7 +4064,7 @@ public static class TL {
 ,cb//Cracking_Transverse;
 ,"decimal(6,2)"//			@F Double width;// steps of 0.05, minimum is 0
 ,cb//Leaching;//on
-			@F Radio1_2 WorkingOrDormant;//2
+,r1_2//			@F Radio1_2 WorkingOrDormant;//2
 ,cb//Textural_AirVoid;//on
 ,cb// Textural_Blistering;//on
 ,cb// Textural_Bugholes;//on
@@ -4103,164 +4104,110 @@ public static class TL {
 ,cb// Leakage;//on
 ,cb// Fault;//on
 ,cb// Popout;//on
-			@F Radio1_3 PopoutSize;//3
+,r1_3//			@F Radio1_3 PopoutSize;//3
 ,cb// isScaling;//on
-			@F Radio1_4 Scaling;//4
+,r1_4//			@F Radio1_4 Scaling;//4
 ,cb// Exposed;//on
 ,cb// Corroded;//on
 ,cb// Snapped;//on
 ,cb// isSpall;//on
-			@F Radio1_2 SpallSize;//2
-
+,r1_2//			@F Radio1_2 SpallSize;//2
+,"text"//json
 					),TL.Util.lst(
 	 TL.Util.lst(C.p,C.b,C.f,C.u,C.dt)
 	,TL.Util.lst(C.u,C.p,C.no,C.dt)
- ,TL.Util.lst(C.p,C.datetime
- ,C.dt),TL.Util.lst(C.p,C.TypeofMemberBeam
- ,C.dt),TL.Util.lst(C.p,C.TypeofMemberColunm
- ,C.dt),TL.Util.lst(C.p,C.TypeofMemberSlab
- ,C.dt),TL.Util.lst(C.p,C.TypeofMemberStairs
- ,C.dt),TL.Util.lst(C.p,C.TypeofMemberMansory
- ,C.dt),TL.Util.lst(C.p,C.TypeofMemberRC
- ,C.dt),TL.Util.lst(C.p,C.TypeofMemberFoundation
- ,C.dt),TL.Util.lst(C.p,C.TypeofMemberOther
- ,C.dt),TL.Util.lst(C.p,C.TypeofMemberOtherText
- ,C.dt),TL.Util.lst(C.p,C.location				//text(255)
- ,C.dt),TL.Util.lst(C.p,C.exposure_wetDry
- ,C.dt),TL.Util.lst(C.p,C.exposure_chemical
- ,C.dt),TL.Util.lst(C.p,C. exposure_erosion
- ,C.dt),TL.Util.lst(C.p,C. exposure_elec
- ,C.dt),TL.Util.lst(C.p,C.exposure_heat
- ,C.dt),TL.Util.lst(C.p,C.LoadingCondition_Dead
- ,C.dt),TL.Util.lst(C.p,C. LoadingCondition_Live
- ,C.dt),TL.Util.lst(C.p,C. LoadingCondition_Impact
- ,C.dt),TL.Util.lst(C.p,C. LoadingCondition_Vibration
- ,C.dt),TL.Util.lst(C.p,C. LoadingCondition_Traffic
- ,C.dt),TL.Util.lst(C.p,C. LoadingCondition_Seismic
- ,C.dt),TL.Util.lst(C.p,C. LoadingCondition_Other
- ,C.dt),TL.Util.lst(C.p,C. LoadingConditionOther//text(255)
- ,C.dt),TL.Util.lst(C.p,C.GeneralCondition
- ,C.dt),TL.Util.lst(C.p,C.Distress_Cracking
- ,C.dt),TL.Util.lst(C.p,C. Distress_Staining
- ,C.dt),TL.Util.lst(C.p,C. Distress_Surface
- ,C.dt),TL.Util.lst(C.p,C. Distress_Leaking
- ,C.dt),TL.Util.lst(C.p,C. Cracking_Checking
- ,C.dt),TL.Util.lst(C.p,C. Cracking_Craze
- ,C.dt),TL.Util.lst(C.p,C. Cracking_D
- ,C.dt),TL.Util.lst(C.p,C. Cracking_Diagnol
- ,C.dt),TL.Util.lst(C.p,C. Cracking_Hairline
- ,C.dt),TL.Util.lst(C.p,C. Cracking_Longitudinal
- ,C.dt),TL.Util.lst(C.p,C. Cracking_Map
- ,C.dt),TL.Util.lst(C.p,C. Cracking_Pattern
- ,C.dt),TL.Util.lst(C.p,C. Cracking_Plastic
- ,C.dt),TL.Util.lst(C.p,C. Cracking_Random
- ,C.dt),TL.Util.lst(C.p,C. Cracking_Shrinkage
- ,C.dt),TL.Util.lst(C.p,C. Cracking_Temperature
- ,C.dt),TL.Util.lst(C.p,C. Cracking_Transverse
- ,C.dt),TL.Util.lst(C.p,C. width//number
- ,C.dt),TL.Util.lst(C.p,C.Leaching
- ,C.dt),TL.Util.lst(C.p,C.WorkingOrDormant
- ,C.dt),TL.Util.lst(C.p C. Textural_AirVoid
- ,C.dt),TL.Util.lst(C.p,C. Textural_Blistering
- ,C.dt),TL.Util.lst(C.p,C. Textural_Bugholes
- ,C.dt),TL.Util.lst(C.p,C. Textural_ColdJoints
- ,C.dt),TL.Util.lst(C.p,C. Textural_ColdLines
- ,C.dt),TL.Util.lst(C.p,C. Textural_Discoloration
- ,C.dt),TL.Util.lst(C.p,C. Textural_Honeycomb
- ,C.dt),TL.Util.lst(C.p,C. Textural_Incrustation
- ,C.dt),TL.Util.lst(C.p,C. Textural_Laitance
- ,C.dt),TL.Util.lst(C.p,C. Textural_SandPocket
- ,C.dt),TL.Util.lst(C.p,C. Textural_SandStreak
- ,C.dt),TL.Util.lst(C.p,C. Textural_Segregation
- ,C.dt),TL.Util.lst(C.p,C. Textural_Staining
- ,C.dt),TL.Util.lst(C.p,C. Textural_Stalactite
- ,C.dt),TL.Util.lst(C.p,C. Textural_Stalagmite
- ,C.dt),TL.Util.lst(C.p,C. Textural_Stratification
- ,C.dt),TL.Util.lst(C.p,C. Distresses_Chalking
- ,C.dt),TL.Util.lst(C.p,C. Distresses_Deflection
- ,C.dt),TL.Util.lst(C.p,C. Distresses_Delamination
- ,C.dt),TL.Util.lst(C.p,C. Distresses_Distortion
- ,C.dt),TL.Util.lst(C.p,C. Distresses_Dusting
- ,C.dt),TL.Util.lst(C.p,C. Distresses_Exfoliation
- ,C.dt),TL.Util.lst(C.p,C. Distresses_Leakage
- ,C.dt),TL.Util.lst(C.p,C. Distresses_Peeling
- ,C.dt),TL.Util.lst(C.p,C. Distresses_Warping
- ,C.dt),TL.Util.lst(C.p,C. Distresses_Curling
- ,C.dt),TL.Util.lst(C.p,C. Distresses_Deformation
- ,C.dt),TL.Util.lst(C.p,C. Distresses_Disintegration
- ,C.dt),TL.Util.lst(C.p,C. Distresses_DrummyArea
- ,C.dt),TL.Util.lst(C.p,C. Distresses_Efflorescence
- ,C.dt),TL.Util.lst(C.p,C. Distresses_Exudation
- ,C.dt),TL.Util.lst(C.p,C. Distresses_MortarFlaking
- ,C.dt),TL.Util.lst(C.p,C. Distresses_Pitting
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt),TL.Util.lst(C.p,C.
- ,C.dt)
-
-					));
+ //,TL.Util.lst(C.p,C.datetime,C.b,C.f,C.dt)
+				,TL.Util.lst(C.p,C.TypeofMemberBeam
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C.TypeofMemberColunm
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C.TypeofMemberSlab
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C.TypeofMemberStairs
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C.TypeofMemberMansory
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C.TypeofMemberRC
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C.TypeofMemberFoundation
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C.TypeofMemberOther
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C.TypeofMemberOtherText
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C.location				//text(255)
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C.exposure_wetDry
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C.exposure_chemical
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. exposure_erosion
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. exposure_elec
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C.exposure_heat
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C.LoadingCondition_Dead
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. LoadingCondition_Live
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. LoadingCondition_Impact
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. LoadingCondition_Vibration
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. LoadingCondition_Traffic
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. LoadingCondition_Seismic
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. LoadingCondition_Other
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. LoadingConditionOther//text(255)
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C.GeneralCondition
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C.Distress_Cracking
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Distress_Staining
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Distress_Surface
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Distress_Leaking
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Cracking_Checking
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Cracking_Craze
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Cracking_D
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Cracking_Diagnol
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Cracking_Hairline
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Cracking_Longitudinal
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Cracking_Map
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Cracking_Pattern
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Cracking_Plastic
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Cracking_Random
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Cracking_Shrinkage
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Cracking_Temperature
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Cracking_Transverse
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. width//number
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C.Leaching
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C.WorkingOrDormant
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Textural_AirVoid
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Textural_Blistering
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Textural_Bugholes
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Textural_ColdJoints
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Textural_ColdLines
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Textural_Discoloration
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Textural_Honeycomb
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Textural_Incrustation
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Textural_Laitance
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Textural_SandPocket
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Textural_SandStreak
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Textural_Segregation
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Textural_Staining
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Textural_Stalactite
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Textural_Stalagmite
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Textural_Stratification
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Distresses_Chalking
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Distresses_Deflection
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Distresses_Delamination
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Distresses_Distortion
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Distresses_Dusting
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Distresses_Exfoliation
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Distresses_Leakage
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Distresses_Peeling
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Distresses_Warping
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Distresses_Curling
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Distresses_Deformation
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Distresses_Disintegration
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Distresses_DrummyArea
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Distresses_Efflorescence
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Distresses_Exudation
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Distresses_MortarFlaking
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Distresses_Pitting
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. JointDeficiencies
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Spall
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. SealantFailure
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Leakage
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Fault
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Popout
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. PopoutSize
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. isScaling
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Scaling
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Exposed
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Corroded
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Snapped
+ ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. isSpall
+ ,C.b,C.f,C.dt)			));
 /*	CREATE TABLE `sheets` (
 			`no` int(11) NOT NULL,
 			`p` int(11) DEFAULT NULL,
@@ -4412,15 +4359,15 @@ CREATE TABLE `Storage` (
 	a.sheet.no=null;
 	a.sheet.dt=a.tl.now;a.sheet.u=a.tl.usr.uid;
 	a.sheet.p=a.proj.no;a.sheet.b=a.bld.no;a.sheet.f=a.flr.no;
-	a.sheet.jsonRef=TL.DB.Tbl.Json.jrmp1();
-	a.sheet.m=a.sheet.asMap();
-	a.sheet.m.put("datetime", TL.Util.formatDate(a.sheet.dt ));
+	//a.sheet.jsonRef=TL.DB.Tbl.Json.jrmp1();
+	//a.sheet.m=a.sheet.asMap();
+	//a.sheet.m.put("datetime", TL.Util.formatDate(a.sheet.dt ));
 	TL.DB.Tbl.Json j=a.sheet.json();
-	a.sheet.m.put(j.Jr,j.jsonRef);
+	//a.sheet.m.put(j.Jr,j.jsonRef);
 	//sheet.jsonRef=j.jsonRef=j.jrmp1();//((Number)sheet.m.get(TL.DB.Tbl.Json.Jr)).intValue();
 	try{a.sheet.save();
-	a.sheet.m.put("no", a.sheet.no);
-	j.save(a.sheet.m);}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.newSheet:");}
+	//a.sheet.m.put("no", a.sheet.no);j.save(a.sheet.m);
+	}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.newSheet:");}
 	a.tl.s(Prm.sheetNo.toString(), a.sheet.no);
 	a.tl.s(Prm.screen.toString(), a.screen=Prm.Screen.Sheet);}}
 
@@ -4506,8 +4453,7 @@ CREATE TABLE `Storage` (
  ,saveSheet{@Override void doOp(AppEU059S a,Map prms){try{
 	a.tl.log("op-saveSheet");
 	TL.DB.Tbl.Json json=a.sheet.json();
-	Map old=a.sheet.m,j=a.sheet.m=(Map)
-	(json.json=a.tl.json.get("json"));
+	Map old=null,j=null;//a.sheet.m,j=a.sheet.m=(Map) (json.json=a.tl.json.get("json"));
 	//a.sheet.fromMap(j);
 	for(int i=0;i<4;i++)try{
 		String n="img"+(i+1);
