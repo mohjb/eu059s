@@ -4013,34 +4013,36 @@ public static class TL {
 			final String cb="enum('f','on') NOT NULL DEFAULT 'f'";
 			return TL.Util.lst(
 				TL.Util.lst("int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT"//no
-					,"int(11) NOT NULL"//p
-					,"int(11) NOT NULL"//b
-					,"int(11) NOT NULL"//f
-					,"int(11) NOT NULL"//u
-					,"timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP "//dt
-					,"timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP "//datetime
-					,cb//TypeofMemberBeam;
-					,cb//TypeofMemberColunm;
-					,cb//TypeofMemberSlab;
-					,cb//TypeofMemberStairs;
-					,cb//TypeofMemberMansory;
+,"int(11) NOT NULL"//p
+,"int(11) NOT NULL"//b
+,"int(11) NOT NULL"//f
+,"int(11) NOT NULL"//u
+,"timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP "//dt
+,"timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP "//datetime
+,cb//TypeofMemberBeam;
+,cb//TypeofMemberColunm;
+,cb//TypeofMemberSlab;
+,cb//TypeofMemberStairs;
+,cb//TypeofMemberMansory;
 ,cb//TypeofMemberRC;
 ,cb//TypeofMemberFoundation;
 ,cb//TypeofMemberOther;//on
-					@TL.Form.F public String TypeofMemberOtherText,location;
-		,cb// exposure_wetDry;
+,"text"//TypeofMemberOtherText,
+,"text"// location;
+
+,cb// exposure_wetDry;
 ,cb//exposure_chemical;//2
-		,cb// exposure_erosion;
+,cb// exposure_erosion;
 ,cb//exposure_elec;//4
-		,cb// exposure_heat;
+,cb// exposure_heat;
 ,cb//LoadingCondition_Dead;
 ,cb//LoadingCondition_Live;
 ,cb//LoadingCondition_Impact;
 ,cb//LoadingCondition_Vibration;
 ,cb//LoadingCondition_Traffic;//5
-		,cb// LoadingCondition_Seismic;
+,cb// LoadingCondition_Seismic;
 ,cb//LoadingCondition_Other;//7
-					@TL.Form.F public String LoadingConditionOther;
+,"text"// LoadingConditionOther;
 					@F Radio1_3 GeneralCondition;
 ,cb// Distress_Cracking;
 ,cb//Distress_Staining;
@@ -4059,7 +4061,7 @@ public static class TL {
 ,cb//Cracking_Shrinkage;
 ,cb//Cracking_Temperature;
 ,cb//Cracking_Transverse;
-			@F Double width;// steps of 0.05, minimum is 0
+,"decimal(6,2)"//			@F Double width;// steps of 0.05, minimum is 0
 ,cb//Leaching;//on
 			@F Radio1_2 WorkingOrDormant;//2
 ,cb//Textural_AirVoid;//on
@@ -4110,8 +4112,156 @@ public static class TL {
 ,cb// isSpall;//on
 			@F Radio1_2 SpallSize;//2
 
-					),TL.Util.lst(C.p,C.b,C.f,C.u,C.jsonRef,C.dt));/*
-			CREATE TABLE `sheets` (
+					),TL.Util.lst(
+	 TL.Util.lst(C.p,C.b,C.f,C.u,C.dt)
+	,TL.Util.lst(C.u,C.p,C.no,C.dt)
+ ,TL.Util.lst(C.p,C.datetime
+ ,C.dt),TL.Util.lst(C.p,C.TypeofMemberBeam
+ ,C.dt),TL.Util.lst(C.p,C.TypeofMemberColunm
+ ,C.dt),TL.Util.lst(C.p,C.TypeofMemberSlab
+ ,C.dt),TL.Util.lst(C.p,C.TypeofMemberStairs
+ ,C.dt),TL.Util.lst(C.p,C.TypeofMemberMansory
+ ,C.dt),TL.Util.lst(C.p,C.TypeofMemberRC
+ ,C.dt),TL.Util.lst(C.p,C.TypeofMemberFoundation
+ ,C.dt),TL.Util.lst(C.p,C.TypeofMemberOther
+ ,C.dt),TL.Util.lst(C.p,C.TypeofMemberOtherText
+ ,C.dt),TL.Util.lst(C.p,C.location				//text(255)
+ ,C.dt),TL.Util.lst(C.p,C.exposure_wetDry
+ ,C.dt),TL.Util.lst(C.p,C.exposure_chemical
+ ,C.dt),TL.Util.lst(C.p,C. exposure_erosion
+ ,C.dt),TL.Util.lst(C.p,C. exposure_elec
+ ,C.dt),TL.Util.lst(C.p,C.exposure_heat
+ ,C.dt),TL.Util.lst(C.p,C.LoadingCondition_Dead
+ ,C.dt),TL.Util.lst(C.p,C. LoadingCondition_Live
+ ,C.dt),TL.Util.lst(C.p,C. LoadingCondition_Impact
+ ,C.dt),TL.Util.lst(C.p,C. LoadingCondition_Vibration
+ ,C.dt),TL.Util.lst(C.p,C. LoadingCondition_Traffic
+ ,C.dt),TL.Util.lst(C.p,C. LoadingCondition_Seismic
+ ,C.dt),TL.Util.lst(C.p,C. LoadingCondition_Other
+ ,C.dt),TL.Util.lst(C.p,C. LoadingConditionOther//text(255)
+ ,C.dt),TL.Util.lst(C.p,C.GeneralCondition
+ ,C.dt),TL.Util.lst(C.p,C.Distress_Cracking
+ ,C.dt),TL.Util.lst(C.p,C. Distress_Staining
+ ,C.dt),TL.Util.lst(C.p,C. Distress_Surface
+ ,C.dt),TL.Util.lst(C.p,C. Distress_Leaking
+ ,C.dt),TL.Util.lst(C.p,C. Cracking_Checking
+ ,C.dt),TL.Util.lst(C.p,C. Cracking_Craze
+ ,C.dt),TL.Util.lst(C.p,C. Cracking_D
+ ,C.dt),TL.Util.lst(C.p,C. Cracking_Diagnol
+ ,C.dt),TL.Util.lst(C.p,C. Cracking_Hairline
+ ,C.dt),TL.Util.lst(C.p,C. Cracking_Longitudinal
+ ,C.dt),TL.Util.lst(C.p,C. Cracking_Map
+ ,C.dt),TL.Util.lst(C.p,C. Cracking_Pattern
+ ,C.dt),TL.Util.lst(C.p,C. Cracking_Plastic
+ ,C.dt),TL.Util.lst(C.p,C. Cracking_Random
+ ,C.dt),TL.Util.lst(C.p,C. Cracking_Shrinkage
+ ,C.dt),TL.Util.lst(C.p,C. Cracking_Temperature
+ ,C.dt),TL.Util.lst(C.p,C. Cracking_Transverse
+ ,C.dt),TL.Util.lst(C.p,C. width//number
+ ,C.dt),TL.Util.lst(C.p,C.Leaching
+ ,C.dt),TL.Util.lst(C.p,C.WorkingOrDormant
+ ,C.dt),TL.Util.lst(C.p C. Textural_AirVoid
+ ,C.dt),TL.Util.lst(C.p,C. Textural_Blistering
+ ,C.dt),TL.Util.lst(C.p,C. Textural_Bugholes
+ ,C.dt),TL.Util.lst(C.p,C. Textural_ColdJoints
+ ,C.dt),TL.Util.lst(C.p,C. Textural_ColdLines
+ ,C.dt),TL.Util.lst(C.p,C. Textural_Discoloration
+ ,C.dt),TL.Util.lst(C.p,C. Textural_Honeycomb
+ ,C.dt),TL.Util.lst(C.p,C. Textural_Incrustation
+ ,C.dt),TL.Util.lst(C.p,C. Textural_Laitance
+ ,C.dt),TL.Util.lst(C.p,C. Textural_SandPocket
+ ,C.dt),TL.Util.lst(C.p,C. Textural_SandStreak
+ ,C.dt),TL.Util.lst(C.p,C. Textural_Segregation
+ ,C.dt),TL.Util.lst(C.p,C. Textural_Staining
+ ,C.dt),TL.Util.lst(C.p,C. Textural_Stalactite
+ ,C.dt),TL.Util.lst(C.p,C. Textural_Stalagmite
+ ,C.dt),TL.Util.lst(C.p,C. Textural_Stratification
+ ,C.dt),TL.Util.lst(C.p,C. Distresses_Chalking
+ ,C.dt),TL.Util.lst(C.p,C. Distresses_Deflection
+ ,C.dt),TL.Util.lst(C.p,C. Distresses_Delamination
+ ,C.dt),TL.Util.lst(C.p,C. Distresses_Distortion
+ ,C.dt),TL.Util.lst(C.p,C. Distresses_Dusting
+ ,C.dt),TL.Util.lst(C.p,C. Distresses_Exfoliation
+ ,C.dt),TL.Util.lst(C.p,C. Distresses_Leakage
+ ,C.dt),TL.Util.lst(C.p,C. Distresses_Peeling
+ ,C.dt),TL.Util.lst(C.p,C. Distresses_Warping
+ ,C.dt),TL.Util.lst(C.p,C. Distresses_Curling
+ ,C.dt),TL.Util.lst(C.p,C. Distresses_Deformation
+ ,C.dt),TL.Util.lst(C.p,C. Distresses_Disintegration
+ ,C.dt),TL.Util.lst(C.p,C. Distresses_DrummyArea
+ ,C.dt),TL.Util.lst(C.p,C. Distresses_Efflorescence
+ ,C.dt),TL.Util.lst(C.p,C. Distresses_Exudation
+ ,C.dt),TL.Util.lst(C.p,C. Distresses_MortarFlaking
+ ,C.dt),TL.Util.lst(C.p,C. Distresses_Pitting
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt),TL.Util.lst(C.p,C.
+ ,C.dt)
+
+					));
+/*	CREATE TABLE `sheets` (
 			`no` int(11) NOT NULL,
 			`p` int(11) DEFAULT NULL,
 			`b` int(11) DEFAULT NULL,
