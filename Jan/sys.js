@@ -1008,6 +1008,7 @@ lastModified based synchronisation between client-LocalStorage and server-DB
 ,{name:'Snapped'				,type:'checkbox'			,filter:7}
 ,{name:'isSpall'				,type:'checkbox'			,filter:	5}
 ,{name:'SpallSize'				,type:'radio',min:1,max:2	,filter:	5}
+		,{name:'notes'			,type:'textarea'}
 		,{name:'json'			,type:'hidden'}
 	]//dbTbl Sheet
 }//dbSchema

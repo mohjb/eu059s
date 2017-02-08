@@ -3896,8 +3896,8 @@ public @TL.Form.F Radio1_3 PopoutSize;//3
 ,Snapped
 ,isSpall;//on
 @TL.Form.F public Radio1_2 SpallSize;//2
-
-		@TL.Form.F(json=true) public Map json;
+@TL.Form.F public String notes;//2
+@TL.Form.F(json=true) public Map json;
 
 		public Map get() {//if(m==null)m=TL.Util.mapCreate("title","-");return m;
 			return null;}
@@ -3979,6 +3979,8 @@ public @TL.Form.F Radio1_3 PopoutSize;//3
 			,Snapped
 
 			,isSpall//1_2
+			,SpallSize
+			,notes
 			,json
 			;
 
@@ -4001,9 +4003,9 @@ public @TL.Form.F Radio1_3 PopoutSize;//3
 
 		@Override public List creationDBTIndices(TL tl){
 			final String cb="enum('f','on') NOT NULL DEFAULT 'f'"
-			,r1_2="enum('v1','v2') NOT NULL DEFAULT 'f'"
-			,r1_3="enum('v1','v2','v3') NOT NULL DEFAULT 'v1'"
-			,r1_4="enum('v1','v2','v3','v4') NOT NULL DEFAULT 'v1'";
+			,r1_2="enum('v1','v2') "// NOT NULL DEFAULT 'v1'"
+			,r1_3="enum('v1','v2','v3') "
+			,r1_4="enum('v1','v2','v3','v4')";
 			return TL.Util.lst(
 				TL.Util.lst("int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT"//no
 ,"int(11) NOT NULL"//p
@@ -4104,102 +4106,69 @@ public @TL.Form.F Radio1_3 PopoutSize;//3
 ,cb// Snapped;//on
 ,cb// isSpall;//on
 ,r1_2//			@F Radio1_2 SpallSize;//2
+,"text"//notes
 ,"text"//json
 					),TL.Util.lst(
-	 TL.Util.lst(C.p,C.b,C.f,C.u,C.dt)
-	,TL.Util.lst(C.u,C.p,C.no,C.dt)
- //,TL.Util.lst(C.p,C.datetime,C.b,C.f,C.dt)
-				,TL.Util.lst(C.p,C.TypeofMemberBeam
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C.TypeofMemberColunm
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C.TypeofMemberSlab
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C.TypeofMemberStairs
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C.TypeofMemberMansory
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C.TypeofMemberRC
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C.TypeofMemberFoundation
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C.TypeofMemberOther
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C.TypeofMemberOtherText
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C.location				//text(255)
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C.exposure_wetDry
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C.exposure_chemical
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. exposure_erosion
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. exposure_elec
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C.exposure_heat
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C.LoadingCondition_Dead
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. LoadingCondition_Live
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. LoadingCondition_Impact
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. LoadingCondition_Vibration
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. LoadingCondition_Traffic
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. LoadingCondition_Seismic
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. LoadingCondition_Other
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. LoadingConditionOther//text(255)
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C.GeneralCondition
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C.Distress_Cracking
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Distress_Staining
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Distress_Surface
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Distress_Leaking
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Cracking_Checking
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Cracking_Craze
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Cracking_D
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Cracking_Diagnol
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Cracking_Hairline
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Cracking_Longitudinal
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Cracking_Map
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Cracking_Pattern
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Cracking_Plastic
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Cracking_Random
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Cracking_Shrinkage
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Cracking_Temperature
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Cracking_Transverse
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. width//number
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C.Leaching
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C.WorkingOrDormant
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Textural_AirVoid
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Textural_Blistering
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Textural_Bugholes
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Textural_ColdJoints
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Textural_ColdLines
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Textural_Discoloration
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Textural_Honeycomb
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Textural_Incrustation
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Textural_Laitance
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Textural_SandPocket
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Textural_SandStreak
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Textural_Segregation
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Textural_Staining
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Textural_Stalactite
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Textural_Stalagmite
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Textural_Stratification
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Distresses_Chalking
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Distresses_Deflection
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Distresses_Delamination
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Distresses_Distortion
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Distresses_Dusting
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Distresses_Exfoliation
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Distresses_Leakage
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Distresses_Peeling
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Distresses_Warping
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Distresses_Curling
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Distresses_Deformation
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Distresses_Disintegration
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Distresses_DrummyArea
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Distresses_Efflorescence
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Distresses_Exudation
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Distresses_MortarFlaking
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Distresses_Pitting
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. JointDeficiencies
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Spall
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. SealantFailure
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Leakage
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Fault
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Popout
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. PopoutSize
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. isScaling
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Scaling
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Exposed
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Corroded
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. Snapped
- ,C.b,C.f,C.dt),TL.Util.lst(C.p,C. isSpall
- ,C.b,C.f,C.dt)			));
+	 TL.Util.lst(C.p,C.b,C.f,C.u)                                           //1
+	,TL.Util.lst(C.u,C.p,C.no)                                              //2
+	,TL.Util.lst(C.dt)                                                      //3
+	,TL.Util.lst(C.p,C.TypeofMemberBeam,C.TypeofMemberColunm            //4
+ ,C.b),TL.Util.lst(C.p,C. TypeofMemberSlab,C.TypeofMemberStairs             //5
+ ,C.b),TL.Util.lst(C.p,C. TypeofMemberMansory,C.TypeofMemberRC              //6
+ ,C.b),TL.Util.lst(C.p,C. TypeofMemberFoundation                            //7
+ ,C.b),TL.Util.lst(C.p,C. TypeofMemberOther,TL.Util.lst(C.TypeofMemberOtherText,200)//8
+ ,C.b),TL.Util.lst(C.p,TL.Util.lst(C.location,200)				//text(255) //9
+ ,C.b),TL.Util.lst(C.p,C. exposure_wetDry,C.exposure_chemical               //10
+ ,C.b),TL.Util.lst(C.p,C. exposure_erosion,C. exposure_elec                 //1
+ ,C.b),TL.Util.lst(C.p,C. exposure_heat                                     //2
+ ,C.b),TL.Util.lst(C.p,C. LoadingCondition_Dead,C. LoadingCondition_Live    //3
+ ,C.b),TL.Util.lst(C.p,C. LoadingCondition_Impact,C. LoadingCondition_Vibration//4
+ ,C.b),TL.Util.lst(C.p,C. LoadingCondition_Traffic,C. LoadingCondition_Seismic//5
+ ,C.b),TL.Util.lst(C.p,C. LoadingCondition_Other,TL.Util.lst(C. LoadingConditionOther,200)//text(255)//6
+ ,C.b),TL.Util.lst(C.p,C. GeneralCondition                                  //7
+ ,C.b),TL.Util.lst(C.p,C. Distress_Cracking,C.Distress_Staining             //8
+ ,C.b),TL.Util.lst(C.p,C. Distress_Surface,Distress_Leaking                 //9
+ ,C.b),TL.Util.lst(C.p,C. Cracking_Checking,C. Cracking_Craze               //20
+ ,C.b),TL.Util.lst(C.p,C. Cracking_D,C. Cracking_Diagnol                    //1
+ ,C.b),TL.Util.lst(C.p,C. Cracking_Hairline,C. Cracking_Longitudinal        //2
+ ,C.b),TL.Util.lst(C.p,C. Cracking_Map,C. Cracking_Pattern                  //3
+ ,C.b),TL.Util.lst(C.p,C. Cracking_Plastic,C. Cracking_Random               //4
+ ,C.b),TL.Util.lst(C.p,C. Cracking_Shrinkage,C. Cracking_Temperature        //5
+ ,C.b),TL.Util.lst(C.p,C. Cracking_Transverse,C.Leaching                    //6
+ ,C.b),TL.Util.lst(C.p,C. width//number                                     //7
+ ,C.b),TL.Util.lst(C.p,C. WorkingOrDormant                                  //8
+ ,C.b),TL.Util.lst(C.p,C. Textural_AirVoid,C. Textural_Blistering,C. Textural_ColdJoints,C. Textural_Discoloration,C. Textural_Incrustation,C. Textural_SandPocket,C. Textural_Segregation,C. Textural_Stalactite,C. Textural_Stratification,C. Textural_Bugholes,C. Textural_ColdLines,C. Textural_Honeycomb,C. Textural_Laitance,C. Textural_SandStreak,C. Textural_Staining,C. Textural_Stalagmite           //9
+ ,C.b),TL.Util.lst(C.p,C. Textural_Bugholes,C. Textural_ColdJoints,C. Textural_Stratification,C. Textural_Stalactite,C. Textural_Segregation,C. Textural_SandPocket,C. Textural_Incrustation,C. Textural_Discoloration,C. Textural_Stalagmite,C. Textural_Staining,C. Textural_SandStreak,C. Textural_Laitance,C. Textural_Honeycomb,C. Textural_ColdLines          //30
+ 
+ 
+ 
+ ,C.b),TL.Util.lst(C.p,C. Textural_ColdLines,C. Textural_Discoloration      //1
+ ,C.b),TL.Util.lst(C.p,C. Textural_Honeycomb,C. Textural_Incrustation       //2
+ ,C.b),TL.Util.lst(C.p,C. Textural_Laitance,C. Textural_SandPocket          //3
+ ,C.b),TL.Util.lst(C.p,C. Textural_SandStreak,C. Textural_Segregation       //4
+ ,C.b),TL.Util.lst(C.p,C. Textural_Staining,C. Textural_Stalactite			//5
+ ,C.b),TL.Util.lst(C.p,C. Textural_Stalagmite,C. Textural_Stratification    //6
+ ,C.b),TL.Util.lst(C.p,C. Distresses_Chalking,C. Distresses_Deflection      //7
+ ,C.b),TL.Util.lst(C.p,C. Distresses_Delamination,C. Distresses_Distortion  //8
+ ,C.b),TL.Util.lst(C.p,C. Distresses_Dusting,C. Distresses_Exfoliation      //9
+ ,C.b),TL.Util.lst(C.p,C. Distresses_Leakage,C. Distresses_Peeling          //40
+ ,C.b),TL.Util.lst(C.p,C. Distresses_Warping,C. Distresses_Curling          //1
+ ,C.b),TL.Util.lst(C.p,C. Distresses_Deformation,C.Distresses_Disintegration//2
+ ,C.b),TL.Util.lst(C.p,C. Distresses_DrummyArea,C. Distresses_Efflorescence //3
+ ,C.b),TL.Util.lst(C.p,C. Distresses_Exudation,C. Distresses_MortarFlaking  //4
+ ,C.b),TL.Util.lst(C.p,C. Distresses_Pitting                                //5
+ ,C.b),TL.Util.lst(C.p,C. JointDeficiencies,C. Spall,C. SealantFailure,C. Leakage,C. Fault//6
+ ,C.b),TL.Util.lst(C.p,C. JointDeficiencies,C. SealantFailure,C. Fault,C. Leakage,C. Spall//7
+ ,C.b),TL.Util.lst(C.p,C. JointDeficiencies,C. Leakage,C. Fault,C. SealantFailure,C. Spall//8
+ ,C.b),TL.Util.lst(C.p,C. JointDeficiencies,C. Fault,C. Leakage,C. Spall,C. SealantFailure//9
+ ,C.b),TL.Util.lst(C.p,C. Popout,C. PopoutSize                              //50
+ ,C.b),TL.Util.lst(C.p,C. isScaling,C. Scaling                              //1
+ ,C.b),TL.Util.lst(C.p,C. Exposed,C. Corroded,C. Snapped                    //2
+ ,C.b),TL.Util.lst(C.p,C. Corroded,C. Snapped,C. Exposed                    //3
+ ,C.b),TL.Util.lst(C.p,C. Snapped,C. Corroded,C. Exposed                    //4
+ ,C.b),TL.Util.lst(C.p,C. isSpall,C. SpallSize                              //5
+ ,C.b),TL.Util.lst(C.p,TL.Util.lst(C. notes,200)                            //6
+ ,C.b)			));
 /*	CREATE TABLE `sheets` (
 			`no` int(11) NOT NULL,
 			`p` int(11) DEFAULT NULL,
