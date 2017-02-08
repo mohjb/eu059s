@@ -1,35 +1,23 @@
-package eu059s;
+package eu059s;//eu059s.AppEU059S.Srvlt
+
+import java.lang.reflect.Field;
 
 import java.io.File;
-import java.sql.SQLException;
-import java.util.Map;
-import java.util.List;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.Date;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.JspWriter;
-
-
 import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.io.File;
 import java.lang.reflect.Array;
-import java.lang.reflect.Field;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
@@ -38,32 +26,33 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.http.*;
+//import javax.servlet.jsp.JspWriter;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+
 import com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 //%><%AppEU059S.jsp(request, response, session, out, pageContext);%><%!
 
-public class AppEU059S {//
+public class AppEU059S  {//
 public static class TL {
 	enum context{ROOT(
-		"/public_html/i1io/EU059S/"
-		,"D:\\apache-tomcat-8.0.15\\webapps\\ROOT/"
-		,"/Users/moh/Google Drive/air/apache-tomcat-8.0.30/webapps/ROOT/"
+		"/Users/moh/Google Drive/air/apache-tomcat-8.0.30/webapps/ROOT/"
+		,"/public_html/i1io/"//EU059S/
+		,"D:\\apache-tomcat-8.0.15\\webapps\\ROOT\\"
+
 		);
 		String str,a[];context(String...p){str=p[0];a=p;}
 		enum DB{
 			pool("dbpool-eu059s")
 			,reqCon("javax.sql.PooledConnection")
-			,server("216.227.216.46","localhost")//,"216.227.220.84"
-			,dbName("js4d00_eu059s","eu059s")
-			,un("js4d00_theblue","root")
-			,pw("theblue","qwerty","","root")/*
+			,server("localhost","216.227.216.46","localhost")//,"216.227.220.84"
+			,dbName("eu059s","js4d00_eu059s","eu059s")
+			,un("root","js4d00_theblue","root")
+			,pw("","theblue","qwerty","root")/*
 			,root( "/public_html/i1io/EU059S/"
 				,"D:\\apache-tomcat-8.0.15\\webapps\\ROOT/"
 				,"/Users/moh/Google Drive/air/apache-tomcat-8.0.30/webapps/ROOT/")*/
@@ -116,8 +105,7 @@ public static class TL {
 	public String comments[]=CommentJson;
 	public HttpServletRequest req;AppEU059S a;
 	public HttpServletResponse rspns;//JspWriter out;
-	javax.servlet.jsp.PageContext pc;//GenericServlet srvlt;
-	javax.servlet.http.HttpSession session;
+	//javax.servlet.jsp.PageContext pc;//GenericServlet srvlt;HttpSession session;
 
 	//public TL(GenericServlet s,HttpServletRequest r,HttpServletResponse n,PrintWriter o){_srvlt=s;req=r;rspns=n;out=o;}
 	public TL(HttpServletRequest r,Writer o){//HttpServletResponse n,
@@ -126,22 +114,14 @@ public static class TL {
 	public Json.Output jo(){if(jo==null)try{jo=new Json.Output();}catch(Exception x){error(x,"moh.TL.jo:IOEx:");}return jo;}
 	public Json.Output getOut() throws IOException{return out;}//JspWriter//if(out==null)out=rspns.getWriter();
 	public HttpServletRequest getRequest(){return req;}
-	public HttpSession getSession(){return session;}//req.getSession();
-	public ServletContext getServletContext(){return session.getServletContext();}//srvlt.getServletContext();
+	public HttpSession getSession(){return req.getSession();}
+	public ServletContext getServletContext(){return getSession().getServletContext();}//srvlt.getServletContext();
 	/**sets a new TL-instance to the localThread*/
 
-	public static TL Enter(
-	HttpServletRequest r
-	 ,HttpServletResponse response
-	 ,javax.servlet.http.HttpSession session
-	 ,JspWriter o
-	 ,javax.servlet.jsp.PageContext pc
-	)
+	public static TL Enter(HttpServletRequest r,HttpServletResponse response,Writer out)
 	throws IOException
-	{TL p;tl.set(p=new TL(r,o));
-		p.rspns=response;
-		p.session=session;
-		p.pc=pc;
+	{TL p;tl.set(p=new TL(r,out!=null?out:response.getWriter()));
+		p.rspns=response;//p.session=session;
 		p.onEnter();
 		return p;}
 
@@ -170,8 +150,8 @@ public static class TL {
 		DB.close((Connection)p.r(context.DB.reqCon.str));
 		p.onExit();tl.set(null);}
 
-	Map getMultiParts()
-	{	Map<Object,Object>m=null;
+ Map getMultiParts(){
+	Map<Object,Object>m=null;
 		if(ServletFileUpload.isMultipartContent(req))try
 		{DiskFileItemFactory factory=new DiskFileItemFactory();
 			factory.setSizeThreshold(40000000);//MemoryThreshold);
@@ -375,8 +355,8 @@ public static class TL {
 		Boolean?(Boolean)x:Boolean.parseBoolean(x.toString());}
 
 	/**mostly used for enums , e.g. "enum Screen"*/
-	public <T>T var(String n,T defVal)
-	{	String r=req(n);
+ public <T>T var(String n,T defVal) {
+	String r=req(n);
 		if(r!=null)
 			s(n,defVal=Util.parse(r,defVal));
 		else{
@@ -395,8 +375,8 @@ public static class TL {
 	/////////////////////////////// */
 
 
-	public String req(String n)
-	{if(json!=null )
+	public String req(String n){
+	if(json!=null )
 	{Object o=json.get(n);if(o!=null)return o.toString();}
 		String r=req.getParameter(n);
 		if(r==null)r=req.getHeader(n);
@@ -477,9 +457,9 @@ public static class TL {
 			if(r!=null)//changed 2016.07.18
 				t.r(context.DB.reqCon.str,r);
 			else try
-			{try{int x=context.getContextIndex(t);
+			{try{int x=context.getContextIndex(t);t.log("TL.DB.c:1:getContextIndex:",x);
 					if(x!=-1)
-					{	a=c(t,x,x,x,x);
+					{	a=c(t,x,x,x,x);t.log("TL.DB.c:1:c2:",a);
 						r=(Connection)a[1];
 						return r;}
 				}catch(Exception e){t.log("TL.DB.MysqlConnectionPoolDataSource:1:",e);}
@@ -2920,7 +2900,17 @@ public TL tl;
 		}tl.logo("index:9");
 	}//authenticate
 
-	/*
+{	/*
+
+<servlet>
+    <servlet-name>EU059Servlet</servlet-name>
+    <servlet-class >eu059s.AppEU059S.Srvlt</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>EU059Servlet</servlet-name>
+    <url-pattern>/EU059S/*</url-pattern>
+</servlet-mapping>
+
 	void jsp01() throws IOException {
 		tl.o("<!DOCTYPE HTML>\r\n"
 			 ,"<html>\r\n"
@@ -3629,35 +3619,37 @@ public TL tl;
 		out.write("</body></html>");
 	}//jspOld
 	*/
-
- public static void jsp(HttpServletRequest request
-	,HttpServletResponse response
-	,javax.servlet.http.HttpSession session
-	,JspWriter out
-	,javax.servlet.jsp.PageContext pageContext)
-	throws IOException, javax.servlet.ServletException{
+}
+ public static void jsp(HttpServletRequest request,HttpServletResponse response,Writer out)throws IOException{
 	TL tl=null;try
-	{tl=TL.Enter(request,response,session,out,pageContext);
-		tl.r("contentType","text/json");
-		tl.logOut=tl.var("logOut",false);
-		Op op=tl.req(Prm.op.toString(),Op.none);
-		if(tl.usr!=null || op==Op.login || op==Op.none)
-			op.doOp(AppEU059S.app(tl),tl.json);
-		else TL.Util.mapSet(tl.response,"msg","Operation not authorized ,or not applicable","return",false);
-		if(tl.r("responseDone")==null)
-		{if(tl.r("responseContentTypeDone")==null)
-			response.setContentType(String.valueOf(tl.r("contentType")));
-			tl.getOut().o(tl.response);
-			tl.log("AppEU059S:xhr-response:",tl.jo().o(tl.response).toString());}
-		out.flush();
+	{tl=TL.Enter(request,response,out);
+		 tl.r("contentType","text/json");
+		 tl.logOut=tl.var("logOut",false);
+		 Op op=tl.req(Prm.op.toString(),Op.none);
+		 if(tl.usr!=null || op==Op.login || op==Op.none)
+			 op.doOp(AppEU059S.app(tl),tl.json);
+		 else TL.Util.mapSet(tl.response,"msg","Operation not authorized ,or not applicable","return",false);
+		 if(tl.r("responseDone")==null)
+		 {if(tl.r("responseContentTypeDone")==null)
+			 response.setContentType(String.valueOf(tl.r("contentType")));
+			 tl.getOut().o(tl.response);
+			 tl.log("AppEU059S:xhr-response:",tl.jo().o(tl.response).toString());}
+		 tl.getOut().flush();
 	}catch(Exception x){
-		if(tl!=null){
-			tl.error(x,"AppEU059S.jsp:");
-			tl.getOut().o(x);
-		}else
-			x.printStackTrace();
-	}finally{TL.Exit();}}//jsp
+		 if(tl!=null){
+			 tl.error(x,"AppEU059S.jsp:");
+			 tl.getOut().o(x);
+		 }else
+			 x.printStackTrace();
+	}finally{TL.Exit();}
+ }
 
+public static class Srvlt extends HttpServlet{
+ @Override public void service(HttpServletRequest q,HttpServletResponse r)
+	throws IOException, javax.servlet.ServletException{jsp(q,r,r.getWriter());}//jsp
+
+ //@Override  public void init(){}//Servlet.init
+}//public static class Srvlt extends HttpServlet
 
 	public static class Project extends TL.DB.Tbl {//implements Serializable
 		public static final String dbtName="projects";

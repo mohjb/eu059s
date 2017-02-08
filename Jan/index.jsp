@@ -1,1 +1,1 @@
-<%eu059s.AppEU059S.jsp(request,response,session,out,pageContext);%>
+<%eu059s.AppEU059S.jsp(request,response,out);%>
