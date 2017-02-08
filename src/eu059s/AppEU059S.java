@@ -40,9 +40,9 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 public class AppEU059S  {//
 public static class TL {
 	enum context{ROOT(
-		"/Users/moh/Google Drive/air/apache-tomcat-8.0.30/webapps/ROOT/"
+		"D:\\apache-tomcat-8.0.15\\webapps\\ROOT\\"
+		,"/Users/moh/Google Drive/air/apache-tomcat-8.0.30/webapps/ROOT/"
 		,"/public_html/i1io/"//EU059S/
-		,"D:\\apache-tomcat-8.0.15\\webapps\\ROOT\\"
 
 		);
 		String str,a[];context(String...p){str=p[0];a=p;}
@@ -52,7 +52,7 @@ public static class TL {
 			,server("localhost","216.227.216.46","localhost")//,"216.227.220.84"
 			,dbName("eu059s","js4d00_eu059s","eu059s")
 			,un("root","js4d00_theblue","root")
-			,pw("","theblue","qwerty","root")/*
+			,pw("qwerty","theblue","","root")/*
 			,root( "/public_html/i1io/EU059S/"
 				,"D:\\apache-tomcat-8.0.15\\webapps\\ROOT/"
 				,"/Users/moh/Google Drive/air/apache-tomcat-8.0.30/webapps/ROOT/")*/

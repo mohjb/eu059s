@@ -746,8 +746,9 @@ lastModified based synchronisation between client-LocalStorage and server-DB
 								var tr=tb.insertRow(),x=rsp['return'];
 								//five columns:no,path, contentType, lastModified, data
 								for(var i in formH)
-								{var td=tr.insertCell();
-									sys.bld(reqData[formH[i].name],td);
+								{var td=tr.insertCell(),x=reqData[formH[i].name];
+								 if(x)
+									sys.bld(x,td);
 								}
 							},
 							onprogress:function(e){
@@ -911,13 +912,103 @@ lastModified based synchronisation between client-LocalStorage and server-DB
 		,{name:'json',type:'json'}
 	]//dbTbl Floor
 	,sheet:[
-		{name:'no',type:'Integer'}
-		,{name:'p',type:'Integer'}
-		,{name:'b',type:'Integer'}
-		,{name:'f',type:'Integer'}
-		,{name:'u',type:'Integer'}
-		,{name:'dt',type:'date-time'}
-		,{name:'json',type:'json'}
+		{name:'no'				,type:'Integer',readonly:1	,filter:	3}
+		,{name:'p'				,type:'Integer',readonly:1	,filter:1}
+		,{name:'b'				,type:'Integer',readonly:1	,filter:2}
+		,{name:'f'				,type:'Integer',readonly:1	,filter:	3}
+		,{name:'u'				,type:'Integer',readonly:1	,filter:8}
+		,{name:'dt'				,type:'date-time',readonly:1,filter:0}
+,{name:'TypeofMemberBeam'		,type:'checkbox'			,filter:	9}
+,{name:'TypeofMemberColunm'		,type:'checkbox'			,filter:	9}
+,{name:'TypeofMemberSlab'		,type:'checkbox'			,filter:	9}
+,{name:'TypeofMemberStairs'		,type:'checkbox'			,filter:	9}
+,{name:'TypeofMemberMansory'	,type:'checkbox'			,filter:	9}
+,{name:'TypeofMemberRC'			,type:'checkbox'			,filter:	9}
+,{name:'TypeofMemberFoundation'	,type:'checkbox'			,filter:	9}
+,{name:'TypeofMemberOther'		,type:'checkbox'			,filter:	9}
+,{name:'TypeofMemberOtherText'	,type:'text'				,filter:	9}
+,{name:'exposure_wetDry'		,type:'checkbox'			,filter:12}
+,{name:'exposure_chemical'		,type:'checkbox'			,filter:12}
+,{name:'exposure_erosion'		,type:'checkbox'			,filter:12}
+,{name:'exposure_elec'			,type:'checkbox'			,filter:12}
+,{name:'exposure_heat'			,type:'checkbox'			,filter:12}
+,{name:'LoadingCondition_Dead'	,type:'checkbox'			,filter:12}
+,{name:'LoadingCondition_Live'	,type:'checkbox'			,filter:12}
+,{name:'LoadingCondition_Impact',type:'checkbox'			,filter:12}
+,{name:'LoadingCondition_Vibration',type:'checkbox'			,filter:12}
+,{name:'LoadingCondition_Traffic',type:'checkbox'			,filter:12}
+,{name:'LoadingCondition_Seismic',type:'checkbox'			,filter:12}
+,{name:'LoadingCondition_Other'	,type:'checkbox'			,filter:12}
+,{name:'LoadingConditionOther'	,type:'text'				,filter:12}
+,{name:'GeneralCondition'		,type:'radio',min:1,max:3	,filter:	10}
+,{name:'Distress_Cracking'		,type:'checkbox'			,filter:11}
+,{name:'Distress_Staining'		,type:'checkbox'			,filter:11}
+,{name:'Distress_Surface'		,type:'checkbox'			,filter:11}
+,{name:'Distress_Leaking'		,type:'checkbox'			,filter:11}
+,{name:'Cracking_Checking'		,type:'checkbox'			,filter:	4}
+,{name:'Cracking_Craze'			,type:'checkbox'			,filter:	4}
+,{name:'Cracking_D'				,type:'checkbox'			,filter:	4}
+,{name:'Cracking_Diagnol'		,type:'checkbox'			,filter:	4}
+,{name:'Cracking_Hairline'		,type:'checkbox'			,filter:	4}
+,{name:'Cracking_Longitudinal'	,type:'checkbox'			,filter:	4}
+,{name:'Cracking_Map'			,type:'checkbox'			,filter:	4}
+,{name:'Cracking_Pattern'		,type:'checkbox'			,filter:	4}
+,{name:'Cracking_Plastic'		,type:'checkbox'			,filter:	4}
+,{name:'Cracking_Random'		,type:'checkbox'			,filter:	4}
+,{name:'Cracking_Shrinkage'		,type:'checkbox'			,filter:	4}
+,{name:'Cracking_Temperature'	,type:'checkbox'			,filter:	4}
+,{name:'Cracking_Transverse'	,type:'checkbox'			,filter:	4}
+,{name:'width'			,min:0	,type:'number',step:.05		,filter:	4}
+,{name:'Leaching'				,type:'checkbox'			,filter:	4}
+,{name:'WorkingOrDormant'		,type:'radio',min:1,max:2	,filter:	4}
+,{name:'Textural_AirVoid'		,type:'checkbox'			,filter:6}
+,{name:'Textural_Blistering'	,type:'checkbox'			,filter:6}
+,{name:'Textural_Bugholes'		,type:'checkbox'			,filter:6}
+,{name:'Textural_ColdJoints'	,type:'checkbox'			,filter:6}
+,{name:'Textural_ColdLines'		,type:'checkbox'			,filter:6}
+,{name:'Textural_Discoloration'	,type:'checkbox'			,filter:6}
+,{name:'Textural_Honeycomb'		,type:'checkbox'			,filter:6}
+,{name:'Textural_Incrustation'	,type:'checkbox'			,filter:6}
+,{name:'Textural_Laitance'		,type:'checkbox'			,filter:6}
+,{name:'Textural_SandPocket'	,type:'checkbox'			,filter:6}
+,{name:'Textural_SandStreak'	,type:'checkbox'			,filter:6}
+,{name:'Textural_Segregation'	,type:'checkbox'			,filter:6}
+,{name:'Textural_Staining'		,type:'checkbox'			,filter:6}
+,{name:'Textural_Stalactite'	,type:'checkbox'			,filter:6}
+,{name:'Textural_Stalagmite'	,type:'checkbox'			,filter:6}
+,{name:'Textural_Stratification',type:'checkbox'			,filter:6}
+,{name:'Distresses_Chalking'	,type:'checkbox'			,filter:	5}
+,{name:'Distresses_Deflection'	,type:'checkbox'			,filter:	5}
+,{name:'Distresses_Delamination',type:'checkbox'			,filter:	5}
+,{name:'Distresses_Distortion'	,type:'checkbox'			,filter:	5}
+,{name:'Distresses_Dusting'		,type:'checkbox'			,filter:	5}
+,{name:'Distresses_Exfoliation'	,type:'checkbox'			,filter:	5}
+,{name:'Distresses_Leakage'		,type:'checkbox'			,filter:	5}
+,{name:'Distresses_Peeling'		,type:'checkbox'			,filter:	5}
+,{name:'Distresses_Warping'		,type:'checkbox'			,filter:	5}
+,{name:'Distresses_Curling'		,type:'checkbox'			,filter:	5}
+,{name:'Distresses_Deformation'	,type:'checkbox'			,filter:	5}
+,{name:'Distresses_Disintegration',type:'checkbox'			,filter:	5}
+,{name:'Distresses_DrummyArea'	,type:'checkbox'			,filter:	5}
+,{name:'Distresses_Efflorescence',type:'checkbox'			,filter:	5}
+,{name:'Distresses_Exudation'	,type:'checkbox'			,filter:	5}
+,{name:'Distresses_MortarFlaking',type:'checkbox'			,filter:	5}
+,{name:'Distresses_Pitting'		,type:'checkbox'			,filter:	5}
+,{name:'JointDeficiencies'		,type:'checkbox',master:1	,filter:	5}
+,{name:'Spall'					,type:'checkbox'	,m:1	,filter:	5}
+,{name:'SealantFailure'			,type:'checkbox'	,m:1	,filter:	5}
+,{name:'Leakage'				,type:'checkbox'	,m:1	,filter:	5}
+,{name:'Fault'					,type:'checkbox'	,m:1	,filter:	5}
+,{name:'Popout'					,type:'checkbox'			,filter:	5}
+,{name:'PopoutSize'				,type:'radio',min:1,max:3	,filter:	5}
+,{name:'isScaling'				,type:'checkbox'			,filter:	5}
+,{name:'Scaling'				,type:'radio',min:1,max:4	,filter:	5}
+,{name:'Exposed'				,type:'checkbox'			,filter:7}
+,{name:'Corroded'				,type:'checkbox'			,filter:7}
+,{name:'Snapped'				,type:'checkbox'			,filter:7}
+,{name:'isSpall'				,type:'checkbox'			,filter:	5}
+,{name:'SpallSize'				,type:'radio',min:1,max:2	,filter:	5}
+		,{name:'json'			,type:'hidden'}
 	]//dbTbl Sheet
 }//dbSchema
 ,storageLib:{//methods for LocalStorage , and sync-ing with server
