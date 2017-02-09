@@ -1,61 +1,52 @@
-package eu059s;//eu059s.AppEU059S.Srvlt
+<%@ page import="java.lang.reflect.Field
+,java.io.File,javax.script.*
+,java.io.ObjectInputStream
+,java.io.OutputStream
+,java.io.OutputStreamWriter
+,java.io.IOException
+,java.io.PrintWriter
+,java.io.StringWriter
+,java.io.Writer
+,java.lang.reflect.Array
+,java.net.URL
+,java.sql.Connection
+,java.sql.PreparedStatement
+,java.sql.ResultSet
+,java.sql.ResultSetMetaData
+,java.sql.Statement
+,java.sql.SQLException
+,java.util.Collection
+,java.util.Date
+,java.util.Enumeration
+,java.util.HashMap
+,java.util.Iterator
+,java.util.LinkedList
+,java.util.List
+,java.util.Map
+,javax.servlet.http.*
 
-import java.lang.reflect.Field;
+,javax.servlet.ServletConfig
+,javax.servlet.ServletContext
 
-import java.io.File;
-import java.io.ObjectInputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.lang.reflect.Array;
-import java.net.URL;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.Statement;
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import javax.servlet.http.*;
-//import javax.servlet.jsp.JspWriter;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
-
-import com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-//%><%AppEU059S.jsp(request, response, session, out, pageContext);%><%!
-
-public class AppEU059S  {//
+,com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource
+,org.apache.commons.fileupload.FileItem
+,org.apache.commons.fileupload.disk.DiskFileItemFactory
+,org.apache.commons.fileupload.servlet.ServletFileUpload
+"%><%!  // <?
+public static class Sys{
 public static class TL {
 	enum context{ROOT(
 		"D:\\apache-tomcat-8.0.15\\webapps\\ROOT\\"
 		,"/Users/moh/Google Drive/air/apache-tomcat-8.0.30/webapps/ROOT/"
-		,"/public_html/i1io/"//EU059S/
-
 		);
 		String str,a[];context(String...p){str=p[0];a=p;}
 		enum DB{
 			pool("dbpool-eu059s")
 			,reqCon("javax.sql.PooledConnection")
-			,server("localhost","216.227.216.46","localhost")//,"216.227.220.84"
-			,dbName("eu059s","js4d00_eu059s","eu059s")
-			,un("root","js4d00_theblue","root")
-			,pw("qwerty","theblue","","root")/*
-			,root( "/public_html/i1io/EU059S/"
-				,"D:\\apache-tomcat-8.0.15\\webapps\\ROOT/"
-				,"/Users/moh/Google Drive/air/apache-tomcat-8.0.30/webapps/ROOT/")*/
+			,server("localhost")
+			,dbName("eu059s")
+			,un("root")
+			,pw("qwerty","")
 			;String str,a[];DB(String...p){str=p[0];a=p;}
 		}
 
@@ -83,27 +74,25 @@ public static class TL {
 						return i;i--;
 				}
 			}catch(Exception ex){
-				t.error(ex,"AppEU059S.TL.context.getContextIndex:");}
+				t.error(ex,"Sys.TL.context.getContextIndex:");}
 			return -1;}
-		//***/static Map<DB,String> getContextPack(TL t,List<Map<DB,String>>a){return null;}
 	}//context
 
 	//TL member variables
 	public String ip;
 	public DB.Tbl.Usr usr;
 	public DB.Tbl.Ssn ssn;
-	public Map<String,Object>json;//accessing request in json-format
-	public Map<Object,Object> response;
+	public Map json;//<Object,Object>accessing request in json-format
 	public Date now;//,sExpire;
 	/**wrapping JspWriter or any other servlet writer in "out" */
 	Json.Output out,/**jo is a single instanceof StringWriter buffer*/jo;
-	int htmlIndentation;
+
 	/**the static/class variable "tl"*/ static ThreadLocal<TL> tl=new ThreadLocal<TL>();
 	static boolean LogOut=false;//tlLog=true;
 	public boolean logOut=LogOut;
 	public static final String CommentHtml[]={"\n<!--","-->\n"},CommentJson[]={"\n/*","\n*/"};
 	public String comments[]=CommentJson;
-	public HttpServletRequest req;AppEU059S a;
+	public HttpServletRequest req;Sys a;
 	public HttpServletResponse rspns;//JspWriter out;
 	//javax.servlet.jsp.PageContext pc;//GenericServlet srvlt;HttpSession session;
 
@@ -132,9 +121,16 @@ public static class TL {
 			o=o==null?null
 			:o.toString().contains("json")?Json.Parser.parse(req)
 			:o.toString().contains("part")?getMultiParts():null;
-			json=o instanceof Map<?, ?>?(Map<String, Object>)o:null;//req.getParameterMap() ;
-			response=TL.Util.mapCreate(//"msg",0 ,
-				"return",false , "op",req("op"),"req",o);
+			json=o instanceof Map<?, ?>?(Map)o:null ;//
+			if(json==null){//json=req.getParameterMap();
+				json=TL.Util.mapCreate("tl",tl);//new HashMap<String,Object>();//
+				//json.addAll(req.getParameterMap());
+				Map<String,String[]>x=req.getParameterMap();
+				for(String k:x.keySet()){String[]a=x.get(k);
+					json.put(k,a==null||a.length==0?a:a[0]);
+			}}
+			TL.Util.mapSet(json,//"msg",0 ,		response
+				"return",false , "op",req("op"));//,"req",o
 			DB.Tbl.Ssn.onEnter();
 		}catch(Exception ex){error(ex,"TL.onEnter");}
 		//if(pages==null){rsp.setHeader("Retry-After", "60");rsp.sendError(503,"pages null");throw new Exception("pages null");}
@@ -142,7 +138,7 @@ public static class TL {
 		//else log(new Json.Output().o(this).toString());
 	}//onEnter
 
-	private void onExit(){usr=null;ssn=null;ip=null;now=null;req=null;response=null;json=null;out=jo=null;}//srvlt=null;rspns=null;
+	private void onExit(){usr=null;ssn=null;ip=null;now=null;req=null;json=null;out=jo=null;}//response=null;
 
 	/**unsets the localThread, and unset local variables*/
 	public static void Exit()//throws Exception
@@ -159,16 +155,9 @@ public static class TL {
 			//upload.setFileSizeMax(MaxFileSize);
 			//upload.setSizeMax(MaxRequestSize);
 			//final String pth="",UploadDirectory="sheetUploads";
-			String path=AppEU059S.app(this).getUploadPath();
-			String real=TL.context.getRealPath(this, path);//getServletContext().getRealPath(path);
+			String path=Sys.app(this).getUploadPath();
+			String real=TL.context.getRealPath(this, path);
 			File f=null,uploadDir;
-			/*if(real==null){int i=0; boolean b=false;
-			 while( i<context.ROOT.a.length && (b=(f==null|| !f.exists())) )
-			 try{
-			 f=new File(context.ROOT.a[i++]);
-			 }catch(Exception ex){}
-			 real=(b?"./":f.getCanonicalPath())+path;
-			 }*/
 			uploadDir=new File(real);
 			if( ! uploadDir.exists() )
 				uploadDir.mkdirs();//mkDir();
@@ -302,8 +291,6 @@ public static class TL {
 			return defval;}
 
 	}//class util
-
-	//static{log("TL.static:version 2015.10.22.08.08,9.31,13.42");}
 
 	/**get the TL-instance for the current Thread*/
 	public static TL tl(){Object o=tl.get();return o instanceof TL?(TL)o:null;}
@@ -690,8 +677,8 @@ public static class TL {
 					TL t=TL.tl();//changed 2016.06.27 18:05
 					final String str="TL.DB.ItTbl.next";
 					t.error(e,str);
-					List l=(List)t.response.get(ErrorsList);
-					if(l==null)t.response.put(ErrorsList,l=new LinkedList());
+					List l=(List)t.json.get(ErrorsList);//response
+					if(l==null)t.json.put(ErrorsList,l=new LinkedList());//response
 					l.add(Util.lst(str,row!=null?row.row:-1,e));
 				}return b;}
 
@@ -715,8 +702,8 @@ public static class TL {
 						TL t=TL.tl();
 						final String str="TL.DB.ItTbl.ItRow.next";
 						t.error(e,str);
-						List l=(List)t.response.get(ErrorsList);
-						if(l==null)t.response.put(ErrorsList,l=new LinkedList());
+						List l=(List)t.json.get(ErrorsList);//response
+						if(l==null)t.json.put(ErrorsList,l=new LinkedList());//response
 						l.add(Util.lst(str,row,col,e));
 					}//.printStackTrace();}
 					return null;}
@@ -830,7 +817,7 @@ public static class TL {
 								if(s){sql.append((String)c);if(x==0){x--;keyHeadFromList=true;}}
 								else {List l=c instanceof List?(List)c:null;
 									sql.append('`').append(
-														   l==null?c.toString()
+														   l==null?String.valueOf(c)
 														   :String.valueOf(l.get(0))
 														   ).append("`");
 									if(l!=null&&l.size()>1)
@@ -863,7 +850,7 @@ public static class TL {
 			/**where[]={col-name , param}*/
 			public int count(Object[]where) throws Exception{
 				StringBuilder sql=new StringBuilder(
-													"select count(*) from `")
+					"select count(*) from `")
 				.append(getName())
 				.append("` where `")
 				.append(where[0])
@@ -873,7 +860,7 @@ public static class TL {
 			/**where[]={col-name , param}*/public
 			int maxPlus1(CI col) throws Exception{
 				StringBuilder sql=new StringBuilder(
-													"select max(`"+col+"`)+1 from `")
+					"select max(`"+col+"`)+1 from `")
 				.append(getName()).append("`");
 				return DB.q1int(sql.toString(),1);}
 
@@ -896,9 +883,9 @@ public static class TL {
 			/**returns one column, where:array of two elements:1st is column param, 2nd value of param*/
 			Object[]column(CI col,Object...where) throws Exception{
 				return DB.q1col("select `"+col+"` from `"+getName()
-								+"` where `"+where[0]+"`="
-								+Cols.M.m(where[0]).txt//(where[0]instanceof CI?m((CI)where[0]):Cols.M.prm)
-								,where[0],where[1]);}//at
+					+"` where `"+where[0]+"`="
+					+Cols.M.m(where[0]).txt//(where[0]instanceof CI?m((CI)where[0]):Cols.M.prm)
+					,where[0],where[1]);}//at
 
 			/**returns a table*/
 			public Object[][]select(CI[]col,Object[]where)throws Exception{
@@ -947,13 +934,13 @@ public static class TL {
 				{String j=t.jo().clrSW().o(cv).toString();cv=j;}
 				catch (IOException e) {t.error(e,"TL.DB.Tbl.save(CI:",c,"):");}
 				try{DB.x("replace into `"+getName()+"` (`"+pkc+
-						 "`,`"+c+"`) values("+Cols.M.m(pkc).txt
-						 +","+Cols.M.m(c).txt+")",pkv,cv);
+						"`,`"+c+"`) values("+Cols.M.m(pkc).txt
+						+","+Cols.M.m(c).txt+")",pkv,cv);
 					Integer k=(Integer)pkv;
 					TL.DB.Tbl.Log.log(
-									  TL.DB.Tbl.Log.Entity.valueOf(getName())
-									  , k, TL.DB.Tbl.Log.Act.Update
-									  , TL.Util.mapCreate(c,v(c)) );
+						TL.DB.Tbl.Log.Entity.valueOf(getName())
+						, k, TL.DB.Tbl.Log.Act.Update
+						, TL.Util.mapCreate(c,v(c)) );
 				}catch(Exception x){tl().error(x
 											   ,"TL.DB.Tbl(",this,").save(",c,"):pkv=",pkv);}
 				return this;}//save
@@ -963,7 +950,7 @@ public static class TL {
 				Object pkv=pkv();CI pkc=pkc();boolean nw=pkv==null;//Map old=asMap();
 				if(nw){
 					int x=DB.q1int("select max(`"
-								   +pkc+"`)+1 from `"+getName()+"`",1);
+						+pkc+"`)+1 from `"+getName()+"`",1);
 					v(pkc,pkv=x);
 					tl().log("TL.DB.Tbl(",toJson(),").save-new:max(",pkc,") + 1:",x);
 				}CI[]cols=columns();
@@ -1005,8 +992,8 @@ public static class TL {
 			{	Map val=asMap();
 				Integer k=(Integer)pkv();
 				TL.DB.Tbl.Log.log(
-								  TL.DB.Tbl.Log.Entity.valueOf(getName())
-								  , k, act, val);}
+					TL.DB.Tbl.Log.Entity.valueOf(getName())
+					, k, act, val);}
 
 			boolean delete() throws SQLException{
 				Object pkv=pkv();
@@ -1020,8 +1007,8 @@ public static class TL {
 				TL t=TL.tl();ResultSet r=null;
 				boolean isMap=Map.class.isAssignableFrom(c.f().getType());
 				try {r=TL.DB.r(
-							   "select `val` from `log` where `entity`=? and `pk`=? order by `dt`"
-							   ,getName(), pkv());
+						"select `val` from `log` where `entity`=? and `pk`=? order by `dt`"
+						,getName(), pkv());
 					while(r.next()){
 						Object o=isMap?r.getString(1):r.getObject(1);
 						if(!isMap)return o;
@@ -1065,11 +1052,11 @@ public static class TL {
 					return b;}
 
 				@Override public Tbl next(){i++;/*
-												 try {int c=0;for(Field f:fields())try{v(f,rs.getObject(++c));}catch(Exception x)
-												 {TL.error("DB.Tbl.Sql("+this+").I2.next:i="+i+",c="+c+",rs="+rs,x);}}catch(Exception x)
-												 {TL.error("DB.Tbl.Sql("+this+").I2.next:i="+i+":"+rs, x);rs=null;}*/
+					try {int c=0;for(Field f:fields())try{v(f,rs.getObject(++c));}catch(Exception x)
+					{TL.error("DB.Tbl.Sql("+this+").I2.next:i="+i+",c="+c+",rs="+rs,x);}}catch(Exception x)
+					{TL.error("DB.Tbl.Sql("+this+").I2.next:i="+i+":"+rs, x);rs=null;}*/
 					try{load(rs,a);}catch(Exception x){tl().error(x,"TL.DB.Tbl("
-																  ,this,").Itrtr.next:i=",i,":",rs);rs=null;}
+						,this,").Itrtr.next:i=",i,":",rs);rs=null;}
 					return Tbl.this;}
 
 				@Override public void remove(){throw new UnsupportedOperationException();}
@@ -1226,7 +1213,7 @@ public static class TL {
 					Map<Class<? extends TL.DB.Tbl>,TL.DB.Tbl>
 					tbls=o instanceof Map?(Map)o:null;
 					if(tbls==null)tl.s(StrSsnTbls,tbls=new
-									   java.util.HashMap<Class<? extends TL.DB.Tbl>,TL.DB.Tbl>());
+						java.util.HashMap<Class<? extends TL.DB.Tbl>,TL.DB.Tbl>());
 					tbls.put(Usr.class, tl.usr);
 					tbls.put(Ssn.class, n);tl.logo("Usr.onLogin:n:",this);}
 
@@ -1252,33 +1239,33 @@ public static class TL {
 				@Override public C[]columns(){return C.values();}
 				@Override public List creationDBTIndices(TL tl){
 					return Util.lst(
-									Util.lst("int(6) NOT NULL AUTO_INCREMENT PRIMARY KEY "//uid
-											 ,"varchar(255) not null"//un
-											 ,"varchar(255) not null"//pw
-											 ,"text"//json
-											 )
-									,Util.lst(C.un)
-									,Util.lst(Util.lst("1","admin","admin","{title:\"admin\",avatar:\"avatar.jpg\"}"))
-									);/*CREATE TABLE `usr` (
-									   `uid` int(6) NOT NULL AUTO_INCREMENT,
-									   `flags` set('eu','auth','admin') not null default 'eu',
-									   `un` varchar(255) NOT NULL,
-									   `pw` varchar(255) NOT NULL,
-									   `full` text ,
-									   `tel` text ,
-									   `email` text ,
-									   `dob` date,
-									   `gender` set('male','female'),
-									   `img` text ,
-									   PRIMARY KEY (`uid`),
-									   KEY `uk` (`un`)
-									   ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+						Util.lst("int(6) NOT NULL AUTO_INCREMENT PRIMARY KEY "//uid
+							,"varchar(255) not null"//un
+							,"varchar(255) not null"//pw
+							,"text"//json
+							)
+						,Util.lst(C.un)
+						,Util.lst(Util.lst("1","admin","admin","{title:\"admin\",avatar:\"avatar.jpg\"}"))
+						);/*CREATE TABLE `usr` (
+						   `uid` int(6) NOT NULL AUTO_INCREMENT,
+						   `flags` set('eu','auth','admin') not null default 'eu',
+						   `un` varchar(255) NOT NULL,
+						   `pw` varchar(255) NOT NULL,
+						   `full` text ,
+						   `tel` text ,
+						   `email` text ,
+						   `dob` date,
+						   `gender` set('male','female'),
+						   `img` text ,
+						   PRIMARY KEY (`uid`),
+						   KEY `uk` (`un`)
+						   ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-									   insert into usr values
-									   (1,'admin','admin',password('admin'),'admin','admin','admin','1/1/1','male','admin'),
-									   (2,'auth','auth',password('auth'),'auth','auth','auth','1/1/1','male','auth'),
-									   (3,'eu','eu',password('eu'),'eu','eu','eu','1/1/1','male','eu');
-									   */}
+						   insert into usr values
+						   (1,'admin','admin',password('admin'),'admin','admin','admin','1/1/1','male','admin'),
+						   (2,'auth','auth',password('auth'),'auth','auth','auth','1/1/1','male','auth'),
+						   (3,'eu','eu',password('eu'),'eu','eu','eu','1/1/1','male','eu');
+						   */}
 			}//class Usr
 
 			public static class Ssn extends Tbl {//implements Serializable
@@ -1325,26 +1312,26 @@ public static class TL {
 				@Override public C[]columns(){return C.values();}
 				@Override public List creationDBTIndices(TL tl){
 					return Util.lst(
-									Util.lst("int(6) PRIMARY KEY NOT NULL AUTO_INCREMENT"//sid
-											 ,"int(6) NOT NULL"//uid
-											 ,"timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"//dt
-											 ,"timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'"//auth
-											 ,"timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'"//last
-											 ),Util.lst(C.dt,C.auth,C.last,Util.lst(C.uid,C.dt))
-									);/*
+						Util.lst("int(6) PRIMARY KEY NOT NULL AUTO_INCREMENT"//sid
+							,"int(6) NOT NULL"//uid
+							,"timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"//dt
+							,"timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'"//auth
+							,"timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'"//last
+							),Util.lst(C.dt,C.auth,C.last,Util.lst(C.uid,C.dt))
+						);/*
 
-									   CREATE TABLE `ssn` (
-									   `sid` int(6) NOT NULL AUTO_INCREMENT,
-									   `uid` int(6) NOT NULL ,
-									   `dt` timestamp not null,
-									   `auth` timestamp,
-									   `last` timestamp not null,
-									   PRIMARY KEY (`sid`),
-									   KEY `kDt` (`dt`),
-									   KEY `kAuth` (`auth`),
-									   KEY `kLast` (`last`)
-									   ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-									   */}
+						   CREATE TABLE `ssn` (
+						   `sid` int(6) NOT NULL AUTO_INCREMENT,
+						   `uid` int(6) NOT NULL ,
+						   `dt` timestamp not null,
+						   `auth` timestamp,
+						   `last` timestamp not null,
+						   PRIMARY KEY (`sid`),
+						   KEY `kDt` (`dt`),
+						   KEY `kAuth` (`auth`),
+						   KEY `kLast` (`last`)
+						   ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+						   */}
 
 			}//class Ssn
 
@@ -1353,35 +1340,35 @@ public static class TL {
 
 				@Override public List creationDBTIndices(TL tl){
 					return Util.lst(
-									Util.lst("int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT"//no
-											 ,"timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"//dt
-											 ,"int(11) NOT NULL"//uid
-											 ,"enum('projects','usr','sheets','json','ssn','log','buildings','floors')"//entity
-											 ,"int(11) NOT NULL"//pk
-											 ,"enum('New','Update','Delete','Login','Logout','Log','Error')"//act
-											 ,"text"//json
-											 )
-									,Util.lst(Util.lst(C.uid,C.dt)
-											  ,C.dt
-											  ,Util.lst(C.entity,C.act,C.dt)
-											  ,Util.lst(C.entity,C.pk,C.dt))
-									);	/*projects,sheets,imgs
+						Util.lst("int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT"//no
+							,"timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"//dt
+							,"int(11) NOT NULL"//uid
+							,"enum('projects','usr','sheets','json','ssn','log','buildings','floors')"//entity
+							,"int(11) NOT NULL"//pk
+							,"enum('New','Update','Delete','Login','Logout','Log','Error')"//act
+							,"text"//json
+							)
+						,Util.lst(Util.lst(C.uid,C.dt)
+							,C.dt
+							,Util.lst(C.entity,C.act,C.dt)
+							,Util.lst(C.entity,C.pk,C.dt))
+						);	/*projects,sheets,imgs
 
-										 CREATE TABLE `log` (
-										 `no` int(11) primary key,
-										 `dt` timestamp not null,
-										 `uid` int(11)not null,
-										 `entity` enum('projects','usr','sheets','img','ssn','log'),
-										 `pk` int(11) DEFAULT NULL,
-										 `act` enum('New','Update','Delete','Login','Logout','Log','Error'),
-										 `val` text,
-										 `old` text,
-										 key(uid,dt),
-										 key(dt),
-										 key(`entity`,`act`,`dt`),
-										 key(`entity`,`pk`,`dt`)
-										 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
-										 */}
+							 CREATE TABLE `log` (
+							 `no` int(11) primary key,
+							 `dt` timestamp not null,
+							 `uid` int(11)not null,
+							 `entity` enum('projects','usr','sheets','img','ssn','log'),
+							 `pk` int(11) DEFAULT NULL,
+							 `act` enum('New','Update','Delete','Login','Logout','Log','Error'),
+							 `val` text,
+							 `old` text,
+							 key(uid,dt),
+							 key(dt),
+							 key(`entity`,`act`,`dt`),
+							 key(`entity`,`pk`,`dt`)
+							 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
+							 */}
 				@Override public String getName(){return dbtName;}//public	Ssn(){super(Name);}
 				@F public Integer no;
 				@F public Date dt;
@@ -1417,22 +1404,22 @@ public static class TL {
 									  ,Integer pk,Act act,Map val){//,Map old
 					int r=-1;try{//throws SQLException, IOException
 						r= TL.DB.x(
-								   "insert into `"+dbtName+"`(`"+C.uid+"`,`"+C.entity+"`,`"+C.pk+"`,`"+C.act+"`,`"+C.json+"`) values(?,?,?,?,?)"
-								   ,t.usr!=null?t.usr.uid:-1,e.toString(),pk , act.toString()
-								   , t.jo().clrSW().o(val).toString()
-								   //, null//t.jo().clrSW().o(old).toString()
-								   );}
+							"insert into `"+dbtName+"`(`"+C.uid+"`,`"+C.entity+"`,`"+C.pk+"`,`"+C.act+"`,`"+C.json+"`) values(?,?,?,?,?)"
+							,t.usr!=null?t.usr.uid:-1,e.toString(),pk , act.toString()
+							, t.jo().clrSW().o(val).toString()
+							//, null//t.jo().clrSW().o(old).toString()
+							);}
 					catch(Exception x){t.error(x,
 											   "TL.DB.Tbl.Log.log:ex:");}return r;}
 
 				public static int log_(TL t,Entity e
 									   ,Integer pk,Act act,Object val){//,Map old
 					int r=-1;try{r= TL.DB.x(
-											"insert into `"+dbtName+"`(`"+C.uid+"`,`"+C.entity+"`,`"+C.pk+"`,`"+C.act+"`,`"+C.json+"`) values(?,?,?,?,?)"
-											,t.usr!=null?t.usr.uid:-1,e.toString(),pk , act.toString()
-											, t.jo().clrSW().o(val).toString()
-											//, null//t.jo().clrSW().o(old).toString()
-											);t.log("TL.DB.Tbl.Log.log_:",e,",",pk,",",act,",",val);}
+						"insert into `"+dbtName+"`(`"+C.uid+"`,`"+C.entity+"`,`"+C.pk+"`,`"+C.act+"`,`"+C.json+"`) values(?,?,?,?,?)"
+						,t.usr!=null?t.usr.uid:-1,e.toString(),pk , act.toString()
+						, t.jo().clrSW().o(val).toString()
+						//, null//t.jo().clrSW().o(old).toString()
+						);t.log("TL.DB.Tbl.Log.log_:",e,",",pk,",",act,",",val);}
 					catch(Exception x){t.error(x,"TL.DB.Tbl.Log.log:ex:");}
 					return r;}
 
@@ -2483,7 +2470,7 @@ public static class TL {
 						.w(",\"ssn\":").o(y.ssn,i2,c?path+".ssn":path)//.w(",sid:").o(y.sid,i2,c?path+".sid":path)
 						.w(",\"now\":").o(y.now,i2,c?path+".now":path)
 						.w(",\"json\":").o(y.json,i2,c?path+".json":path)
-						.w(",\"response\":").o(y.response,i2,c?path+".response":path)
+						//.w(",\"response\":").o(y.response,i2,c?path+".response":path)
 						.w(",\"Request\":").o(y.getRequest(),i2,c?path+".request":path)
 						//.w(",\"Session\":").o(y.getSession(false))
 						.w(",\"application\":").o(y.getServletContext(),i2,c?path+".application":path)
@@ -2699,1511 +2686,9 @@ public static class TL {
 		}//class Json.Parser
 	}//class Json
 
-
 }//class TL //TL tl=null;try{tl=TL.Enter(request,out);
 
-//public class AppEU059S
-	enum Prm{screen(Screen.class),op(Op.class)
-		,projNo(Integer.class)
-		,buildingNo(Integer.class)
-		,floorNo(Integer.class)
-		,sheetNo(Integer.class)
-		,query(String.class)
-		,entity(String.class)
-		,pk(Integer.class),v(Map.class)
-		,userLevel(String.class)
-		;Class<?>c;Prm(Class<?>p){c=p;}
 
-		enum Screen {ProjectsList,ProjectScreen,BuildingScreen
-			,FloorScreen,UsersList,User,Sheet
-			,ReportsMenu
-			,LogMenu
-			,ConfigMenu
-			,Search
-		}//Screen
-
-		enum UserLevel{Manage,Edit,View ,Suspended}
-
-	}//enum Prm
-
-	static TL .DB.Tbl.Usr usr(Object uid){
-		TL .DB.Tbl.Usr u=new TL .DB.Tbl.Usr();
-		u.load(uid);return u;}
-
-	static Map getJ(TL.DB.Tbl p){
-		Map r=null;
-		if(p instanceof Project){Project x=(Project)p;
-			r=x.json;
-		}else if(p instanceof Building){Building x=(Building)p;
-			r=x.json;
-		}else if(p instanceof Floor){Floor x=(Floor)p;
-			r=x.json;
-		}else if(p instanceof Sheet)
-		{Sheet x=(Sheet)p;
-			r=x.get();}
-		return r;}
-
-	static Map merge(Map dst,Map src){
-		if(dst!=null&& src!=null)for(Object k:src.keySet())
-			dst.put(k, src.get(k));
-		return dst;
-	}
-
-	static final String SsnNm="AppEU059S"
-	,UploadPth="/eu059sUploads/";
-	public Project proj=new Project();
-public Building bld=new Building();
-public Floor flr=new Floor();
-public Sheet sheet=new Sheet();
-public Storage storage=new Storage();
-public Prm.Screen screen;
-public TL tl;
-
-	public static AppEU059S app(){return app(TL.tl());}
-	public static AppEU059S app(TL tl){
-		Object o=tl.s(SsnNm);
-		if(o==null || !(o instanceof AppEU059S))
-			tl.s(SsnNm,o=new AppEU059S());
-		AppEU059S e=(AppEU059S)o;e.tl=tl;tl.a=e;
-		if(tl.usr==null && tl.a(SsnNm+".checkDBTCreation")==null
-		   ){
-			e.proj.checkDBTCreation(tl);
-			e.bld .checkDBTCreation(tl);
-			e.flr .checkDBTCreation(tl);
-			e.sheet.checkDBTCreation(tl);
-			e.storage.checkDBTCreation(tl);
-			new TL.DB.Tbl.Json().checkDBTCreation(tl);
-			new TL.DB.Tbl.Usr().checkDBTCreation(tl);
-			new TL.DB.Tbl.Ssn().checkDBTCreation(tl);
-			new TL.DB.Tbl.Log().checkDBTCreation(tl);
-			tl.a(SsnNm+".checkDBTCreation",tl.now);
-		}return e;}
-
-	/**path to the uploaded files for Sheet (the sheet stored in the session)*/
-	public String getUploadPath(){
-		//readVars();//if(proj.no!=sheet.p)proj.no=sheet.p;
-		if(bld.no==-1)//sheet.b
-			bld.no=sheet.b;
-		if(flr.no==-1)//!=sheet.f
-			flr.no=sheet.f;
-		return UploadPth//+proj.no+'/'+bld.no+'/'+flr.no+'/'+sheet.no+'/'
-		+sheet.p+'/'+sheet.b+'/'+sheet.f+'/'+sheet.no+'/';}
-
-	AppEU059S appInit(){try{
-		screen=tl.var(Prm.screen.toString(),Prm.Screen.ProjectsList);
-		if( tl.s(SsnNm)!=this )
-			tl.s( SsnNm , this );
-		//proj=(Project)tl.s("proj");
-		Integer n=tl.var(Prm.projNo.toString(),-1).intValue();//proj.no);
-		if(n!=proj.no && n!=-1)
-			proj.load(n);
-
-		//bld=(Building)tl.s("bld");
-		n=tl.var(Prm.buildingNo.toString(),-1).intValue();//bld.no);
-		if(n!=bld.no && n!=-1)
-			bld.load(n);
-
-		n=tl.var(Prm.floorNo.toString(),-1).intValue();//flr.no);
-		if(n!=flr.no && n!=-1)
-			flr.load(n);
-
-		n=tl.var(Prm.sheetNo.toString(),-1).intValue();//sheet.no);
-		if(n!=sheet.no){if( n!=-1)
-		{	sheet.load(n);
-			TL.DB.Tbl.Json j=sheet.json();
-			//j.json=sheet.m=j.LoadRef(j.jsonRef);
-			//if(sheet.f!=flr.no)flr.load(sheet.f);
-		}//else sheet.m=null;
-		}
-		/*if(sheet!=null && sheet.no!=null && sheet.jsonRef==null)
-			sheet.jsonRef=TL.DB.q1int(
-				"select `"+Sheet.C.jsonRef
-				+"` from `"+sheet.getName()
-				+"` where `"+Sheet.C.no
-				+"`=?", -1, sheet.no);
-
-		/*sheet=(Sheet)tl.s("sheet");
-		 if(sheet==null)
-		 {//sheet=new;
-		 sheet.no=tl.var(Prm.sheetNo.toString(),-1).intValue();
-		 if(sheet.no!=-1)
-		 {	sheet.load();
-		 TL.DB.Tbl.Json j=sheet.json();
-		 j.load();
-		 if(j.json instanceof Map)
-		 {	sheet.m=(Map)j.json;
-		 sheet.m.get(TL.DB.Tbl.Json.Jr);
-		 }
-		 }
-		 tl.s("sheet",sheet);
-		 }else
-		 {Number n=tl.var(Prm.sheetNo.toString(),sheet.no);
-		 if(n!=sheet.no)
-		 sheet.load(n);
-		 }
-		 * /
-		 if(sheet!=null && flr!=null && flr.no!=null && sheet.f!=null && sheet.f!=-1 && sheet.f!=flr.no)flr.load(sheet.f);
-		 if(flr!=null && bld!=null && flr.no!=null && bld.no!=null && flr.b!=-1 && flr.b!=bld.no)bld.load(flr.b);
-		 if( bld!=null && proj!=null && bld.no!=null && proj.no!=null && bld.p!=-1 && bld.p!=proj.no)proj.load(bld.p);*/
-	}catch(Exception ex){
-		tl.error(ex,SsnNm,".appInit");}
-		return this;
-	}//appInit
-
-	String title(TL.DB.Tbl t){Map j=getJ(t);
-		Object ttl=j==null?null:j.get("title");
-		String r=ttl==null?"title"+t:ttl.toString();
-		return r;}
-
-	String author(TL.DB.Tbl t){
-		Map j=getJ(t);
-		TL.DB.Tbl.Usr author=null;
-		Object a=j==null?null:j.get("author");
-		if(a!=null)try{author=usr(a);}
-		catch(Exception ex){tl.error(ex,"AppEU059S.author");}
-		Object authorName=author!=null && author.json!=null?author.json.get("name"):author!=null?author.un:null;
-		String retVal= authorName==null?"author:"+t : authorName.toString();
-		return retVal;}
-
-	void authenticate(Op op) throws Exception{
-
-		if(tl.usr==null&&op==Op.login){tl.logo("index:4:login");
-			TL.DB.Tbl.Usr u=TL.DB.Tbl.Usr.login();tl.logo("index:5:login");
-			if(u!=null){u.onLogin();
-				TL.DB.Tbl.Log.log(TL.DB.Tbl.Log.Entity.usr
-					, tl.usr.uid
-					, TL.DB.Tbl.Log.Act.Login
-					,TL.Util.mapCreate("usr",tl.usr,"request",tl.req));
-			}else// msg="incorrect login";
-				TL.DB.Tbl.Log.log(TL.DB.Tbl.Log.Entity.usr
-					, tl.usr.uid, TL.DB.Tbl.Log.Act.Log
-					,TL.Util.mapCreate("msg","incorrect login","request",tl.req));
-			//tl.logo("index:6:login:msg=",msg);
-		}
-
-		if(tl.usr==null && tl.getSession().isNew())
-			TL.DB.Tbl.Log.log(TL.DB.Tbl.Log.Entity.ssn, -1, TL.DB.Tbl.Log.Act.Log,
-				TL.Util.mapCreate("msg","new Connection","request",tl.req));
-
-		if(tl.usr!=null&&op==Op.logout)
-		{ TL.DB.Tbl.Log.log(TL.DB.Tbl.Log.Entity.usr, tl.usr.uid
-				, TL.DB.Tbl.Log.Act.Logout
-				,TL.Util.mapCreate("usr",tl.usr));
-			tl.ssn.onLogout();}
-
-		if(tl.usr==null){try{//tl.o("version 2016.05.04 08:36");
-			//pageContext.include("flat-login-form/index.html");
-			tl.o("<script>location=\"login.html\"</script>");
-		}catch(Exception x){tl.error(x,"AppEU059S.authenticate");}
-			tl.logo("index:8:end");
-			return;
-		}tl.logo("index:9");
-	}//authenticate
-
-{	/*
-
-<servlet>
-	<servlet-name>EU059Servlet</servlet-name>
-	<servlet-class >eu059s.AppEU059S.Srvlt</servlet-class>
-</servlet>
-<servlet-mapping>
-	<servlet-name>EU059Servlet</servlet-name>
-	<url-pattern>/EU059S/*</url-pattern>
-</servlet-mapping>
-
-	void jsp01() throws IOException {
-		tl.o("<!DOCTYPE HTML>\r\n"
-			 ,"<html>\r\n"
-			 ,"\t<head>\r\n"
-			 ,"\t\t<title>EU059S Structural Assessment of Underground Water Reservoirs</title>\r\n"
-			 ,"\t\t<meta charset=\"utf-8\" serverVersion=\"2016/05/16/17:56:00\"/>\r\n"
-			 ,"\t\t<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\r\n"
-			 ,"\t\t<!--[if lte IE 8]><script src=\"assets/js/ie/html5shiv.js\"></script><![endif]-->\r\n"
-			 ,"\t\t<link rel=\"stylesheet\" href=\"assets/css/main.css\" />\r\n"
-			 ,"\t\t<!--[if lte IE 9]><link rel=\"stylesheet\" href=\"assets/css/ie9.css\" /><![endif]-->\r\n"
-			 ,"\t\t<!--[if lte IE 8]><link rel=\"stylesheet\" href=\"assets/css/ie8.css\" /><![endif]-->\r\n"
-			 ,"<script src=\"app.js\"></script><script>AppEU059S.clkEdit=clkEdit=\r\n"
-			 ,"function clkEdit(evt){\r\n"
-			 ,"\tvar src=evt.target||event.srcElement\r\n"
-			 ,"\t//,p=src;//console.log(\"clkEdit\",evt,src)\r\n"
-			 ,"\t//while(p&&p.nodeName!='ARTICLE'){p=p.parentNode;}\r\n"
-			 ,"\r\n"
-			 ,"\tvar p=document.getElementsByClassName('editForm')[0]\r\n"
-			 ,"\t, a=p.getElementsByClassName('editable')\r\n"
-			 ,"\t,b=src.innerText=='EDIT'\r\n"
-			 ,"\t,v={},data\r\n"
-			 ,"\tp.aEdit=a;src.innerText=b?'Save':'EDIT'\r\n"
-			 ,"\tfor(var i =0;i<a.length;i++)\r\n"
-			 ,"\t{\ta[i].contentEditable=b;\r\n"
-			 ,"\t\ta[i].style.backgroundColor=b?'lightgray':''\r\n"
-			 ,"\t\tv[a[i].getAttribute('name')]=a[i].innerText;\r\n"
-			 ,"\t}data={op:'xhrEdit',entity:p.entity \r\n"
-			 ,"\t\t|| p.getAttribute('entity') ,pk:p.pk \r\n"
-			 ,"\t\t|| p.getAttribute('pk') ,v:v}\r\n"
-			 ,"\tconsole.log('clkEdit:src=',src,' ,p=',p,' ,a='\r\n"
-			 ,"\t\t,a,' ,b=',b,' ,v=',v ,' ,data=',data);\r\n"
-			 ,"\tif(!b)\r\n"
-			 ,"\t\tApp.xhr({data:data})\r\n"
-			 ,"}//function clkEdit(evt)\r\n"
-			 ,"</script>\r\n"
-			 ,"\t</head>\r\n"
-			 ,"\t<body>\r\n"
-			 ,"\r\n"
-			 ,"\t\t<!-- Wrapper -->\r\n"
-			 ,"\t\t\t<div id=\"wrapper\">\r\n"
-			 ,"\r\n"
-			 ,"\t\t\t\t<!-- Header -->\r\n"
-			 ,"\t\t\t\t\t<header id=\"header\">\r\n"
-			 //tl.o("\t\t\t\t\t\t<h1><a href=\"#\">Structural Assessment of Underground Water Reservoirs, EU059S</a></h1>\r\n");
-			 ,"\t\t\t\t\t\t<nav class=\"links\">\r\n"
-			 ,"\t\t\t\t\t\t\t<ul>\r\n"
-			 ,"\t\t\t\t\t\t\t\t<li><a href=\"?",Prm.screen,'=',Prm.Screen.ProjectsList
-			 ,"\">Projects</a></li>\r\n"
-			 ,"\t\t\t\t\t\t\t\t<li><a href=\"?",Prm.screen,'=',Prm.Screen.UsersList
-			 ,"\">Users</a></li>\r\n"
-			 ,"\t\t\t\t\t\t\t\t<li><a href=\"?",Prm.screen,'=',Prm.Screen.ReportsMenu
-			 ,"\">Reports</a></li>\r\n"
-			 ,"\t\t\t\t\t\t\t\t<li><a href=\"?",Prm.screen,'=',Prm.Screen.LogMenu
-			 ,"\">Logs</a></li>\r\n"
-			 ,"\t\t\t\t\t\t\t\t<li><a href=\"?",Prm.screen,'=',Prm.Screen.ConfigMenu
-			 ,"\">Configurations</a></li>\r\n"
-			 ,"\t\t\t\t\t\t\t</ul>\r\n"
-			 ,"\t\t\t\t\t\t</nav>\r\n"
-			 ,"\t\t\t\t\t\t<nav class=\"main\">\r\n"
-			 ,"\t\t\t\t\t\t\t<ul>\r\n"
-			 ,"\t\t\t\t\t\t\t\t<li class=\"search\">\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t<a class=\"fa-search\" href=\"#search\">Search</a>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t<form id=\"search\" method=\"get\" action=\"?",Prm.screen,'=',Prm.Screen.Search,'&',Prm.op,'=',Op.query
-			 ,"\">\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t\t<input type=\"text\" name=\"",Prm.query
-			 ,"\" placeholder=\"Search\" />\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t</form>\r\n"
-			 ,"\t\t\t\t\t\t\t\t</li>\r\n"
-			 ,"\t\t\t\t\t\t\t\t<li class=\"menu\">\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t<a class=\"fa-bars\" href=\"#menu\">Menu</a>\r\n"
-			 ,"\t\t\t\t\t\t\t\t</li>\r\n"
-			 ,"\t\t\t\t\t\t\t</ul>\r\n"
-			 ,"\t\t\t\t\t\t</nav>\r\n"
-			 ,"\t\t\t\t\t\t<h1><a href=\"#\">Structural Assessment of Underground <br/>Water Reservoirs, EU059S</a></h1>\r\n"
-			 ,"\t\t\t\t\t</header>\r\n"
-			 ,"\r\n"
-			 ,"\t\t\t\t<!-- Menu -->\r\n"
-			 ,"\t\t\t\t\t<section id=\"menu\">\r\n"
-			 ,"\r\n"
-			 ,"\t\t\t\t\t\t<!-- Search -->\r\n"
-			 ,"\t\t\t\t\t\t\t<section>\r\n"
-			 ,"\t\t\t\t\t\t\t\t<form id=\"search\" method=\"get\" action=\"?",Prm.screen,'=',Prm.Screen.Search,'&',Prm.op,'=',Op.query
-			 ,"\">\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t\t<input type=\"text\" name=\"",Prm.query
-			 ,"\" placeholder=\"Search\" />\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t</form>\r\n"
-			 ,"\t\t\t\t\t\t\t</section>\r\n"
-			 ,"\r\n"
-			 ,"\t\t\t\t\t\t<!-- Links -->\r\n"
-			 ,"\t\t\t\t\t\t\t<section>\r\n"
-			 ,"\t\t\t\t\t\t\t\t<ul class=\"links\">\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t<li>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t\t<a href=\"http://www.kisr.edu.kw\">\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t\t\t<h3>KISR</h3>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t\t\t<p>Kuwait Institute for Scientific Research</p>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t\t</a>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t</li>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t<li>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t\t<a href=\"#\">\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t\t\t<h3>EU</h3>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t\t\t<p>Energy & Building Research Center</p>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t\t</a>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t</li>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t<li>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t\t<a href=\"#\">\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t\t\t<h3>TED</h3>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t\t\t<p>Techno Economics Division</p>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t\t</a>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t</li>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t<li>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t\t<a href=\"#\">\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t\t\t<h3>EU059S</h3>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t\t\t<p>Project:Structural Assessment of Underground Water Reservoirs</p>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t\t</a>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t</li>");
-	}//jsp01
-
-	void jspMenu() throws IOException{
-		AppEU059S e=this;
-		if(e.screen==Prm.Screen.UsersList){
-			tl.o("\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t<li>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t<a href=\"#\">\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t\t<h3>New User</h3>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t\t<p><form method=\"post\"><input type=\"hidden\" name=\"",Prm.op
-				 ,"\" value=\"",Op.newUser
-				 ,"\"/><input type=\"submit\" value=\"Create\"/></form></p>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t</a>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t</li>");
-		}else if(e.screen==Prm.Screen.User){
-			tl.o("\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t<li>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t<a href=\"#\">\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t\t<h3>Delete User</h3>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t\t<p><form method=\"post\"><input type=\"hidden\" name=\"",Prm.op
-				 ,"\" value=\"",Op.deleteUser
-				 ,"\"/><input type=\"submit\" value=\"Delete\"/></form></p>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t</a>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t</li>");
-		}else if(e.screen==Prm.Screen.ProjectsList){
-			tl.o("\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t<li>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t<a href=\"#\">\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t\t<h3>New Project</h3>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t\t<p><form method=\"post\"><input type=\"hidden\" name=\"",Prm.op
-				 ,"\" value=\"",Op.newProject
-				 ,"\"/><input type=\"submit\" value=\"Create\"/></form></p>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t</a>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t</li>");
-		}else if(e.screen==Prm.Screen.ProjectScreen){
-			tl.o("\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t<li>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t<a href=\"#\">\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t\t<h3>Delete Project</h3>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t\t<p><form method=\"post\"><input type=\"hidden\" name=\"",Prm.op
-				 ,"\" value=\"",Op.deleteProject
-				 ,"\"/><input type=\"submit\" value=\"Delete\"/></form></p>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t</a>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t</li>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t<li>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t<a href=\"#\">\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t\t<h3>New Building</h3>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t\t<p><form method=\"post\"><input type=\"hidden\" name=\"",Prm.op
-				 ,"\" value=\"",Op.newBuilding
-				 ,"\"/><input type=\"submit\" value=\"Create\"/></form></p>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t</a>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t</li>");
-		}else if(e.screen==Prm.Screen.BuildingScreen){
-			tl.o("\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t<li>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t<a href=\"#\">\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t<h3>Delete Building</h3>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t<p><form method=\"post\"><input type=\"hidden\" name=\"",Prm.op
-				 ,"\" value=\"",Op.deleteBuilding
-				 ,"\"/><input type=\"submit\" value=\"Delete\"/></form></p>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t</a>\r\n"
-				 ,"\t\t\t\t\t\t\t\t</li>\r\n"
-				 ,"\t\t\t\t\t\t\t\t<li>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t<a href=\"#\">\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t<h3>New Floor</h3>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t<p><form method=\"post\"><input type=\"hidden\" name=\"",Prm.op
-				 ,"\" value=\"",Op.newFloor
-				 ,"\"/><input type=\"submit\" value=\"Create\"/></form></p>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t</a>\r\n"
-				 ,"\t\t\t\t\t\t\t\t</li>");
-		}else if(e.screen==Prm.Screen.FloorScreen){
-			tl.o("\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t<li>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t<a href=\"#\">\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t\t<h3>Delete Floor</h3>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t\t<p><form method=\"post\"><input type=\"hidden\" name=\"",Prm.op
-				 ,"\" value=\"",Op.deleteFloor
-				 ,"\"/><input type=\"submit\" value=\"Delete\"/></form></p>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t</a>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t</li>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t<li>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t<a href=\"#\">\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t\t<h3>New Sheet</h3>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t\t<p><form method=\"post\"><input type=\"hidden\" name=\"",Prm.op
-				 ,"\" value=\"",Op.newSheet
-				 ,"\"/><input type=\"submit\" value=\"Create\"/></form></p>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t</a>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t</li>");
-		}else if(e.screen==Prm.Screen.Sheet){
-			tl.o("<li><a href=\"#\"><h3>Delete Sheet</h3>\r\n"
-				 ,"<p><form method=\"post\"><input type=\"hidden\" name=\"",Prm.op
-				 ,"\" value=\"",Op.deleteSheet
-				 ,"\"/><input type=\"submit\" value=\"Delete\"/></form></p>\r\n"
-				 ,"</a></li>\r\n");
-		}
-		tl.o("\r\n"
-			 ,"\t\t\t\t\t\t\t\t</ul>\r\n"
-			 ,"\t\t\t\t\t\t\t</section>\r\n"
-			 ,"\r\n"
-			 ,"\t\t\t\t\t\t<!-- Actions -->\r\n"
-			 ,"\t\t\t\t\t\t\t<section>\r\n"
-			 ,"\t\t\t\t\t\t\t\t<ul class=\"actions vertical\">\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t<li><a href=\"?",Prm.op,'=',Op.logout
-			 ,"\" class=\"button big fit\">Logout</a></li>\r\n"
-			 ,"\t\t\t\t\t\t\t\t</ul>\r\n"
-			 ,"\t\t\t\t\t\t\t</section>\r\n"
-			 ,"\r\n"
-			 ,"\t\t\t\t\t</section>\r\n");
-	}//jspMenu
-
-	void jspMain() throws IOException{
-		tl.o("\r\n\t\t\t\t<!-- Main -->\r\n\t\t\t\t\t<div id=\"main\">\r\n");
-	}//jspMain
-
-	void jspScreenUsersList() throws IOException{
-		tl.o("\r\n"
-			 ,"<h1>Users</h1><table><tr>User-Name</tr><tr>User-Level</tr><\r\n"
-			 );
-		tl.o("</table><a href=\"?",Prm.op,'=',Op.newUser,"\">New User</a>","\r\n");
-	}//jspScreenUsersList
-
-	void jspScreenConfig() throws IOException{
-		tl.o("<h1>Config</h1>","Change Password");
-	}//jspScreenConfig
-
-	void jspScreenProjectsList() throws IOException{
-		AppEU059S e=this;int serialNo=0;//Project p=new Project();
-		tl.o("<h1>Projects</h1><table><tr><th>sn</th><th>Title</th><th>Desc</th><th>Created</th><th>by</th><th>Description</th><th>#Buildings</th><th>#Sheets</th></tr>");
-		for(TL.DB.Tbl row:e.proj.query(TL.DB.Tbl.where( )))try
-		{TL.DB.Tbl.Usr author=null; if(e.proj.json==null)e.proj.json=TL.Util.mapCreate();
-			try{author=usr(e.proj.json.get("author"));}
-			catch(Exception ex){tl.error(ex,"eu059s : project list for-loop:author ,proj=",e.proj);}
-			Object avatar=e.proj.json.get("avatar")
-			, uAvatar = author != null && author . json != null	? author . json . get ( "avatar" ):null
-			,authorName=author!=null && author.json!=null?author.json.get("name"):author!=null?author.un:"-";
-			++serialNo;// Object o=TL.Json.Parser.parse(json);Map l=(Map)((Map)o).get("labels");
-
-			tl.o("<tr entity=\"projects\" pk=",e.proj.no
-				 ,"><td>",serialNo,"</td>"
-				 ,"<td><h2 class=\"title\"><a href=\"?",Prm.screen,'=',Prm.Screen.ProjectScreen,'&',Prm.projNo,'=',e.proj.no
-				 ,"\" name=\"title\">",e.proj.json.get("title")
-				 ,"</a></h2></td>"
-				 ,"<td name=\"shortDesc\">",e.proj.json.get("shortDesc")
-				 ,"</td>\r\n"
-				 ,"<td class=\"meta\"><time class=\"published\" datetime=\"",e.proj.json.get("date")
-				 ,"\" name=\"date\">",e.proj.json.get("date")
-				 ,"</time></td>"
-				 ,"<td><a href=\"#\" class=\"author\"><span class=\"name\" name=\"author\" title=\"author name\">",authorName!=null?authorName:author!=null&&author.un!=null?author.un : "n/a"
-				 ,"<img src=\"images/",uAvatar==null?"avatar.jpg":uAvatar
-				 ,"\" alt=\"author image\" /></a></td>\r\n"
-				 //tl.o("\t\t\t< tr>\r\n");
-				 ,"<x-td><a href=\"#\" x-class=\"image featured\"><x-img src=\"images/",avatar!=null?avatar:(serialNo<10?"pic0"+serialNo+".jpg":"pic"+serialNo+".jpg")
-				 ,"\" alt=\"\" /></a></x-td>\r\n"
-				 ,"<td name=\"desc\">",e.proj.json.get("desc")
-				 ,"</td>"
-				 ,"<td class=\"stats\"><a title=\"number of buildings in this project\" class=\"icon fa-heart\" name=\"heart\">",TL.DB.q1int("select count(*) from buildings where p=?",-1,e.proj.no)
-				 ,"</a></td>"
-				 ,"<td><a title=\"number of sheets in this project\" href=\"#\" class=\"icon fa-comment\" name=\"comment\">",TL.DB.q1int("select count(*) from sheets where p=?",-1,e.proj.no)
-				 ,"</a></td footer></tr>\r\n");
-		}catch(Exception ex){tl.error(ex,"eu059s : Projects list for-loop ,proj=",e.proj);}
-		tl.o("</table><a href=\"?"
-			 ,Prm.screen,'=',Prm.Screen.ProjectScreen
-			 ,'&',Prm.op,'=',Op.newProject,"\">New Project</a>");
-	}//jspScreenProjectsList
-
-	void jspScreenProject() throws IOException, SQLException {
-		AppEU059S e=this;int serialNo=1;
-		serialNo=1;//if(e.proj.json==null)e.proj.json=TL.Util.mapCreate();TL.DB.Tbl.Usr author=null;try{author=usr(e.proj.json.get("author"));}catch(Exception ex){tl.error(ex,"eu059s : project-selected:author");}Object avatar=e.proj.json.get("avatar"),pTtl=e.proj.json.get("title"),uAvatar=author!=null && author.json!=null?author.json.get("avatar"):null,authorName=author!=null && author.json!=null?author.json.get("name"):author!=null?author.un:"-";
-
-		tl.o("<h1>Project</h1><table><tr><th>Title</th><th>Desc</th><th>Created</th><th>by</th><th>Description</th><th>Actions</th><th>#Buildings</th><th>#Sheets</th></tr>");
-		try
-		{ //if(e.proj.json==null)e.proj.json=TL.Util.mapCreate();try{author=usr(e.proj.json.get("author"));} catch(Exception ex){tl.error(ex,"eu059s : project :author ,proj=",e.proj);}
-			String pTtl=title(e.proj);
-			tl.o("<tr entity=\"projects\" pk=",e.proj.no
-				 ,screen==Prm.Screen.ProjectScreen?" class=\"editForm\"":""
-				 ,"><td><h2 class=\"title\"><a href=\"?"
-				 ,Prm.screen,'=',Prm.Screen.ProjectScreen,'&',Prm.projNo,'=',e.proj.no
-				 ,"\" name=\"title\""
-				 ,screen==Prm.Screen.ProjectScreen?" class=\"editable\">":">"
-				 ,pTtl,"</a></h2></td>"
-				 ,"<td name=\"shortDesc\""
-				 ,screen==Prm.Screen.ProjectScreen?" class=\"editable\">":">"
-				 ,e.proj.json.get("shortDesc"),"</td>\r\n"
-				 ,"<td class=\"meta\"><time class=\"published\" datetime=\"",e.proj.json.get("date")
-				 ,"\" name=\"date\">",e.proj.json.get("date"),"</time></td>"
-				 ,"<td><a href=\"#\" class=\"author\"><span class=\"name\" name=\"author\" title=\"author name\">"
-				 ,author(e.proj)//authorName!=null?authorName:author!=null&&author.un!=null?author.un : "n/a"
-				 ,"<img src=\"images/"
-				 ,"avatar.jpg"//uAvatar==null?"avatar.jpg":uAvatar
-				 ,"\" alt=\"author image\" /></a></td>\r\n"
-				 //,"<x-td><a href=\"#\" x-class=\"image featured\"><x-img src=\"images/",avatar!=null?avatar:serialNo<10?"pic0"+serialNo+".jpg":"pic"+serialNo+".jpg","\" alt=\"\" /></a></x-td>\r\n"
-				 ,"<td name=\"desc\"",screen==Prm.Screen.ProjectScreen?" class=\"editable\">":">"
-				 ,e.proj.json.get("desc"),"</td>"
-				 ,"<td footer class=\"actions\"><a href=\"?"
-				 ,Prm.screen,'=',Prm.Screen.ProjectScreen
-				 ,'&',Prm.projNo,'=',e.proj.no,"\" class=\"button big\">View</a>");
-			//  if(e.screen==Prm.Screen.ProjectScreen)
-			tl.o("<a onclick=\"clkEdit(event)\" class=\"button big\">Edit</a>\r\n"
-				 ,"<a onclick=\"confirm('delete project ",pTtl," ?')\" href=\"?"
-				 ,Prm.screen,'=',Prm.Screen.ProjectsList,'&'
-				 ,Prm.op,'=',Op.deleteProject,'&',Prm.projNo,'=',e.proj.no
-				 ,"\" class=\"button big\">Delete Project</a>"
-				 ,"<a href=\"?",Prm.screen,'=',Prm.Screen.BuildingScreen
-				 ,'&',Prm.op,'=',Op.newBuilding,'&',Prm.projNo,'=',e.proj.no
-				 ,"\" class=\"button big\">New Building</a>");
-
-			tl.o("</td>"
-				 ,"<td class=\"stats\"><a title=\"number of buildings in this project\" class=\"icon fa-heart\" name=\"heart\">"
-				 ,TL.DB.q1int("select count(*) from buildings where p=?",-1,e.proj.no)
-				 ,"</a></td><td><a title=\"number of sheets in this project\" href=\"#\" class=\"icon fa-comment\" name=\"comment\">"
-				 ,TL.DB.q1int("select count(*) from sheets where p=?",-1,e.proj.no)
-				 ,"</a></td footer></tr>\r\n");
-		}catch(Exception ex){tl.error(ex,"eu059s : Projects list for-loop ,proj=",e.proj);}
-		tl.o("</table>");
-		jspScreenBuildingList();
-	}//jspScreenProj
-
-	void jspIntro() throws IOException{
-		tl.o("\t\t\t\t\t</div>\r\n"
-			 ,"\r\n"
-			 ,"\t\t\t\t<!-- Sidebar -->\r\n"
-			 ,"\t\t\t\t\t<section x-id=\"sidebar\">\r\n"
-			 ,"\r\n"
-			 ,"\t\t\t\t\t\t<!-- Intro -->\r\n"
-			 ,"\t\t\t\t\t\t\t<section id=\"intro\">\r\n"
-			 ,"\t\t\t\t\t\t\t\t<a href=\"#\" class=\"logo\"><img src=\"images/logo.png\" alt=\"\" /></a>\r\n"
-			 ,"\t\t\t\t\t\t\t\t<header>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t<h2>Visual Assessment</h2>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t<p>Web-application</p>\r\n"
-			 ,"\t\t\t\t\t\t\t\t</header>\r\n"
-			 ,"\t\t\t\t\t\t\t</section>\r\n");
-	}//jspIntro
-
-	void jspScreenBuildingList() throws IOException, SQLException{
-		AppEU059S e=this;int serialNo=0;
-
-		tl.o("<h1>Buildings</h1><table><tr><th>sn</th><th>Title</th><th>Notes</th><th>Created</th><th>by</th><th>#Floors</th><th>#Sheets</th></tr>");
-
-		for(TL.DB.Tbl row:e.bld.query(TL.DB.Tbl.where(Building.C.p,e.proj.no )))
-		{TL.DB.Tbl.Usr author=usr(e.bld.json.get("author"));
-			Object avatar=e.bld.json.get("avatar")
-			, uAvatar = author != null && author . json != null
-			? author . json . get ( "avatar" ):null
-			,authorName=author!=null && author.json!=null
-			?author.json.get("name"):author!=null?author.un:"-";
-			++serialNo;
-
-
-			tl.o("<tr xclass=\"mini-post building\" entity=\"building\" pk=",e.bld.no
-				 ,">\r\n"
-				 ,"<td>",serialNo
-				 ,"</td>\r\n"
-				 ,"<td><h3><a href=\"?",Prm.screen,'=',Prm.Screen.BuildingScreen,'&',Prm.projNo,'=',e.proj.no,'&',Prm.buildingNo,'=',e.bld.no
-				 ,"\" name=\"title\">",e.bld.json.get("title")
-				 ,"</a></h3></td>\r\n"
-				 ,"<td>",e.bld.json.get("notes")
-				 ,"</td>\r\n"
-				 ,"<td><time class=\"published\" datetime=\"",tl.now ,'"','>',e.bld.json.get("date")
-				 ,"</time></td>\r\n"
-				 ,"<td><a href=\"#\" class=\"author\"><span class=\"name\" name=\"author\" title=\"author name\">",authorName!=null?authorName:author!=null&&author.un!=null?author.un : "n/a"
-				 ,"</span><img src=\"images/",uAvatar==null?"avatar.jpg":uAvatar
-				 ,"\" alt=\"author image\" /></a></td>\r\n"
-				 ,"<td class=\"stats\"><a title=\"number of floors in this building\" class=\"icon fa-heart\" name=\"heart\">",TL.DB.q1int("select count(*) from floors where b=?",-1,e.bld.no)
-				 ,"</a></td>\r\n"
-				 ,"<td><a title=\"number of sheets in this building\" href=\"#\" class=\"icon fa-comment\" name=\"comment\">",TL.DB.q1int("select count(*) from sheets where b=?",-1,e.bld.no)
-				 ,"</a></td></tr>\r\n");
-		}tl.o("</table>");
-	}//jspScreenBuildingList	//jspScreenProject
-
-	void jspScreenBuilding()throws IOException, SQLException{
-		AppEU059S e=this;int serialNo=1;
-		TL.DB.Tbl.Usr author=usr(e.bld.json.get("author"));
-		Object avatar=e.bld.json.get("avatar")
-		, uAvatar = author != null && author . json != null
-		? author . json . get ( "avatar" )
-		:null
-		,authorName=author!=null && author.json!=null
-		?author.json.get("name")
-		:author!=null?author.un
-		:"User";
-
-		tl.o("<h1>Building</h1><table><tr><th>Title</th><th>Notes</th><th>Created</th><th>by</th><th>Action</th><th>#Floors</th><th>#Sheets</th></tr>\n"
-			 ,"<tr xclass=\"mini-post building"
-			 ," editForm"//e.screen==Prm.Screen.BuildingScreen?" editForm":""
-			 ,"\" entity=\"building\" pk=\"",e.bld.no
-			 ,"\">\r\n"
-			 ,"<td><h3><a href=\"?",Prm.screen,'=',Prm.Screen.BuildingScreen,'&',Prm.buildingNo,'=',e.bld.no
-			 ,"\" name=\"title\" class=\"editable\">",e.bld.json.get("title")
-			 ,"</a></h3></td>\r\n"
-			 ,"<td class=\"editable\">",e.bld.json.get("notes")
-			 ,"</td>\r\n"
-			 ,"<td><time class=\"published\" datetime=\"",tl.now ,'"','>',e.bld.json.get("date")
-			 ,"</time></td>\r\n"
-			 ,"<td><a href=\"#\" class=\"author\"><span class=\"name\" name=\"author\" title=\"author name\">",authorName!=null?authorName:author!=null&&author.un!=null?author.un : "n/a"
-			 ,"</span><img src=\"images/",uAvatar==null?"avatar.jpg":uAvatar
-			 ,"\" alt=\"author image\" /></a></td>\r\n"
-			 ,"<td class=\"stats\" >\r\n");
-		//if(e.screen==Prm.Screen.BuildingScreen)
-		{
-			tl.o("<button onclick=\"clkEdit(event)\">EDIT</button>\r\n"
-				 ,"\t\t\t\t<button ><a href=\"?",Prm.op,'=',Op.newFloor
-				 ,"\">New Floor</a></button>\r\n"
-				 ,"\t\t\t\t<button ><a href=\"?",Prm.op,'=',Op.deleteBuilding
-				 ,"\">Delete Building</a></button>");
-		}
-		tl.o("</td>"
-			 ,"<td style=\"display:inline;	list-style: none;\" ><a title=\"number of floors in this building\" class=\"icon fa-heart\" name=\"heart\">",TL.DB.q1int("select count(*) from floors where b=?",-1,e.bld.no)
-			 ,"</a></td>\r\n"
-			 ,"<td style=\"display:inline;	list-style: none;\" ><a title=\"number of sheets in this project\" href=\"#\" class=\"icon fa-comment\" name=\"comment\">",TL.DB.q1int("select count(*) from sheets where b=?",-1,e.bld.no)
-			 ,"</a></td></tr></table>\r\n");
-		//if(e.screen==Prm.Screen.BuildingScreen)
-		{serialNo=0;
-			tl.o("<h1>Floors</h1><table><tr><th>sn</th><th>Title</th><th>Notes</th><th>Created</th><th>by</th><th>#Sheets</th></tr>");
-			for(TL.DB.Tbl row:e.flr.query(TL.DB.Tbl.where(Floor.C.b,e.bld.no )))
-			{ author=usr(e.bld.json.get("author"));
-				avatar=e.bld.json.get("avatar");
-				uAvatar = author != null && author . json != null
-				? author . json . get ( "avatar" ):null;
-				authorName=author!=null && author.json!=null
-				?author.json.get("name"):author!=null?author.un:"-";
-				++serialNo;
-
-
-				tl.o("<tr xclass=\"mini-post floor\" floorNo=",e.flr.no
-					 ,"><td>",serialNo
-					 ,"</td>\r\n"
-					 ,"<td><h3><a href=\"?",Prm.screen,'=',Prm.Screen.FloorScreen,'&',Prm.floorNo,'=',e.flr.no
-					 ,"\" name=\"title\">",e.flr.json.get("title")
-					 ,"</a></h3></td>\r\n"
-					 ,"<td>",e.flr.json.get("notes")
-					 ,"</td>\r\n"
-					 ,"<td><time class=\"published\" datetime=\"",tl.now ,'"','>',e.flr.json.get("date")
-					 ,"</time></td>\r\n"
-					 ,"<td><a href=\"#\" class=\"author\"><span class=\"name\" name=\"author\" title=\"author name\">",authorName!=null?authorName:author!=null&&author.un!=null?author.un : "n/a"
-					 ,"<img src=\"images/",uAvatar==null?"avatar.jpg":uAvatar
-					 ,"\" alt=\"author image\" /></a></td>\r\n"
-					 ,"<td class=\"stats\"><a title=\"number of sheets in this floor\" href=\"#\" class=\"icon fa-comment\" name=\"comment\">",TL.DB.q1int("select count(*) from sheets where f=?",-1,e.flr.no)
-					 ,"</a></td></tr>\r\n");
-			}tl.o("</table>\r\n");
-		}
-	}//jspNonBld
-
-	void jspScreenFloor() throws IOException,SQLException{
-		AppEU059S e=this;
-		tl.o("<h1>Floor</h1><table><tr><th>Title</th><th>Notes</th><th>Created</th><th>by</th><th>Action</th><th>#Sheets</th></tr>"
-
-			 ,"<tr"// xclass=\"mini-post floor");
-			 ,//e.screen==Prm.Screen.FloorScreen?:""
-			 " class=\"editForm\""
-			 ," entity=\"floor\" pk=\"",e.flr.no,"\">\r\n"
-			 ,"<td><h3><a href=\"?",Prm.screen,'=',Prm.Screen.FloorScreen
-			 ,'&',Prm.floorNo,'=',e.flr.no
-			 ,"\" name=\"title\" class=\"editable\">"
-			 ,e.flr.json.get("title")
-			 ,"</a></h3></td>\r\n"
-			 ,"<td class=\"editable\">"
-			 ,e.flr.json.get("notes")
-			 ,"</td>\r\n"
-			 ,"<td><time class=\"published\" datetime=\""
-			 ,tl.now ,'"','>',e.flr.json.get("date")
-			 ,"</time></td>\r\n"
-			 ,"<td><a href=\"#\" class=\"author\"><img src=\"images/"
-			 ,e.flr.json.get("avatar")
-			 ,"\" alt=\"\" /></a></td>"
-
-			 ,"<td><button onclick=\"clkEdit(event)\">EDIT</button>\r\n"
-			 ,"<form method=\"post\"><input type=\"hidden\" name=\""
-			 ,Prm.op,"\" value=\"",Op.deleteFloor
-			 ,"\"/><input type=\"submit\" value=\"Delete Floor\"/></form>\r\n"
-
-			 ,"<form method=\"post\"><input type=\"hidden\" name=\""
-			 ,Prm.op,"\" value=\"",Op.newSheet
-			 ,"\"/><input type=\"submit\" value=\"New Sheet\"/></form></td>\r\n"
-
-			 ,"<td class=\"stats\"><a title=\"number of sheets in this floor\" href=\"#\" class=\"icon fa-comment\" name=\"comment\">"
-			 ,TL.DB.q1int("select count(*) from sheets where f=?",-1,e.flr.no)
-			 ,"</a></td></tr></table>");
-		jspSheets();
-		//}//else , not floors
-	}
-
-	void jspPosts() throws IOException{
-		tl.o("\t\t\t\t\t\t\t\t</div>\r\n"
-			 ,"\t\t\t\t\t\t\t</section>\r\n"
-			 ,"\r\n"
-			 ,"\t\t\t\t\t\t<!-- Posts List -->\r\n"
-			 ,"\t\t\t\t\t\t\t<section>\r\n"
-			 ,"\t\t\t\t\t\t\t\t<ul class=\"posts\">\r\n");
-	}//jspPosts
-
-	void jspSheets()throws IOException, SQLException{//,int sIx
-		AppEU059S e=this;int serialNo=0,sIx=screen.ordinal();
-		//final int i0=Prm.Screen.ProjectScreen.ordinal(),i1=Prm.Screen.BuildingScreen.ordinal();
-		for(TL.DB.Tbl row:e.sheet.query(TL.DB.Tbl.where(
-														sIx==0?Sheet.C.p
-														:sIx==1?Sheet.C.b
-														:Sheet.C.f
-														,
-														sIx==0?e.proj.no
-														:sIx==1?e.bld.no
-														:e.flr.no )))
-		{	int sn=((serialNo++)%12)+1;
-			if(serialNo==1)
-				tl.o("<h1>Sheets</h1>");
-
-			tl.o("\r\n"
-				 ,"\t\t<li>\r\n"
-				 ,"\t\t\t<article>\r\n"
-				 ,"\t\t\t\t<header>\r\n"
-				 ,"\t\t\t\t\t<h3><a href=\"?",Prm.screen,'=',Prm.Screen.Sheet,'&',Prm.projNo,'=',e.sheet.p//e.proj.no);
-				 ,'&',Prm.buildingNo,'=',e.sheet.b//e.bld.no);
-				 ,'&',Prm.floorNo,'=',e.sheet.f//e.flr.no);
-				 ,'&',Prm.sheetNo,'=',e.sheet.no,'"','>',serialNo
-				 ,"</a></h3>\r\n"
-				 ,"\t\t\t\t\t<time class=\"published\" datetime=\"2015-10-15\">",e.sheet.dt//get("datetime") );
-				 ,"</time>\r\n"
-				 ,"\t\t\t\t</header>\r\n"
-				 ,"\t\t\t\t\t<a href=\"#\" class=\"image\"><img src=\"images/pic",sn<10?"0":"",sn
-				 ,".jpg\" alt=\"\" /></a>\r\n"
-				 ,"\t\t\t</article>\r\n"
-				 ,"\t\t</li>\r\n"
-				 ,"\t\t");
-		}//for row
-	}//jspSheets
-
-	void jspAbout_Footer() throws IOException{
-		tl.o("\r\n"
-			 ,"\t\t\t\t\t\t\t\t</ul>\r\n"
-			 ,"\t\t\t\t\t\t\t</section>\r\n"
-			 ,"\r\n"
-			 ,"\t\t\t\t\t\t<!-- About -->\r\n"
-			 ,"\t\t\t\t\t\t\t<section class=\"blurb\">\r\n"
-			 ,"\t\t\t\t\t\t\t\t<h2>About</h2>\r\n"
-			 ,"\t\t\t\t\t\t\t\t<p>The Project is headed by Dr Zafer Sakka zsakka@kisr.edu.kw , The Web-application is implemented by Mohamad Buhamad mbohamad@kisr.edu.kw</p>\r\n"
-			 ,"\t\t\t\t\t\t\t\t<ul class=\"actions\">\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t<li><a href=\"#\" class=\"button\">Learn More</a></li>\r\n"
-			 ,"\t\t\t\t\t\t\t\t</ul>\r\n"
-			 ,"\t\t\t\t\t\t\t</section>\r\n"
-			 ,"\r\n"
-			 ,"\t\t\t\t\t\t<!-- Footer -->\r\n"
-			 ,"\t\t\t\t\t\t\t<section id=\"footer\">\r\n"
-			 ,"\t\t\t\t\t\t\t\t<ul class=\"icons\">\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t<li><a href=\"#\" class=\"fa-twitter\"><span class=\"label\">Twitter</span></a></li>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t<li><a href=\"#\" class=\"fa-facebook\"><span class=\"label\">Facebook</span></a></li>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t<li><a href=\"#\" class=\"fa-instagram\"><span class=\"label\">Instagram</span></a></li>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t<li><a href=\"#\" class=\"fa-rss\"><span class=\"label\">RSS</span></a></li>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t<li><a href=\"#\" class=\"fa-envelope\"><span class=\"label\">Email</span></a></li>\r\n"
-			 ,"\t\t\t\t\t\t\t\t</ul>\r\n"
-			 ,"\t\t\t\t\t\t\t\t<p class=\"copyright\">&copy;K.I.S.R.</p>\r\n"
-			 ,"\t\t\t\t\t\t\t</section>\r\n"
-			 ,"\t\t\t\t\t</section>\r\n");
-	}//jspAbout_Footer
-
-	void jspSheet()throws IOException, SQLException{
-		AppEU059S e=this;
-		if(e.sheet!=null && e.sheet.no!=null && (e.sheet.jsonRef==null || e.sheet.m==null || e.sheet.m.get(TL.DB.Tbl.Json.Jr)==null))
-			try{	if(e.sheet.jsonRef==null)
-				e.sheet.jsonRef=TL.DB.q1int(
-											"select `"+Sheet.C.jsonRef
-											+"` from `"+e.sheet.getName()
-											+"` where `"+Sheet.C.no
-											+"`=?", -1, e.sheet.no);
-				if(e.sheet.m==null)
-					e.sheet.m=TL.Util.mapCreate(TL.DB.Tbl.Json.Jr, e.sheet.jsonRef);
-				else
-					e.sheet.m.put(TL.DB.Tbl.Json.Jr, e.sheet.jsonRef);
-				//e.sheet.m=TL.DB.Tbl.Json.LoadRef(e.sheet.m);
-			}catch(Exception ex){
-				tl.error(ex,"AppEU059S:SheetScreen:load Sheet and Json map");}
-		Object ft="-";
-		try{
-			e.sheet.m=TL.DB.Tbl.Json.LoadRef(e.sheet.m);
-			ft=e.flr.json.get("title");}
-		catch(Exception ex){tl.error(ex,"eu059s:ex:");}
-
-		tl.o("\r\n"
-			 ,"<script>\r\n"
-			 ,"sheet=",e.sheet.toJson()
-			 ,"\r\n"
-			 ,"sheet.json=",tl.jo().clrSW().o(e.sheet.get()).toString()
-			 ,"\r\n"
-			 ,"\r\n"
-			 ,"sheet.json.p={no:",e.proj.no
-			 ,",title:",tl.jo().clrSW().o(e.proj.json.get("title")).toString()
-			 ,"}\r\n"
-			 ,"sheet.json.b={no:",e.bld.no
-			 ,",title:",tl.jo().clrSW().o(e.bld.json.get("title")).toString()
-			 ,"}\r\n"
-			 ,"sheet.json.f={no:",e.flr.no
-			 ,",title:",tl.jo().clrSW().o(ft).toString(),'}'
-			 ,"\r\n"
-			 ,"sheet.json.u={no:",e.sheet.u
-			 ,",title:");
-
-		TL.DB.Tbl.Usr author=null;
-		try{author=usr(e.sheet.u);}
-		catch(Exception ex){tl.error(ex,"eu059s : sheet: usr: ",e.sheet);}
-		Object authorName=author!=null && author.json!=null
-		?author.json.get("name"):author!=null?author.un:"-";
-
-		tl.o( tl.jo().clrSW().o( authorName ).toString(),'}'
-			 ,"\r\n"
-			 ,"setFormData(sheet)\r\n"
-			 ,"</script>\r\n");
-	}//jspSheet
-
-	void jsp03() throws IOException{
-		tl.o("\r\n"
-			 ,"\t\t\t</div>\r\n"
-			 ,"\r\n"
-			 ,"\t\t<!-- Scripts -->\r\n"
-			 ,"\t\t\t<script src=\"assets/js/jquery.min.js\"></script>\r\n"
-			 ,"\t\t\t<script src=\"assets/js/skel.min.js\"></script>\r\n"
-			 ,"\t\t\t<script src=\"assets/js/util.js\"></script>\r\n"
-			 ,"\t\t\t<!--[if lte IE 8]><script src=\"assets/js/ie/respond.min.js\"></script><![endif]-->\r\n"
-			 ,"\t\t\t<script src=\"assets/js/main.js\"></script>\r\n");
-	}
-
-	public static void jspOld
-	(HttpServletRequest request
-	 ,HttpServletResponse response
-	 ,javax.servlet.http.HttpSession session
-	 ,JspWriter out
-	 ,javax.servlet.jsp.PageContext pageContext)
-	throws IOException, javax.servlet.ServletException
-	{TL tl=null;try{tl=TL.Enter(request,out);
-		Op op=tl.req(Prm.op.toString(),Op.none);tl.logo("index:1:",op);
-		response.setContentType("text/html; charset=UTF-8");
-		tl.logOut=tl.var("logOut",false);
-		AppEU059S e=AppEU059S.app(tl).appInit();
-		e.authenticate(op);
-		e.doOp(op);
-		int sIx=e.screen==Prm.Screen.ProjectScreen?0
-		:e.screen==Prm.Screen.BuildingScreen?1
-		:e.screen==Prm.Screen.FloorScreen?2
-		:e.screen==Prm.Screen.Sheet?3
-		:-1;
-		TL.DB.Tbl tbl=sIx==0?e.proj:sIx==1?
-		e.bld:sIx==2?e.flr:sIx==3?e.sheet:null;
-		e.jsp01();
-		e.jspMenu();
-
-		if(e.screen==Prm.Screen.Sheet)
-		{pageContext.include("fragment.html");
-			e.jspSheet();
-		}
-		else
-		{	e.jspMain();
-			if(e.screen==Prm.Screen.UsersList)
-				e.jspScreenUsersList();
-			else if(e.screen==Prm.Screen.ConfigMenu)
-				e.jspScreenConfig();
-			else if(e.screen==Prm.Screen.ProjectsList)
-				e.jspScreenProjectsList();
-			else if(e.screen==Prm.Screen.ProjectScreen)
-				e.jspScreenProject();
-			else if(sIx>0) {
-				//jsp breadcrumb proj
-				tl.o("<a href=\"?",Prm.screen,'=',Prm.Screen.ProjectScreen,'&',Prm.projNo,'=',e.proj.no,"\">",e.title(e.proj),"</a> / ");
-
-				if(e.screen==Prm.Screen.BuildingScreen)
-					e.jspScreenBuilding();//jsp bld
-				else {// jsp breadcrumb bld
-					tl.o("<a href=\"?",Prm.screen,'=',Prm.Screen.BuildingScreen,'&',Prm.buildingNo,'=',e.bld.no,"\">",e.title(e.bld),"</a> / ");
-
-					//if(e.screen==Prm.Screen.FloorScreen);
-					// jsp floor
-					e.jspScreenFloor();
-				}
-			}
-			e.jspIntro();
-			e.jspPosts();
-			//if(sIx>=0) e.jspSheets();
-			e.jspAbout_Footer();
-		}//! e.sheet
-		e.jsp03();
-	}
-		catch(Exception x){
-			if(tl!=null)
-				tl.error(x,"/adoqs/index.jsp:");
-			else
-				x.printStackTrace();}
-		finally{try{
-			List l=tl!=null && tl.response!=null?(
-												  List)tl.response.get(TL.DB.ItTbl.ErrorsList):null;
-			if(l!=null)//errors from TL.DB.ItTbl iterator
-				tl.o("<!--",l,"-->");
-		}catch(Exception ex){}
-			TL.Exit();
-		}
-		out.write("</body></html>");
-	}//jspOld
-	*/
-}
- public static void jsp(HttpServletRequest request,HttpServletResponse response,Writer out)throws IOException{
-	TL tl=null;try
-	{tl=TL.Enter(request,response,out);
-		 tl.r("contentType","text/json");
-		 tl.logOut=tl.var("logOut",false);
-		 Op op=tl.req(Prm.op.toString(),Op.none);
-		 if(tl.usr!=null || op==Op.login || op==Op.none)
-			 op.doOp(AppEU059S.app(tl),tl.json);
-		 else TL.Util.mapSet(tl.response,"msg","Operation not authorized ,or not applicable","return",false);
-		 if(tl.r("responseDone")==null)
-		 {if(tl.r("responseContentTypeDone")==null)
-			 response.setContentType(String.valueOf(tl.r("contentType")));
-			 tl.getOut().o(tl.response);
-			 tl.log("AppEU059S:xhr-response:",tl.jo().o(tl.response).toString());}
-		 tl.getOut().flush();
-	}catch(Exception x){
-		 if(tl!=null){
-			 tl.error(x,"AppEU059S.jsp:");
-			 tl.getOut().o(x);
-		 }else
-			 x.printStackTrace();
-	}finally{TL.Exit();}
- }
-
-public static class Srvlt extends HttpServlet{
- @Override public void service(HttpServletRequest q,HttpServletResponse r)
-	throws IOException, javax.servlet.ServletException{jsp(q,r,r.getWriter());}//jsp
-
- //@Override  public void init(){}//Servlet.init
-}//public static class Srvlt extends HttpServlet
-
-	public static class Project extends TL.DB.Tbl {//implements Serializable
-		public static final String dbtName="projects";
-		@Override public List creationDBTIndices(TL tl){
-			return TL.Util.lst(
-							   TL.Util.lst("int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT"//p
-										   ,"text"//json
-										   ));
-			/*projects,sheets,imgs
-
-			 CREATE TABLE `projects` (
-			 `no` int(11) NOT NULL,
-			 `title` varchar(255) DEFAULT NULL,
-			 `j` json DEFAULT NULL,
-			 PRIMARY KEY (`no`)
-			 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
-			 insert into projects values();
-
-			 CREATE TABLE `sheets` (
-			 `no` int(11) NOT NULL,
-			 `p` int(11) DEFAULT NULL,
-			 `b` int(11) DEFAULT NULL,
-			 `f` int(11) DEFAULT NULL,
-			 `n` int(11) DEFAULT NULL,
-			 `j` json DEFAULT NULL,
-			 PRIMARY KEY (`no`)
-			 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-			 */}
-		@Override public String getName(){return dbtName;}//public	Ssn(){super(Name);}
-		@TL.Form.F public Integer no;
-		@TL.Form.F(json=true) public Map json;
-
-		public enum C implements TL.DB.Tbl.CI{no,json;
-			@Override public Class<? extends TL.DB.Tbl>cls(){return Project.class;}
-			@Override public Class<? extends TL.Form>clss(){return cls();}
-			@Override public String text(){return name();}
-			@Override public Field f(){return TL.DB.Tbl.Cols.f(name(), cls());}
-			@Override public TL.DB.Tbl tbl(){return TL.DB.Tbl.tbl(cls());}
-			@Override public void save(){tbl().save(this);}
-			@Override public Object load(){return tbl().load(this);}
-			@Override public Object value(){return val(tbl());}
-			@Override public Object value(Object v){return val(tbl(),v);}
-			@Override public Object val(TL.Form f){return f.v(this);}
-			@Override public Object val(TL.Form f,Object v){return f.v(this,v);}
-
-		}//C
-
-		@Override public TL.DB.Tbl.CI pkc(){return C.no;}
-		@Override public Object pkv(){return no;}
-		@Override public C[]columns(){return C.values();}
-
-	}//class Project
-
-
-	public static class Building extends TL.DB.Tbl {//implements Serializable
-		public static final String dbtName="buildings";
-		@Override public List creationDBTIndices(TL tl){
-			return TL.Util.lst(
-							   TL.Util.lst("int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT"//no
-										   ,"int(11) NOT NULL"//p
-										   ,"text"//json
-										   ),TL.Util.lst(TL.Util.lst(C.p)));
-			/*
-			 CREATE TABLE `buildings` (
-			 `no` int(11) NOT NULL primary key,
-			 `p` int(11) NOT NULL ,
-			 `j` json DEFAULT NULL,
-			 KEY (`p`)
-			 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
-			 insert into projects values();
-			 */}
-		@Override public String getName(){return dbtName;}
-		@TL.Form.F public Integer no,p;
-		@TL.Form.F(json=true) public Map json;
-
-		public enum C implements TL.DB.Tbl.CI{no,p,json;
-			@Override public Class<? extends TL.DB.Tbl>cls(){return Building.class;}
-			@Override public Class<? extends TL.Form>clss(){return cls();}
-			@Override public String text(){return name();}
-			@Override public Field f(){return TL.DB.Tbl.Cols.f(name(), cls());}
-			@Override public TL.DB.Tbl tbl(){return TL.DB.Tbl.tbl(cls());}
-			@Override public void save(){tbl().save(this);}
-			@Override public Object load(){return tbl().load(this);}
-			@Override public Object value(){return val(tbl());}
-			@Override public Object value(Object v){return val(tbl(),v);}
-			@Override public Object val(TL.Form f){return f.v(this);}
-			@Override public Object val(TL.Form f,Object v){return f.v(this,v);}
-
-		}//C
-
-		@Override public TL.DB.Tbl.CI pkc(){return C.no;}
-		@Override public Object pkv(){return no;}
-		@Override public C[]columns(){return C.values();}
-
-	}//class Building
-
-
-	public static class Floor extends TL.DB.Tbl {//implements Serializable
-		public static final String dbtName="floors";
-
-		@Override public List creationDBTIndices(TL tl){
-			return TL.Util.lst(
-				TL.Util.lst("int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT"//no
-				   ,"int(11) NOT NULL"//p
-				   ,"int(11) NOT NULL"//b
-				   ,"text"//json
-				   ),TL.Util.lst(TL.Util.lst(C.p,C.b)));/*
-				 CREATE TABLE `floors` (
-				 `no` int(11) NOT NULL primary key,
-				 `p` int(11) NOT NULL,
-				 `b` int(11) NOT NULL,
-				 `j` json DEFAULT NULL,
-				 KEY (`p`,`b`)
-				 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
-				 insert into floors values();
-				 */}
-
-		@Override public String getName(){return dbtName;}//public	Ssn(){super(Name);}
-		@TL.Form.F public Integer no,p,b;
-		@TL.Form.F(json=true) public Map json;
-
-		public enum C implements TL.DB.Tbl.CI{no,p,b,json;
-			@Override public Class<? extends TL.DB.Tbl>cls(){return Floor.class;}
-			@Override public Class<? extends TL.Form>clss(){return cls();}
-			@Override public String text(){return name();}
-			@Override public Field f(){return TL.DB.Tbl.Cols.f(name(), cls());}
-			@Override public TL.DB.Tbl tbl(){return TL.DB.Tbl.tbl(cls());}
-			@Override public void save(){tbl().save(this);}
-			@Override public Object load(){return tbl().load(this);}
-			@Override public Object value(){return val(tbl());}
-			@Override public Object value(Object v){return val(tbl(),v);}
-			@Override public Object val(TL.Form f){return f.v(this);}
-			@Override public Object val(TL.Form f,Object v){return f.v(this,v);}
-
-		}//C
-
-		@Override public TL.DB.Tbl.CI pkc(){return C.no;}
-		@Override public Object pkv(){return no;}
-		@Override public C[]columns(){return C.values();}
-
-	}//class Floor
-
-
-	public static class Sheet extends TL.DB.Tbl {//implements Serializable
-		public static final String dbtName="sheets";
-
-		@Override public String getName(){return dbtName;}//public	Ssn(){super(Name);}
-		public enum Checkbox{f,on}
-		public enum Radio1_2{v1,v2}
-		public enum Radio1_3{v1,v2,v3}
-		public enum Radio1_4{v1,v2,v3,v4}
-
-		@TL.Form.F public Integer no,p,b,f,u;
-		@TL.Form.F public Date dt;//,datetime;
-
-		@TL.Form.F public Checkbox TypeofMemberBeam
-		,TypeofMemberColunm
-,TypeofMemberSlab
-,TypeofMemberStairs
-,TypeofMemberMansory
-,TypeofMemberRC
-,TypeofMemberFoundation
-,TypeofMemberOther;//on
-		@TL.Form.F public String TypeofMemberOtherText,location;
-		@TL.Form.F public Checkbox exposure_wetDry
-,exposure_chemical
-,exposure_erosion
-,exposure_elec
-,exposure_heat
-,LoadingCondition_Dead
-,LoadingCondition_Live
-,LoadingCondition_Impact
-,LoadingCondition_Vibration
-,LoadingCondition_Traffic
-,LoadingCondition_Seismic
-,LoadingCondition_Other;//7
-		@TL.Form.F public String LoadingConditionOther;
-		@TL.Form.F public Radio1_3 GeneralCondition;
-		@TL.Form.F public Checkbox Distress_Cracking
-,Distress_Staining
-,Distress_Surface
-,Distress_Leaking
-,Cracking_Checking
-,Cracking_Craze
-,Cracking_D//on----------------------------- replace the dash : -cracks // done/fixed
-,Cracking_Diagnol
-,Cracking_Hairline
-,Cracking_Longitudinal
-,Cracking_Map
-,Cracking_Pattern
-,Cracking_Plastic
-,Cracking_Random
-,Cracking_Shrinkage
-,Cracking_Temperature
-,Cracking_Transverse;//on
-@TL.Form.F public Double width;// steps of 0.05, minimum is 0
-@TL.Form.F public Checkbox Leaching;//on
-@TL.Form.F public Radio1_2 WorkingOrDormant;//2
-@TL.Form.F public Checkbox Textural_AirVoid
-,Textural_Blistering
-,Textural_Bugholes
-,Textural_ColdJoints
-,Textural_ColdLines
-,Textural_Discoloration
-,Textural_Honeycomb
-,Textural_Incrustation
-,Textural_Laitance
-,Textural_SandPocket
-,Textural_SandStreak
-,Textural_Segregation
-,Textural_Staining
-,Textural_Stalactite
-,Textural_Stalagmite
-,Textural_Stratification
-,Distresses_Chalking
-,Distresses_Deflection
-,Distresses_Delamination
-,Distresses_Distortion
-,Distresses_Dusting
-,Distresses_Exfoliation
-,Distresses_Leakage
-,Distresses_Peeling
-,Distresses_Warping
-,Distresses_Curling
-,Distresses_Deformation
-,Distresses_Disintegration
-,Distresses_DrummyArea
-,Distresses_Efflorescence
-,Distresses_Exudation
-,Distresses_MortarFlaking
-,Distresses_Pitting
-,JointDeficiencies
-,Spall
-,SealantFailure
-,Leakage
-,Fault
-,Popout;//on
-public @TL.Form.F Radio1_3 PopoutSize;//3
-@TL.Form.F public Checkbox isScaling;//on
-@TL.Form.F public Radio1_4 Scaling;//4
-@TL.Form.F public Checkbox Exposed
-,Corroded
-,Snapped
-,isSpall;//on
-@TL.Form.F public Radio1_2 SpallSize;//2
-@TL.Form.F public String notes;//2
-@TL.Form.F(json=true) public Map json;
-
-		public Map get() {//if(m==null)m=TL.Util.mapCreate("title","-");return m;
-			return null;}
-
-		public TL.DB.Tbl.Json json() {/*
-			TL.DB.Tbl.Json j=new TL.DB.Tbl.Json();
-			j.jsonRef=jsonRef;
-			j.json=get();
-			if(jsonRef==null)
-				j.jsonRef=jsonRef=TL.DB.Tbl.Json.jrn(j.json);//(Integer)j.mv().get(j.Jr);
-			return j;*/return null;}
-
-		public Object get(String p) {
-			return get().get(p);}
-
-		public Map set(TL.DB.Tbl.Json p) throws Exception{/*
-			if(p!=null){ if(jsonRef!=p.jsonRef)
-			{jsonRef=p.jsonRef;
-				save();
-			}	m=p.mv();
-			}*/
-			return get();}
-
-		public enum C implements TL.DB.Tbl.CI{no,p,b,f,u,dt//,datetime
-
-			,TypeofMemberBeam,TypeofMemberColunm,TypeofMemberSlab,TypeofMemberStairs
-			,TypeofMemberMansory,TypeofMemberRC,TypeofMemberFoundation,TypeofMemberOther
-			,TypeofMemberOtherText
-
-			,location
-
-			,exposure_wetDry,exposure_chemical,exposure_erosion,exposure_elec,exposure_heat
-
-			,LoadingCondition_Dead,LoadingCondition_Live,LoadingCondition_Impact,LoadingCondition_Vibration
-			,LoadingCondition_Traffic,LoadingCondition_Seismic,LoadingCondition_Other
-			,LoadingConditionOther
-
-			,GeneralCondition//1_3
-
-			,Distress_Cracking,Distress_Staining,Distress_Surface,Distress_Leaking
-
-			,Cracking_Checking,Cracking_Craze
-			,Cracking_D//------------------------------- replace dash with underscore : Cracking_D-cracks
-			,Cracking_Diagnol,Cracking_Hairline
-			,Cracking_Longitudinal,Cracking_Map,Cracking_Pattern,Cracking_Plastic,Cracking_Random
-			,Cracking_Shrinkage,Cracking_Temperature,Cracking_Transverse
-
-			,width
-			,Leaching
-
-			,WorkingOrDormant//1_2
-
-			,Textural_AirVoid,Textural_Blistering,Textural_Bugholes,Textural_ColdJoints
-			,Textural_ColdLines,Textural_Discoloration,Textural_Honeycomb,Textural_Incrustation
-			,Textural_Laitance,Textural_SandPocket,Textural_SandStreak,Textural_Segregation
-			,Textural_Staining,Textural_Stalactite,Textural_Stalagmite,Textural_Stratification
-
-			,Distresses_Chalking,Distresses_Deflection,Distresses_Delamination,Distresses_Distortion
-			,Distresses_Dusting,Distresses_Exfoliation,Distresses_Leakage,Distresses_Peeling
-			,Distresses_Warping,Distresses_Curling,Distresses_Deformation,Distresses_Disintegration
-			,Distresses_DrummyArea,Distresses_Efflorescence,Distresses_Exudation,Distresses_MortarFlaking
-			,Distresses_Pitting
-
-			,JointDeficiencies
-			,Spall
-			,SealantFailure
-			,Leakage
-			,Fault
-			,Popout
-
-			,PopoutSize//1_3
-
-			,isScaling
-
-			,Scaling//1_4
-
-			,Exposed
-			,Corroded
-			,Snapped
-
-			,isSpall//1_2
-			,SpallSize
-			,notes
-			,json
-			;
-
-			@Override public Class<? extends TL.DB.Tbl>cls(){return Sheet.class;}
-			@Override public Class<? extends TL.Form>clss(){return cls();}
-			@Override public String text(){return name();}
-			@Override public Field f(){return TL.DB.Tbl.Cols.f(name(), cls());}
-			@Override public TL.DB.Tbl tbl(){return TL.DB.Tbl.tbl(cls());}
-			@Override public void save(){tbl().save(this);}
-			@Override public Object load(){return tbl().load(this);}
-			@Override public Object value(){return val(tbl());}
-			@Override public Object value(Object v){return val(tbl(),v);}
-			@Override public Object val(TL.Form f){return f.v(this);}
-			@Override public Object val(TL.Form f,Object v){return f.v(this,v);}
-		}//C
-
-		@Override public TL.DB.Tbl.CI pkc(){return C.no;}
-		@Override public Object pkv(){return no;}
-		@Override public C[]columns(){return C.values();}
-
-		@Override public List creationDBTIndices(TL tl){
-			final String cb="enum('f','on') NOT NULL DEFAULT 'f'"
-			,r1_2="enum('v1','v2') "// NOT NULL DEFAULT 'v1'"
-			,r1_3="enum('v1','v2','v3') "
-			,r1_4="enum('v1','v2','v3','v4')";
-			return TL.Util.lst(
-				TL.Util.lst("int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT"//no
-,"int(11) NOT NULL"//p
-,"int(11) NOT NULL"//b
-,"int(11) NOT NULL"//f
-,"int(11) NOT NULL"//u
-,"timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP "//dt
-//,"timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP "//datetime
-,cb//TypeofMemberBeam;
-,cb//TypeofMemberColunm;
-,cb//TypeofMemberSlab;
-,cb//TypeofMemberStairs;
-,cb//TypeofMemberMansory;
-,cb//TypeofMemberRC;
-,cb//TypeofMemberFoundation;
-,cb//TypeofMemberOther;//on
-,"text"//TypeofMemberOtherText,
-,"text"// location;
-
-,cb// exposure_wetDry;
-,cb//exposure_chemical;//2
-,cb// exposure_erosion;
-,cb//exposure_elec;//4
-,cb// exposure_heat;
-,cb//LoadingCondition_Dead;
-,cb//LoadingCondition_Live;
-,cb//LoadingCondition_Impact;
-,cb//LoadingCondition_Vibration;
-,cb//LoadingCondition_Traffic;//5
-,cb// LoadingCondition_Seismic;
-,cb//LoadingCondition_Other;//7
-,"text"// LoadingConditionOther;
-,r1_3//					@F Radio1_3 GeneralCondition;
-,cb// Distress_Cracking;
-,cb//Distress_Staining;
-,cb//Distress_Surface;
-,cb//Distress_Leaking;
-,cb//Cracking_Checking;
-,cb//Cracking_Craze;
-,cb//Cracking_D
-,cb//Cracking_Diagnol;
-,cb//Cracking_Hairline;
-,cb//Cracking_Longitudinal;
-,cb//Cracking_Map;
-,cb//Cracking_Pattern;
-,cb//Cracking_Plastic;
-,cb//Cracking_Random;
-,cb//Cracking_Shrinkage;
-,cb//Cracking_Temperature;
-,cb//Cracking_Transverse;
-,"decimal(6,2)"//			@F Double width;// steps of 0.05, minimum is 0
-,cb//Leaching;//on
-,r1_2//			@F Radio1_2 WorkingOrDormant;//2
-,cb//Textural_AirVoid;//on
-,cb// Textural_Blistering;//on
-,cb// Textural_Bugholes;//on
-,cb// Textural_ColdJoints;//on
-,cb// Textural_ColdLines;//on
-,cb// Textural_Discoloration;//on
-,cb// Textural_Honeycomb;//on
-,cb// Textural_Incrustation;//on
-,cb// Textural_Laitance;//on
-,cb// Textural_SandPocket;//on
-,cb// Textural_SandStreak;//on
-,cb// Textural_Segregation;//on
-,cb// Textural_Staining;//on
-,cb// Textural_Stalactite;//on
-,cb// Textural_Stalagmite;//on
-,cb// Textural_Stratification;//on
-,cb// Distresses_Chalking;//on
-,cb// Distresses_Deflection;//on
-,cb// Distresses_Delamination;//on
-,cb// Distresses_Distortion;//on
-,cb// Distresses_Dusting;//on
-,cb// Distresses_Exfoliation;//on
-,cb// Distresses_Leakage;//on
-,cb// Distresses_Peeling;//on
-,cb// Distresses_Warping;//on
-,cb// Distresses_Curling;//on
-,cb// Distresses_Deformation;//on
-,cb// Distresses_Disintegration;//on
-,cb// Distresses_DrummyArea;//on
-,cb// Distresses_Efflorescence;//on
-,cb// Distresses_Exudation;//on
-,cb// Distresses_MortarFlaking;//on
-,cb// Distresses_Pitting;//on
-,cb// JointDeficiencies;//on
-,cb// Spall;//on
-,cb// SealantFailure;//on
-,cb// Leakage;//on
-,cb// Fault;//on
-,cb// Popout;//on
-,r1_3//			@F Radio1_3 PopoutSize;//3
-,cb// isScaling;//on
-,r1_4//			@F Radio1_4 Scaling;//4
-,cb// Exposed;//on
-,cb// Corroded;//on
-,cb// Snapped;//on
-,cb// isSpall;//on
-,r1_2//			@F Radio1_2 SpallSize;//2
-,"text"//notes
-,"text"//json
-					),TL.Util.lst(
-	 TL.Util.lst(C.p,C.b,C.f,C.u)										//1
-	,TL.Util.lst(C.u,C.p,C.no)											//2
-	,TL.Util.lst(C.dt)													//3
-	,TL.Util.lst(C.p,C.TypeofMemberBeam,C.TypeofMemberColunm			//4
- ,C.b),TL.Util.lst(C.p,C. TypeofMemberSlab,C.TypeofMemberStairs			//5
- ,C.b),TL.Util.lst(C.p,C. TypeofMemberMansory,C.TypeofMemberRC			//6
- ,C.b),TL.Util.lst(C.p,C. TypeofMemberFoundation						//7
- ,C.b),TL.Util.lst(C.p,C. TypeofMemberOther,TL.Util.lst(C.TypeofMemberOtherText,200)//8
- ,C.b),TL.Util.lst(C.p,TL.Util.lst(C.location,200)				//text(255) //9
- ,C.b),TL.Util.lst(C.p,C. exposure_wetDry,C.exposure_chemical			//10
- ,C.b),TL.Util.lst(C.p,C. exposure_erosion,C. exposure_elec				//1
- ,C.b),TL.Util.lst(C.p,C. exposure_heat									//2
- ,C.b),TL.Util.lst(C.p,C. LoadingCondition_Dead,C. LoadingCondition_Live//3
- ,C.b),TL.Util.lst(C.p,C. LoadingCondition_Impact,C. LoadingCondition_Vibration//4
- ,C.b),TL.Util.lst(C.p,C. LoadingCondition_Traffic,C. LoadingCondition_Seismic//5
- ,C.b),TL.Util.lst(C.p,C. LoadingCondition_Other,TL.Util.lst(C. LoadingConditionOther,200)//text(255)//6
- ,C.b),TL.Util.lst(C.p,C. GeneralCondition								//7
- ,C.b),TL.Util.lst(C.p,C. Distress_Cracking,C.Distress_Staining			//8
- ,C.b),TL.Util.lst(C.p,C. Distress_Surface,Distress_Leaking				//9
- ,C.b),TL.Util.lst(C.p,C. Cracking_Checking,C. Cracking_Craze			//20
- ,C.b),TL.Util.lst(C.p,C. Cracking_D,C. Cracking_Diagnol				//1
- ,C.b),TL.Util.lst(C.p,C. Cracking_Hairline,C. Cracking_Longitudinal	//2
- ,C.b),TL.Util.lst(C.p,C. Cracking_Map,C. Cracking_Pattern				//3
- ,C.b),TL.Util.lst(C.p,C. Cracking_Plastic,C. Cracking_Random			//4
- ,C.b),TL.Util.lst(C.p,C. Cracking_Shrinkage,C. Cracking_Temperature	//5
- ,C.b),TL.Util.lst(C.p,C. Cracking_Transverse,C.Leaching				//6
- ,C.b),TL.Util.lst(C.p,C. width//number									//7
- ,C.b),TL.Util.lst(C.p,C. WorkingOrDormant								//8
- ,C.b),TL.Util.lst(C.p,C. Textural_AirVoid,C. Textural_Blistering,C. Textural_ColdJoints,C. Textural_Discoloration,C. Textural_Incrustation,C. Textural_SandPocket,C. Textural_Segregation,C. Textural_Stalactite,C. Textural_Stratification,C. Textural_Bugholes,C. Textural_ColdLines,C. Textural_Honeycomb,C. Textural_Laitance,C. Textural_SandStreak,C. Textural_Staining,C. Textural_Stalagmite		   //9
- ,C.b),TL.Util.lst(C.p,C. Textural_Bugholes,C. Textural_ColdJoints,C. Textural_Stratification,C. Textural_Stalactite,C. Textural_Segregation,C. Textural_SandPocket,C. Textural_Incrustation,C. Textural_Discoloration,C. Textural_Stalagmite,C. Textural_Staining,C. Textural_SandStreak,C. Textural_Laitance,C. Textural_Honeycomb,C. Textural_ColdLines		  //30
- 
- 
- 
- ,C.b),TL.Util.lst(C.p,C. Textural_ColdLines,C. Textural_Discoloration	//1
- ,C.b),TL.Util.lst(C.p,C. Textural_Honeycomb,C. Textural_Incrustation	//2
- ,C.b),TL.Util.lst(C.p,C. Textural_Laitance,C. Textural_SandPocket		//3
- ,C.b),TL.Util.lst(C.p,C. Textural_SandStreak,C. Textural_Segregation	//4
- ,C.b),TL.Util.lst(C.p,C. Textural_Staining,C. Textural_Stalactite		//5
- ,C.b),TL.Util.lst(C.p,C. Textural_Stalagmite,C. Textural_Stratification//6
- ,C.b),TL.Util.lst(C.p,C. Distresses_Chalking,C. Distresses_Deflection	//7
- ,C.b),TL.Util.lst(C.p,C. Distresses_Delamination,C. Distresses_Distortion//8
- ,C.b),TL.Util.lst(C.p,C. Distresses_Dusting,C. Distresses_Exfoliation	//9
- ,C.b),TL.Util.lst(C.p,C. Distresses_Leakage,C. Distresses_Peeling		//40
- ,C.b),TL.Util.lst(C.p,C. Distresses_Warping,C. Distresses_Curling		//1
- ,C.b),TL.Util.lst(C.p,C. Distresses_Deformation,C.Distresses_Disintegration//2
- ,C.b),TL.Util.lst(C.p,C. Distresses_DrummyArea,C. Distresses_Efflorescence //3
- ,C.b),TL.Util.lst(C.p,C. Distresses_Exudation,C. Distresses_MortarFlaking  //4
- ,C.b),TL.Util.lst(C.p,C. Distresses_Pitting							//5
- ,C.b),TL.Util.lst(C.p,C. JointDeficiencies,C. Spall,C. SealantFailure,C. Leakage,C. Fault//6
- ,C.b),TL.Util.lst(C.p,C. JointDeficiencies,C. SealantFailure,C. Fault,C. Leakage,C. Spall//7
- ,C.b),TL.Util.lst(C.p,C. JointDeficiencies,C. Leakage,C. Fault,C. SealantFailure,C. Spall//8
- ,C.b),TL.Util.lst(C.p,C. JointDeficiencies,C. Fault,C. Leakage,C. Spall,C. SealantFailure//9
- ,C.b),TL.Util.lst(C.p,C. Popout,C. PopoutSize							//50
- ,C.b),TL.Util.lst(C.p,C. isScaling,C. Scaling							//1
- ,C.b),TL.Util.lst(C.p,C. Exposed,C. Corroded,C. Snapped				//2
- ,C.b),TL.Util.lst(C.p,C. Corroded,C. Snapped,C. Exposed				//3
- ,C.b),TL.Util.lst(C.p,C. Snapped,C. Corroded,C. Exposed				//4
- ,C.b),TL.Util.lst(C.p,C. isSpall,C. SpallSize							//5
- ,C.b),TL.Util.lst(C.p,TL.Util.lst(C. notes,200)						//6
- ,C.b)			));
-/*	CREATE TABLE `sheets` (
-	`no` int(11) NOT NULL,
-	`p` int(11) DEFAULT NULL,
-	`b` int(11) DEFAULT NULL,
-	`f` int(11) DEFAULT NULL,
-	`jsonRef` int(18) NOT NULL,
-	`dt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-	`u` int(11) DEFAULT NULL,
-	PRIMARY KEY (`no`)
-	) ENGINE=InnoDB DEFAULT CHARSET=utf8
-
-
-	public static void checkTableCreation(TL tl){
-	String sql="CREATE TABLE `"+dbtName+"` (\n" +
-	"`"+C.no+"` int(11) NOT NULL primary key,\n" +
-	"`"+C.p+"` int(11) NOT NULL,\n" +
-	"`"+C.b+"` int(11) NOT NULL,\n" +
-	"`"+C.f+"` int(11) NOT NULL,\n" +
-	"`"+C.u+"` int(11) NOT NULL,\n" +
-	"`"+C.jsonRef+"` int(24) NOT NULL,\n" +
-	"`"+C.dt+"` timestamp NOT NULL,\n" +
-	"KEY (`"+C.p+"`,`"+C.b+"`,`"+C.f+"`),\n" +
-	"KEY (`"+C.jsonRef+"`)\n" +
-	"KEY (`"+C.dt+"`)\n" +
-	") ENGINE=InnoDB DEFAULT CHARSET=utf8 ;";
-	try {
-	Object o=TL.DB.q("desc "+dbtName,0);
-	if(o==null){
-	int x=TL.DB.x(sql);
-	tl.log("AppEU059S.Sheet.checkTableCreation:",x,sql);
-	}
-	} catch (SQLException ex) {
-	tl.error(ex, "AppEU059S.Sheet.checkTableCreation");}
-	}//checkTableCreation*/}
-	}//class Sheet
 
 public static class Storage extends TL.DB.Tbl {//implements Serializable
 	public static final String dbtName="Storage";
@@ -4235,18 +2720,18 @@ public static class Storage extends TL.DB.Tbl {//implements Serializable
 		return TL.Util.lst(
 			TL.Util.lst("int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT"//no
 				,"varchar(255) NOT NULL"//path
-				,"text NOT NULL"//data
+				,"MEDIUMTEXT NOT NULL Default ''"//data
 				,"varchar(255) NOT NULL"//contentType
 				,"timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP "//lastModified
-				,"varchar(255) NOT NULL"//
+				//,"varchar(255) NOT NULL"//
 			), TL.Util.lst(
 				TL.Util.lst(C.path,C.lastModified),
 				TL.Util.lst(C.lastModified,C.path)));/*
 CREATE TABLE `Storage` (
   `no` int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `path` varchar(255) NOT NULL,
-  `data` text NOT NULL,
-  `contentType` text NOT NULL,
+  `data` MEDIUMTEXT NOT NULL,
+  `contentType` varchar(255) NOT NULL,
   `lastModified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ,
    key(`path`,`lastModified`),
    key(`lastModified`,`path`)
@@ -4254,279 +2739,120 @@ CREATE TABLE `Storage` (
 
 */}
 
-// Map vals(C except){}
-
 }//class Storage
 
- void respond(String contentType,String content){
-	try{tl.r("responseDone",true);
-	tl.rspns.setContentType(contentType);
-	tl.o(content);}catch(Exception ex){tl.error(ex,"AppEU059S.respond:");}}
+/* public <T>T req(String s,T defVal)
+ {if(s!=null)
+	defVal=parse(s,defVal);
+	return defVal;}
 
- enum Op{
-	 /**none is equivelant to bootstrapping the web-application system to Storage:key=app*/
- none{@Override void doOp(AppEU059S a,Map prms){//TODO: after the development stage of bootstrapping , change the respond to get from dbTbl-storage the js code path: "eu059s.bootStrap" ::= raw minimal js code to load LocalStorage "eu059s.BootStrap" and execute or do a xhr of xhr-op:eu059s.BootStrap
-	a.respond("text/html",//"<html><head><script src=\"sys.js\"></script></head><body></body></html>"
-	"<html><head><script>function bootstrap(){"
-+"	var path='eu059s.files:sys.js',x=localStorage[path] \n"
-+"	function init(x){console.log('bootstrap.js:init:',x)\n"
-+"		var s=document.createElement('script');			\n"
-+"		document.body.appendChild(s);\n"
-+"		s.text=x;}				\n"
-+"	if(!x)						\n"
-+"	{function xhr(p){			\n"
-+"			if(!p)return p;		\n"
-+"			var ct='Content-Type',cs='charset'	\n"
-+"				,x=typeof XMLHttpRequest === 'undefined'\n"
-+"				?new ActiveXObject('microsoft.XMLHTTP')\n"
-+"				:new XMLHttpRequest();x.p=p;p.xhr=x;	\n"
-+"			x.open(p.method||'POST',p.url||'', p.onload )\n"
-+"			x.setRequestHeader(ct, 'text/json');\n"
-+"			x.setRequestHeader(cs, 'utf-8');	\n"
-+"			x.onload=p.onload					\n"
-+"			x.send(JSON.stringify(p.data));		\n"
-+"			console.log('xhr:response:',x.response,p,x); \n"
-+"			return x.response;					\n"
-+"		}//function xhr							\n"
-+"		xhr({data:{op:'StorageGet',path:path	\n"
-+"			,onload:function(e){				\n"
-+"			localStorage[path]=x=e&&(e.response	\n"
-+"				||(e.target&&e.target.response)	\n"
-+"				||(e.src&&e.src.response))		\n"
-+"			init(x);\n"
-+"		}//onload function\n"
-+"		}//data		\n"
-+"		}//xhr param\n"
-+"		)//xhr		\n"
-+"	}//if !x		\n"
-+"	else init(x)	\n"
-+"}//function bootstrap\n"
-+"</script></head><body></body></html>"
-	);}}
+ public static <T>T parse(String s,T defval)
+ {if(s!=null)
+	try{	Class<T> c=(Class<T>) defval.getClass();
+		if(c.isEnum()){
+			for(T o:c.getEnumConstants())
+				if(s.equalsIgnoreCase(o.toString()))
+					return o;
+		}}catch(Exception x){//changed 2016.06.27 18:28
+			//TL.tl().error(x+ "TL.Util.<T>T parse(String s,T defval):"+s+defval);
+			x.printStackTrace();
+			}
+	return defval;}*/
+TL tl;Storage storage=new Storage();
+	enum Op{none,StorageNew,StorageGet,StorageDelete,StorageContent
+	,eval{	//scriptEngineEval, params:{<optional>engine:<str:engineName>,<optional>tl.s:<str>,eval:<str:script>}
+		@Override public void doOp(Sys app,Map params){
+			try{TL tl=app.tl;String engn=tl.var("engine", "JavaScript")
+				,tl_s_name=tl.var("op:eval.tl_s", "Engine:"+engn)
+				,eval=tl.req("eval");
 
- ,login{@Override void doOp(AppEU059S a,Map prms){try{
-	TL.DB.Tbl.Usr u=TL.DB.Tbl.Usr.login();TL tl=a.tl;
-	if(u!=null){u.onLogin();
-		TL.DB.Tbl.Log.log(TL.DB.Tbl.Log.Entity.usr
-			, tl.usr.uid
-			, TL.DB.Tbl.Log.Act.Login
-			,TL.Util.mapCreate("usr",tl.usr,"request",tl.req));}
-	else// msg="incorrect login";
-		TL.DB.Tbl.Log.log(TL.DB.Tbl.Log.Entity.usr
-			, tl!=null&&tl.usr!=null?tl.usr.uid:-1
-			, TL.DB.Tbl.Log.Act.Log
-			,TL.Util.mapCreate(
-				"msg","incorrect login"
-				,"request",tl.req));}catch(Exception ex){
-					a.tl.error(ex,"AppEU059S.Op.login:");}}}
+			ScriptEngine engine=(ScriptEngine)tl.s(tl_s_name);
 
- ,logout{@Override void doOp(AppEU059S a,Map prms)
-	{try{TL.DB.Tbl.Log.log(TL.DB.Tbl.Log.Entity.usr, a.tl.usr.uid,TL.
-		DB.Tbl.Log.Act.Logout,TL.Util.mapCreate("usr",a.tl.usr));
-		a.tl.ssn.onLogout();}catch(Exception ex){
-			a.tl.error(ex,"AppEU059S.Op.logout:");}}}
+			if("renjin".equalsIgnoreCase(engn)||"r".equalsIgnoreCase(engn)){
+				if(engine==null){// create a script engine manager
+					//RenjinScriptEngineFactory factory = new RenjinScriptEngineFactory();engine = factory.getScriptEngine();
+					//engine=ScriptEngineManager.getEngineByName("Renjin")
+					ScriptEngineManager factory = new ScriptEngineManager();
+					engine = factory.getEngineByName("Renjin");
+					tl.s(tl_s_name,engine);
+				}
+				engine.put("tl",tl);
+				Object retval=engine.eval(eval);
+				params.put("return",retval);
+			}else if("rhino".equalsIgnoreCase(engn)||"JavaScript".equalsIgnoreCase(engn)||"js".equalsIgnoreCase(engn)){
+				if(engine==null){// create a script engine manager
+					ScriptEngineManager factory = new ScriptEngineManager();
+			        // create a JavaScript engine
+			        engine = factory.getEngineByName("JavaScript");
+					tl.s(tl_s_name,engine);
+				}tl.log("test.jsp:Op.eval:engn=",engn," ,tl_s_name=",tl_s_name," ,eval=",eval);
+				engine.put("tl",tl);
+				Object retval=engine.eval(eval);
+				params.put("return",retval);
+				
+			}else super.doOp( app, params);
+		}catch(Exception ex){TL.Util.mapSet(params, "msg","Exception","Exception",ex);}}
+	}
+	,dbx{@Override public void doOp(Sys app,Map params){
+			try{TL tl=app.tl;String sql=tl.req("sql");
+			Object o=tl.json.get("p");
+			Object[]p=o instanceof Object[]?(Object[])o:null;
+			tl.log("test.jsp:Op.dbx:sql=",sql,",p=",o);
+			TL.Util.mapSet(params, "return",TL.DB.X(sql,p));
+	}catch(Exception ex){TL.Util.mapSet(params, "msg","Exception","Exception",ex);}}}
+	,dbq{@Override public void doOp(Sys app,Map params){
+			try{TL tl=app.tl;String sql=tl.req("sql");
+			Object o=tl.json.get("p");
+			Object[]p={};p=o instanceof Object[]?(Object[])o:p;
+			tl.log("test.jsp:Op.dbq:sql=",sql,",p=",o);
+			TL.Util.mapSet(params, "return",TL.DB.R(sql,p));
+		}catch(Exception ex){TL.Util.mapSet(params, "msg","Exception","Exception",ex);}}
+	}
+	,StorageSet
+	{@Override void doOp(Sys a,Map prms) {
+	try{
+		a.tl.log("test.jsp:Op.StorageSet:",prms);
+		a.storage.readReq_save();
+		prms.put("return",true);
+		
+		} catch (Exception e) {
+		a.tl.error(e,"test.jsp:Sys.Op.StorageSet");}}}
+	;
+	void doOp(Sys a,Map params){params.put("msg","op not implemented:"+this);}
+	}//enum Op
 
- ,newProject{@Override void doOp(AppEU059S a,Map prms){
-	a.proj.no=null;//TL.DB.q1int("select max(`no`)+1 from projects;", 1);
-	a.proj.json=TL.Util.mapCreate("title","Project "+a.tl.now
-		, "date",TL.Util.formatDate( a.tl.now )
-		, "shortDesc","short Desc"//"avatar","avatar.jpg"
-		, "author",a.tl.usr.uid, "desc","description" );
-	try{a.proj.save();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.newProject:");}
-	a.tl.s(Prm.projNo.toString(),a.proj.no);
-	a.tl.s(Prm.screen.toString(),a.screen=Prm.Screen.ProjectScreen);}}
+String getUploadPath(){return null;}
+static final String SsnNm="Sys";
 
- ,newBuilding{@Override void doOp(AppEU059S a,Map prms){
-	a.bld.no=null;a.bld.p=a.proj.no;
-	a.bld.json=TL.Util.mapCreate("date",TL.Util.formatDate( a.tl.now )
-		, "author",a.tl.usr.uid , "title","Building "+a.tl.now );//"avatar","avatar.jpg"
-	try{a.bld.save();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.newBuilding:");}
-	a.tl.s(Prm.buildingNo.toString(),a.bld.no);
-	a.tl.s(Prm.screen.toString(), Prm.Screen.BuildingScreen);}}
+public static Sys app(TL tl){
+		Object o=tl.s(SsnNm);
+		if(o==null || !(o instanceof Sys))
+			tl.s(SsnNm,o=new Sys());
+		Sys e=(Sys)o;e.tl=tl;tl.a=e;
+		return e;}
 
- ,newFloor{@Override void doOp(AppEU059S a,Map prms){
-	a.flr.no=null;a.flr.b=a.bld.no;a.flr.p=a.proj.no;
-	a.flr.json=TL.Util.mapCreate("date", TL.Util.formatDate( a.tl.now )
-		, "author",a.tl.usr.uid , "title","Floor "+a.tl.now);//"avatar","avatar.jpg"
-	try{a.flr.save();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.newFloor:");}
-	a.tl.s(Prm.floorNo.toString(),a.flr.no);
-	a.tl.s(Prm.screen.toString(), Prm.Screen.FloorScreen);}}
+static void jsp(HttpServletRequest q, HttpServletResponse response, Writer out){
+TL tl=null;try{tl=TL.Enter(q,response,out);
+ Op op=tl.req("op",Op.none);tl.r("contentType","text/json");
+ tl.logOut=tl.var("logOut",false);Sys sys=Sys.app(tl);
 
- ,newSheet{@Override void doOp(AppEU059S a,Map prms){
-	a.sheet.no=null;
-	a.sheet.dt=a.tl.now;a.sheet.u=a.tl.usr.uid;
-	a.sheet.p=a.proj.no;a.sheet.b=a.bld.no;a.sheet.f=a.flr.no;
-	//a.sheet.jsonRef=TL.DB.Tbl.Json.jrmp1();
-	//a.sheet.m=a.sheet.asMap();
-	//a.sheet.m.put("datetime", TL.Util.formatDate(a.sheet.dt ));
-	TL.DB.Tbl.Json j=a.sheet.json();
-	//a.sheet.m.put(j.Jr,j.jsonRef);
-	//sheet.jsonRef=j.jsonRef=j.jrmp1();//((Number)sheet.m.get(TL.DB.Tbl.Json.Jr)).intValue();
-	try{a.sheet.save();
-	//a.sheet.m.put("no", a.sheet.no);j.save(a.sheet.m);
-	}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.newSheet:");}
-	a.tl.s(Prm.sheetNo.toString(), a.sheet.no);
-	a.tl.s(Prm.screen.toString(), a.screen=Prm.Screen.Sheet);}}
+	//if((tl.usr!=null||tl.logOut)|| op==Op.login || op==Op.none)		//TODO: AFTER TESTING DEVELOPMENT, REMOVE from if: logOut
+		if(op==null)op=Op.none ;tl.log("test.jsp:mainService:",op,":",tl.a);
+		op.doOp(tl.a,tl.json);
+		//else TL.Util.mapSet(tl.response,"msg","Operation not authorized ,or not applicable","return",false);
+		 if(tl.r("responseDone")==null)
+		 {if(tl.r("responseContentTypeDone")==null)
+			 response.setContentType(String.valueOf(tl.r("contentType")));
+			 tl.getOut().o(tl.json);//response
+			 tl.log("Sys:xhr-response:",tl.jo().o(tl.json).toString());}
+		 tl.getOut().flush();
 
- ,newUser{@Override void doOp(AppEU059S a,Map prms){
-	TL.DB.Tbl.Usr u=new TL.DB.Tbl.Usr();
-	u.readReq("");//u .j=TL.Util.mapCreate name tel gender address email tel-ext id cid	"avatar","avatar.jpg"
-	u.uid=null;
-	try{u.save();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.newUser:");}
-	a.tl.s(Prm.screen.toString(), Prm.Screen.User);}}
+}catch(Exception ex){if(tl!=null)
+		tl.error(ex,"test.jsp:error:");
+	else ex.printStackTrace();}
+finally{Sys.TL.Exit();}	
+	
+}//jsp
 
- ,deleteProject{@Override void doOp(AppEU059S a,Map prms){
-	try{a.proj.delete();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.deleteProject:");}
-	a.tl.s(Prm.projNo.toString(),a.proj.no=-1);
-	a.screen=Prm.Screen.ProjectsList;}}
-
- ,deleteBuilding{@Override void doOp(AppEU059S a,Map prms){
-	try{a.bld.delete();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.deleteBuilding:");}
-	a.tl.s(Prm.buildingNo.toString(),a.bld.no=-1);
-	a.screen=Prm.Screen.ProjectScreen;}}
-
- ,deleteFloor{@Override void doOp(AppEU059S a,Map prms){
-	try{a.flr.delete();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.deleteFloor:");}
-	a.tl.s(Prm.floorNo.toString(),a.flr.no=-1);
-	a.screen=Prm.Screen.BuildingScreen;}}
-
- ,deleteSheet{@Override void doOp(AppEU059S a,Map prms){
-	/*deleteImages();
-		void deleteImages(){try{
-			//delete folder//Integer jsonRef=sheet.jsonRef;	 //AppEU059S app=app(t);app.
-			String path=getUploadPath()
-			,real=TL.context.getRealPath(tl,path);//t.getServletContext().getRealPath(path);
-			File f=new File(real);
-			if(f.exists())
-				f.delete();
-		}catch(Exception ex){tl.error(ex,"deleteImages");}
-		}//deleteImages*/
-	try{a.sheet.delete();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.deleteSheet:");}
-	a.tl.s(Prm.sheetNo.toString(), a.sheet.no=-1);
-	a.screen=Prm.Screen.FloorScreen;}}
-
- ,deleteUser{@Override void doOp(AppEU059S a,Map prms){
-	TL.DB.Tbl.Usr u=new TL.DB.Tbl.Usr();u.readReq("");
-	try{u.delete();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.deleteUser:");}
-	a.tl.s(Prm.screen.toString(),a.screen=Prm.Screen.UsersList);}}
-/*/,userChngPw{@Override void doOp(AppEU059S a,Map prms){}}
-,query{@Override void doOp(AppEU059S a,Map prms){/*
-	* search
-	* proj
-	* title
-	* short desc
-	* desc
-	* building title
-	* floor title
-	* sheet
-	* notes
-	* other txt,txt,txt
-	* usr full-name ,user-id , desc
-	* * /}}*/
-
- ,xhrEdit{@Override void doOp(AppEU059S a,Map prms){try{
-	a.tl.log("AppEU059S.Op.xhrEdit : op==xhrEdit");
-	if(a.tl.response==null)a.tl.response=TL.Util.mapCreate();
-	TL.Util.mapSet(a.tl.response,"msg","um...");
-	String entity=a.tl.req("entity");
-	Map v=(Map)a.tl.json.get("v");
-	Integer pk=a.tl.req("pk",-1);
-	TL.DB.Tbl t="project".equals(entity)?a.proj
-	:"building".equals(entity)?a.bld
-	:"floor".equals(entity)?a.flr:null;
-	a.tl.log("AppEU059S.Op.xhrEdit : entity=",entity," ,pk=",pk," ,v=",v ," ,t=",t);
-	if(t!=null && pk!=-1)
-	{t.load(pk);a.tl.log("AppEU059S.Op.xhrEdit : t!=null && pk!=-1");
-		Map j=a.getJ(t);
-		a.merge(j,v);
-		a.tl.log("AppEU059S.Op.xhrEdit : merge:",t);
-		t.save();
-		a.tl.log("AppEU059S.Op.xhrEdit : save");
-	}else a.tl.log("AppEU059S.Op.xhrEdit : else: t!=null && pk!=-1");
-	a.tl.getOut().o(a.tl.response);
-	a.tl.log("AppEU059S.Op.xhrEdit : return");
-	}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.xhrEdit:");}}}
-
- ,saveSheet{@Override void doOp(AppEU059S a,Map prms){try{
-	a.tl.log("op-saveSheet");
-	TL.DB.Tbl.Json json=a.sheet.json();
-	Map old=null,j=null;//a.sheet.m,j=a.sheet.m=(Map) (json.json=a.tl.json.get("json"));
-	//a.sheet.fromMap(j);
-	for(int i=0;i<4;i++)try{
-		String n="img"+(i+1);
-		Object o=a.tl.json.get(n);//Map m=(Map)tl.json.get(n);
-		if(o==null && old!=null)
-			o=old.get(n);
-		if(o!=null &&(!(o instanceof String) || o.toString().trim().length()>0))
-			j.put(n, o);
-	}catch(Exception ex){
-		a.tl.error(ex,"AppEU059S.saveSheet");}
-	j.put("no", a.sheet.no);
-	json.save();
-	a.sheet.save();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.saveSheet:");}
-	}}
- //,getImg
-
- ,StorageList{@Override void doOp(AppEU059S a,Map prms){
-	Storage.C[]x={Storage.C.no,Storage.C.path,Storage.C.contentType,Storage.C.lastModified};
-	a.storage.readReq("");
-	StringBuilder sql=new StringBuilder("select ");
-	TL.DB.Tbl.Cols.generate(sql,x)
-		.append(" from ").append(Storage.dbtName)
-		.append(" where `").append(Storage.C.lastModified).append("`>?");
-	List<Object>l=TL.Util.lst(x),r;
-
-	a.tl.response.put("return",l);
-	for (TL.DB.ItTbl.ItRow i:TL.DB.ItTbl.it( sql.toString()
-		,a.storage.lastModified)) {
-		l.add(r=TL.Util.lst());
-		for (Storage.C c:x)
-			r.add(i.next());}}}
-
- ,StorageGet{@Override void doOp(AppEU059S a,Map prms){
-	try{a.storage.readReq("");a.storage.load();prms.put("return",a.storage);} catch (Exception e) {
-		a.tl.error(e,"AppEU059S.Op.StorageGet");}}}
-
- ,StorageContent{@Override void doOp(AppEU059S a,Map prms){
-	try{a.storage.readReq("");a.storage.load();//prms.put("return",a);
-	//set response headers: lastModified,
-	a.respond(a.storage.contentType,a.storage.data);
-	} catch (Exception e) {
-		a.tl.error(e,"Storage.Op.StorageContent");}}}/*
-
- ,StorageScript{@Override void doOp(AppEU059S a,Map prms){
-	try{a.storage.readReq("");a.storage.load();//prms.put("return",a);
-	//set response headers: lastModified,
-	a.respond(a.storage.contentType,a.storage.data);
-	} catch (Exception e) {
-		a.tl.error(e,"AppEU059S.Op.get");}}}
-
- ,StorageCss{@Override void doOp(AppEU059S a,Map prms){
-	try{a.storage.readReq("");a.storage.load();prms.put("return",a);} catch (Exception e) {
-		a.tl.error(e,"AppEU059S.Op.get");}}}
-
- ,StorageImg{@Override void doOp(AppEU059S a,Map prms){
-	try{a.storage.readReq("");a.storage.load();prms.put("return",a);} catch (Exception e) {
-		a.tl.error(e,"AppEU059S.Op.get");}}}*/
-
- ,StorageSet{@Override void doOp(AppEU059S a,Map prms) {
-	try{a.storage.readReq_save();prms.put("return",true);} catch (Exception e) {
-		a.tl.error(e,"AppEU059S.Op.StorageSet");}}}
-
- ,StorageNew{@Override void doOp(AppEU059S a,Map prms) {
-	try{int no=a.storage.no=a.storage.maxPlus1(Storage.C.no);
-	prms.put("return",no);
-	a.storage.readReq_save();} catch (Exception e) {
-		a.tl.error(e,"AppEU059S.Op.StorageNew");}}}
-
- ,StorageDelete{@Override void doOp(AppEU059S a,Map prms) {
-	try{a.storage.readReq("");
-	prms.put("return",a.storage.delete());} catch (Exception e) {
-		a.tl.error(e,"AppEU059S.Op.StorageDelete");}}}
-
- //,StorageSyncOffline{@Override void doOp(TL tl,Map prms){}}
- ;
- void doOp(AppEU059S a,Map params){params.put("msg","op not implemented");}
- }//enum Op
-
-}//class AppEU059S
+}//Sys
+%><%Sys.jsp(request,response,out);%>
