@@ -1,35 +1,27 @@
 package eu059s;//eu059s.AppEU059S.Srvlt
 
+import java.io.*;
 import java.lang.reflect.Field;
 
-import java.io.File;
-import java.io.ObjectInputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.lang.reflect.Array;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.Principal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import javax.servlet.*;
+import javax.servlet.descriptor.JspConfigDescriptor;
 import javax.servlet.http.*;
 //import javax.servlet.jsp.JspWriter;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
+import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.PageContext;
+import javax.servlet.jsp.el.ExpressionEvaluator;
+import javax.servlet.jsp.el.VariableResolver;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource;
 import org.apache.commons.fileupload.FileItem;
@@ -292,11 +284,14 @@ public static class TL {
 
 		public static <T>T parse(String s,T defval)
 		{if(s!=null)
-			try{	Class<T> c=(Class<T>) defval.getClass();
-				if(c.isEnum()){
-					for(T o:c.getEnumConstants())
+			try{	Class<T> ct=(Class<T>) defval.getClass();
+				Class c=ct;
+			boolean b=c==null?false:c.isEnum();
+				if(!b){c=ct.getEnclosingClass();b=c==null?false:c.isEnum();}
+				if(b){
+					for(Object o:c.getEnumConstants())
 						if(s.equalsIgnoreCase(o.toString()))
-							return o;
+							return (T)o;
 				}}catch(Exception x){//changed 2016.06.27 18:28
 					TL.tl().error(x, "TL.Util.<T>T parse(String s,T defval):",s,defval);}
 			return defval;}
@@ -800,7 +795,7 @@ public static class TL {
 			public void checkDBTCreation(TL tl){
 				String dtn=getName();Object o=null;
 				try {o=TL.DB.q("desc "+dtn);} catch (SQLException ex) {
-					tl.error(ex, "TL.DB.Tbl.checkTableCreation:",dtn);}
+					tl.error(ex, "TL.DB.Tbl.checkTableCreation:check-pt1:",dtn);}
 				try{if(o==null){
 					StringBuilder sql=
 					new StringBuilder("CREATE TABLE `")
@@ -830,9 +825,9 @@ public static class TL {
 								if(s){sql.append((String)c);if(x==0){x--;keyHeadFromList=true;}}
 								else {List l=c instanceof List?(List)c:null;
 									sql.append('`').append(
-														   l==null?c.toString()
-														   :String.valueOf(l.get(0))
-														   ).append("`");
+										l==null?String.valueOf(c)
+										:String.valueOf(l.get(0))
+										).append("`");
 									if(l!=null&&l.size()>1)
 										sql.append('(').append(l.get(1)).append(')');
 								}x++;
@@ -844,8 +839,9 @@ public static class TL {
 					 "KEY (`"+C.jsonRef+"`)\n" +
 					 "KEY (`"+C.dt+"`)\n" +*/
 					sql.append(") ENGINE=InnoDB DEFAULT CHARSET=utf8 ;");
+					tl.log("TL.DB.Tbl.checkTableCreation:before:sql=",sql);
 					int r=TL.DB.x(sql.toString());
-					tl.log("TL.DB.Tbl.checkTableCreation:",dtn,r,sql);
+					tl.log("TL.DB.Tbl.checkTableCreation:executedSql:",dtn,":returnValue=",r);
 					b=an>2?(List)a.get(2):b;if(an>2)
 						for(Object bo:b){
 							List c=(List)bo;
@@ -857,13 +853,13 @@ public static class TL {
 						}
 				}
 				} catch (SQLException ex) {
-					tl.error(ex, "TL.DB.Tbl.checkTableCreation:",dtn);}
+					tl.error(ex, "TL.DB.Tbl.checkTableCreation:errMain:",dtn);}
 			}//checkTableCreation
 
 			/**where[]={col-name , param}*/
 			public int count(Object[]where) throws Exception{
 				StringBuilder sql=new StringBuilder(
-													"select count(*) from `")
+				"select count(*) from `")
 				.append(getName())
 				.append("` where `")
 				.append(where[0])
@@ -955,7 +951,7 @@ public static class TL {
 									  , k, TL.DB.Tbl.Log.Act.Update
 									  , TL.Util.mapCreate(c,v(c)) );
 				}catch(Exception x){tl().error(x
-											   ,"TL.DB.Tbl(",this,").save(",c,"):pkv=",pkv);}
+					,"TL.DB.Tbl(",this,").save(",c,"):pkv=",pkv);}
 				return this;}//save
 
 			/**store this entity in the dbt , if pkv is null , this method uses the max+1 */
@@ -989,6 +985,11 @@ public static class TL {
 					else save(c);}
 				//log(TL.DB.Tbl.Log.Act.Update,old);
 				return this;
+			}//readReq_save
+
+			public Tbl readReq_saveNew() throws Exception{
+				readReq("");
+				return save();//log(TL.DB.Tbl.Log.Act.Update,old);
 			}//readReq_save
 
 			@Override public Object[] vals() {
@@ -1065,11 +1066,11 @@ public static class TL {
 					return b;}
 
 				@Override public Tbl next(){i++;/*
-												 try {int c=0;for(Field f:fields())try{v(f,rs.getObject(++c));}catch(Exception x)
-												 {TL.error("DB.Tbl.Sql("+this+").I2.next:i="+i+",c="+c+",rs="+rs,x);}}catch(Exception x)
-												 {TL.error("DB.Tbl.Sql("+this+").I2.next:i="+i+":"+rs, x);rs=null;}*/
+					try {int c=0;for(Field f:fields())try{v(f,rs.getObject(++c));}catch(Exception x)
+					{TL.error("DB.Tbl.Sql("+this+").I2.next:i="+i+",c="+c+",rs="+rs,x);}}catch(Exception x)
+					{TL.error("DB.Tbl.Sql("+this+").I2.next:i="+i+":"+rs, x);rs=null;}*/
 					try{load(rs,a);}catch(Exception x){tl().error(x,"TL.DB.Tbl("
-																  ,this,").Itrtr.next:i=",i,":",rs);rs=null;}
+						,this,").Itrtr.next:i=",i,":",rs);rs=null;}
 					return Tbl.this;}
 
 				@Override public void remove(){throw new UnsupportedOperationException();}
@@ -1120,8 +1121,7 @@ public static class TL {
 				public static StringBuilder generate(StringBuilder b,CI[]col){
 					return generate(b,col,",");}
 
-				static StringBuilder generate(
-											  StringBuilder b,CI[]col,String separator){
+				static StringBuilder generate(StringBuilder b,CI[]col,String separator){
 					if(separator==null)separator=",";
 					for(int n=col.length,i=0;i<n;i++){
 						if(i>0)b.append(separator);
@@ -1133,8 +1133,7 @@ public static class TL {
 						else b.append("`").append(col[i]).append("`");}
 					return b;}
 
-				static StringBuilder where(
-										   StringBuilder b,Object[]where){b.append(" where ");
+				static StringBuilder where(StringBuilder b,Object[]where){b.append(" where ");
 					for(int n=where.length,i=0;i<n;i++){Object o=where[i];
 						if(i>0)b.append(" and ");
 						if(o instanceof Cols.M)b.append(o);else
@@ -3626,9 +3625,11 @@ public TL tl;
 		 tl.r("contentType","text/json");
 		 tl.logOut=tl.var("logOut",false);
 		 Op op=tl.req(Prm.op.toString(),Op.none);
-		 if(tl.usr!=null || op==Op.login || op==Op.none)
-			 op.doOp(AppEU059S.app(tl),tl.json);
-		 else TL.Util.mapSet(tl.response,"msg","Operation not authorized ,or not applicable","return",false);
+		 tl.log("jsp:version2017.02.09.17.10:op=",op);
+		 //if((tl.usr!=null||tl.logOut)|| op==Op.login || op==Op.none)//TODO: AFTER TESTING DEVELOPMENT, REMOVE from if: logOut
+
+			op.doOp(AppEU059S.app(tl),tl.json);
+		// else TL.Util.mapSet(tl.response,"msg","Operation not authorized ,or not applicable","return",false);
 		 if(tl.r("responseDone")==null)
 		 {if(tl.r("responseContentTypeDone")==null)
 			 response.setContentType(String.valueOf(tl.r("contentType")));
@@ -4127,7 +4128,7 @@ public @TL.Form.F Radio1_3 PopoutSize;//3
  ,C.b),TL.Util.lst(C.p,C. LoadingCondition_Other,TL.Util.lst(C. LoadingConditionOther,200)//text(255)//6
  ,C.b),TL.Util.lst(C.p,C. GeneralCondition								//7
  ,C.b),TL.Util.lst(C.p,C. Distress_Cracking,C.Distress_Staining			//8
- ,C.b),TL.Util.lst(C.p,C. Distress_Surface,Distress_Leaking				//9
+ ,C.b),TL.Util.lst(C.p,C. Distress_Surface,C. Distress_Leaking				//9
  ,C.b),TL.Util.lst(C.p,C. Cracking_Checking,C. Cracking_Craze			//20
  ,C.b),TL.Util.lst(C.p,C. Cracking_D,C. Cracking_Diagnol				//1
  ,C.b),TL.Util.lst(C.p,C. Cracking_Hairline,C. Cracking_Longitudinal	//2
@@ -4137,11 +4138,8 @@ public @TL.Form.F Radio1_3 PopoutSize;//3
  ,C.b),TL.Util.lst(C.p,C. Cracking_Transverse,C.Leaching				//6
  ,C.b),TL.Util.lst(C.p,C. width//number									//7
  ,C.b),TL.Util.lst(C.p,C. WorkingOrDormant								//8
- ,C.b),TL.Util.lst(C.p,C. Textural_AirVoid,C. Textural_Blistering,C. Textural_ColdJoints,C. Textural_Discoloration,C. Textural_Incrustation,C. Textural_SandPocket,C. Textural_Segregation,C. Textural_Stalactite,C. Textural_Stratification,C. Textural_Bugholes,C. Textural_ColdLines,C. Textural_Honeycomb,C. Textural_Laitance,C. Textural_SandStreak,C. Textural_Staining,C. Textural_Stalagmite		   //9
- ,C.b),TL.Util.lst(C.p,C. Textural_Bugholes,C. Textural_ColdJoints,C. Textural_Stratification,C. Textural_Stalactite,C. Textural_Segregation,C. Textural_SandPocket,C. Textural_Incrustation,C. Textural_Discoloration,C. Textural_Stalagmite,C. Textural_Staining,C. Textural_SandStreak,C. Textural_Laitance,C. Textural_Honeycomb,C. Textural_ColdLines		  //30
- 
- 
- 
+ ,C.b),TL.Util.lst(C.p,C. Textural_AirVoid,C. Textural_Blistering,C. Textural_ColdJoints,C. Textural_Discoloration,C. Textural_Incrustation,C. Textural_SandPocket,C. Textural_Segregation,C. Textural_Stalactite,C. Textural_Stratification,C. Textural_Bugholes,C. Textural_ColdLines,C. Textural_Honeycomb,C. Textural_Laitance//,C. Textural_SandStreak//,C. Textural_Staining//,C. Textural_Stalagmite		   //9
+ ,C.b),TL.Util.lst(C.p,C. Textural_Bugholes,C. Textural_ColdJoints,C. Textural_Stratification,C. Textural_Stalactite,C. Textural_Segregation,C. Textural_SandPocket,C. Textural_Incrustation,C. Textural_Discoloration,C. Textural_Stalagmite,C. Textural_Staining,C. Textural_SandStreak,C. Textural_Laitance,C. Textural_Honeycomb//,C. Textural_ColdLines		  //30
  ,C.b),TL.Util.lst(C.p,C. Textural_ColdLines,C. Textural_Discoloration	//1
  ,C.b),TL.Util.lst(C.p,C. Textural_Honeycomb,C. Textural_Incrustation	//2
  ,C.b),TL.Util.lst(C.p,C. Textural_Laitance,C. Textural_SandPocket		//3
@@ -4235,7 +4233,7 @@ public static class Storage extends TL.DB.Tbl {//implements Serializable
 		return TL.Util.lst(
 			TL.Util.lst("int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT"//no
 				,"varchar(255) NOT NULL"//path
-				,"text NOT NULL"//data
+				,"MEDIUMTEXT NOT NULL"//data
 				,"varchar(255) NOT NULL"//contentType
 				,"timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP "//lastModified
 				,"varchar(255) NOT NULL"//
@@ -4267,7 +4265,7 @@ CREATE TABLE `Storage` (
 	 /**none is equivelant to bootstrapping the web-application system to Storage:key=app*/
  none{@Override void doOp(AppEU059S a,Map prms){//TODO: after the development stage of bootstrapping , change the respond to get from dbTbl-storage the js code path: "eu059s.bootStrap" ::= raw minimal js code to load LocalStorage "eu059s.BootStrap" and execute or do a xhr of xhr-op:eu059s.BootStrap
 	a.respond("text/html",//"<html><head><script src=\"sys.js\"></script></head><body></body></html>"
-	"<html><head><script>function bootstrap(){"
+	"<html><head><script>window.onload=function bootstrap(){"
 +"	var path='eu059s.files:sys.js',x=localStorage[path] \n"
 +"	function init(x){console.log('bootstrap.js:init:',x)\n"
 +"		var s=document.createElement('script');			\n"
@@ -4516,7 +4514,7 @@ CREATE TABLE `Storage` (
  ,StorageNew{@Override void doOp(AppEU059S a,Map prms) {
 	try{int no=a.storage.no=a.storage.maxPlus1(Storage.C.no);
 	prms.put("return",no);
-	a.storage.readReq_save();} catch (Exception e) {
+	a.storage.readReq_saveNew();} catch (Exception e) {
 		a.tl.error(e,"AppEU059S.Op.StorageNew");}}}
 
  ,StorageDelete{@Override void doOp(AppEU059S a,Map prms) {
@@ -4528,5 +4526,319 @@ CREATE TABLE `Storage` (
  ;
  void doOp(AppEU059S a,Map params){params.put("msg","op not implemented");}
  }//enum Op
+
+
+public static class Dbg{
+		static final String Name="org.kisr.adoqs.Dbg";
+		//////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+		public static class Req implements HttpServletRequest{
+			Ssn ssn=new Ssn();String data,contentType="text/json",method="POST",protocolVersion,uri;
+			//"{op:'query',sql:'select d,count(*),min(no),max(no) from d group by y,m,w'}"
+			HashMap<String,Object> attribs=new HashMap<String,Object>();
+			HashMap<String,String> headers=new HashMap<String,String>();
+			HashMap<String,String[]>prms=new HashMap<String,String[]>();
+			@Override public AsyncContext getAsyncContext() {return null;}
+			@Override public Object getAttribute(String p) {return attribs.get(p);}
+			@Override public Enumeration<String> getAttributeNames() {return new Enumeration<String>() {
+				java.util.Iterator<String>i=attribs.keySet().iterator();
+				@Override	public boolean hasMoreElements() {	return i.hasNext();}
+				@Override	public String nextElement() {return i.next();}};}
+			@Override public String getCharacterEncoding() {return "utf8";}
+			@Override public int getContentLength() {return data.length();}
+			@Override public long getContentLengthLong() {return data.length();}
+			@Override public String getContentType() {p("Req.getContentType:",contentType);return contentType;}
+			@Override public DispatcherType getDispatcherType() {return null;}
+			@Override public ServletInputStream getInputStream() throws IOException
+			{return new ServletInputStream() {int i=0;
+				@Override public int read() throws IOException{return data.charAt(i++);}
+				@Override public void setReadListener(ReadListener p){}
+				@Override public boolean isReady() {return true;}
+				@Override public boolean isFinished() {return i>=data.length();}};}//new java.io.ByteArrayInputStream(data.getBytes());}//(new java.io.StringReader(data));//StringBufferInputStream(data);
+			@Override public String getLocalAddr() {return null;}
+			@Override public String getLocalName() {return null;}
+			@Override public int getLocalPort() {return 0;}
+			@Override public Locale getLocale() {return null;}
+			@Override public Enumeration<Locale> getLocales() {return null;}
+			@Override public String getParameter(String p){String[]a= prms.get(p);return a!=null&&a.length>0?a[0]:null;}
+			@Override public Map<String, String[]> getParameterMap() {return prms;}
+			@Override public Enumeration<String> getParameterNames() {return new Enumeration<String>() {
+				java.util.Iterator<String>i=prms.keySet().iterator();
+				@Override	public boolean hasMoreElements() {	return i.hasNext();}
+				@Override	public String nextElement() {return i.next();}};}
+			@Override public String[] getParameterValues(String p) {return prms.get(p);}
+			@Override public String getProtocol() {return protocolVersion;}
+			@Override public BufferedReader getReader() throws IOException {return new BufferedReader(new java.io.CharArrayReader(data.toCharArray()));}
+			@Override public String getRealPath(String p) {return null;}
+			@Override public String getRemoteAddr() {return "127.0.0.1";}
+			@Override public String getRemoteHost() {return null;}
+			@Override public int getRemotePort() {return 0;}
+			@Override public RequestDispatcher getRequestDispatcher(String p) {return null;}
+			@Override public String getScheme() {return null;}
+			@Override public String getServerName() {return null;}
+			@Override public int getServerPort() {return 0;}
+			@Override public ServletContext getServletContext() {return null;}
+			@Override public boolean isAsyncStarted() {return false;}
+			@Override public boolean isAsyncSupported() {return false;}
+			@Override public boolean isSecure() {return false;}
+			@Override public void removeAttribute(String p) {attribs.remove(p);}
+			@Override public void setAttribute(String p, Object p2) {attribs.put(p, p2);}
+			@Override public void setCharacterEncoding(String p) throws UnsupportedEncodingException {}
+			@Override public AsyncContext startAsync() throws IllegalStateException {return null;}
+			@Override public AsyncContext startAsync(ServletRequest p, ServletResponse p2) throws IllegalStateException {return null;}
+			@Override public boolean authenticate(HttpServletResponse p) throws IOException, ServletException {return false;}
+			@Override public String changeSessionId() {return null;}
+			@Override public String getAuthType() {return null;}
+			@Override public String getContextPath() {return null;}
+			@Override public Cookie[] getCookies() {return null;}
+			@Override public long getDateHeader(String p) {return 0;}
+			@Override public String getHeader(String p) {return headers.get(p);}
+			@Override public Enumeration<String> getHeaderNames() {return new Enumeration<String>() {
+				java.util.Iterator<String>i=headers.keySet().iterator();
+				@Override	public boolean hasMoreElements() {	return i.hasNext();}
+				@Override	public String nextElement() {return i.next();}};}
+			@Override public Enumeration<String> getHeaders(String p) {return null;}
+			@Override public int getIntHeader(String p) {return 0;}
+			@Override public String getMethod() {return method;}
+			@Override public Part getPart(String p) throws IOException, ServletException {return null;}
+			@Override public Collection<Part> getParts() throws IOException, ServletException {return null;}
+			@Override public String getPathInfo() {return null;}
+			@Override public String getPathTranslated() {return null;}
+			@Override public String getQueryString() {return "/adoqs/xhr.jsp";}
+			@Override public String getRemoteUser() {return null;}
+			@Override public String getRequestURI() {return null;}
+			@Override public StringBuffer getRequestURL() {return null;}
+			@Override public String getRequestedSessionId() {return null;}
+			@Override public String getServletPath() {return null;}
+			@Override public HttpSession getSession() {return ssn;}
+			@Override public HttpSession getSession(boolean p) {return ssn;}
+			@Override public Principal getUserPrincipal() {return null;}
+			@Override public boolean isRequestedSessionIdFromCookie() {return false;}
+			@Override public boolean isRequestedSessionIdFromURL() {return false;}
+			@Override public boolean isRequestedSessionIdFromUrl() {return false;}
+			@Override public boolean isRequestedSessionIdValid() {return false;}
+			@Override public boolean isUserInRole(String p) {return false;}
+			@Override public void login(String p, String p2) throws ServletException {}
+			@Override public void logout() throws ServletException {}
+			@Override public <T extends HttpUpgradeHandler> T upgrade(Class<T> p) throws IOException, ServletException {return null;}
+		}//class Req
+
+		//////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+		public static class Rsp implements HttpServletResponse{
+			String contentType="";Sos sos;static final String Name=Dbg.Name+".Rsp";
+			PrintWriter out=new PrintWriter(new SrvltWrtr());//System.out//strW);StringWriter strW=new StringWriter();
+			@Override public void flushBuffer() throws IOException {if(out!=null)out.flush();if(sos!=null)sos.flush();}
+			@Override public int getBufferSize() {p(Name,".getBufferSize:0");return 0;}
+			@Override public String getCharacterEncoding() {p(Name,".getCharacterEcoding");return null;}
+			@Override public String getContentType() {p(Name,".getContentType:",contentType);return contentType;}
+			@Override public Locale getLocale() {p(Name,".getLocale");return null;}
+			@Override public ServletOutputStream getOutputStream() throws IOException {p(Name,".getOutputStream");return sos;}
+			@Override public PrintWriter getWriter() throws IOException {p(Name,".getWriter");return out;}
+			@Override public boolean isCommitted() {p(Name,".isCommited");return false;}
+			@Override public void reset() {p(Name,".reset");}
+			@Override public void resetBuffer() {p(Name,".resetBuffer");}
+			@Override public void setBufferSize(int p) {p(Name,".setBufferSize:",p);}
+			@Override public void setCharacterEncoding(String p) {p(Name,".setCharacterEncoding:",p);}
+			@Override public void setContentLength(int p) {p(Name,".setContentLength:",p);}
+			@Override public void setContentLengthLong(long p) {p(Name,".setContentLengthLong:",p);}
+			@Override public void setContentType(String p) {p(Name,".setContentType:",p);contentType=p;}
+			@Override public void setLocale(Locale p) {p(Name,".setLocale:",p);}
+			@Override public void addCookie(Cookie p) {p(Name,".addCookie:",p);}
+			@Override public void addDateHeader(String p, long p2) {p(Name,".addDateHeader:",p,",",p2);}
+			@Override public void addHeader(String p, String p2) {p(Name,".addHeader:",p,",",p2);}
+			@Override public void addIntHeader(String p, int p2) {p(Name,".addIntHeader:",p,",",p2);}
+			@Override public boolean containsHeader(String p) {p(Name,".containsHeader:",p);return false;}
+			@Override public String encodeRedirectURL(String p) {p(Name,".ecodeRedirectURL:",p);return null;}
+			@Override public String encodeRedirectUrl(String p) {p(Name,".encodeRedirectUrl:",p);return null;}
+			@Override public String encodeURL(String p) {p(Name,".encodeURL:",p);return null;}
+			@Override public String encodeUrl(String p) {p(Name,".encodeUrl:",p);return null;}
+			@Override public String getHeader(String p) {p(Name,".getHeader:",p);return null;}
+			@Override public Collection<String> getHeaderNames() {p(Name,".getHeaderNames");return null;}
+			@Override public Collection<String> getHeaders(String p) {p(Name,".getHeaders:",p);return null;}
+			@Override public int getStatus() {p(Name,".getStatus");return 0;}
+			@Override public void sendError(int p) throws IOException {p(Name,".sendError:",p);}
+			@Override public void sendError(int p, String p2) throws IOException {p(Name,".sendError:",p,",",p2);}
+			@Override public void sendRedirect(String p) throws IOException {p(Name,".sendRedirect:",p);}
+			@Override public void setDateHeader(String p, long p2) {p(Name,".setDateHeader:",p,",",p2);}
+			@Override public void setHeader(String p, String p2) {p(Name,".setHeader:",p,",",p2);}
+			@Override public void setIntHeader(String p, int p2) {p(Name,".setIntHeader:",p,",",p2);}
+			@Override public void setStatus(int p) {p(Name,".setStatus:",p);}
+			@Override public void setStatus(int p, String p2) {p(Name,".setStatus:",p,",",p2);}
+
+			public static class Sos extends ServletOutputStream{
+				// java.io.OutputStream o;
+				Sos(java.io.OutputStream p){p("\n------------------------------\nSos.<init>:",p);}//o=p;
+				@Override public boolean isReady() {return true;}
+				@Override public void setWriteListener(WriteListener p) {}
+				@Override public void write(int p) throws IOException {p("Sos.write(int:",p,"):",(char)p);}//o.write(p);
+				@Override public void flush() throws IOException {super.flush();}//o.flush();
+				@Override public void close() throws IOException {super.close();}//o.close();
+				@Override public void write(byte[] p) throws IOException {p("Sos.write(byte):",new String(p));}//super.write(p);o.write(p);}
+				@Override public void write(byte[] a, int b, int c) throws IOException {
+					p("Sos.write(byte:",a,",int:",b,",int:",c,"):",new String(a, b, c));}//super.write(a, b, c);o.write(a, b, c);}
+			}//class Sos
+
+			public static class SrvltWrtr extends java.io.Writer{
+				SrvltWrtr(){p("SrvltWrtr.<init>");}
+				@Override public void flush() throws IOException {p("SrvltWrtr.flush");}
+				@Override public void close() throws IOException {p("SrvltWrtr.close");}
+				@Override public void write(char[] cbuf, int off, int len) throws IOException {
+					p("SrvltWrtr.write(char[]",cbuf,",off=",off,",len=",len,"):",String.valueOf(cbuf,off,len));}
+			}//public static class SrvltWrtr extends java.io.Writer
+		}//class Rsp
+
+		public static class PC extends PageContext{
+
+			@Override public void forward(String arg0) throws ServletException, IOException {}
+			@Override public Exception getException() {return null;}
+			@Override public Object getPage() {return null;}
+			@Override public ServletRequest getRequest(){return Srvlt.sttc.q;}
+			@Override public ServletResponse getResponse(){return Srvlt.sttc.p;}
+			@Override public ServletConfig getServletConfig(){return Srvlt.sttc.getServletConfig();}
+			@Override public ServletContext getServletContext(){return Srvlt.sttc.getServletContext();}
+			@Override public HttpSession getSession(){return Srvlt.sttc.q.ssn;}
+			@Override public void handlePageException(Exception arg0) throws ServletException, IOException{}
+			@Override public void handlePageException(Throwable arg0) throws ServletException, IOException{}
+			@Override public void include(String arg0) throws ServletException, IOException{}
+			@Override public void include(String arg0, boolean arg1) throws ServletException, IOException{}
+			@Override public void initialize(Servlet arg0, ServletRequest arg1, ServletResponse arg2, String arg3, boolean arg4, int arg5,
+											 boolean arg6) throws IOException, IllegalStateException, IllegalArgumentException{}
+			@Override public void release(){}
+			@Override public Object findAttribute(String n){Srvlt s=Srvlt.sttc;Object o=s.q.getAttribute(n);if(o==null)o=s.q.ssn.getAttribute(n);if(o==null)o=s.a.getAttribute(n);return o;}
+			@Override public Object getAttribute(String n){return findAttribute(n);}
+			@Override public Object getAttribute(String n, int arg1){return null;}
+			@Override public Enumeration<String> getAttributeNamesInScope(int arg0){return null;}
+			@Override public int getAttributesScope(String arg0) {TL.tl().log("Dbg.PC.getAttributesScope:not implemented:return null");return 0;}
+
+			@Override public ExpressionEvaluator getExpressionEvaluator(){return null;}
+			@Override public JspWriter getOut(){TL.tl().log("Dbg.PC.getOut:not implemented:return null");return null;}
+			@Override public VariableResolver getVariableResolver(){return null;}
+			@Override public void removeAttribute(String arg0){TL.tl().log("Dbg.PC.removeAttribute a:not implemented:return null");}
+			@Override public void removeAttribute(String arg0, int arg1){TL.tl().log("Dbg.PC.removeAttribute a,b:not implemented:return null");}
+			@Override public void setAttribute(String arg0, Object arg1) {TL.tl().log("Dbg.PC.setAttribute a,b:not implemented:return null");}
+			@Override public void setAttribute(String arg0, Object arg1, int arg2) {TL.tl().log("Dbg.PC.setAttribute a,b,c:not implemented:return null");}
+			@Override public javax.el.ELContext getELContext(){TL.tl().log("Dbg.PC.getELContext:not implemented:return null");return null;}
+//public static class ELContext{}
+		}//class PC
+
+		//////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+		public static class Srvlt extends GenericServlet{
+			static final String Name=Dbg.Name+".Srvlt";
+			@Override public void service(ServletRequest q, ServletResponse
+					p)throws ServletException, IOException {p(Name,".service:",q,",",p);}
+			Req q=new Req();Rsp p=new Rsp();SrvltContxt a=new SrvltContxt();
+			PC pc=new PC();static Srvlt sttc=new Srvlt();
+			@Override public void log(String message, Throwable t) {log(message);t.printStackTrace();}//super.log(message, t);}
+			@Override public void log(String msg) {p("log:",msg);}//super.log(msg);
+			@Override public ServletContext getServletContext() {return a;}//super.getServletContext()
+			@Override public String getServletName() {return Name;}//super.getServletName();
+		}//class Srvlt
+
+		//////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+		public static class Ssn implements HttpSession{
+			HashMap<String,Object> attribs=new HashMap<String,Object>();long expir;
+			@Override public Object getAttribute(String p){return attribs.get(p);}
+			@Override public Enumeration<String> getAttributeNames() {return new Enumeration<String>() {
+				java.util.Iterator<String>i=attribs.keySet().iterator();
+				@Override	public boolean hasMoreElements() {	return i.hasNext();}
+				@Override	public String nextElement() {return i.next();}};}
+			@Override public long getCreationTime() {return 0;}
+			@Override public String getId() {return null;}
+			@Override public long getLastAccessedTime() {return 0;}
+			@Override public int getMaxInactiveInterval() {return 0;}
+			@Override public ServletContext getServletContext() {return Srvlt.sttc.a;}
+			@Override public HttpSessionContext getSessionContext() {return null;}
+			@Override public Object getValue(String p){return null;}
+			@Override public String[] getValueNames() {return null;}
+			@Override public void invalidate(){}
+			@Override public boolean isNew() {return false;}
+			@Override public void putValue(String p, Object p2){}
+			@Override public void removeAttribute(String p){}
+			@Override public void removeValue(String p){}
+			@Override public void setAttribute(String k, Object v){attribs.put(k, v);}
+			@Override public void setMaxInactiveInterval(int p){}}
+		//////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+		public static class SrvltContxt implements ServletContext{//static SrvltContxt sttc;
+			HashMap<String,Object> attribs=new HashMap<String,Object>();
+			@Override public FilterRegistration.Dynamic addFilter(String arg0, String p2){return null;}
+			@Override public FilterRegistration.Dynamic addFilter(String arg0, Filter p2){return null;}
+			@Override public FilterRegistration.Dynamic addFilter(String arg0, Class<? extends Filter> p2){return null;}
+			@Override public void addListener(String p){}
+			@Override public <T extends EventListener> void addListener(T p){}
+			@Override public void addListener(Class<? extends EventListener> p){}
+			@Override public javax.servlet.ServletRegistration.Dynamic addServlet(String arg0, String p2){return null;}
+			@Override public javax.servlet.ServletRegistration.Dynamic addServlet(String arg0, Servlet p2){return null;}
+			@Override public javax.servlet.ServletRegistration.Dynamic addServlet(String arg0, Class<? extends Servlet> p2){return null;}
+			@Override public <T extends Filter> T createFilter(Class<T> p2)throws ServletException{return null;}
+			@Override public <T extends EventListener> T createListener(Class<T> p2)throws ServletException{return null;}
+			@Override public <T extends Servlet> T createServlet(Class<T> p2)throws ServletException{return null;}
+			@Override public void declareRoles(String... p){}
+			@Override public Object getAttribute(String p){return attribs.get(p);}
+			@Override public Enumeration<String> getAttributeNames(){return new Enumeration<String>() {
+				java.util.Iterator<String>i=attribs.keySet().iterator();
+				@Override	public boolean hasMoreElements() {	return i.hasNext();}
+				@Override	public String nextElement() {return i.next();}};}
+			@Override public ClassLoader getClassLoader(){return null;}
+			@Override public ServletContext getContext(String p){return null;}
+			@Override public String getContextPath(){return null;}
+			@Override public Set<SessionTrackingMode> getDefaultSessionTrackingModes(){return null;}
+			@Override public int getEffectiveMajorVersion(){return 0;}
+			@Override public int getEffectiveMinorVersion(){return 0;}
+			@Override public Set<SessionTrackingMode> getEffectiveSessionTrackingModes(){return null;}
+			@Override public FilterRegistration getFilterRegistration(String p){return null;}
+			@Override public Map<String, ? extends FilterRegistration> getFilterRegistrations(){return null;}
+			@Override public String getInitParameter(String p){return null;}
+			@Override public Enumeration<String> getInitParameterNames(){return null;}
+			@Override public JspConfigDescriptor getJspConfigDescriptor(){return null;}
+			@Override public int getMajorVersion(){return 0;}
+			@Override public String getMimeType(String p){return null;}
+			@Override public int getMinorVersion(){return 0;}
+			@Override public RequestDispatcher getNamedDispatcher(String p){return null;}
+			@Override public String getRealPath(String p){return null;}
+			@Override public RequestDispatcher getRequestDispatcher(String p){return null;}
+			@Override public URL getResource(String arg0) throws MalformedURLException {return null;}
+			@Override public InputStream getResourceAsStream(String p){return null;}
+			@Override public Set<String> getResourcePaths(String p){return null;}
+			@Override public String getServerInfo(){return null;}
+			@Override public Servlet getServlet(String p2)throws ServletException{return null;}
+			@Override public String getServletContextName(){return null;}
+			@Override public Enumeration<String> getServletNames(){return null;}
+			@Override public ServletRegistration getServletRegistration(String p){return null;}
+			@Override public Map<String, ? extends ServletRegistration> getServletRegistrations(){return null;}
+			@Override public Enumeration<Servlet> getServlets(){return null;}
+			@Override public SessionCookieConfig getSessionCookieConfig(){return null;}
+			@Override public String getVirtualServerName(){return null;}
+			@Override public void log(String p){p("log:",p);}
+			@Override public void log(Exception x, String p){x.printStackTrace();p(p);}
+			@Override public void log(String p, Throwable x){log(p);x.printStackTrace();}
+			@Override public void removeAttribute(String p){}
+			@Override public void setAttribute(String p, Object v){p(Name,".SrvltContxt.setAttribute:",p,",",v);attribs.put(p, v);}
+			@Override public boolean setInitParameter(String arg0, String p2){return false;}
+			@Override public void setSessionTrackingModes(Set<SessionTrackingMode> p){}}
+
+		//////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+		public static void p(Object...p){for(Object s:p)System.out.print(s);System.out.println();}
+		public static void pa(String...p){for(String s:p)System.out.print(s);}
+
+ public static void main(String[]args)
+ {p("DebugXhr.main:begin");
+
+ Srvlt s=new Srvlt();p("DebugXhr.main:new Srvlt");
+ s.q.data="{op:'StorageNew',path:'eu059s.files:dbg.txt',contentType:'text/Javascript',lastModified:100,data:'dbgOk',logOut:true}";
+ try {//s.q.c
+	//Tst._jspService(s);
+	//TL tl=TL.Enter(s.q,s.p,s.p.out);for( Op x:Op.values())tl.log("x=",x," ,parse:",TL.Util.parse(x.toString(),Op.none));TL.Exit();
+	AppEU059S.jsp(s.q,s.p,s.p.out);
+ }catch (Exception e) {e.printStackTrace();}
+	p("Dbg.main:end");
+ }//main
+ }//class Dbg
+
+ public static void main(String[]args) {Dbg.main(args);}
 
 }//class AppEU059S
