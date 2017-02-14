@@ -930,8 +930,7 @@ public static class TL {
 
 			/**loads one object from column CI c ,from one row of primary-key value pkv ,from the table*/
 			Object load(CI c){Object pkv=pkv();
-				Object o=null;try{o=DB.q1obj("select `"+c+"` from `"
-											 +getName()+"` where `"+pkc()+"`="+Cols.M.m(c).txt,pkv);
+				Object o=null;try{o=DB.q1obj("select `"+c+"` from `"+getName()+"` where `"+pkc()+"`="+Cols.M.m(c).txt,pkv);
 					v(c,o);}
 				catch(Exception x){tl().error(x,"TL.DB.Tbl(",this,").load(CI ",c,"):",pkv);}
 				return o;}//load
@@ -988,7 +987,7 @@ public static class TL {
 			}//readReq_save
 
 			public Tbl readReq_saveNew() throws Exception{
-				readReq("");
+				Object pkv=pkv();readReq("");if(pkv()==null&&pkv!=null)v(pkc(),pkv);
 				return save();//log(TL.DB.Tbl.Log.Act.Update,old);
 			}//readReq_save
 
@@ -1089,8 +1088,11 @@ public static class TL {
 					,prm("?")
 					,password("password(?)")
 					,Null("null")
+					,lt("<"),le("<="),ne("<>"),gt(">"),ge(">=")
+					,or("or"),like("like")//,and("and"),prnthss("(")
 					;String txt;
 					private M(String p){txt=p;}
+					public List of(CI c){return Util.lst(c,this);}
 					public String text(){return txt;}
 					public Class<? extends Tbl>cls(){return Tbl.class;}
 					public Class<? extends Form>clss(){return cls();}
@@ -1137,10 +1139,13 @@ public static class TL {
 					for(int n=where.length,i=0;i<n;i++){Object o=where[i];
 						if(i>0)b.append(" and ");
 						if(o instanceof Cols.M)b.append(o);else
-							if(o instanceof CI)//((CI)where[i]).where(b);
-								b.append('`').append(o).append("`=")
-								.append(Cols.M.m(o).txt);
-							else tl().error(null,"TL.DB.Tbl.Col.where:for:",o);
+						if(o instanceof CI)//((CI)where[i]).where(b);
+							b.append('`').append(o).append("`=")
+							.append(Cols.M.m(o).txt);
+						else if(o instanceof List){List l=(List)o;o=l.get(0);
+							b.append('`').append(o).append("`").append(l.get(1))
+							.append(Cols.M.m(o).txt);}
+						else tl().error(null,"TL.DB.Tbl.Col.where:for:",o);
 						i++;
 					}//for
 					return b;}
@@ -1385,7 +1390,7 @@ public static class TL {
 				@F public Integer no;
 				@F public Date dt;
 				@F public Integer uid;
-				public enum Entity{projects,usr,sheets,ssn,log,json}//,img //CHANGED 2016.08.17.10.49
+				public enum Entity{Project,usr,sheets,ssn,log,json,Building,Floor,Storage}//,img //CHANGED 2016.08.17.10.49
 				@F public Entity entity;
 				@F public Integer pk;
 				public enum Act{New,Update,Delete,Login,Logout,Log,Error}
@@ -3622,26 +3627,26 @@ public TL tl;
  public static void jsp(HttpServletRequest request,HttpServletResponse response,Writer out)throws IOException{
 	TL tl=null;try
 	{tl=TL.Enter(request,response,out);
-		 tl.r("contentType","text/json");
-		 tl.logOut=tl.var("logOut",false);
-		 Op op=tl.req(Prm.op.toString(),Op.none);
-		 tl.log("jsp:version2017.02.09.17.10:op=",op);
-		 //if((tl.usr!=null||tl.logOut)|| op==Op.login || op==Op.none)//TODO: AFTER TESTING DEVELOPMENT, REMOVE from if: logOut
+		tl.r("contentType","text/json");
+		tl.logOut=tl.var("logOut",false);
+		Op op=tl.req(Prm.op.toString(),Op.none);
+		tl.log("jsp:version2017.02.09.17.10:op=",op);
+		//if((tl.usr!=null||tl.logOut)|| op==Op.login || op==Op.none)//TODO: AFTER TESTING DEVELOPMENT, REMOVE from if: logOut
 
 			op.doOp(AppEU059S.app(tl),tl.json);
 		// else TL.Util.mapSet(tl.response,"msg","Operation not authorized ,or not applicable","return",false);
-		 if(tl.r("responseDone")==null)
-		 {if(tl.r("responseContentTypeDone")==null)
-			 response.setContentType(String.valueOf(tl.r("contentType")));
-			 tl.getOut().o(tl.response);
-			 tl.log("AppEU059S:xhr-response:",tl.jo().o(tl.response).toString());}
-		 tl.getOut().flush();
+		if(tl.r("responseDone")==null)
+		{if(tl.r("responseContentTypeDone")==null)
+			response.setContentType(String.valueOf(tl.r("contentType")));
+			tl.getOut().o(tl.response);
+			tl.log("AppEU059S:xhr-response:",tl.jo().o(tl.response).toString());}
+		tl.getOut().flush();
 	}catch(Exception x){
-		 if(tl!=null){
-			 tl.error(x,"AppEU059S.jsp:");
-			 tl.getOut().o(x);
-		 }else
-			 x.printStackTrace();
+		if(tl!=null){
+			tl.error(x,"AppEU059S.jsp:");
+			tl.getOut().o(x);
+		}else
+			x.printStackTrace();
 	}finally{TL.Exit();}
  }
 
@@ -4829,7 +4834,7 @@ public static class Dbg{
  {p("DebugXhr.main:begin");
 
  Srvlt s=new Srvlt();p("DebugXhr.main:new Srvlt");
- s.q.data="{op:'StorageNew',path:'eu059s.files:dbg.txt',contentType:'text/Javascript',lastModified:100,data:'dbgOk',logOut:true}";
+ s.q.data="{op:'StorageList',path:'eu059s.files:dbg.txt',contentType:'text/Javascript',lastModified:100,data:'dbgOk',logOut:true}";
  try {//s.q.c
 	//Tst._jspService(s);
 	//TL tl=TL.Enter(s.q,s.p,s.p.out);for( Op x:Op.values())tl.log("x=",x," ,parse:",TL.Util.parse(x.toString(),Op.none));TL.Exit();

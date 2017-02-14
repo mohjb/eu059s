@@ -288,11 +288,14 @@ public static class TL {
 
 		public static <T>T parse(String s,T defval)
 		{if(s!=null)
-			try{	Class<T> c=(Class<T>) defval.getClass();
-				if(c.isEnum()){
-					for(T o:c.getEnumConstants())
+			try{	Class<T> ct=(Class<T>) defval.getClass();
+				Class c=ct;
+			boolean b=c==null?false:c.isEnum();
+				if(!b){c=ct.getEnclosingClass();b=c==null?false:c.isEnum();}
+				if(b){
+					for(Object o:c.getEnumConstants())
 						if(s.equalsIgnoreCase(o.toString()))
-							return o;
+							return (T)o;
 				}}catch(Exception x){//changed 2016.06.27 18:28
 					TL.tl().error(x, "TL.Util.<T>T parse(String s,T defval):",s,defval);}
 			return defval;}
@@ -952,7 +955,7 @@ public static class TL {
 									  , k, TL.DB.Tbl.Log.Act.Update
 									  , TL.Util.mapCreate(c,v(c)) );
 				}catch(Exception x){tl().error(x
-											   ,"TL.DB.Tbl(",this,").save(",c,"):pkv=",pkv);}
+					,"TL.DB.Tbl(",this,").save(",c,"):pkv=",pkv);}
 				return this;}//save
 
 			/**store this entity in the dbt , if pkv is null , this method uses the max+1 */
@@ -986,6 +989,11 @@ public static class TL {
 					else save(c);}
 				//log(TL.DB.Tbl.Log.Act.Update,old);
 				return this;
+			}//readReq_save
+
+			public Tbl readReq_saveNew() throws Exception{
+				Object pkv=pkv();readReq("");if(pkv()==null&&pkv!=null)v(pkc(),pkv);
+				return save();//log(TL.DB.Tbl.Log.Act.Update,old);
 			}//readReq_save
 
 			@Override public Object[] vals() {
@@ -1117,8 +1125,7 @@ public static class TL {
 				public static StringBuilder generate(StringBuilder b,CI[]col){
 					return generate(b,col,",");}
 
-				static StringBuilder generate(
-											  StringBuilder b,CI[]col,String separator){
+				static StringBuilder generate(StringBuilder b,CI[]col,String separator){
 					if(separator==null)separator=",";
 					for(int n=col.length,i=0;i<n;i++){
 						if(i>0)b.append(separator);
@@ -1130,8 +1137,7 @@ public static class TL {
 						else b.append("`").append(col[i]).append("`");}
 					return b;}
 
-				static StringBuilder where(
-										   StringBuilder b,Object[]where){b.append(" where ");
+				static StringBuilder where(StringBuilder b,Object[]where){b.append(" where ");
 					for(int n=where.length,i=0;i<n;i++){Object o=where[i];
 						if(i>0)b.append(" and ");
 						if(o instanceof Cols.M)b.append(o);else
@@ -1383,7 +1389,7 @@ public static class TL {
 				@F public Integer no;
 				@F public Date dt;
 				@F public Integer uid;
-				public enum Entity{projects,usr,sheets,ssn,log,json}//,img //CHANGED 2016.08.17.10.49
+				public enum Entity{Project,usr,sheets,ssn,log,json,Building,Floor,Storage}//,img //CHANGED 2016.08.17.10.49
 				@F public Entity entity;
 				@F public Integer pk;
 				public enum Act{New,Update,Delete,Login,Logout,Log,Error}
@@ -3625,7 +3631,7 @@ public TL tl;
 		 Op op=tl.req(Prm.op.toString(),Op.none);
 		 tl.log("jsp:version2017.02.09.17.10:op=",op);
 		 //if((tl.usr!=null||tl.logOut)|| op==Op.login || op==Op.none)//TODO: AFTER TESTING DEVELOPMENT, REMOVE from if: logOut
-			 
+
 			op.doOp(AppEU059S.app(tl),tl.json);
 		// else TL.Util.mapSet(tl.response,"msg","Operation not authorized ,or not applicable","return",false);
 		 if(tl.r("responseDone")==null)
@@ -4512,7 +4518,7 @@ CREATE TABLE `Storage` (
  ,StorageNew{@Override void doOp(AppEU059S a,Map prms) {
 	try{int no=a.storage.no=a.storage.maxPlus1(Storage.C.no);
 	prms.put("return",no);
-	a.storage.readReq_save();} catch (Exception e) {
+	a.storage.readReq_saveNew();} catch (Exception e) {
 		a.tl.error(e,"AppEU059S.Op.StorageNew");}}}
 
  ,StorageDelete{@Override void doOp(AppEU059S a,Map prms) {
