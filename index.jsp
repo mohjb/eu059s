@@ -40,15 +40,15 @@ public static class TL {
 	enum context{ROOT(
 					  "/public_html/theblueone/eu059s/v1/"
 					  ,"/Users/moh/apache-tomcat-8.0.30/webapps/ROOT/"
-					  ,"C:\\Users\\mbohamad\\WebApplicationEU059S\\web/"
 					  ,"D:\\apache-tomcat-8.0.15\\webapps\\ROOT/"
+					  ,"C:\\Users\\mbohamad\\WebApplicationEU059S\\web/"
 					  );
 		String str,a[];context(String...p){str=p[0];a=p;}
 		enum DB{
 			pool("dbpool-eu059s")
 			,reqCon("javax.sql.PooledConnection")
 			,server("216.227.216.46","216.227.220.84","localhost")
-			,dbName("js4d00_eu059s","eu059s")
+			,dbName("eu059s","js4d00_eu059s")
 			,un("js4d00_theblue","root")
 			,pw("theblue","qwerty","root","");
 			String str,a[];DB(String...p){str=p[0];a=p;}
@@ -2740,7 +2740,7 @@ public static class App {
 	public static App app(){return app(TL.tl());}
 	public static App app(TL tl){
 		Object o=tl.s(SsnNm);
-		if(o==null)
+		if(o==null || !(o instanceof App))
 			tl.s(SsnNm,o=new App());
 		App e=(App)o;e.tl=tl;
 		if(tl.usr==null && tl.a(SsnNm+".checkDBTCreation")==null
