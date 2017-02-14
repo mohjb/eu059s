@@ -48,7 +48,7 @@ public static class TL {
 			pool("dbpool-eu059s")
 			,reqCon("javax.sql.PooledConnection")
 			,server("216.227.216.46","216.227.220.84","localhost")
-			,dbName("eu059s","js4d00_eu059s")
+			,dbName("js4d00_eu059s","eu059s")
 			,un("js4d00_theblue","root")
 			,pw("theblue","qwerty","root","");
 			String str,a[];DB(String...p){str=p[0];a=p;}
@@ -3033,7 +3033,7 @@ public static class App {
 
 		if(tl.usr==null){try{//tl.o("version 2016.05.04 08:36");
 			//pageContext.include("flat-login-form/index.html");
-			tl.o("<script>location=\"login.html\"</script>");
+			tl.o("<script>location=\"../login.html\"</script>");
 		}catch(Exception x){tl.error(x,"eu059s.App.init2");}
 			tl.logo("index:8:end");
 			return;
