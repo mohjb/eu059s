@@ -935,6 +935,14 @@ public static class TL {
 				catch(Exception x){tl().error(x,"TL.DB.Tbl(",this,").load(CI ",c,"):",pkv);}
 				return o;}//load
 
+			/**loads one row using column CI c */
+			Tbl loadBy(CI c,Object v){
+				try{Object[]a=DB.q1row("select * from `"
+					+getName()+"` where `"+c+"`="+Cols.M.m(c).txt,v);
+					vals(a);}
+				catch(Exception x){tl().error(x,"TL.DB.Tbl(",this,").loadBy(",c,",",v,")");}
+				return this;}//loadBy
+
 			Tbl save(CI c){// throws Exception
 				CI pkc=pkc();
 				Object cv=v(c),pkv=pkv();TL t=TL.tl();
@@ -2973,7 +2981,7 @@ public TL tl;*/
 		}tl.logo("index:9");
 	}//authenticate
 
-{	/*
+	{	/*
 
 <servlet>
 	<servlet-name>EU059Servlet</servlet-name>
@@ -3691,8 +3699,8 @@ public TL tl;*/
 		}
 		out.write("</body></html>");
 	}//jspOld
-	*/
-}
+	* /
+
  public static void jsp(HttpServletRequest request,HttpServletResponse response,Writer out)throws IOException{
 	TL tl=null;try
 	{tl=TL.Enter(request,response,out);
@@ -3717,6 +3725,280 @@ public TL tl;*/
 			x.printStackTrace();
 	}finally{TL.Exit();}
  }
+/*
+ void respond(String contentType,String content){
+	try{tl.r("responseDone",true);
+	tl.rspns.setContentType(contentType);
+	tl.o(content);}catch(Exception ex){tl.error(ex,"AppEU059S.respond:");}}
+
+ enum Op{
+	 /**none is equivelant to bootstrapping the web-application system to Storage:key=app* /
+ none{@Override void doOp(AppEU059S a,Map prms){//TODO: after the development stage of bootstrapping , change the respond to get from dbTbl-storage the js code path: "eu059s.bootStrap" ::= raw minimal js code to load LocalStorage "eu059s.BootStrap" and execute or do a xhr of xhr-op:eu059s.BootStrap
+	a.respond("text/html",//"<html><head><script src=\"sys.js\"></script></head><body></body></html>"
+	"<html><head><script>window.onload=function bootstrap(){"
++"	var path='eu059s.files:sys.js',x=localStorage[path] \n"
++"	function init(x){console.log('bootstrap.js:init:',x)\n"
++"		var s=document.createElement('script');			\n"
++"		document.body.appendChild(s);\n"
++"		s.text=x;}				\n"
++"	if(!x)						\n"
++"	{function xhr(p){			\n"
++"			if(!p)return p;		\n"
++"			var ct='Content-Type',cs='charset'	\n"
++"				,x=typeof XMLHttpRequest === 'undefined'\n"
++"				?new ActiveXObject('microsoft.XMLHTTP')\n"
++"				:new XMLHttpRequest();x.p=p;p.xhr=x;	\n"
++"			x.open(p.method||'POST',p.url||'', p.onload )\n"
++"			x.setRequestHeader(ct, 'text/json');\n"
++"			x.setRequestHeader(cs, 'utf-8');	\n"
++"			x.onload=p.onload					\n"
++"			x.send(JSON.stringify(p.data));		\n"
++"			console.log('xhr:response:',x.response,p,x); \n"
++"			return x.response;					\n"
++"		}//function xhr							\n"
++"		xhr({data:{op:'StorageGet',path:path	\n"
++"			,onload:function(e){				\n"
++"			localStorage[path]=x=e&&(e.response	\n"
++"				||(e.target&&e.target.response)	\n"
++"				||(e.src&&e.src.response))		\n"
++"			init(x);\n"
++"		}//onload function\n"
++"		}//data		\n"
++"		}//xhr param\n"
++"		)//xhr		\n"
++"	}//if !x		\n"
++"	else init(x)	\n"
++"}//function bootstrap\n"
++"</script></head><body></body></html>"
+	);}}
+
+ ,login{@Override void doOp(AppEU059S a,Map prms){try{
+	TL.DB.Tbl.Usr u=TL.DB.Tbl.Usr.login();TL tl=a.tl;
+	if(u!=null){u.onLogin();
+		TL.DB.Tbl.Log.log(TL.DB.Tbl.Log.Entity.usr
+			, tl.usr.uid
+			, TL.DB.Tbl.Log.Act.Login
+			,TL.Util.mapCreate("usr",tl.usr,"request",tl.req));}
+	else// msg="incorrect login";
+		TL.DB.Tbl.Log.log(TL.DB.Tbl.Log.Entity.usr
+			, tl!=null&&tl.usr!=null?tl.usr.uid:-1
+			, TL.DB.Tbl.Log.Act.Log
+			,TL.Util.mapCreate(
+				"msg","incorrect login"
+				,"request",tl.req));}catch(Exception ex){
+					a.tl.error(ex,"AppEU059S.Op.login:");}}}
+
+ ,logout{@Override void doOp(AppEU059S a,Map prms)
+	{try{TL.DB.Tbl.Log.log(TL.DB.Tbl.Log.Entity.usr, a.tl.usr.uid,TL.
+		DB.Tbl.Log.Act.Logout,TL.Util.mapCreate("usr",a.tl.usr));
+		a.tl.ssn.onLogout();}catch(Exception ex){
+			a.tl.error(ex,"AppEU059S.Op.logout:");}}}
+
+ ,newProject{@Override void doOp(AppEU059S a,Map prms){
+	a.proj.no=null;//TL.DB.q1int("select max(`no`)+1 from projects;", 1);
+	a.proj.json=TL.Util.mapCreate("title","Project "+a.tl.now
+		, "date",TL.Util.formatDate( a.tl.now )
+		, "shortDesc","short Desc"//"avatar","avatar.jpg"
+		, "author",a.tl.usr.uid, "desc","description" );
+	try{a.proj.save();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.newProject:");}
+	a.tl.s(Prm.projNo.toString(),a.proj.no);//a.tl.s(Prm.screen.toString(),a.screen=Prm.Screen.ProjectScreen);
+	}}
+
+ ,newBuilding{@Override void doOp(AppEU059S a,Map prms){
+	a.bld.no=null;a.bld.p=a.proj.no;
+	a.bld.json=TL.Util.mapCreate("date",TL.Util.formatDate( a.tl.now )
+		, "author",a.tl.usr.uid , "title","Building "+a.tl.now );//"avatar","avatar.jpg"
+	try{a.bld.save();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.newBuilding:");}
+	a.tl.s(Prm.buildingNo.toString(),a.bld.no);
+	a.tl.s(Prm.screen.toString(), Prm.Screen.BuildingScreen);}}
+
+ ,newFloor{@Override void doOp(AppEU059S a,Map prms){
+	a.flr.no=null;a.flr.b=a.bld.no;a.flr.p=a.proj.no;
+	a.flr.json=TL.Util.mapCreate("date", TL.Util.formatDate( a.tl.now )
+		, "author",a.tl.usr.uid , "title","Floor "+a.tl.now);//"avatar","avatar.jpg"
+	try{a.flr.save();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.newFloor:");}
+	a.tl.s(Prm.floorNo.toString(),a.flr.no);
+	a.tl.s(Prm.screen.toString(), Prm.Screen.FloorScreen);}}
+
+ ,newSheet{@Override void doOp(AppEU059S a,Map prms){
+	a.sheet.no=null;
+	a.sheet.dt=a.tl.now;a.sheet.u=a.tl.usr.uid;
+	a.sheet.p=a.proj.no;a.sheet.b=a.bld.no;a.sheet.f=a.flr.no;
+	//a.sheet.jsonRef=TL.DB.Tbl.Json.jrmp1();
+	//a.sheet.m=a.sheet.asMap();
+	//a.sheet.m.put("datetime", TL.Util.formatDate(a.sheet.dt ));
+	TL.DB.Tbl.Json j=a.sheet.json();
+	//a.sheet.m.put(j.Jr,j.jsonRef);
+	//sheet.jsonRef=j.jsonRef=j.jrmp1();//((Number)sheet.m.get(TL.DB.Tbl.Json.Jr)).intValue();
+	try{a.sheet.save();
+	//a.sheet.m.put("no", a.sheet.no);j.save(a.sheet.m);
+	}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.newSheet:");}
+	a.tl.s(Prm.sheetNo.toString(), a.sheet.no);//a.tl.s(Prm.screen.toString(), a.screen=Prm.Screen.Sheet);
+	}}
+
+ ,newUser{@Override void doOp(AppEU059S a,Map prms){
+	TL.DB.Tbl.Usr u=new TL.DB.Tbl.Usr();
+	u.readReq("");//u .j=TL.Util.mapCreate name tel gender address email tel-ext id cid	"avatar","avatar.jpg"
+	u.uid=null;
+	try{u.save();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.newUser:");}
+	a.tl.s(Prm.screen.toString(), Prm.Screen.User);}}
+
+ ,deleteProject{@Override void doOp(AppEU059S a,Map prms){
+	try{a.proj.delete();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.deleteProject:");}
+	a.tl.s(Prm.projNo.toString(),a.proj.no=-1);//a.screen=Prm.Screen.ProjectsList;
+	}}
+
+ ,deleteBuilding{@Override void doOp(AppEU059S a,Map prms){
+	try{a.bld.delete();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.deleteBuilding:");}
+	a.tl.s(Prm.buildingNo.toString(),a.bld.no=-1);//a.screen=Prm.Screen.ProjectScreen;
+	}}
+
+ ,deleteFloor{@Override void doOp(AppEU059S a,Map prms){
+	try{a.flr.delete();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.deleteFloor:");}
+	a.tl.s(Prm.floorNo.toString(),a.flr.no=-1);//a.screen=Prm.Screen.BuildingScreen;
+	}}
+
+ ,deleteSheet{@Override void doOp(AppEU059S a,Map prms){
+	/*deleteImages();
+		void deleteImages(){try{
+			//delete folder//Integer jsonRef=sheet.jsonRef;	 //AppEU059S app=app(t);app.
+			String path=getUploadPath()
+			,real=TL.context.getRealPath(tl,path);//t.getServletContext().getRealPath(path);
+			File f=new File(real);
+			if(f.exists())
+				f.delete();
+		}catch(Exception ex){tl.error(ex,"deleteImages");}
+		}//deleteImages* /
+	try{a.sheet.delete();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.deleteSheet:");}
+	a.tl.s(Prm.sheetNo.toString(), a.sheet.no=-1);//a.screen=Prm.Screen.FloorScreen;
+	}}
+
+ ,deleteUser{@Override void doOp(AppEU059S a,Map prms){
+	TL.DB.Tbl.Usr u=new TL.DB.Tbl.Usr();u.readReq("");
+	try{u.delete();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.deleteUser:");}
+	//a.tl.s(Prm.screen.toString(),a.screen=Prm.Screen.UsersList);
+ }}
+/*,userChngPw{@Override void doOp(AppEU059S a,Map prms){}}
+,query{@Override void doOp(AppEU059S a,Map prms){/*
+	* search
+	* proj
+	* title
+	* short desc
+	* desc
+	* building title
+	* floor title
+	* sheet
+	* notes
+	* other txt,txt,txt
+	* usr full-name ,user-id , desc
+	* * /}}* /
+
+ ,xhrEdit{@Override void doOp(AppEU059S a,Map prms){try{
+	a.tl.log("AppEU059S.Op.xhrEdit : op==xhrEdit");
+	//if(a.tl.response==null)a.tl.response=TL.Util.mapCreate();
+	TL.Util.mapSet(prms,"msg","um...");//a.tl.response
+	String entity=a.tl.req("entity");
+	Map v=(Map)a.tl.json.get("v");
+	Integer pk=a.tl.req("pk",-1);
+	TL.DB.Tbl t="project".equals(entity)?a.proj
+	:"building".equals(entity)?a.bld
+	:"floor".equals(entity)?a.flr:null;
+	a.tl.log("AppEU059S.Op.xhrEdit : entity=",entity," ,pk=",pk," ,v=",v ," ,t=",t);
+	if(t!=null && pk!=-1)
+	{t.load(pk);a.tl.log("AppEU059S.Op.xhrEdit : t!=null && pk!=-1");
+		Map j=a.getJ(t);
+		a.merge(j,v);
+		a.tl.log("AppEU059S.Op.xhrEdit : merge:",t);
+		t.save();
+		a.tl.log("AppEU059S.Op.xhrEdit : save");
+	}else a.tl.log("AppEU059S.Op.xhrEdit : else: t!=null && pk!=-1");
+	a.tl.getOut().o(prms);//a.tl.response
+	a.tl.log("AppEU059S.Op.xhrEdit : return");
+	}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.xhrEdit:");}}}
+
+ ,saveSheet{@Override void doOp(AppEU059S a,Map prms){try{
+	a.tl.log("op-saveSheet");
+	TL.DB.Tbl.Json json=a.sheet.json();
+	Map old=null,j=null;//a.sheet.m,j=a.sheet.m=(Map) (json.json=a.tl.json.get("json"));
+	//a.sheet.fromMap(j);
+	for(int i=0;i<4;i++)try{
+		String n="img"+(i+1);
+		Object o=a.tl.json.get(n);//Map m=(Map)tl.json.get(n);
+		if(o==null && old!=null)
+			o=old.get(n);
+		if(o!=null &&(!(o instanceof String) || o.toString().trim().length()>0))
+			j.put(n, o);
+	}catch(Exception ex){
+		a.tl.error(ex,"AppEU059S.saveSheet");}
+	j.put("no", a.sheet.no);
+	json.save();
+	a.sheet.save();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.saveSheet:");}
+	}}
+ //,getImg
+
+ ,StorageList{@Override void doOp(AppEU059S a,Map prms){
+	Storage.C[]x={Storage.C.no,Storage.C.path,Storage.C.contentType,Storage.C.lastModified};
+	a.storage.readReq("");
+	StringBuilder sql=new StringBuilder("select ");
+	TL.DB.Tbl.Cols.generate(sql,x)
+		.append(" from ").append(Storage.dbtName)
+		.append(" where `").append(Storage.C.lastModified).append("`>?");
+	List<Object>l=TL.Util.lst(x),r;
+
+	prms.put("return",l);//a.tl.response
+	for (TL.DB.ItTbl.ItRow i:TL.DB.ItTbl.it( sql.toString()
+		,a.storage.lastModified)) {
+		l.add(r=TL.Util.lst());
+		for (Storage.C c:x)
+			r.add(i.next());}}}
+
+ ,StorageGet{@Override void doOp(AppEU059S a,Map prms){
+	try{a.storage.readReq("");a.storage.load();prms.put("return",a.storage);} catch (Exception e) {
+		a.tl.error(e,"AppEU059S.Op.StorageGet");}}}
+
+ ,StorageContent{@Override void doOp(AppEU059S a,Map prms){
+	try{a.storage.readReq("");a.storage.load();//prms.put("return",a);
+	//set response headers: lastModified,
+	a.respond(a.storage.contentType,a.storage.data);
+	} catch (Exception e) {
+		a.tl.error(e,"Storage.Op.StorageContent");}}}/*
+
+ ,StorageScript{@Override void doOp(AppEU059S a,Map prms){
+	try{a.storage.readReq("");a.storage.load();//prms.put("return",a);
+	//set response headers: lastModified,
+	a.respond(a.storage.contentType,a.storage.data);
+	} catch (Exception e) {
+		a.tl.error(e,"AppEU059S.Op.get");}}}
+
+ ,StorageCss{@Override void doOp(AppEU059S a,Map prms){
+	try{a.storage.readReq("");a.storage.load();prms.put("return",a);} catch (Exception e) {
+		a.tl.error(e,"AppEU059S.Op.get");}}}
+
+ ,StorageImg{@Override void doOp(AppEU059S a,Map prms){
+	try{a.storage.readReq("");a.storage.load();prms.put("return",a);} catch (Exception e) {
+		a.tl.error(e,"AppEU059S.Op.get");}}}* /
+
+ ,StorageSet{@Override void doOp(AppEU059S a,Map prms) {
+	try{a.storage.readReq_save();prms.put("return",true);} catch (Exception e) {
+		a.tl.error(e,"AppEU059S.Op.StorageSet");}}}
+
+ ,StorageNew{@Override void doOp(AppEU059S a,Map prms) {
+	try{int no=a.storage.no=a.storage.maxPlus1(Storage.C.no);
+	prms.put("return",no);
+	a.storage.readReq_saveNew();} catch (Exception e) {
+		a.tl.error(e,"AppEU059S.Op.StorageNew");}}}
+
+ ,StorageDelete{@Override void doOp(AppEU059S a,Map prms) {
+	try{a.storage.readReq("");
+	prms.put("return",a.storage.delete());} catch (Exception e) {
+		a.tl.error(e,"AppEU059S.Op.StorageDelete");}}}
+
+ //,StorageSyncOffline{@Override void doOp(TL tl,Map prms){}}
+ ;
+ void doOp(AppEU059S a,Map params){params.put("msg","op not implemented");}
+ }//enum Op
+
+//public interface IOp{public void doOp(AppEU059S a,Map params);}
 
 public static class Srvlt extends HttpServlet{
  @Override public void service(HttpServletRequest q,HttpServletResponse r)
@@ -3724,6 +4006,9 @@ public static class Srvlt extends HttpServlet{
 
  //@Override  public void init(){}//Servlet.init
 }//public static class Srvlt extends HttpServlet
+
+*/
+	}
 
 	public static class Project extends TL.DB.Tbl {//implements Serializable
 		public static final String dbtName="projects";
@@ -4331,292 +4616,47 @@ CREATE TABLE `Storage` (
 		try{no=storage.no=storage.maxPlus1(C.no);
 			storage.save();
 			} catch (Exception e) {
-			tl.error(e,"AppEU059S.Op.StorageNew");}
+			tl.error(e,"AppEU059S.Storage.New:op");}
 		return no;}
 
-
-	static @TL.Op int list(int lastModified,TL tl){int no=-1;
-		try{no=storage.no=storage.maxPlus1(C.no);
-			storage.save();
+	static @TL.Op ResultSet list(int lastModified,TL tl){ResultSet rs=null;
+		try{C[]x={C.no,C.path,C.contentType,C.lastModified};
+			StringBuilder sql=new StringBuilder("select ");
+			TL.DB.Tbl.Cols.generate(sql,x)
+				.append(" from ").append(dbtName)
+				.append(" where `").append(C.lastModified).append("`>?");
+			rs=TL.DB.r(sql.toString(),lastModified);
 		} catch (Exception e) {
-			tl.error(e,"AppEU059S.Op.StorageNew");}
-		return no;}
+			tl.error(e,"AppEU059S.Storage.list:op");}
+		return rs;}
+
+	static @TL.Op Storage get(String path,TL tl){Storage s=null;
+		try{s=new Storage();s.loadBy(C.path,path);
+		} catch (Exception e) {
+			tl.error(e,"AppEU059S.Storage.get:op");}
+		return s;}
+
+	static @TL.Op Storage content(String path,TL tl){Storage s=null;
+		try{s=new Storage();s.loadBy(C.path,path);
+			tl.respond(s.contentType,s.data);
+		} catch (Exception e) {
+			tl.error(e,"Storage.Storage.content");}
+		return s;}
+
+	static @TL.Op Storage set(Storage s,TL tl){
+		try{s.save();
+		} catch (Exception e) {
+			tl.error(e,"Storage.Storage.set");}
+		return s;}
+
+	static @TL.Op boolean delete(int no,TL tl){
+		try{Storage s=new Storage();s.no=no;return s.delete();
+		} catch (Exception e) {
+			tl.error(e,"Storage.Storage.set");}
+		return false;}
 
 }//class Storage
 
- void respond(String contentType,String content){
-	try{tl.r("responseDone",true);
-	tl.rspns.setContentType(contentType);
-	tl.o(content);}catch(Exception ex){tl.error(ex,"AppEU059S.respond:");}}
-
- enum Op{
-	 /**none is equivelant to bootstrapping the web-application system to Storage:key=app*/
- none{@Override void doOp(AppEU059S a,Map prms){//TODO: after the development stage of bootstrapping , change the respond to get from dbTbl-storage the js code path: "eu059s.bootStrap" ::= raw minimal js code to load LocalStorage "eu059s.BootStrap" and execute or do a xhr of xhr-op:eu059s.BootStrap
-	a.respond("text/html",//"<html><head><script src=\"sys.js\"></script></head><body></body></html>"
-	"<html><head><script>window.onload=function bootstrap(){"
-+"	var path='eu059s.files:sys.js',x=localStorage[path] \n"
-+"	function init(x){console.log('bootstrap.js:init:',x)\n"
-+"		var s=document.createElement('script');			\n"
-+"		document.body.appendChild(s);\n"
-+"		s.text=x;}				\n"
-+"	if(!x)						\n"
-+"	{function xhr(p){			\n"
-+"			if(!p)return p;		\n"
-+"			var ct='Content-Type',cs='charset'	\n"
-+"				,x=typeof XMLHttpRequest === 'undefined'\n"
-+"				?new ActiveXObject('microsoft.XMLHTTP')\n"
-+"				:new XMLHttpRequest();x.p=p;p.xhr=x;	\n"
-+"			x.open(p.method||'POST',p.url||'', p.onload )\n"
-+"			x.setRequestHeader(ct, 'text/json');\n"
-+"			x.setRequestHeader(cs, 'utf-8');	\n"
-+"			x.onload=p.onload					\n"
-+"			x.send(JSON.stringify(p.data));		\n"
-+"			console.log('xhr:response:',x.response,p,x); \n"
-+"			return x.response;					\n"
-+"		}//function xhr							\n"
-+"		xhr({data:{op:'StorageGet',path:path	\n"
-+"			,onload:function(e){				\n"
-+"			localStorage[path]=x=e&&(e.response	\n"
-+"				||(e.target&&e.target.response)	\n"
-+"				||(e.src&&e.src.response))		\n"
-+"			init(x);\n"
-+"		}//onload function\n"
-+"		}//data		\n"
-+"		}//xhr param\n"
-+"		)//xhr		\n"
-+"	}//if !x		\n"
-+"	else init(x)	\n"
-+"}//function bootstrap\n"
-+"</script></head><body></body></html>"
-	);}}
-
- ,login{@Override void doOp(AppEU059S a,Map prms){try{
-	TL.DB.Tbl.Usr u=TL.DB.Tbl.Usr.login();TL tl=a.tl;
-	if(u!=null){u.onLogin();
-		TL.DB.Tbl.Log.log(TL.DB.Tbl.Log.Entity.usr
-			, tl.usr.uid
-			, TL.DB.Tbl.Log.Act.Login
-			,TL.Util.mapCreate("usr",tl.usr,"request",tl.req));}
-	else// msg="incorrect login";
-		TL.DB.Tbl.Log.log(TL.DB.Tbl.Log.Entity.usr
-			, tl!=null&&tl.usr!=null?tl.usr.uid:-1
-			, TL.DB.Tbl.Log.Act.Log
-			,TL.Util.mapCreate(
-				"msg","incorrect login"
-				,"request",tl.req));}catch(Exception ex){
-					a.tl.error(ex,"AppEU059S.Op.login:");}}}
-
- ,logout{@Override void doOp(AppEU059S a,Map prms)
-	{try{TL.DB.Tbl.Log.log(TL.DB.Tbl.Log.Entity.usr, a.tl.usr.uid,TL.
-		DB.Tbl.Log.Act.Logout,TL.Util.mapCreate("usr",a.tl.usr));
-		a.tl.ssn.onLogout();}catch(Exception ex){
-			a.tl.error(ex,"AppEU059S.Op.logout:");}}}
-
- ,newProject{@Override void doOp(AppEU059S a,Map prms){
-	a.proj.no=null;//TL.DB.q1int("select max(`no`)+1 from projects;", 1);
-	a.proj.json=TL.Util.mapCreate("title","Project "+a.tl.now
-		, "date",TL.Util.formatDate( a.tl.now )
-		, "shortDesc","short Desc"//"avatar","avatar.jpg"
-		, "author",a.tl.usr.uid, "desc","description" );
-	try{a.proj.save();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.newProject:");}
-	a.tl.s(Prm.projNo.toString(),a.proj.no);//a.tl.s(Prm.screen.toString(),a.screen=Prm.Screen.ProjectScreen);
-	}}
-
- ,newBuilding{@Override void doOp(AppEU059S a,Map prms){
-	a.bld.no=null;a.bld.p=a.proj.no;
-	a.bld.json=TL.Util.mapCreate("date",TL.Util.formatDate( a.tl.now )
-		, "author",a.tl.usr.uid , "title","Building "+a.tl.now );//"avatar","avatar.jpg"
-	try{a.bld.save();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.newBuilding:");}
-	a.tl.s(Prm.buildingNo.toString(),a.bld.no);
-	a.tl.s(Prm.screen.toString(), Prm.Screen.BuildingScreen);}}
-
- ,newFloor{@Override void doOp(AppEU059S a,Map prms){
-	a.flr.no=null;a.flr.b=a.bld.no;a.flr.p=a.proj.no;
-	a.flr.json=TL.Util.mapCreate("date", TL.Util.formatDate( a.tl.now )
-		, "author",a.tl.usr.uid , "title","Floor "+a.tl.now);//"avatar","avatar.jpg"
-	try{a.flr.save();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.newFloor:");}
-	a.tl.s(Prm.floorNo.toString(),a.flr.no);
-	a.tl.s(Prm.screen.toString(), Prm.Screen.FloorScreen);}}
-
- ,newSheet{@Override void doOp(AppEU059S a,Map prms){
-	a.sheet.no=null;
-	a.sheet.dt=a.tl.now;a.sheet.u=a.tl.usr.uid;
-	a.sheet.p=a.proj.no;a.sheet.b=a.bld.no;a.sheet.f=a.flr.no;
-	//a.sheet.jsonRef=TL.DB.Tbl.Json.jrmp1();
-	//a.sheet.m=a.sheet.asMap();
-	//a.sheet.m.put("datetime", TL.Util.formatDate(a.sheet.dt ));
-	TL.DB.Tbl.Json j=a.sheet.json();
-	//a.sheet.m.put(j.Jr,j.jsonRef);
-	//sheet.jsonRef=j.jsonRef=j.jrmp1();//((Number)sheet.m.get(TL.DB.Tbl.Json.Jr)).intValue();
-	try{a.sheet.save();
-	//a.sheet.m.put("no", a.sheet.no);j.save(a.sheet.m);
-	}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.newSheet:");}
-	a.tl.s(Prm.sheetNo.toString(), a.sheet.no);//a.tl.s(Prm.screen.toString(), a.screen=Prm.Screen.Sheet);
-	}}
-
- ,newUser{@Override void doOp(AppEU059S a,Map prms){
-	TL.DB.Tbl.Usr u=new TL.DB.Tbl.Usr();
-	u.readReq("");//u .j=TL.Util.mapCreate name tel gender address email tel-ext id cid	"avatar","avatar.jpg"
-	u.uid=null;
-	try{u.save();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.newUser:");}
-	a.tl.s(Prm.screen.toString(), Prm.Screen.User);}}
-
- ,deleteProject{@Override void doOp(AppEU059S a,Map prms){
-	try{a.proj.delete();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.deleteProject:");}
-	a.tl.s(Prm.projNo.toString(),a.proj.no=-1);//a.screen=Prm.Screen.ProjectsList;
-	}}
-
- ,deleteBuilding{@Override void doOp(AppEU059S a,Map prms){
-	try{a.bld.delete();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.deleteBuilding:");}
-	a.tl.s(Prm.buildingNo.toString(),a.bld.no=-1);//a.screen=Prm.Screen.ProjectScreen;
-	}}
-
- ,deleteFloor{@Override void doOp(AppEU059S a,Map prms){
-	try{a.flr.delete();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.deleteFloor:");}
-	a.tl.s(Prm.floorNo.toString(),a.flr.no=-1);//a.screen=Prm.Screen.BuildingScreen;
-	}}
-
- ,deleteSheet{@Override void doOp(AppEU059S a,Map prms){
-	/*deleteImages();
-		void deleteImages(){try{
-			//delete folder//Integer jsonRef=sheet.jsonRef;	 //AppEU059S app=app(t);app.
-			String path=getUploadPath()
-			,real=TL.context.getRealPath(tl,path);//t.getServletContext().getRealPath(path);
-			File f=new File(real);
-			if(f.exists())
-				f.delete();
-		}catch(Exception ex){tl.error(ex,"deleteImages");}
-		}//deleteImages*/
-	try{a.sheet.delete();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.deleteSheet:");}
-	a.tl.s(Prm.sheetNo.toString(), a.sheet.no=-1);//a.screen=Prm.Screen.FloorScreen;
-	}}
-
- ,deleteUser{@Override void doOp(AppEU059S a,Map prms){
-	TL.DB.Tbl.Usr u=new TL.DB.Tbl.Usr();u.readReq("");
-	try{u.delete();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.deleteUser:");}
-	//a.tl.s(Prm.screen.toString(),a.screen=Prm.Screen.UsersList);
- }}
-/*/,userChngPw{@Override void doOp(AppEU059S a,Map prms){}}
-,query{@Override void doOp(AppEU059S a,Map prms){/*
-	* search
-	* proj
-	* title
-	* short desc
-	* desc
-	* building title
-	* floor title
-	* sheet
-	* notes
-	* other txt,txt,txt
-	* usr full-name ,user-id , desc
-	* * /}}*/
-
- ,xhrEdit{@Override void doOp(AppEU059S a,Map prms){try{
-	a.tl.log("AppEU059S.Op.xhrEdit : op==xhrEdit");
-	//if(a.tl.response==null)a.tl.response=TL.Util.mapCreate();
-	TL.Util.mapSet(prms,"msg","um...");//a.tl.response
-	String entity=a.tl.req("entity");
-	Map v=(Map)a.tl.json.get("v");
-	Integer pk=a.tl.req("pk",-1);
-	TL.DB.Tbl t="project".equals(entity)?a.proj
-	:"building".equals(entity)?a.bld
-	:"floor".equals(entity)?a.flr:null;
-	a.tl.log("AppEU059S.Op.xhrEdit : entity=",entity," ,pk=",pk," ,v=",v ," ,t=",t);
-	if(t!=null && pk!=-1)
-	{t.load(pk);a.tl.log("AppEU059S.Op.xhrEdit : t!=null && pk!=-1");
-		Map j=a.getJ(t);
-		a.merge(j,v);
-		a.tl.log("AppEU059S.Op.xhrEdit : merge:",t);
-		t.save();
-		a.tl.log("AppEU059S.Op.xhrEdit : save");
-	}else a.tl.log("AppEU059S.Op.xhrEdit : else: t!=null && pk!=-1");
-	a.tl.getOut().o(prms);//a.tl.response
-	a.tl.log("AppEU059S.Op.xhrEdit : return");
-	}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.xhrEdit:");}}}
-
- ,saveSheet{@Override void doOp(AppEU059S a,Map prms){try{
-	a.tl.log("op-saveSheet");
-	TL.DB.Tbl.Json json=a.sheet.json();
-	Map old=null,j=null;//a.sheet.m,j=a.sheet.m=(Map) (json.json=a.tl.json.get("json"));
-	//a.sheet.fromMap(j);
-	for(int i=0;i<4;i++)try{
-		String n="img"+(i+1);
-		Object o=a.tl.json.get(n);//Map m=(Map)tl.json.get(n);
-		if(o==null && old!=null)
-			o=old.get(n);
-		if(o!=null &&(!(o instanceof String) || o.toString().trim().length()>0))
-			j.put(n, o);
-	}catch(Exception ex){
-		a.tl.error(ex,"AppEU059S.saveSheet");}
-	j.put("no", a.sheet.no);
-	json.save();
-	a.sheet.save();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.saveSheet:");}
-	}}
- //,getImg
-
- ,StorageList{@Override void doOp(AppEU059S a,Map prms){
-	Storage.C[]x={Storage.C.no,Storage.C.path,Storage.C.contentType,Storage.C.lastModified};
-	a.storage.readReq("");
-	StringBuilder sql=new StringBuilder("select ");
-	TL.DB.Tbl.Cols.generate(sql,x)
-		.append(" from ").append(Storage.dbtName)
-		.append(" where `").append(Storage.C.lastModified).append("`>?");
-	List<Object>l=TL.Util.lst(x),r;
-
-	prms.put("return",l);//a.tl.response
-	for (TL.DB.ItTbl.ItRow i:TL.DB.ItTbl.it( sql.toString()
-		,a.storage.lastModified)) {
-		l.add(r=TL.Util.lst());
-		for (Storage.C c:x)
-			r.add(i.next());}}}
-
- ,StorageGet{@Override void doOp(AppEU059S a,Map prms){
-	try{a.storage.readReq("");a.storage.load();prms.put("return",a.storage);} catch (Exception e) {
-		a.tl.error(e,"AppEU059S.Op.StorageGet");}}}
-
- ,StorageContent{@Override void doOp(AppEU059S a,Map prms){
-	try{a.storage.readReq("");a.storage.load();//prms.put("return",a);
-	//set response headers: lastModified,
-	a.respond(a.storage.contentType,a.storage.data);
-	} catch (Exception e) {
-		a.tl.error(e,"Storage.Op.StorageContent");}}}/*
-
- ,StorageScript{@Override void doOp(AppEU059S a,Map prms){
-	try{a.storage.readReq("");a.storage.load();//prms.put("return",a);
-	//set response headers: lastModified,
-	a.respond(a.storage.contentType,a.storage.data);
-	} catch (Exception e) {
-		a.tl.error(e,"AppEU059S.Op.get");}}}
-
- ,StorageCss{@Override void doOp(AppEU059S a,Map prms){
-	try{a.storage.readReq("");a.storage.load();prms.put("return",a);} catch (Exception e) {
-		a.tl.error(e,"AppEU059S.Op.get");}}}
-
- ,StorageImg{@Override void doOp(AppEU059S a,Map prms){
-	try{a.storage.readReq("");a.storage.load();prms.put("return",a);} catch (Exception e) {
-		a.tl.error(e,"AppEU059S.Op.get");}}}*/
-
- ,StorageSet{@Override void doOp(AppEU059S a,Map prms) {
-	try{a.storage.readReq_save();prms.put("return",true);} catch (Exception e) {
-		a.tl.error(e,"AppEU059S.Op.StorageSet");}}}
-
- ,StorageNew{@Override void doOp(AppEU059S a,Map prms) {
-	try{int no=a.storage.no=a.storage.maxPlus1(Storage.C.no);
-	prms.put("return",no);
-	a.storage.readReq_saveNew();} catch (Exception e) {
-		a.tl.error(e,"AppEU059S.Op.StorageNew");}}}
-
- ,StorageDelete{@Override void doOp(AppEU059S a,Map prms) {
-	try{a.storage.readReq("");
-	prms.put("return",a.storage.delete());} catch (Exception e) {
-		a.tl.error(e,"AppEU059S.Op.StorageDelete");}}}
-
- //,StorageSyncOffline{@Override void doOp(TL tl,Map prms){}}
- ;
- void doOp(AppEU059S a,Map params){params.put("msg","op not implemented");}
- }//enum Op
-
-//public interface IOp{public void doOp(AppEU059S a,Map params);}
 
 public static class Dbg{
 		static final String Name="org.kisr.adoqs.Dbg";
@@ -4919,12 +4959,12 @@ public static class Dbg{
  {Dbg.p("DebugXhr.main:begin");
 	final String prms=",path:'eu059s.files:dbg.txt',contentType:'text/Javascript',lastModified:100,data:'dbgOk',logOut:true}";
 	final String[]testCases={
-		 "{op:'Storage.New'"		+prms
-		,"{op:'Storage.List'"		+prms
-		,"{op:'Storage.Get'"		+prms
-		,"{op:'Storage.Content'"	+prms
-		,"{op:'Storage.Set'"		+prms
-		,"{op:'Storage.Delete'"	+prms
+		 "{op:'Storage.New'"	+prms
+		,"{op:'Storage.list'"	+prms
+		,"{op:'Storage.get'"	+prms
+		,"{op:'Storage.content'"+prms
+		,"{op:'Storage.set'"	+prms
+		,"{op:'Storage.delete'"	+prms
 	};//final String[]testCases
 	Dbg.Srvlt s=new Dbg.Srvlt();Dbg.p("DebugXhr.main:new Srvlt");
 	TL.registerOp(AppEU059S.class);
