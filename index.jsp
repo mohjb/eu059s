@@ -48,7 +48,7 @@ public static class TL {
 			pool("dbpool-eu059s")
 			,reqCon("javax.sql.PooledConnection")
 			,server("216.227.216.46","216.227.220.84","localhost")
-			,dbName("js4d00_eu059s","eu059s")
+			,dbName("eu059s","js4d00_eu059s")
 			,un("js4d00_theblue","root")
 			,pw("theblue","qwerty","root","");
 			String str,a[];DB(String...p){str=p[0];a=p;}
