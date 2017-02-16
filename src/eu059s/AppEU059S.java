@@ -1,6 +1,7 @@
 package eu059s;//eu059s.AppEU059S.Srvlt
 
 import java.io.*;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
 import java.lang.reflect.Array;
@@ -232,6 +233,9 @@ public static class TL {
 
 		static Date parseDate(String s){
 			Integer[]a=parseInts(s);int n=a.length;
+			if(n<2){long l=Long.parseLong(s);
+				Date d=new Date(l);
+				return d;}
 			java.util.GregorianCalendar c=new java.util.GregorianCalendar();
 			c.set(n>0?a[0]:0,n>1?a[1]-1:0,n>2?a[2]:0,n>3?a[3]:0,n>4?a[4]:0);
 			return c.getTime();}
@@ -282,10 +286,10 @@ public static class TL {
 				TL.tl().error(ex, "TL.Util.parseInt:",v,dv);
 			}return dv;}
 
-		public static <T>T parse(String s,T defval)
-		{if(s!=null)
-			try{	Class<T> ct=(Class<T>) defval.getClass();
-				Class c=ct;
+		public static <T>T parse(String s,T defval){
+		 if(s!=null)try{
+			Class<T> ct=(Class<T>) defval.getClass();
+			Class c=ct;
 			boolean b=c==null?false:c.isEnum();
 				if(!b){c=ct.getEnclosingClass();b=c==null?false:c.isEnum();}
 				if(b){
@@ -295,6 +299,29 @@ public static class TL {
 				}}catch(Exception x){//changed 2016.06.27 18:28
 					TL.tl().error(x, "TL.Util.<T>T parse(String s,T defval):",s,defval);}
 			return defval;}
+
+		public static Object parse(String s,Class c){
+		 if(s!=null)try{
+			boolean b=c==null?false:c.isEnum();
+			if(!b){Class ct=c.getEnclosingClass();b=ct==null?false:ct.isEnum();if(b)c=ct;}
+			if(b){
+				for(Object o:c.getEnumConstants())
+					if(s.equalsIgnoreCase(o.toString()))
+						return o;
+			}else if(String.class.equals(c))return s;
+			else if(Number.class.isAssignableFrom(c)){
+				if(Double.class.equals(c))return new Double(s);
+				else if(Float.class.equals(c))return new Float(s);
+				else if(Short.class.equals(c))return new Short(s);
+				else if(Long.class.equals(c))return new Long(s);
+				else if(Byte.class.equals(c))return new Byte(s);
+				else return new Integer(s);}
+			else if(Boolean.class.equals(c))return new Boolean(s);
+			else if(Date.class.equals(c))return parseDate(s);
+			else return Json.Parser.parse(s);
+	 	 }catch(Exception x){//changed 2016.06.27 18:28
+				TL.tl().error(x, "TL.Util.<T>T parse(String s,Class):",s,c);}
+		 return s;}
 
 	}//class util
 
@@ -398,6 +425,11 @@ public static class TL {
 	{String s=req(n);if(s!=null)
 		defVal=Util.parse(s,defVal);
 		return defVal;}
+
+	public Object req(String n,Class c)
+	{String s=req(n);//if(s!=null)
+		Object o=Util.parse(s,c);
+		return o;}
 
 	////////////////////////////////
 	public String logo(Object...a){String s=null;
@@ -2691,20 +2723,29 @@ public static class TL {
 
 	/** annotation to designate a java method as an ajax/xhr entry point of execution*/
 	@java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-	public static @interface Op{	String prefix() default "";boolean json() default false; }
+	public static @interface Op{
+		boolean useClassName() default true;
+		//boolean caseSensitive() default true;
+		boolean nestJsonReq() default true;//if false , then only the returned-value from the method call is json-stringified as a response body, if true the returned-value is set in the json-request with prop-name "return"
+		String prefix() default "";//prefix for parameter names
+		String urlPath() default "\n"; //if no method name match from parameters, then this string is mathed with the requested url, "*" means method will match any request path
+		String prmName() default "";
+	}//Op
 
-	static Map<String,java.lang.reflect.Method>ops=new HashMap<String,java.lang.reflect.Method>();
+	static Map<String,java.lang.reflect.Method>
+	ops=new HashMap<String,java.lang.reflect.Method>(),
+	url=new HashMap<String,java.lang.reflect.Method>();
 
 	public static void registerOp(Class p){
 		java.lang.reflect.Method[]b=p.getMethods();
-		String cn=p.getName();
+		String cn=p.getSimpleName();
 		for(java.lang.reflect.Method m:b){
-			//java.lang.annotation.Annotation<Op>oc=null;//Op.class;
-			Class c=null;//m.getAnnotation(Op.class); //c!=null
-			if(m.isAnnotationPresent(Op.class))
-			{Object[]a={m,p};
-				String s=m.getName();
-				ops.put(cn+"."+s,m);
+			Op op= m.getAnnotation(Op.class);
+			if(op!=null)
+			{	String s=m.getName();
+				ops.put(op.useClassName()?cn+"."+s:s,m);
+				if(!"\n".equals(op.urlPath()))
+					url.put(op.urlPath(),m);
 			}
 		}
 	}//registerOp
@@ -2719,7 +2760,15 @@ public static class TL {
 		TL tl=null;try
 		{tl=TL.Enter(request,response,out);
 			tl.r("contentType","text/json");//tl.logOut=tl.var("logOut",false);
-			java.lang.reflect.Method op=ops.get(tl.req(Prm.op.toString()));
+			java.lang.reflect.Method op=ops.get(tl.req("op"));//Prm.op.toString()));
+
+			if(op==null) {String p=tl.req.getContextPath();
+				for (String s : url.keySet())
+					if ( p.startsWith(s) || "*".equals(s) ) {//s == null || s.length() < 1 ||
+						op = url.get(s);
+						if(!"*".equals(s))break;
+					}
+			}
 			tl.log("jsp:version2017.02.09.17.10:op=",op);
 			//if((tl.usr!=null||tl.logOut)|| op==Op.login || op==Op.none)//TODO: AFTER TESTING DEVELOPMENT, REMOVE from if: logOut
 
@@ -2728,29 +2777,34 @@ public static class TL {
 			if(op!=null){
 				Class[]prmTypes=op.getParameterTypes();//int n=prmTypes==null?0:prmTypes.length;
 				Class cl=op.getDeclaringClass();
-				java.lang.reflect.TypeVariable<java.lang.reflect.Method>[]tv=op.getTypeParameters();
+				Annotation[][] tv=op.getParameterAnnotations();//java.lang.reflect.TypeVariable<java.lang.reflect.Method>[]tv=op.getTypeParameters();
 				int n=tv==null?0:tv.length,i=-1;
 				Object[]args=new Object[n];
-				for(java.lang.reflect.TypeVariable<java.lang.reflect.Method>t:tv){
+				for(Annotation[]t:tv)try{//java.lang.reflect.TypeVariable<java.lang.reflect.Method>t
+					Op pp=t.length>0&&t[0] instanceof Op?(Op)t[0]:null;
 					Class c=prmTypes[++i];
-					String nm=t.getName();
+					String nm=pp!=null?pp.prmName():"arg"+i;//t.getName();
 					Object o=null;
-					if(c.isAssignableFrom(TL.Form.class))//TL.DB.Tbl
+					if(TL.Form.class.isAssignableFrom(c))//c.isAssignableFrom(TL.Form.class))//TL.DB.Tbl
 					{args[i]=o=c.newInstance();
 						TL.Form f=(TL.Form)o;
-						f.readReq("");
+						o=tl.json.get(nm);
+						if(o instanceof Map)f.fromMap((Map)o);
+						else if(o instanceof List)f.vals(((List)o).toArray());
+						else if(o instanceof Object[])f.vals((Object[])o);
+						else f.readReq("");
 					}else
-					 args[i]=o=c==TL.class?tl
-							:c==AppEU059S.class?tl.a
+					 args[i]=o=TL.class.equals(c)?tl
+						:AppEU059S.class.equals(c)?tl.a
 							// :c==HttpServletRequest.class?tl.xxx	///  xxx
 							// :c==HttpServletResponse.class?tl.rspns
 							//:c==HttpSession.class?tl.getSession()
-							:c==Map.class
+						:Map.class.equals(c)
 							&&(nm.indexOf("p")!=-1)
 							&&(nm.indexOf("r")!=-1)
 							&&(nm.indexOf("m")!=-1)?tl.json
 						:tl.req(nm,c);
-				}
+				}catch(Exception ex){tl.error(ex,"TL.run:arg:i=",i);}
 				retVal=n==0?op.invoke(cl)
 					:n==1?op.invoke(cl,args[0])
 					:n==2?op.invoke(cl,args[0],args[1])
@@ -2784,75 +2838,23 @@ public static class TL {
 }//class TL //TL tl=null;try{tl=TL.Enter(request,out);
 
 //public class AppEU059S
-	enum Prm{screen(Screen.class),op(Op.class)
-		,projNo(Integer.class)
-		,buildingNo(Integer.class)
-		,floorNo(Integer.class)
-		,sheetNo(Integer.class)
-		,query(String.class)
-		,entity(String.class)
-		,pk(Integer.class),v(Map.class)
-		,userLevel(String.class)
-		;Class<?>c;Prm(Class<?>p){c=p;}
-
-		enum Screen {ProjectsList,ProjectScreen,BuildingScreen
-			,FloorScreen,UsersList,User,Sheet
-			,ReportsMenu
-			,LogMenu
-			,ConfigMenu
-			,Search
-		}//Screen
-
-		enum UserLevel{Manage,Edit,View ,Suspended}
-
-	}//enum Prm
-
-	static TL .DB.Tbl.Usr usr(Object uid){
-		TL .DB.Tbl.Usr u=new TL .DB.Tbl.Usr();
-		u.load(uid);return u;}
-
-	static Map getJ(TL.DB.Tbl p){
-		Map r=null;
-		if(p instanceof Project){Project x=(Project)p;
-			r=x.json;
-		}else if(p instanceof Building){Building x=(Building)p;
-			r=x.json;
-		}else if(p instanceof Floor){Floor x=(Floor)p;
-			r=x.json;
-		}else if(p instanceof Sheet)
-		{Sheet x=(Sheet)p;
-			r=x.get();}
-		return r;}
-
-	static Map merge(Map dst,Map src){
-		if(dst!=null&& src!=null)for(Object k:src.keySet())
-			dst.put(k, src.get(k));
-		return dst;
-	}
 
 	static final String SsnNm="AppEU059S"
 	,UploadPth="/eu059sUploads/";
-/*	public Project proj=new Project();
-public Building bld=new Building();
-public Floor flr=new Floor();
-public Sheet sheet=new Sheet();
-public Storage storage=new Storage();
-//public Prm.Screen screen;
-public TL tl;*/
 
 	public static AppEU059S app(){return app(TL.tl());}
 	public static AppEU059S app(TL tl){
 		Object o=tl.s(SsnNm);
 		if(o==null || !(o instanceof AppEU059S))
 			tl.s(SsnNm,o=new AppEU059S());
-		AppEU059S e=(AppEU059S)o;e.tl=tl;tl.a=e;
+		AppEU059S e=(AppEU059S)o;tl.a=e;//e.tl=tl;
 		if(tl.usr==null && tl.a(SsnNm+".checkDBTCreation")==null
 		   ){
-			e.proj.checkDBTCreation(tl);
-			e.bld .checkDBTCreation(tl);
-			e.flr .checkDBTCreation(tl);
-			e.sheet.checkDBTCreation(tl);
-			e.storage.checkDBTCreation(tl);
+			new Project().checkDBTCreation(tl);
+			new Building() .checkDBTCreation(tl);
+			new Floor() .checkDBTCreation(tl);
+			new Sheet().checkDBTCreation(tl);
+			new Storage().checkDBTCreation(tl);
 			new TL.DB.Tbl.Json().checkDBTCreation(tl);
 			new TL.DB.Tbl.Usr().checkDBTCreation(tl);
 			new TL.DB.Tbl.Ssn().checkDBTCreation(tl);
@@ -2861,90 +2863,25 @@ public TL tl;*/
 		}return e;}
 
 	/**path to the uploaded files for Sheet (the sheet stored in the session)*/
-	public String getUploadPath(){
-		//readVars();//if(proj.no!=sheet.p)proj.no=sheet.p;
+	public String getUploadPath(){return UploadPth;
+		/*//readVars();//if(proj.no!=sheet.p)proj.no=sheet.p;
 		if(bld.no==-1)//sheet.b
 			bld.no=sheet.b;
 		if(flr.no==-1)//!=sheet.f
 			flr.no=sheet.f;
 		return UploadPth//+proj.no+'/'+bld.no+'/'+flr.no+'/'+sheet.no+'/'
-		+sheet.p+'/'+sheet.b+'/'+sheet.f+'/'+sheet.no+'/';}
+		+sheet.p+'/'+sheet.b+'/'+sheet.f+'/'+sheet.no+'/';*/}
 
-	AppEU059S appInit(){try{
-		//screen=tl.var(Prm.screen.toString(),Prm.Screen.ProjectsList);
-		if( tl.s(SsnNm)!=this )
-			tl.s( SsnNm , this );
-		//proj=(Project)tl.s("proj");
-		Integer n=tl.var(Prm.projNo.toString(),-1).intValue();//proj.no);
-		if(n!=proj.no && n!=-1)
-			proj.load(n);
+	{	/*
 
-		//bld=(Building)tl.s("bld");
-		n=tl.var(Prm.buildingNo.toString(),-1).intValue();//bld.no);
-		if(n!=bld.no && n!=-1)
-			bld.load(n);
-
-		n=tl.var(Prm.floorNo.toString(),-1).intValue();//flr.no);
-		if(n!=flr.no && n!=-1)
-			flr.load(n);
-
-		n=tl.var(Prm.sheetNo.toString(),-1).intValue();//sheet.no);
-		if(n!=sheet.no){if( n!=-1)
-		{	sheet.load(n);
-			TL.DB.Tbl.Json j=sheet.json();
-			//j.json=sheet.m=j.LoadRef(j.jsonRef);
-			//if(sheet.f!=flr.no)flr.load(sheet.f);
-		}//else sheet.m=null;
-		}
-		/*if(sheet!=null && sheet.no!=null && sheet.jsonRef==null)
-			sheet.jsonRef=TL.DB.q1int(
-				"select `"+Sheet.C.jsonRef
-				+"` from `"+sheet.getName()
-				+"` where `"+Sheet.C.no
-				+"`=?", -1, sheet.no);
-
-		/*sheet=(Sheet)tl.s("sheet");
-		 if(sheet==null)
-		 {//sheet=new;
-		 sheet.no=tl.var(Prm.sheetNo.toString(),-1).intValue();
-		 if(sheet.no!=-1)
-		 {	sheet.load();
-		 TL.DB.Tbl.Json j=sheet.json();
-		 j.load();
-		 if(j.json instanceof Map)
-		 {	sheet.m=(Map)j.json;
-		 sheet.m.get(TL.DB.Tbl.Json.Jr);
-		 }
-		 }
-		 tl.s("sheet",sheet);
-		 }else
-		 {Number n=tl.var(Prm.sheetNo.toString(),sheet.no);
-		 if(n!=sheet.no)
-		 sheet.load(n);
-		 }
-		 * /
-		 if(sheet!=null && flr!=null && flr.no!=null && sheet.f!=null && sheet.f!=-1 && sheet.f!=flr.no)flr.load(sheet.f);
-		 if(flr!=null && bld!=null && flr.no!=null && bld.no!=null && flr.b!=-1 && flr.b!=bld.no)bld.load(flr.b);
-		 if( bld!=null && proj!=null && bld.no!=null && proj.no!=null && bld.p!=-1 && bld.p!=proj.no)proj.load(bld.p);*/
-	}catch(Exception ex){
-		tl.error(ex,SsnNm,".appInit");}
-		return this;
-	}//appInit
-
-	String title(TL.DB.Tbl t){Map j=getJ(t);
-		Object ttl=j==null?null:j.get("title");
-		String r=ttl==null?"title"+t:ttl.toString();
-		return r;}
-
-	String author(TL.DB.Tbl t){
-		Map j=getJ(t);
-		TL.DB.Tbl.Usr author=null;
-		Object a=j==null?null:j.get("author");
-		if(a!=null)try{author=usr(a);}
-		catch(Exception ex){tl.error(ex,"AppEU059S.author");}
-		Object authorName=author!=null && author.json!=null?author.json.get("name"):author!=null?author.un:null;
-		String retVal= authorName==null?"author:"+t : authorName.toString();
-		return retVal;}
+<servlet>
+	<servlet-name>EU059Servlet</servlet-name>
+	<servlet-class >eu059s.AppEU059S.Srvlt</servlet-class>
+</servlet>
+<servlet-mapping>
+	<servlet-name>EU059Servlet</servlet-name>
+	<url-pattern>/EU059S/*</url-pattern>
+</servlet-mapping>
 
 	void authenticate(Op op) throws Exception{
 
@@ -2980,17 +2917,6 @@ public TL tl;*/
 			return;
 		}tl.logo("index:9");
 	}//authenticate
-
-	{	/*
-
-<servlet>
-	<servlet-name>EU059Servlet</servlet-name>
-	<servlet-class >eu059s.AppEU059S.Srvlt</servlet-class>
-</servlet>
-<servlet-mapping>
-	<servlet-name>EU059Servlet</servlet-name>
-	<url-pattern>/EU059S/*</url-pattern>
-</servlet-mapping>
 
 	void jsp01() throws IOException {
 		tl.o("<!DOCTYPE HTML>\r\n"
@@ -4007,6 +3933,137 @@ public static class Srvlt extends HttpServlet{
  //@Override  public void init(){}//Servlet.init
 }//public static class Srvlt extends HttpServlet
 
+
+	enum Prm{screen(Screen.class),op(Op.class)
+		,projNo(Integer.class)
+		,buildingNo(Integer.class)
+		,floorNo(Integer.class)
+		,sheetNo(Integer.class)
+		,query(String.class)
+		,entity(String.class)
+		,pk(Integer.class),v(Map.class)
+		,userLevel(String.class)
+		;Class<?>c;Prm(Class<?>p){c=p;}
+
+		enum Screen {ProjectsList,ProjectScreen,BuildingScreen
+			,FloorScreen,UsersList,User,Sheet
+			,ReportsMenu
+			,LogMenu
+			,ConfigMenu
+			,Search
+		}//Screen
+
+		enum UserLevel{Manage,Edit,View ,Suspended}
+
+	}//enum Prm
+
+	static TL .DB.Tbl.Usr usr(Object uid){
+		TL .DB.Tbl.Usr u=new TL .DB.Tbl.Usr();
+		u.load(uid);return u;}
+
+	static Map getJ(TL.DB.Tbl p){
+		Map r=null;
+		if(p instanceof Project){Project x=(Project)p;
+			r=x.json;
+		}else if(p instanceof Building){Building x=(Building)p;
+			r=x.json;
+		}else if(p instanceof Floor){Floor x=(Floor)p;
+			r=x.json;
+		}else if(p instanceof Sheet)
+		{Sheet x=(Sheet)p;
+			r=x.get();}
+		return r;}
+
+	static Map merge(Map dst,Map src){
+		if(dst!=null&& src!=null)for(Object k:src.keySet())
+			dst.put(k, src.get(k));
+		return dst;
+	}
+
+	AppEU059S appInit(){try{
+		//screen=tl.var(Prm.screen.toString(),Prm.Screen.ProjectsList);
+		if( tl.s(SsnNm)!=this )
+			tl.s( SsnNm , this );
+		//proj=(Project)tl.s("proj");
+		Integer n=tl.var(Prm.projNo.toString(),-1).intValue();//proj.no);
+		if(n!=proj.no && n!=-1)
+			proj.load(n);
+
+		//bld=(Building)tl.s("bld");
+		n=tl.var(Prm.buildingNo.toString(),-1).intValue();//bld.no);
+		if(n!=bld.no && n!=-1)
+			bld.load(n);
+
+		n=tl.var(Prm.floorNo.toString(),-1).intValue();//flr.no);
+		if(n!=flr.no && n!=-1)
+			flr.load(n);
+
+		n=tl.var(Prm.sheetNo.toString(),-1).intValue();//sheet.no);
+		if(n!=sheet.no){if( n!=-1)
+		{	sheet.load(n);
+			TL.DB.Tbl.Json j=sheet.json();
+			//j.json=sheet.m=j.LoadRef(j.jsonRef);
+			//if(sheet.f!=flr.no)flr.load(sheet.f);
+		}//else sheet.m=null;
+		}
+		/*if(sheet!=null && sheet.no!=null && sheet.jsonRef==null)
+			sheet.jsonRef=TL.DB.q1int(
+				"select `"+Sheet.C.jsonRef
+				+"` from `"+sheet.getName()
+				+"` where `"+Sheet.C.no
+				+"`=?", -1, sheet.no);
+
+		/*sheet=(Sheet)tl.s("sheet");
+		 if(sheet==null)
+		 {//sheet=new;
+		 sheet.no=tl.var(Prm.sheetNo.toString(),-1).intValue();
+		 if(sheet.no!=-1)
+		 {	sheet.load();
+		 TL.DB.Tbl.Json j=sheet.json();
+		 j.load();
+		 if(j.json instanceof Map)
+		 {	sheet.m=(Map)j.json;
+		 sheet.m.get(TL.DB.Tbl.Json.Jr);
+		 }
+		 }
+		 tl.s("sheet",sheet);
+		 }else
+		 {Number n=tl.var(Prm.sheetNo.toString(),sheet.no);
+		 if(n!=sheet.no)
+		 sheet.load(n);
+		 }
+		 * /
+		 if(sheet!=null && flr!=null && flr.no!=null && sheet.f!=null && sheet.f!=-1 && sheet.f!=flr.no)flr.load(sheet.f);
+		 if(flr!=null && bld!=null && flr.no!=null && bld.no!=null && flr.b!=-1 && flr.b!=bld.no)bld.load(flr.b);
+		 if( bld!=null && proj!=null && bld.no!=null && proj.no!=null && bld.p!=-1 && bld.p!=proj.no)proj.load(bld.p);* /
+	}catch(Exception ex){
+		tl.error(ex,SsnNm,".appInit");}
+		return this;
+}//appInit
+
+	String title(TL.DB.Tbl t){Map j=getJ(t);
+		Object ttl=j==null?null:j.get("title");
+		String r=ttl==null?"title"+t:ttl.toString();
+		return r;}
+
+	String author(TL.DB.Tbl t){
+		Map j=getJ(t);
+		TL.DB.Tbl.Usr author=null;
+		Object a=j==null?null:j.get("author");
+		if(a!=null)try{author=usr(a);}
+		catch(Exception ex){tl.error(ex,"AppEU059S.author");}
+		Object authorName=author!=null && author.json!=null?author.json.get("name"):author!=null?author.un:null;
+		String retVal= authorName==null?"author:"+t : authorName.toString();
+		return retVal;}
+
+public Project proj=new Project();
+public Building bld=new Building();
+public Floor flr=new Floor();
+public Sheet sheet=new Sheet();
+public Storage storage=new Storage();
+//public Prm.Screen screen;
+public TL tl;
+
 */
 	}
 
@@ -4612,14 +4669,14 @@ CREATE TABLE `Storage` (
 
 // Map vals(C except){}
 
-	static @TL.Op int New(Storage storage,TL tl){int no=-1;
+ public	static @TL.Op int New(@TL.Op(prmName="storage") Storage storage,TL tl){int no=-1;
 		try{no=storage.no=storage.maxPlus1(C.no);
 			storage.save();
 			} catch (Exception e) {
 			tl.error(e,"AppEU059S.Storage.New:op");}
 		return no;}
 
-	static @TL.Op ResultSet list(int lastModified,TL tl){ResultSet rs=null;
+ public	static @TL.Op ResultSet list(@TL.Op(prmName="lastModified") Date lastModified,TL tl){ResultSet rs=null;
 		try{C[]x={C.no,C.path,C.contentType,C.lastModified};
 			StringBuilder sql=new StringBuilder("select ");
 			TL.DB.Tbl.Cols.generate(sql,x)
@@ -4630,26 +4687,26 @@ CREATE TABLE `Storage` (
 			tl.error(e,"AppEU059S.Storage.list:op");}
 		return rs;}
 
-	static @TL.Op Storage get(String path,TL tl){Storage s=null;
+ public static @TL.Op Storage get(@TL.Op(prmName="path") String path,TL tl){Storage s=null;
 		try{s=new Storage();s.loadBy(C.path,path);
 		} catch (Exception e) {
 			tl.error(e,"AppEU059S.Storage.get:op");}
 		return s;}
 
-	static @TL.Op Storage content(String path,TL tl){Storage s=null;
+ public static @TL.Op Storage content(@TL.Op(prmName="path") String path,TL tl){Storage s=null;
 		try{s=new Storage();s.loadBy(C.path,path);
 			tl.respond(s.contentType,s.data);
 		} catch (Exception e) {
 			tl.error(e,"Storage.Storage.content");}
 		return s;}
 
-	static @TL.Op Storage set(Storage s,TL tl){
+ public static @TL.Op Storage set(@TL.Op(prmName="storage") Storage s,TL tl){
 		try{s.save();
 		} catch (Exception e) {
 			tl.error(e,"Storage.Storage.set");}
 		return s;}
 
-	static @TL.Op boolean delete(int no,TL tl){
+ public static @TL.Op boolean delete(@TL.Op(prmName="no") int no,TL tl){
 		try{Storage s=new Storage();s.no=no;return s.delete();
 		} catch (Exception e) {
 			tl.error(e,"Storage.Storage.set");}
@@ -4659,7 +4716,7 @@ CREATE TABLE `Storage` (
 
 
 public static class Dbg{
-		static final String Name="org.kisr.adoqs.Dbg";
+		static final String Name="eu059s.AppEU059S.TL.Dbg";
 		//////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 		public static class Req implements HttpServletRequest{
@@ -4678,6 +4735,7 @@ public static class Dbg{
 			@Override public int getContentLength() {return data.length();}
 			@Override public long getContentLengthLong() {return data.length();}
 			@Override public String getContentType() {p("Req.getContentType:",contentType);return contentType;}
+			@Override public String getContextPath() {return "";}
 			@Override public DispatcherType getDispatcherType() {return null;}
 			@Override public ServletInputStream getInputStream() throws IOException
 			{return new ServletInputStream() {int i=0;
@@ -4719,7 +4777,6 @@ public static class Dbg{
 			@Override public boolean authenticate(HttpServletResponse p) throws IOException, ServletException {return false;}
 			@Override public String changeSessionId() {return null;}
 			@Override public String getAuthType() {return null;}
-			@Override public String getContextPath() {return null;}
 			@Override public Cookie[] getCookies() {return null;}
 			@Override public long getDateHeader(String p) {return 0;}
 			@Override public String getHeader(String p) {return headers.get(p);}
@@ -4955,9 +5012,48 @@ public static class Dbg{
 
  }//class Dbg
 
+ public static @TL.Op(urlPath ="*")void firstPage(TL tl){//TODO: after the development stage of bootstrapping , change the respond to get from dbTbl-storage the js code path: "eu059s.bootStrap" ::= raw minimal js code to load LocalStorage "eu059s.BootStrap" and execute or do a xhr of xhr-op:eu059s.BootStrap
+	tl.respond("text/html",
+"<html><head><script>window.onload=function bootstrap(){"
+		+"	var path='eu059s.files:sys.js',x=localStorage[path] \n"
+		+"	function init(x){console.log('bootstrap.js:init:',x)\n"
+		+"		var s=document.createElement('script');			\n"
+		+"		document.body.appendChild(s);\n"
+		+"		s.text=x;}				\n"
+		+"	if(!x)						\n"
+		+"	{function xhr(p){			\n"
+		+"			if(!p)return p;		\n"
+		+"			var ct='Content-Type',cs='charset'	\n"
+		+"				,x=typeof XMLHttpRequest === 'undefined'\n"
+		+"				?new ActiveXObject('microsoft.XMLHTTP')\n"
+		+"				:new XMLHttpRequest();x.p=p;p.xhr=x;	\n"
+		+"			x.open(p.method||'POST',p.url||'', p.onload )\n"
+		+"			x.setRequestHeader(ct, 'text/json');\n"
+		+"			x.setRequestHeader(cs, 'utf-8');	\n"
+		+"			x.onload=p.onload					\n"
+		+"			x.send(JSON.stringify(p.data));		\n"
+		+"			console.log('xhr:response:',x.response,p,x); \n"
+		+"			return x.response;					\n"
+		+"		}//function xhr							\n"
+		+"		xhr({data:{op:'StorageGet',path:path	\n"
+		+"			,onload:function(e){				\n"
+		+"			localStorage[path]=x=e&&(e.response	\n"
+		+"				||(e.target&&e.target.response)	\n"
+		+"				||(e.src&&e.src.response))		\n"
+		+"			init(x);\n"
+		+"		}//onload function\n"
+		+"		}//data		\n"
+		+"		}//xhr param\n"
+		+"		)//xhr		\n"
+		+"	}//if !x		\n"
+		+"	else init(x)	\n"
+		+"}//function bootstrap\n"
+		+"</script></head><body></body></html>"
+	);}
+
  public static void main(String[]args)
  {Dbg.p("DebugXhr.main:begin");
-	final String prms=",path:'eu059s.files:dbg.txt',contentType:'text/Javascript',lastModified:100,data:'dbgOk',logOut:true}";
+	final String prms=",storage:{path:'eu059s.files:dbg.txt',contentType:'text/Javascript',lastModified:1487164764805,data:'dbgOk'},path:'eu059s.files:dbg.txt',lastModified:1486164764805,no:0,logOut:true}";
 	final String[]testCases={
 		 "{op:'Storage.New'"	+prms
 		,"{op:'Storage.list'"	+prms
@@ -4967,10 +5063,11 @@ public static class Dbg{
 		,"{op:'Storage.delete'"	+prms
 	};//final String[]testCases
 	Dbg.Srvlt s=new Dbg.Srvlt();Dbg.p("DebugXhr.main:new Srvlt");
-	TL.registerOp(AppEU059S.class);
+     TL.registerOp(AppEU059S.class);
+     TL.registerOp(AppEU059S.Storage.class);
 	for(String data:testCases){Dbg.p("DebugXhr.main:data=",s.q.data=data);
-	try {
-		//AppEU059S.jsp(s.q,s.p,s.p.out);
+	try {s.q.attribs.clear();
+		TL.run(s.q,s.p,s.p.out);//AppEU059S.jsp(s.q,s.p,s.p.out);
 	}catch (Exception e) {e.printStackTrace();}}
 	Dbg.p("Dbg.main:end");
  }//main
