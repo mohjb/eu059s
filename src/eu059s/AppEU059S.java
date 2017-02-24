@@ -3,11 +3,7 @@ package eu059s;//eu059s.AppEU059S.Srvlt
 import java.io.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-
 import java.lang.reflect.Array;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.security.Principal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,10 +12,8 @@ import java.sql.Statement;
 import java.sql.SQLException;
 import java.util.*;
 import javax.servlet.*;
-import javax.servlet.descriptor.JspConfigDescriptor;
-import javax.servlet.http.*;import javax.servlet.jsp.JspWriter;import javax.servlet.jsp.PageContext;
-import javax.servlet.jsp.el.ExpressionEvaluator;
-import javax.servlet.jsp.el.VariableResolver;
+import javax.servlet.http.*;
+
 
 import com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource;
 import org.apache.commons.fileupload.FileItem;
@@ -30,24 +24,21 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 public class AppEU059S  {//
 public static class TL {
 	enum context{ROOT(
-		"D:\\apache-tomcat-8.0.15\\webapps\\ROOT\\"
-		,"/Users/moh/Google Drive/air/apache-tomcat-8.0.30/webapps/ROOT/"
-		,"/public_html/i1io/"//EU059S/
-
+			"/public_html/i1io/"//EU059S/
+			,"/Users/moh/Google Drive/air/apache-tomcat-8.0.30/webapps/ROOT/"
+			,"D:\\apache-tomcat-8.0.15\\webapps\\ROOT\\"
+		,"C:\\apache-tomcat-9.0.0.M17\\webapps\\ROOT\\"
 		);
-		String str,a[];context(String...p){str=p[0];a=p;}
-		enum DB{
-			pool("dbpool-eu059s")
-			,reqCon("javax.sql.PooledConnection")
-			,server("localhost","216.227.216.46","localhost")//,"216.227.220.84"
-			,dbName("eu059s","js4d00_eu059s","eu059s")
-			,un("root","js4d00_theblue","root")
-			,pw("qwerty","theblue","","root")/*
-			,root( "/public_html/i1io/EU059S/"
-				,"D:\\apache-tomcat-8.0.15\\webapps\\ROOT/"
-				,"/Users/moh/Google Drive/air/apache-tomcat-8.0.30/webapps/ROOT/")*/
-			;String str,a[];DB(String...p){str=p[0];a=p;}
-		}
+			String str,a[];context(String...p){str=p[0];a=p;}
+			enum DB{
+				pool("dbpool-eu059s")
+				,reqCon("javax.sql.PooledConnection")
+				,server("216.227.216.46","localhost")//,"216.227.220.84"
+				,dbName("js4d00_eu059s","eu059s")
+				,un("js4d00_theblue","root")
+				,pw("theblue","","qwerty")
+				;String str,a[];DB(String...p){str=p[0];a=p;}
+			}
 
 		static String getRealPath(TL t,String path){
 			String real=t.getServletContext().getRealPath(path);
@@ -83,56 +74,49 @@ public static class TL {
 	public DB.Tbl.Usr usr;
 	public DB.Tbl.Ssn ssn;
 	public Map<String,Object>json;//accessing request in json-format
-	//public Map<Object,Object> response;
-	public Date now;//,sExpire;
+	public Date now;
 	/**wrapping JspWriter or any other servlet writer in "out" */
 	Json.Output out,/**jo is a single instanceof StringWriter buffer*/jo;
-	int htmlIndentation;
 	/**the static/class variable "tl"*/ static ThreadLocal<TL> tl=new ThreadLocal<TL>();
-	static boolean LogOut=false;//tlLog=true;
-	public boolean logOut=LogOut;
+	public boolean logOut=false;
 	public static final String CommentHtml[]={"\n<!--","-->\n"},CommentJson[]={"\n/*","\n*/"};
 	public String comments[]=CommentJson;
-	public HttpServletRequest req;AppEU059S a;
-	public HttpServletResponse rspns;//JspWriter out;//javax.servlet.jsp.PageContext pc;//GenericServlet srvlt;HttpSession session;
+	public HttpServletRequest req;
+	public HttpServletResponse rspns;
 
-	//public TL(GenericServlet s,HttpServletRequest r,HttpServletResponse n,PrintWriter o){_srvlt=s;req=r;rspns=n;out=o;}
-	public TL(HttpServletRequest r,Writer o){//HttpServletResponse n,
-		req=r;out=new Json.Output(o);}//rspns=n;
+		public TL(HttpServletRequest r,HttpServletResponse n,Writer o){req=r;rspns=n;out=new Json.Output(o);}
 
-	public Json.Output jo(){if(jo==null)try{jo=new Json.Output();}catch(Exception x){error(x,"moh.TL.jo:IOEx:");}return jo;}
-	public Json.Output getOut() throws IOException{return out;}//JspWriter//if(out==null)out=rspns.getWriter();
-	public HttpServletRequest getRequest(){return req;}
-	public HttpSession getSession(){return req.getSession();}
-	public ServletContext getServletContext(){return getSession().getServletContext();}//srvlt.getServletContext();
-	/**sets a new TL-instance to the localThread*/
+		public Json.Output jo(){if(jo==null)try{jo=new Json.Output();}catch(Exception x){error(x,"moh.TL.jo:IOEx:");}return jo;}
+		public Json.Output getOut() throws IOException{return out;}
+		public HttpServletRequest getRequest(){return req;}
+		public HttpSession getSession(){return req.getSession();}
+		public ServletContext getServletContext(){return getSession().getServletContext();}
+		/**sets a new TL-instance to the localThread*/
 
-	public static TL Enter(HttpServletRequest r,HttpServletResponse response,Writer out)
-	throws IOException
-	{TL p;tl.set(p=new TL(r,out!=null?out:response.getWriter()));
-		p.rspns=response;//p.session=session;
-		p.onEnter();
-		return p;}
+		public static TL Enter(HttpServletRequest r,HttpServletResponse response,Writer out)
+				throws IOException
+		{TL p;tl.set(p=new TL(r,response,out!=null?out:response.getWriter()));
+			p.onEnter();
+			return p;}
 
-	private void onEnter()throws IOException
-	{ip=getRequest().getRemoteAddr();
-		now=new Date();
-		try{Object o=req.getContentType();
-			o=o==null?null
-			:o.toString().contains("json")?Json.Parser.parse(req)
-			:o.toString().contains("part")?getMultiParts():null;
-			json=o instanceof Map<?, ?>?(Map<String, Object>)o:null;//req.getParameterMap() ;
-			//response=TL.Util.mapCreate("return",false , "op",req("op"),"req",o);//"msg",0 ,
-			logOut=var("logOut",logOut);
-			if(getSession().isNew())DB.Tbl.check(this);
-			DB.Tbl.Ssn.onEnter();
-		}catch(Exception ex){error(ex,"TL.onEnter");}
-		//if(pages==null){rsp.setHeader("Retry-After", "60");rsp.sendError(503,"pages null");throw new Exception("pages null");}
-		if(logOut)out.w(comments[0]).w("TL.tl.onEnter:\n").o(this).w(comments[1]);
-		//else log(new Json.Output().o(this).toString());
-	}//onEnter
+		private void onEnter()throws IOException
+		{ip=getRequest().getRemoteAddr();
+			now=new Date();
+			try{Object o=req.getContentType();
+				o=o==null?null
+						:o.toString().contains("json")?Json.Parser.parse(req)
+						:o.toString().contains("part")?getMultiParts():null;
+				json=o instanceof Map<?, ?>?(Map<String, Object>)o:null;//req.getParameterMap() ;
 
-	private void onExit(){usr=null;ssn=null;ip=null;now=null;req=null;json=null;out=jo=null;}//response=null;srvlt=null;rspns=null;
+				logOut=var("logOut",logOut);
+				if(getSession().isNew())DB.Tbl.check(this);
+				DB.Tbl.Ssn.onEnter();
+			}catch(Exception ex){error(ex,"TL.onEnter");}
+			//if(pages==null){rsp.setHeader("Retry-After", "60");rsp.sendError(503,"pages null");throw new Exception("pages null");}
+			if(logOut)out.w(comments[0]).w("TL.tl.onEnter:\n").o(this).w(comments[1]);
+		}//onEnter
+
+		private void onExit(){usr=null;ssn=null;ip=null;now=null;req=null;json=null;out=jo=null;rspns=null;}
 
 	/**unsets the localThread, and unset local variables*/
 	public static void Exit()//throws Exception
@@ -145,20 +129,10 @@ public static class TL {
 		if(ServletFileUpload.isMultipartContent(req))try
 		{DiskFileItemFactory factory=new DiskFileItemFactory();
 			factory.setSizeThreshold(40000000);//MemoryThreshold);
-			//factory.setRepository(new File(System.getProperty("java.io.tmpdir","defaultDirUpload")));
-			//upload.setFileSizeMax(MaxFileSize);
-			//upload.setSizeMax(MaxRequestSize);
-			//final String pth="",UploadDirectory="sheetUploads";
-			String path=AppEU059S.app(this).getUploadPath();
+			String path=AppEU059S.UploadPath;//app(this).getUploadPath();
 			String real=TL.context.getRealPath(this, path);//getServletContext().getRealPath(path);
 			File f=null,uploadDir;
-			/*if(real==null){int i=0; boolean b=false;
-			 while( i<context.ROOT.a.length && (b=(f==null|| !f.exists())) )
-			 try{
-			 f=new File(context.ROOT.a[i++]);
-			 }catch(Exception ex){}
-			 real=(b?"./":f.getCanonicalPath())+path;
-			 }*/
+
 			uploadDir=new File(real);
 			if( ! uploadDir.exists() )
 				uploadDir.mkdirs();//mkDir();
@@ -185,12 +159,10 @@ public static class TL {
 							f=new File(uploadDir,nm);
 							while(f.exists())
 								f=new File(uploadDir,(count++)+'.'+nm);
-							//String path=pth+f.getCanonicalPath().substring(real.length());
 							m.put(fieldNm,Util.mapCreate(//"name",fieldNm,
 								"contentType",ct,"size",sz
 								,"fileName",path+f.getName()
-								//,"isInMemory",mem//,"isFormField",fld
-								//,"data",item.get()//byt[](sz,item.getInputStream())
+
 								));
 							item.write(f);
 						}//if sz > 0
@@ -262,23 +234,22 @@ public static class TL {
 
 		public static List<Object>lst(Object...p){List<Object>r=new LinkedList<Object>();for(Object o:p)r.add(o);return r;}
 
-		public static boolean isNum(String v){
-			int i=-1,n=v!=null?v.length():0;
-			char c='\0';
-			boolean b=n>0;
-			while(b&& c!='.'&& i<n)
-			{c=++i<n?v.charAt(i):'\0';
-				b= Character.isDigit(c)||c=='.';
+			public static boolean isNum(String v){
+				int i=-1,n=v!=null?v.length():0;
+				char c='\0';
+				boolean b=n>0;
+				while(b&& c!='.'&& i<n)
+				{c=++i<n?v.charAt(i):'\0';
+					b= Character.isDigit(c)||c=='.';
+				}
+				if(c=='.') while(b&& i<n)
+				{c=++i<n?v.charAt(i):'\0';
+					b= Character.isDigit(c);
+				};
+				return b;
 			}
-			if(c=='.') while(b&& i<n)
-			{c=++i<n?v.charAt(i):'\0';
-				b= Character.isDigit(c);
-			};
-			return b;
-		}
-		public static int parseInt(String v,int dv)
-		{if(isNum(v) //v!=null
-			)try{dv=Integer.parseInt(v);}
+			public static int parseInt(String v,int dv)
+			{if(isNum(v) )try{dv=Integer.parseInt(v);}
 			catch(Exception ex){//changed 2016.06.27 18:28
 				TL.tl().error(ex, "TL.Util.parseInt:",v,dv);
 			}return dv;}
@@ -297,38 +268,39 @@ public static class TL {
 					TL.tl().error(x, "TL.Util.<T>T parse(String s,T defval):",s,defval);}
 			return defval;}
 
-		public static Object parse(String s,Class c){
-		if(s!=null)try{if(String.class.equals(c))return s;
-			else if(Number.class.isAssignableFrom(c)||c.isPrimitive()) {
-					 if (Integer.class.equals(c)|| "int"   .equals(c.getName())) return new Integer(s);
-				else if (Double .class.equals(c)|| "double".equals(c.getName())) return new Double(s);
-				else if (Float  .class.equals(c)|| "float" .equals(c.getName())) return new Float(s);
-				else if (Short  .class.equals(c)|| "short" .equals(c.getName())) return new Short(s);
-				else if (Long   .class.equals(c)|| "long"  .equals(c.getName())) return new Long(s);
-				else if (Byte   .class.equals(c)|| "byte"  .equals(c.getName())) return new Byte(s);
-			}///else return new Integer(s);}
-			else if(Boolean.class.equals(c)||(c.isPrimitive()&&"boolean".equals(c.getName())))return new Boolean(s);
-			else if(Date.class.equals(c))return parseDate(s);
-			else if(Character.class.isAssignableFrom(c)||(c.isPrimitive()&&"char".equals(c.getName())))
-				return s.length()<1?'\0':s.charAt(0);
-			boolean b=c==null?false:c.isEnum();
-			if(!b){Class ct=c.getEnclosingClass();b=ct==null?false:ct.isEnum();if(b)c=ct;}
-			if(b){
-				for(Object o:c.getEnumConstants())
-					if(s.equalsIgnoreCase(o.toString()))
-						return o;
-			}
-			return Json.Parser.parse(s);
-	 	}catch(Exception x){//changed 2016.06.27 18:28
-				TL.tl().error(x, "TL.Util.<T>T parse(String s,Class):",s,c);}
-		return s;}
+			public static Object parse(String s,Class c){
+				if(s!=null)try{if(String.class.equals(c))return s;
+				else if(Number.class.isAssignableFrom(c)||c.isPrimitive()) {
+					if (Integer.class.equals(c)|| "int"   .equals(c.getName())) return new Integer(s);
+					else if (Double .class.equals(c)|| "double".equals(c.getName())) return new Double(s);
+					else if (Float  .class.equals(c)|| "float" .equals(c.getName())) return new Float(s);
+					else if (Short  .class.equals(c)|| "short" .equals(c.getName())) return new Short(s);
+					else if (Long   .class.equals(c)|| "long"  .equals(c.getName())) return new Long(s);
+					else if (Byte   .class.equals(c)|| "byte"  .equals(c.getName())) return new Byte(s);
+				}///else return new Integer(s);}
+				else if(Boolean.class.equals(c)||(c.isPrimitive()&&"boolean".equals(c.getName())))return new Boolean(s);
+				else if(Date.class.equals(c))return parseDate(s);
+				else if(Character.class.isAssignableFrom(c)||(c.isPrimitive()&&"char".equals(c.getName())))
+					return s.length()<1?'\0':s.charAt(0);
+				else if(java.net.URL.class.isAssignableFrom(c))try {return new java.net.URL(
+						"file:" +TL.tl().getServletContext().getContextPath()+'/'+s);}
+				catch (Exception ex) {TL.tl().error(ex,"TL.Util.parse:URL:p=",s," ,c=",c);}
+					boolean b=c==null?false:c.isEnum();
+					if(!b){Class ct=c.getEnclosingClass();b=ct==null?false:ct.isEnum();if(b)c=ct;}
+					if(b){
+						for(Object o:c.getEnumConstants())
+							if(s.equalsIgnoreCase(o.toString()))
+								return o;
+					}
+					return Json.Parser.parse(s);
+				}catch(Exception x){//changed 2016.06.27 18:28
+					TL.tl().error(x, "TL.Util.<T>T parse(String s,Class):",s,c);}
+				return s;}
 
 	}//class util
 
-	//static{log("TL.static:version 2015.10.22.08.08,9.31,13.42");}
-
-	/**get the TL-instance for the current Thread*/
-	public static TL tl(){Object o=tl.get();return o instanceof TL?(TL)o:null;}
+		/**get the TL-instance for the current Thread*/
+		public static TL tl(){Object o=tl.get();return o instanceof TL?(TL)o:null;}
 
 	/**get a request-scope attribute*/
 	public Object r(Object n){return req.getAttribute(String.valueOf(n));}
@@ -349,18 +321,18 @@ public static class TL {
 	public void a(Object n,Object v){getServletContext().setAttribute(String.valueOf(n),v);}
 
 
-	/**get variable, a variable is considered
-	 1: a parameter from the http request
-	 2: if the request-parameter is not null then set it in the session with the attribute-name pn
-	 3: if the request-parameter is null then get pn attribute from the session
-	 4: if both the request-parameter and the session attribute are null then return null
-	 @parameters String pn Parameter/attribute Name
-	 HttpSession ss the session to get/set the attribute
-	 HttpServletRequest rq the http-request to get the parameter from.
-	 @return variable value.*/
-	public Object var(String pn)
-	{HttpSession ss=getSession();//HttpServletRequest rq=p.getRequest();
-		Object r=null;try{Object sVal=ss.getAttribute(pn);String reqv=req(pn);
+		/**get variable, a variable is considered
+		 1: a parameter from the http request
+		 2: if the request-parameter is not null then set it in the session with the attribute-name pn
+		 3: if the request-parameter is null then get pn attribute from the session
+		 4: if both the request-parameter and the session attribute are null then return null
+		 @parameters String pn Parameter/attribute Name
+		 HttpSession ss the session to get/set the attribute
+		 HttpServletRequest rq the http-request to get the parameter from.
+		 @return variable value.*/
+		public Object var(String pn)
+		{HttpSession ss=getSession();
+			Object r=null;try{Object sVal=ss.getAttribute(pn);String reqv=req(pn);
 			if(reqv!=null&&!reqv.equals(sVal)){ss.setAttribute(pn,r=reqv);//logo("TL.var(",pn,")reqVal:sesssion.set=",r);
 			}
 			else if(sVal!=null){r=sVal; //logo("TL.var(",pn,")sessionVal=",r);
@@ -394,32 +366,28 @@ public static class TL {
 		}return defVal;
 	}
 
-	/////////////////////////////// */
-
-
-	public String req(String n){
-	if(json!=null )
-	{Object o=json.get(n);if(o!=null)return o.toString();}
-		String r=req.getParameter(n);
-		if(r==null)r=req.getHeader(n);
-		if(logOut)log("TL.req(",n,"):",r);
-		return r;}
+		public String req(String n){
+			if(json!=null )
+			{Object o=json.get(n);if(o!=null)return o.toString();}
+			String r=req.getParameter(n);
+			if(r==null)r=req.getHeader(n);
+			if(logOut)log("TL.req(",n,"):",r);
+			return r;}
 
 	public int req(String n,int defval)
 	{String s=req(n);
 		int r=Util.parseInt(s, defval);
 		return r;}
 
-	public Date req(String n,Date defval)
-	{String s=req(n);if(s!=null)
-		defval=Util.parseDate(s);//(s, defval);
-		return defval;}
+		public Date req(String n,Date defval)
+		{String s=req(n);if(s!=null)
+			defval=Util.parseDate(s);
+			return defval;}
 
-	public double req(String n,double defval)
-	{String s=req(n);if(s!=null)
-		try{defval=Double.parseDouble(s);//(s, defval);
-		}catch(Exception x){}
-		return defval;}
+		public double req(String n,double defval)
+		{String s=req(n);if(s!=null)
+			try{defval=Double.parseDouble(s);}catch(Exception x){}
+			return defval;}
 
 	public <T>T req(String n,T defVal)
 	{String s=req(n);if(s!=null)
@@ -431,36 +399,35 @@ public static class TL {
 		Object o=Util.parse(s,c);
 		return o;}
 
-	////////////////////////////////
-	public String logo(Object...a){String s=null;
-		if(a!=null&&a.length>0)
-			try{//TL p=this;
-				Json.Output o=tl().jo().clrSW();//new Json.Output();
-				for(Object i:a)o.o(i);
-				s=o.toStrin_();
-				getServletContext().log(s);//CHANGED 2016.08.17.10.00
-				if(logOut){out.flush().
-					w(comments[0]//"\n/*"
-					  ).w(s).w(comments[1]//"*/\n"
-						);}}catch(Exception ex){ex.printStackTrace();}return s;}
+		////////////////////////////////
+		public String logo(Object...a){String s=null;
+			if(a!=null&&a.length>0)
+				try{Json.Output o=tl().jo().clrSW();
+					for(Object i:a)o.o(i);
+					s=o.toStrin_();
+					getServletContext().log(s);//CHANGED 2016.08.17.10.00
+					if(logOut){out.flush().
+							w(comments[0]//"\n/*"
+							).w(s).w(comments[1]//"*/\n"
+					);}}catch(Exception ex){ex.printStackTrace();}return s;}
 
-	/**calls the servlet log method*/
-	public void log(Object...s){logA(s);}
-	public void logA(Object[]s){try{
-		jo().clrSW();//StringBuilder b=new StringBuilder();//builder towards the log
-		for(Object t:s)jo.w(String.valueOf(t));//b.append(t);//g.log(String.valueOf(t));{if(p.logOut)p.getOut().w(t);}
-		String t=jo.toStrin_();
-		getServletContext().log(t);
-		if(logOut)out.flush().w(comments[0]).w(t).w(comments[1]);//"*/\n");
-	}catch(Exception ex){ex.printStackTrace();}}
+		/**calls the servlet log method*/
+		public void log(Object...s){logA(s);}
+		public void logA(Object[]s){try{
+			jo().clrSW();
+			for(Object t:s)jo.w(String.valueOf(t));
+			String t=jo.toStrin_();
+			getServletContext().log(t);
+			if(logOut)out.flush().w(comments[0]).w(t).w(comments[1]);
+		}catch(Exception ex){ex.printStackTrace();}}
 
 	public void error(Throwable x,Object...p){try{
 		String s=jo().clrSW().w("error:").o(p,x).toString();
 		getServletContext().log(s);
 		if(logOut)out.w(comments[0]//"\n/*
 			).w("error:").w(s.replaceAll("<", "&lt;"))
-			.w("\n---\n").o(x).w(comments[1]//"*/\n"
-			);if(x!=null)x.printStackTrace();}
+					.w("\n---\n").o(x).w(comments[1]
+					);if(x!=null)x.printStackTrace();}
 		catch(Exception ex){ex.printStackTrace();}}
 
 	/**get a pooled jdbc-connection for the current Thread, calling the function dbc()*/
@@ -470,21 +437,21 @@ public static class TL {
 			p.r(s,o=DB.c());
 		return (Connection)o;}
 
-	public static class DB
-	{//public static boolean dbLog=false;//CHANGED: 2016.05.05.07.57
-		/**returns a jdbc pooled Connection.
-		 uses MysqlConnectionPoolDataSource with a database from the enum context.DB.url.str,
-		 sets the pool as an application-scope attribute named context.DB.pool.str
-		 when first time called, all next calls uses this context.DB.pool.str*/
-		public static synchronized Connection c()throws SQLException
-		{ TL t=tl();Connection r=(Connection)t.r(context.DB.reqCon.str);if(r!=null)return r;
-			Object[]a={0,0,0};
-			MysqlConnectionPoolDataSource d=(MysqlConnectionPoolDataSource)t.a(context.DB.pool.str);
-			r=d==null?null:d.getPooledConnection().getConnection();
-			if(r!=null)//changed 2016.07.18
-				t.r(context.DB.reqCon.str,r);
-			else try
-			{try{int x=context.getContextIndex(t);t.log("TL.DB.c:1:getContextIndex:",x);
+		public static class DB
+		{
+			/**returns a jdbc pooled Connection.
+			 uses MysqlConnectionPoolDataSource with a database from the enum context.DB.url.str,
+			 sets the pool as an application-scope attribute named context.DB.pool.str
+			 when first time called, all next calls uses this context.DB.pool.str*/
+			public static synchronized Connection c()throws SQLException
+			{ TL t=tl();Connection r=(Connection)t.r(context.DB.reqCon.str);if(r!=null)return r;
+				Object[]a={0,0,0};
+				MysqlConnectionPoolDataSource d=(MysqlConnectionPoolDataSource)t.a(context.DB.pool.str);
+				r=d==null?null:d.getPooledConnection().getConnection();
+				if(r!=null)//changed 2016.07.18
+					t.r(context.DB.reqCon.str,r);
+				else try
+				{try{int x=context.getContextIndex(t);t.log("TL.DB.c:1:getContextIndex:",x);
 					if(x!=-1)
 					{	a=c(t,x,x,x,x);t.log("TL.DB.c:1:c2:",a);
 						r=(Connection)a[1];
@@ -499,8 +466,7 @@ public static class TL {
 						for(int ipw=0;r==null&&ipw<pwa.length;ipw++)//n=context.DB.len()
 							for(int isr=0;r==null&&isr<sra.length;isr++)try
 							{	a=c(t,idb,iun,ipw,isr);
-								//d=(MysqlConnectionPoolDataSource)a[0];ss=(String)a[2];
-								r=(Connection)a[1];//t.a(context.DB.pool.str,a[0]);t.r(context.DB.reqCon.str,a[1]);
+								r=(Connection)a[1];
 								if(t.logOut)t.log("new "+context.DB.pool.str+":"+a[0]);
 							}catch(Exception e){t.log("TL.DB.MysqlConnectionPoolDataSource:",idb,",",isr,",",iun,ipw,t.logOut?a[2]:"",",",e);}
 			}catch(Throwable e){t.error(e,"TL.DB.MysqlConnectionPoolDataSource:throwable:");}//ClassNotFoundException
@@ -592,15 +558,18 @@ public static class TL {
 
 		public static String newUuid()throws SQLException{return q1str("select uuid();");}
 
-		/**returns an java obj, which the result of executing sql,
-		 calls dpR() to set the variable-length-arguments parameters-p*/
-		//public static Object q1obj(String sql,Object...p)throws Exception{ResultSet s=null;try{s=R(sql,p);return s.next()?s.getObject(1):null;}finally{close(s,dbc());}}
-		public static Object q1obj(String sql,Object...p)throws SQLException{return q1Obj(sql,p);}
-		public static Object q1Obj(String sql,Object[]p)throws SQLException
-		{ResultSet s=null;try{
-			s=R(sql,p);
-			return s.next()?s.getObject(1):null;
-		}finally{closeRS(s);}}
+			/**returns an java obj, which the result of executing sql,
+			 calls dpR() to set the variable-length-arguments parameters-p*/
+			public static Object q1obj(String sql,Object...p)throws SQLException{return q1Obj(sql,p);}
+			public static Object q1Obj(String sql,Object[]p)throws SQLException
+			{ResultSet s=null;try{
+				s=R(sql,p);
+				return s.next()?s.getObject(1):null;
+			}finally{closeRS(s);}}
+			public static <T>T q1(String sql,Class<T>t,Object[]p)throws SQLException
+			{ResultSet s=null;try{s=R(sql,p);
+				return s.next()?s.getObject(1,t):null;
+			}finally{closeRS(s);}}
 
 		/**returns an integer or df, which the result of executing sql,
 		 calls dpR() to set the variable-length-arguments parameters-p*/
@@ -646,15 +615,28 @@ public static class TL {
 				try{t.log(t.jo().o("TL.DB.q1colList:sql=")//CHANGED:2015.10.23.16.06:closeRS ;
 	.o(sql).w(",prms=").o(p).w(",return=").o(r).toStrin_());}catch(IOException x){t.error(x,"TL.DB.q1colList:",sql);}}}
 
-		public static Object[] q1col(String sql,Object...p)throws SQLException
-		{List<Object> l=q1colList(sql,p);Object r[]=new Object[l.size()];l.toArray(r);l.clear();return r;}
+			public static <T>List<T> q1colTList(String sql,Class<T>t,Object...p)throws SQLException
+			{ResultSet s=null;List<T> r=null;try{s=R(sql,p);r=new LinkedList<T>();//Class<T>t=null;
+				while(s.next())r.add(
+						s.getObject(1,t)
+						//s.getObject(1)
+				);return r;}
+			finally{closeRS(s);TL tl=tl();if(tl.logOut)
+				try{tl.log(tl.jo().o("TL.DB.q1colList:sql=")//CHANGED:2015.10.23.16.06:closeRS ;
+						.o(sql).w(",prms=").o(p).w(",return=").o(r).toStrin_());}catch(IOException x){tl.error(x,"TL.DB.q1colList:",sql);}}}
 
-		/**returns a row of columns of the result of sql
-		 ,calls dbR(),dbcc(),and dbclose(ResultSet,TL.dbc())*/
-		public static Object[] q1row(String sql,Object...p)throws SQLException{return q1Row(sql,p);}
-		public static Object[] q1Row(String sql,Object[]p)throws SQLException
-		{ResultSet s=null;try{s=R(sql,p);Object[]a=null;int cc=cc(s);if(s.next())
-		{a=new Object[cc];for(int i=0;i<cc;i++)try{a[i]=s.getObject(i+1);}
+			public static Object[] q1col(String sql,Object...p)throws SQLException
+			{List<Object> l=q1colList(sql,p);Object r[]=new Object[l.size()];l.toArray(r);l.clear();return r;}
+
+			public static <T>T[] q1colT(String sql,Class<T>t,Object...p)throws SQLException
+			{List<T> l=q1colTList(sql,t,p);T[]r=(T[])Array.newInstance(t,l.size());l.toArray(r);l.clear();return r;}
+
+			/**returns a row of columns of the result of sql
+			 ,calls dbR(),dbcc(),and dbclose(ResultSet,TL.dbc())*/
+			public static Object[] q1row(String sql,Object...p)throws SQLException{return q1Row(sql,p);}
+			public static Object[] q1Row(String sql,Object[]p)throws SQLException
+			{ResultSet s=null;try{s=R(sql,p);Object[]a=null;int cc=cc(s);if(s.next())
+			{a=new Object[cc];for(int i=0;i<cc;i++)try{a[i]=s.getObject(i+1);}
 			catch(Exception ex){tl().error(ex,"TL.DB.q1Row:",sql);a[i]=s.getString(i+1);}}
 			return a;}finally{closeRS(s);}}//CHANGED:2015.10.23.16.06:closeRS ;
 
@@ -712,7 +694,7 @@ public static class TL {
 
 			@Override public boolean hasNext(){
 				boolean b=false;try {if(b=row!=null&&row.rs!=null&&row.rs.next())row.row++;
-				else TL.DB.closeRS(row.rs);//CHANGED:2015.10.23.16.06:closeRS ;	//,row.rs.getStatement().getConnection());
+				else TL.DB.closeRS(row.rs);//CHANGED:2015.10.23.16.06:closeRS
 				}catch (SQLException e) {//e.printStackTrace();
 					TL t=TL.tl();//changed 2016.06.27 18:05
 					final String str="TL.DB.ItTbl.next";
@@ -763,18 +745,18 @@ public static class TL {
 
 		}//ItTbl
 
-		/**represents one entity , one row from a table in a relational database*/
-		public abstract static class Tbl extends Form{
-			static final String StrSsnTbls="TL.DB.Tbl.tbls";
-			//public Map<Class<? extends DB.Tbl.Sql>,DB.Tbl.Sql>tbls;
-			public static Tbl tbl(Class<? extends Tbl>p){
-				TL t=tl();Object o=t.s(StrSsnTbls);
-				Map<Class<? extends Tbl>,Tbl>tbls=o instanceof Map?(Map)o:null;
-				if(tbls==null)t.s(StrSsnTbls,tbls=new HashMap<Class<? extends Tbl>,Tbl>());
-				Tbl r=tbls.get(p);if(r==null)try {tbls.put(p, r=p.newInstance());}
-				//catch (InstantiationException ex) {}catch(IllegalAccessException ex){}
-				catch(Exception ex){t.error(ex,"TL.DB.Tbl.tbl(Class<TL.DB.Tbl>",p,"):Exception:");}
-				return r;}
+			/**represents one entity , one row from a table in a relational database*/
+			public abstract static class Tbl extends Form{
+				static final String StrSsnTbls="TL.DB.Tbl.tbls";
+				//public Map<Class<? extends DB.Tbl.Sql>,DB.Tbl.Sql>tbls;
+				public static Tbl tbl(Class<? extends Tbl>p){
+					TL t=tl();Object o=t.s(StrSsnTbls);
+					Map<Class<? extends Tbl>,Tbl>tbls=o instanceof Map?(Map)o:null;
+					if(tbls==null)t.s(StrSsnTbls,tbls=new HashMap<Class<? extends Tbl>,Tbl>());
+					Tbl r=tbls.get(p);if(r==null)try {tbls.put(p, r=p.newInstance());}
+
+					catch(Exception ex){t.error(ex,"TL.DB.Tbl.tbl(Class<TL.DB.Tbl>",p,"):Exception:");}
+					return r;}
 
 			/**Sql-Column Interface, for enum -items that represent columns in sql-tables
 			 * the purpose of creating this interface is to centerlize
@@ -794,9 +776,8 @@ public static class TL {
 				public Tbl tbl();
 			}//interface CI
 
-			public static CI[]cols(CI...p){return p;}
-			public static CI[]orderBy(CI...p){return p;}//static Col[]groupBy(Col...p){return p;}
-			public static Object[]where(Object...p){return p;}
+				public static CI[]cols(CI...p){return p;}
+				public static Object[]where(Object...p){return p;}
 
 			public abstract CI pkc();
 			public abstract Object pkv();
@@ -867,9 +848,6 @@ public static class TL {
 						}else
 							sql.append(bo);
 					}
-					/*"KEY (`"+C.p+"`,`"+C.b+"`,`"+C.f+"`),\n" +
-					 "KEY (`"+C.jsonRef+"`)\n" +
-					 "KEY (`"+C.dt+"`)\n" +*/
 					sql.append(") ENGINE=InnoDB DEFAULT CHARSET=utf8 ;");
 					tl.log("TL.DB.Tbl.checkTableCreation:before:sql=",sql);
 					int r=TL.DB.x(sql.toString());
@@ -982,13 +960,13 @@ public static class TL {
 				{String j=t.jo().clrSW().o(cv).toString();cv=j;}
 				catch (IOException e) {t.error(e,"TL.DB.Tbl.save(CI:",c,"):");}
 				try{DB.x("replace into `"+getName()+"` (`"+pkc+
-						 "`,`"+c+"`) values("+Cols.M.m(pkc).txt
-						 +","+Cols.M.m(c).txt+")",pkv,cv);
+						"`,`"+c+"`) values("+Cols.M.m(pkc).txt
+						+","+Cols.M.m(c).txt+")",pkv,cv);
 					Integer k=(Integer)pkv;
 					TL.DB.Tbl.Log.log(
-									  TL.DB.Tbl.Log.Entity.valueOf(getName())
-									  , k, TL.DB.Tbl.Log.Act.Update
-									  , TL.Util.mapCreate(c,v(c)) );
+								TL.DB.Tbl.Log.Entity.valueOf(getName())
+								, k, TL.DB.Tbl.Log.Act.Update
+								, TL.Util.mapCreate(c,v(c)) );
 				}catch(Exception x){tl().error(x
 					,"TL.DB.Tbl(",this,").save(",c,"):pkv=",pkv);}
 				return this;}//save
@@ -998,13 +976,13 @@ public static class TL {
 				Object pkv=pkv();CI pkc=pkc();boolean nw=pkv==null;//Map old=asMap();
 				if(nw){
 					int x=DB.q1int("select max(`"
-								   +pkc+"`)+1 from `"+getName()+"`",1);
+							+pkc+"`)+1 from `"+getName()+"`",1);
 					v(pkc,pkv=x);
 					tl().log("TL.DB.Tbl(",toJson(),").save-new:max(",pkc,") + 1:",x);
 				}CI[]cols=columns();
 				StringBuilder sql=new StringBuilder("replace into`")
 				.append(getName()).append("`( ");
-				Cols.generate(sql, cols).toString();
+				Cols.generate(sql, cols);//.toString();
 				sql.append(")values(").append(Cols.M.m(cols[0]).txt);//Cols.M.prm);
 				for(int i=1;i<cols.length;i++)
 					sql.append(",").append(Cols.M.m(cols[i]).txt);
@@ -1048,13 +1026,11 @@ public static class TL {
 					TL.DB.Tbl.Log.Entity.valueOf(getName())
 					, k, act, val);}
 
-			public int delete() throws SQLException{
-				Object pkv=pkv();
-				//if(pkv==null)return 0;
-				//Map old=asMap();
-				int x=TL.DB.x("delete from `"+getName()+"` where `"+pkc()+"`=?", pkv);
-				log(TL.DB.Tbl.Log.Act.Delete);
-				return x;}
+				public int delete() throws SQLException{
+					Object pkv=pkv();
+					int x=TL.DB.x("delete from `"+getName()+"` where `"+pkc()+"`=?", pkv);
+					log(TL.DB.Tbl.Log.Act.Delete);
+					return x;}
 
 			/**retrieve from the db table all the rows that match
 			 * the conditions in < where > , create an iterator
@@ -1081,13 +1057,10 @@ public static class TL {
 					if(!b&&rs!=null){DB.closeRS(rs);rs=null;}
 					return b;}
 
-				@Override public Tbl next(){i++;/*
-					try {int c=0;for(Field f:fields())try{v(f,rs.getObject(++c));}catch(Exception x)
-					{TL.error("DB.Tbl.Sql("+this+").I2.next:i="+i+",c="+c+",rs="+rs,x);}}catch(Exception x)
-					{TL.error("DB.Tbl.Sql("+this+").I2.next:i="+i+":"+rs, x);rs=null;}*/
-					try{load(rs,a);}catch(Exception x){tl().error(x,"TL.DB.Tbl("
-						,this,").Itrtr.next:i=",i,":",rs);rs=null;}
-					return Tbl.this;}
+					@Override public Tbl next(){i++;
+						try{load(rs,a);}catch(Exception x){tl().error(x,"TL.DB.Tbl("
+								,this,").Itrtr.next:i=",i,":",rs);rs=null;}
+						return Tbl.this;}
 
 				@Override public void remove(){throw new UnsupportedOperationException();}
 
@@ -1140,32 +1113,30 @@ public static class TL {
 				public static StringBuilder generate(StringBuilder b,CI[]col){
 					return generate(b,col,",");}
 
-				static StringBuilder generate(StringBuilder b,CI[]col,String separator){
-					if(separator==null)separator=",";
-					for(int n=col.length,i=0;i<n;i++){
-						if(i>0)b.append(separator);
-						if(col[i] instanceof Cols.M)
-							//b.append(((Col)col[i]).name);
-							b.append(col[i]);
-						//else if(col[i] instanceof Tbl)b.append('\'').append(col[i]).append('\'');
-						//else if(col[i] instanceof String)b.append(col[i]);
-						else b.append("`").append(col[i]).append("`");}
-					return b;}
+					static StringBuilder generate(StringBuilder b,CI[]col,String separator){
+						if(separator==null)separator=",";
+						for(int n=col.length,i=0;i<n;i++){
+							if(i>0)b.append(separator);
+							if(col[i] instanceof Cols.M)
+								b.append(col[i]);
 
-				static StringBuilder where(StringBuilder b,Object[]where){b.append(" where ");
-					for(int n=where.length,i=0;i<n;i++){Object o=where[i];
-						if(i>0)b.append(" and ");
-						if(o instanceof Cols.M)b.append(o);else
-						if(o instanceof CI)//((CI)where[i]).where(b);
-							b.append('`').append(o).append("`=")
-							.append(Cols.M.m(o).txt);
-						else if(o instanceof List){List l=(List)o;o=l.get(0);
-							b.append('`').append(o).append("`").append(l.get(1))
-							.append(Cols.M.m(o).txt);}
-						else tl().error(null,"TL.DB.Tbl.Col.where:for:",o);
-						i++;
-					}//for
-					return b;}
+							else b.append("`").append(col[i]).append("`");}
+						return b;}
+
+					static StringBuilder where(StringBuilder b,Object[]where){b.append(" where ");
+						for(int n=where.length,i=0;i<n;i++){Object o=where[i];
+							if(i>0)b.append(" and ");
+							if(o instanceof Cols.M)b.append(o);else
+							if(o instanceof CI)
+								b.append('`').append(o).append("`=")
+										.append(Cols.M.m(o).txt);
+							else if(o instanceof List){List l=(List)o;o=l.get(0);
+								b.append('`').append(o).append("`").append(l.get(1))
+										.append(Cols.M.m(o).txt);}
+							else tl().error(null,"TL.DB.Tbl.Col.where:for:",o);
+							i++;
+						}//for
+						return b;}
 
 			}//class Cols
 
@@ -1183,7 +1154,7 @@ public static class TL {
 			} catch (IOException e){tl().error(e,"TL.DB.Tbl.outputJson:");}
 			}//outputJson(Object...where)
 public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extends Tbl>>();
-//			public void register(Class<? extends Tbl>p){registered.add(p);}
+
  static void check(TL tl){
 	for(Class<? extends Tbl>c:registered)try
 	{String n=c.getName(),n2=".checkDBTCreation."+n;
@@ -1206,15 +1177,8 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 				//public Usr(){super(Name);}
 				@Override public String getName(){return dbtName;}
 				@F public Integer uid;
-				//public enum Gender{male,female}
-				//public enum Flags{eu,auth,admin}
-				//@F public Flags flags;
 				@F public String un;
 				@F(prmPw=true) public String pw;
-				//@F public String full,tel,email;
-				//@F public Date dob;
-				//@F public Gender gender;
-				//@F public URL img;
 				@F(json=true) public Map json;
 
 				/**load uid by un,pw , load from mysql*/
@@ -1256,14 +1220,14 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 					Map<Class<? extends TL.DB.Tbl>,TL.DB.Tbl>
 					tbls=o instanceof Map?(Map)o:null;
 					if(tbls==null)tl.s(StrSsnTbls,tbls=new
-									   java.util.HashMap<Class<? extends TL.DB.Tbl>,TL.DB.Tbl>());
+							java.util.HashMap<Class<? extends TL.DB.Tbl>,TL.DB.Tbl>());
 					tbls.put(Usr.class, tl.usr);
 					tbls.put(Ssn.class, n);tl.logo("Usr.onLogin:n:",this);}
 
 				/**update the member variables , save to the mysql table*/
 				public void onSignup()throws Exception{onLogin();save();}
 
-				public enum C implements CI{uid,un,pw,json;//,flags,full,tel,email,dob,gender,img;
+				public enum C implements CI{uid,un,pw,json;
 					@Override public Class<? extends TL.DB.Tbl>cls(){return Usr.class;}
 					@Override public Class<? extends TL.Form>clss(){return cls();}
 					@Override public String text(){return name();}
@@ -1277,39 +1241,20 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 					@Override public Object val(TL.Form f,Object v){return f.v(this,v);}
 				}//C
 
-				@Override public CI pkc(){return C.uid;}
-				@Override public Object pkv(){return uid;}
-				@Override public C[]columns(){return C.values();}
-				@Override public List creationDBTIndices(TL tl){
-					return Util.lst(
-									Util.lst("int(6) NOT NULL AUTO_INCREMENT PRIMARY KEY "//uid
-											 ,"varchar(255) not null"//un
-											 ,"varchar(255) not null"//pw
-											 ,"text"//json
-											 )
-									,Util.lst(C.un)
-									,Util.lst(Util.lst("1","admin","admin","{title:\"admin\",avatar:\"avatar.jpg\"}"))
-									);/*CREATE TABLE `usr` (
-									   `uid` int(6) NOT NULL AUTO_INCREMENT,
-									   `flags` set('eu','auth','admin') not null default 'eu',
-									   `un` varchar(255) NOT NULL,
-									   `pw` varchar(255) NOT NULL,
-									   `full` text ,
-									   `tel` text ,
-									   `email` text ,
-									   `dob` date,
-									   `gender` set('male','female'),
-									   `img` text ,
-									   PRIMARY KEY (`uid`),
-									   KEY `uk` (`un`)
-									   ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-									   insert into usr values
-									   (1,'admin','admin',password('admin'),'admin','admin','admin','1/1/1','male','admin'),
-									   (2,'auth','auth',password('auth'),'auth','auth','auth','1/1/1','male','auth'),
-									   (3,'eu','eu',password('eu'),'eu','eu','eu','1/1/1','male','eu');
-									   */}
-	static{registered.add(Usr.class);}
+					@Override public CI pkc(){return C.uid;}
+					@Override public Object pkv(){return uid;}
+					@Override public C[]columns(){return C.values();}
+					@Override public List creationDBTIndices(TL tl){
+						return Util.lst(
+								Util.lst("int(6) NOT NULL AUTO_INCREMENT PRIMARY KEY "//uid
+										,"varchar(255) not null"//un
+										,"varchar(255) not null"//pw
+										,"text"//json
+								)
+								,Util.lst(C.un)
+								,Util.lst(Util.lst("1","admin","admin","{title:\"admin\",avatar:\"avatar.jpg\"}"))
+						);}
+					static{registered.add(Usr.class);}
 				}//class Usr
 
 			public static class Ssn extends Tbl {//implements Serializable
@@ -1317,7 +1262,7 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 				static final String SessionAttrib="TL.DB.Tbl."+dbtName;
 				Usr usr;
 
-				@Override public String getName(){return dbtName;}//public	Ssn(){super(Name);}
+				@Override public String getName(){return dbtName;}
 				@F public Integer sid,uid;
 				@F public Date dt,auth,last;
 
@@ -1351,78 +1296,49 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 
 				}//C
 
-				@Override public CI pkc(){return C.sid;}
-				@Override public Object pkv(){return sid;}
-				@Override public C[]columns(){return C.values();}
-				@Override public List creationDBTIndices(TL tl){
-					return Util.lst(
-									Util.lst("int(6) PRIMARY KEY NOT NULL AUTO_INCREMENT"//sid
-											 ,"int(6) NOT NULL"//uid
-											 ,"timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"//dt
-											 ,"timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'"//auth
-											 ,"timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'"//last
-											 ),Util.lst(C.dt,C.auth,C.last,Util.lst(C.uid,C.dt))
-									);/*
-
-									   CREATE TABLE `ssn` (
-									   `sid` int(6) NOT NULL AUTO_INCREMENT,
-									   `uid` int(6) NOT NULL ,
-									   `dt` timestamp not null,
-									   `auth` timestamp,
-									   `last` timestamp not null,
-									   PRIMARY KEY (`sid`),
-									   KEY `kDt` (`dt`),
-									   KEY `kAuth` (`auth`),
-									   KEY `kLast` (`last`)
-									   ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-									   */}
-				static{registered.add(Ssn.class);}
-			}//class Ssn
+					@Override public CI pkc(){return C.sid;}
+					@Override public Object pkv(){return sid;}
+					@Override public C[]columns(){return C.values();}
+					@Override public List creationDBTIndices(TL tl){
+						return Util.lst(
+								Util.lst("int(6) PRIMARY KEY NOT NULL AUTO_INCREMENT"//sid
+										,"int(6) NOT NULL"//uid
+										,"timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"//dt
+										,"timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'"//auth
+										,"timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'"//last
+								),Util.lst(C.dt,C.auth,C.last,Util.lst(C.uid,C.dt))
+						);}
+					static{registered.add(Ssn.class);}
+				}//class Ssn
 
 			public static class Log extends Tbl {//implements Serializable
 				public static final String dbtName="log";
 
-				@Override public List creationDBTIndices(TL tl){
-					return Util.lst(
-									Util.lst("int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT"//no
-											 ,"timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"//dt
-											 ,"int(11) NOT NULL"//uid
-											 ,"enum('projects','usr','sheets','json','ssn','log','buildings','floors')"//entity
-											 ,"int(11) NOT NULL"//pk
-											 ,"enum('New','Update','Delete','Login','Logout','Log','Error')"//act
-											 ,"text"//json
-											 )
-									,Util.lst(Util.lst(C.uid,C.dt)
-											  ,C.dt
-											  ,Util.lst(C.entity,C.act,C.dt)
-											  ,Util.lst(C.entity,C.pk,C.dt))
-									);	/*projects,sheets,imgs
-
-										 CREATE TABLE `log` (
-										 `no` int(11) primary key,
-										 `dt` timestamp not null,
-										 `uid` int(11)not null,
-										 `entity` enum('projects','usr','sheets','img','ssn','log'),
-										 `pk` int(11) DEFAULT NULL,
-										 `act` enum('New','Update','Delete','Login','Logout','Log','Error'),
-										 `val` text,
-										 `old` text,
-										 key(uid,dt),
-										 key(dt),
-										 key(`entity`,`act`,`dt`),
-										 key(`entity`,`pk`,`dt`)
-										 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
-										 */}
-				@Override public String getName(){return dbtName;}//public	Ssn(){super(Name);}
-				@F public Integer no;
-				@F public Date dt;
-				@F public Integer uid;
-				public enum Entity{Project,usr,sheets,ssn,log,json,Building,Floor,Storage}//,img //CHANGED 2016.08.17.10.49
-				@F public Entity entity;
-				@F public Integer pk;
-				public enum Act{New,Update,Delete,Login,Logout,Log,Error}
-				@F public Act act;
-				@F public String json;//,old;
+					@Override public List creationDBTIndices(TL tl){
+						return Util.lst(
+								Util.lst("int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT"//no
+										,"timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"//dt
+										,"int(11) NOT NULL"//uid
+										,"enum('projects','usr','sheets','json','ssn','log','buildings','floors')"//entity
+										,"int(11) NOT NULL"//pk
+										,"enum('New','Update','Delete','Login','Logout','Log','Error')"//act
+										,"text"//json
+								)
+								,Util.lst(Util.lst(C.uid,C.dt)
+										,C.dt
+										,Util.lst(C.entity,C.act,C.dt)
+										,Util.lst(C.entity,C.pk,C.dt))
+						);}
+					@Override public String getName(){return dbtName;}//public	Ssn(){super(Name);}
+					@F public Integer no;
+					@F public Date dt;
+					@F public Integer uid;
+					public enum Entity{Project,usr,sheets,ssn,log,json,Building,Floor,Storage}//,img //CHANGED 2016.08.17.10.49
+					@F public Entity entity;
+					@F public Integer pk;
+					public enum Act{New,Update,Delete,Login,Logout,Log,Error}
+					@F public Act act;
+					@F public String json;//,old;
 
 				public enum C implements CI{no,dt,uid,entity,pk,act,json;//,old;
 					@Override public Class<? extends TL.DB.Tbl>cls(){return Log.class;}
@@ -1466,712 +1382,60 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 				static{registered.add(Log.class);}
 			}//class Log
 
-			public static class Json extends Tbl{
-				enum Typ{Int,dbl,str,bool,dt,jsonRef,javaObjectDataStream;//,file,function,codeJson
-
-					Object load(ResultSet rs){
-						final int col=3;try{switch(this){
-							case Int:return rs.getInt(col);
-							case dbl:return rs.getDouble(col);
-							case str:return rs.getString(col);
-							case bool:{byte b=rs.getByte(col);return b==0?false:b==1?true:null;}
-							case dt:return rs.getDate(col);
-							case jsonRef:Long ref=rs.getLong(col);return TL.Util.mapCreate(Jr,ref);
-							case javaObjectDataStream:java.sql.Blob b=rs.getBlob(col);
-								java.io.ObjectInputStream s=new ObjectInputStream( b.getBinaryStream());
-								Object o=s.readObject();s.close();
-								return o;
-						}}catch(Exception ex){TL.tl().error(ex, "TL.DB.Json.Typ.get");}
-						return null;
-					}//get(ResultSet)
-					/*
-					 int save(PreparedStatement ps,String p,Object v) throws Exception{
-					 int x=-1;Typ t=this;try{
-					 ps.setString(2, p);
-					 ps.setString(3, t.toString());
-					 switch(t){
-					 case javaObjectDataStream:{
-					 java.io.PipedInputStream pi=new PipedInputStream();
-					 java.io.ObjectOutputStream s=new java.io.
-					 ObjectOutputStream(new PipedOutputStream(pi));
-					 s.writeObject(v);s.close();
-					 ps.setBinaryStream(4, pi);}break;
-					 case bool://ps.setObject(4, v==null?-1: ((Boolean)v).booleanValue() );break;
-					 case Int:
-					 case dbl:
-					 case dt:
-					 case str:
-					 case jsonRef:
-					 default:
-					 ps.setObject(4, v);
-					 }
-					 x=ps.executeUpdate();
-					 }catch(Exception ex){
-					 TL.tl().error(ex,"TL.DB.Tbl.Json.Typ.save");}
-					 return x;
-					 }*
-
-					 int save(PreparedStatement ps,String p,Object v) throws Exception{
-					 int x=-1;Typ t=this;byte[]a=null;ByteBuffer b=null;
-					 ps.setString(2, p);
-					 ps.setString(3, t.toString());
-					 switch(t){
-					 case jsonRef:v=v instanceof Map?((Map)v).get(Jr):v;//ps.setObject(4, v);break;
-					 case Int:b=ByteBuffer.allocate(8)
-					 .putLong(((Number)v).longValue());break;
-					 case dbl:b=ByteBuffer.allocate(8)
-					 .putDouble(((Number)v).doubleValue());break;
-					 case dt:b=ByteBuffer.allocate(8)
-					 .putLong(((Date)v).getTime());break;
-					 case bool:a=new byte[1];a[0]=(byte)(v==null?
-					 -1:((Boolean)v).booleanValue()?1:0);break;
-					 case str:a=((String)v).getBytes("utf8");break;
-					 case javaObjectDataStream:{
-					 java.io.PipedInputStream pi=new PipedInputStream();
-					 java.io.ObjectOutputStream s=new java.io.
-					 ObjectOutputStream(new PipedOutputStream(pi));
-					 s.writeObject(v);s.close();
-					 ps.setBinaryStream(4, pi);}break;
-					 }//switch
-					 if(b!=null)
-					 a=b.array();
-					 if(a!=null)
-					 ps.setBytes(4,a);
-					 x=ps.executeUpdate();
-					 return x;}
-
-					 Object load(ResultSet rs){
-					 final int col=3;try{
-					 if(this==javaObjectDataStream){
-					 java.sql.Blob b=rs.getBlob(col);
-					 ObjectInputStream s=new
-					 ObjectInputStream( b.getBinaryStream());
-					 Object o=s.readObject();s.close();
-					 return o;}
-					 byte[]a=rs.getBytes(col);
-					 ByteBuffer b=this!=str?ByteBuffer.wrap(a):null;
-					 switch(this){
-					 case Int:return b.getLong();
-					 case dbl:return b.getDouble();
-					 case str:return new String(a,"utf8");
-					 case bool:return a[0]==0?false:a[0]==1?true:null;
-					 case dt:return new Date(b.getLong());
-					 case jsonRef:return TL.Util.mapCreate(Jr,b.getLong());
-					 }}catch(Exception ex){TL.tl().error(ex, "TL.DB.Json.Typ.get");}
-					 return null;
-					 }//get(ResultSet)
-					 */
-					static Typ typ(Object p){
-						if(p==null || p instanceof Boolean)return bool;
-						if(p instanceof String)return str;
-						if(p instanceof Number)return p instanceof Double||p instanceof Float?dbl:Int;
-						if(p instanceof Date)return dt;
-						if(p instanceof Map && ((Map)p).containsKey(Jr))return jsonRef;
-						return javaObjectDataStream;
-					}
-
-				} //enum Typ
-
-				@Override public List creationDBTIndices(TL tl){
-					return Util.lst(
-									Util.lst("int(24) PRIMARY KEY NOT NULL AUTO_INCREMENT"//no
-											 ,"int(18) NOT NULL"//jsonRef
-											 ,"text not null"//path
-											 ,"enum('Int','dbl','str','bool','dt','jsonRef','javaObjectDataStream') NOT NULL"//typ
-											 ,"blob"//json
-											 )
-									,Util.lst(Util.lst("unique key (",C.jsonRef,Util.lst(C.path,64))
-											  ,Util.lst(C.typ,Util.lst(C.json,64))
-											  ,Util.lst(Util.lst(C.path,64),Util.lst(C.json,64))
-											  )
-									);/*
-									   Create table `jsonHead`(
-									   `jsonRef` int(18) primary key auto_increment,
-									   `parent` int(18) not null,
-									   `proto` int(18) not null,
-									   `meta` text, -- json
-									   Key (`parent`),
-									   Key (`proto`),
-									   );
-
-									   Create table `Json`(
-									   `no` int(24) primary key auto_increment,
-									   `jsonRef` int(18) not null,
-									   `path` text not null,
-									   `typ` enum( 'Int' , 'dbl' , 'str' , 'bool' , 'dt' , 'jsonRef', ‘javaObjectDataStream’	) not null, --	, ‘file’ ,'function','codeJson','javaMap'
-									   `json` blob ,
-									   Unique ( `jsonRef` , `path`(64) ) ,
-									   key(`typ`,`json`(64)) ,
-									   key( `path`(64) , `typ`,`json`(64) )
-									   );
-
-									   Create table `log`(
-									   `no` int(27) primary key auto_increment ,
-									   `dt` timestamp not null ,
-									   `proto` int(18) ,
-									   `jsonRef`int(18) ,
-									   `path` text ,
-									   `json` blob ,
-									   `act` enum(‘insert’ ,’update’ ,’delete’ ,’login’ ,’logout’) ,
-									   Key (`proto`,`path`(64),`json`(64)),
-									   key(`dt`),
-									   key(`jsonRef`,`path`(64),`act`)
-									   );
-									   */}
-
-				@F public Integer no,jsonRef;
-				@F public String path;
-				@F public Typ typ;
-				@F public Object json;
-
-				Map mv(){return json instanceof Map?(Map)json:asMap();}
-
-				public enum C implements CI{no,jsonRef,path,typ,json;
-					@Override public Class<? extends TL.DB.Tbl>cls(){return Json.class;}
-					@Override public Class<? extends TL.Form>clss(){return cls();}
-					@Override public String text(){return name();}
-					@Override public Field f(){return Cols.f(name(), cls());}
-					@Override public TL.DB.Tbl tbl(){return TL.DB.Tbl.tbl(cls());}
-					@Override public void save(){tbl().save(this);}
-					@Override public Object load(){return tbl().load(this);}
-					@Override public Object value(){return val(tbl());}
-					@Override public Object value(Object v){return val(tbl(),v);}
-					@Override public Object val(TL.Form f){return f.v(this);}
-					@Override public Object val(TL.Form f,Object v){return f.v(this,v);}
-				}//C
-
-				@Override public CI pkc(){return C.no;}
-				@Override public Object pkv(){return no;}
-				@Override public CI[]columns(){return C.values();}
-				public static final String dbtName="json",Jr=Typ.jsonRef.toString();
-
-				@Override public String getName(){return dbtName;}//public	Ssn(){super(Name);}
-
-				static Object get(Object o,String[]p,int i){
-					if(o instanceof Map){Map m=(Map)o;
-						String n=p[i];
-						o=m.get(n);
-						if(i<p.length)
-							o=get(o,p,i+1);
-					}else if(o instanceof Object[])
-					{int j=TL.Util.parseInt(p[i], -1);
-						if(j!=-1){
-							Object[]a=(Object[])o;
-							o=a[j];
-							if(i<p.length)
-								o=get(o,p,i+1);
-						}
-					}else if(o instanceof List)//Collection
-					{int j=TL.Util.parseInt(p[i], -1);
-						if(j!=-1){
-							List a=(List)o;
-							o=a.get(j);
-							if(i<p.length)
-								o=get(o,p,i+1);
-						}
-					}
-					return o;
-				}//get
-
-				/**load from dbt json all properties, param ref should have a prop "jsonRef"*/
-				static Map LoadRef( Map ref ){TL tl=null;
-					Object jsonRef=jr(ref);
-					for(TL.DB.ItTbl.ItRow row:TL.DB.ItTbl.it(
-															 "select `"+C.path+"`,`"+C.typ+"`,`"+C.json
-															 +"` from `"+dbtName+"` where `"+C.jsonRef+"`=?", jsonRef))
-						try{	String path=row.nextStr();Typ typ=Typ.valueOf(row.nextStr());
-							int i=path.indexOf('.');Object v=typ.load(row.rs);if(i==-1)
-							{Object o=ref.get(path);
-								if(o==null)
-									ref.put(path, v);
-								else
-									(tl==null?tl=TL.tl():tl).log("TL.DB.Tbl.Json.LoadRef(Map ref):wont overwrite:",path);
-							}
-							else
-								set(ref,path.split("\\."),v,0);
-						}catch(Exception ex){
-							(tl==null?tl=TL.tl():tl).error(ex,"TL.DB.Tbl.Json.LoadRef:jr=",jsonRef,row);
-						}
-					ref.put(Jr, jsonRef);
-					return ref;
-				} // LoadRef
-
-				/**remark(internal):o is parent*/
-				static Object set(Object p,String[]path,Object v,int i){
-					Object o=p;
-					try{
-						String s=path[i];int j=TL.Util.parseInt(s, -1)
-						,j1=i+1<path.length?TL.Util.parseInt(path[i+1], -1):-1;
-						if(o==null)
-							o=j==-1&&j1==-1?TL.Util.mapCreate():TL.Util.lst();
-						if(o instanceof Map){Map m=(Map)o;
-							if(i==path.length-1)
-								m.put(s, v);
-							else if(i<path.length){
-								o=m.get(s);
-								if(o==null)
-								{
-									o=new HashMap();//TL.Util.mapCreate();
-									m.put(s,o);}
-								o=set(o,path,v,i+1);
-							}
-						}else if(o instanceof List){List m=(List)o;//TODO: switch List to map in cases j==-1
-							if(i==path.length-1)//TODO: check when j==-1 with o instanceof List
-								m.set(j, v);
-							else if(i<path.length){
-								o=m.get(j);
-								if(o==null){
-									o=j==-1?TL.Util.mapCreate():TL.Util.lst();
-									m.set(j,o);}
-								o=set(o,path,v,i+1);
-							}
-						}}catch(Exception ex){
-							TL.tl().error(ex,
-										  "TL.DB.Tbl.Json.set(Object o,String[]path,Object v,int i)"
-										  , o ,path,v,i);}
-					//if(i<path.length)o=set(o,path,v,i+1);
-					return o;}
-
-				static Map LoadRef( Object jsonRef ){
-					Map m=jsonRef instanceof Map?(Map)jsonRef:
-					//jsonRef instanceof Integer?:
-					null;
-					if(m!=null && m.get(Jr)==null)
-						m.put(Jr, jrmp1());
-					if(m==null) m=TL.Util.mapCreate(Jr
-													,//jsonRef instanceof Number?jsonRef:
-													jsonRef);
-					return LoadRef(m);
-				} // LoadRef
-
-				/**return from the db tbl the max value of jsonRef plus 1 ,javadoc-draft2016.08.17.11.10*/
-				static int jrMaxPlus1() throws SQLException{
-					int no= TL.DB.q1int("select max(`"+C.jsonRef+"`)+1 from `"+dbtName+"`", 1);
-					TL.tl().log("TL.DB.Tbl.Json.jrMaxPlus1=",no);
-					return no;}
-
-				/**same as jrMaxPlus1 but the method signature doesnt throw anything ,javadoc-draft2016.08.17.11.10*/
-				static int jrmp1(){try {
-					return jrMaxPlus1();}catch (SQLException ex){}
-					return 1;}
-
-				/**get from the arg map the property jsonRef as an int, if not found return -1 ,javadoc-draft2016.08.17.11.10*/
-				static int jr(Object m){
-					Object o=m instanceof Map?((Map)m).get(Jr):null;
-					return o==null?-1:((Number)o).intValue();}
-
-				/**same as js but instead of -1 , returns jrmp1 ,javadoc-draft2016.08.17.11.10*/
-				static int jrn(Object m){
-					Object o=m instanceof Map?((Map)m).get(Jr):null;
-					return o==null?jrmp1():((Number)o).intValue();}
-
-				/**create an instance and set in the db tbl the name-value pairs, uses maPCreate ,javadoc-draft2016.08.17.11.10*/
-				static Json create(Object...p) throws SQLException{
-					Map m=maPCreate(p==null||p.length<1?null:Util.maPSet(new HashMap(), p));
-					Json j=new Json();j.json=m;
-					j.jsonRef=jr(m);
-					return j;}
-
-				/**convenience method with the variable length-arguments, uses maPCreate ,javadoc-draft2016.08.17.11.10*/
-				static Map mapCreate(Object...p) throws SQLException{
-					return maPCreate(p==null||p.length<1?null:Util.maPSet(new HashMap(), p));}
-
-				/**create an instance and set in the db tbl the name-value pairs, if there is no prop jsonRef then uses jrMaxPlaus1 , uses Tbl.save ,javadoc-draft2016.08.17.11.10*/
-				static Map maPCreate(Map m) throws SQLException{
-					if(m==null)m=new HashMap();
-					Object o= m.get(Jr) ;
-					if(o ==null){
-						int jr=jrMaxPlus1();
-						m.put(Jr, jr);
-					}save(m);return m;}
-
-				/**return a list of all(objects :jsonRef) that have a ref to this jsonRef with the param- prop path*/
-				Integer[]allFK(TL t,String prop){
-					List l=null;try {l=TL.DB.q1colList(
-													   "select `jsonRef` from `Json` where `json`=? and `typ`=? and `path`=?"
-													   , jsonRef , TL.DB.Tbl.Json.Typ.jsonRef , prop );
-					} catch (SQLException ex) {t.error(ex,"allFK");}
-					int n=l==null?0:l.size();
-					Integer[]a=new Integer[n];
-					for(int i=0;i<n;i++)
-						a[i]=((Number)l.get(i)).intValue();
-					return a;}
-
-				/**return a list of the Primary keys of all props with this.jsonRef*/
-				Integer[]allNo(TL t){
-					List l=null;try {l=TL.DB.q1colList(
-													   "select `no` from `Json` where `jsonRef`=? "
-													   , jsonRef	);
-					} catch (SQLException ex) {t.error(ex,"allNo");}
-					int n=l==null?0:l.size();
-					Integer[]a=new Integer[n];
-					for(int i=0;i<n;i++)
-						a[i]=((Number)l.get(i)).intValue();
-					return a;}
-
-				static Json load(int jr){
-					Json j=new Json();
-					j.json=loadProps(j.jsonRef=jr,null);
-					return j;}
-
-				/** load from dbTbl `json` all the properties into Map<String,Json>, where the props are tied by dbtColumn `jsonRef`, param jr (short for jsonRef)
-				 if jr is negative , then jr is inited from prop jsonRef in param props, if also not found then NOTHING is processed.
-
-				 //return a formal(general-struct) representation of all the properties in the json-obj/array,
-
-				 Motivation: the need when updating from ajax .
-				 must consider the case when the new ajax json(obj or array) has new props
-				 , or ,
-				 old-props that are not mention in the new axaj json
-				 ,in a nutshell, Structural Change ,javadoc-draft2016.08.17.11.10*/
-				static Map<String,Json>loadProps(int jr,Map<String,Json>props){// ,draft2016.08.17.11.10 , this method is the inspiration for db tbls master-detail (dbTbl:`Json` (head) ,and dbTbl:`jsonProp`)
-					if(jr<0 && props!=null)
-						jr=jr(props);
-					if(jr<0)
-						return props;
-					if(props==null)
-						props=new HashMap<String,Json>();
-					for(TL.DB.ItTbl.ItRow row:TL.DB.ItTbl.it( "select `"
-															 +C.no+"`,`"+C.path+"`,`"+C.typ+"`,`"+C.json+"` from `"
-															 +dbtName+"` where `"+C.jsonRef+"`=?", jr))
-					{Json j=new Json();j.jsonRef=jr;
-						j.no=row.nextInt();
-						j.path=row.nextStr();
-						props.put(j.path,j);
-						String ty=row.nextStr();
-						j.typ=Typ.valueOf(ty);
-						j.json=j.typ.load(row.rs);//this is beatiful (tear running down my cheek)
-					}//for itrtr
-					return props;
-				}//loadProps
-
-				/**get member-var json as Map<String,Json>, if necessary load from db, calls loadProps */
-				Map<String,Json>prps(){
-					Map<String,Json>m=null;
-					if(json instanceof Map)//<String,Json>)
-					{	m=(Map<String,Json>)json;
-						//for(Object k:m.keySet())if()
-						Object[]a=m.getClass().getTypeParameters();
-						if(a==null|| a.length<2 || a[0]!=String.class || a[1]!=Json.class)
-							m=loadProps(jsonRef,null);
-					}
-					else m=loadProps(jsonRef,null);
-					return m;}//prps
-
-				/** as can be clearly read from the source-code of the method body
-				 , overwrites the super-class method.
-				 according to the run-time type of what is stored in the member-variable(mmbrVrbl) `json`,
-				 if mmbrVrbl-json is a Map then call(delegate the work) saveProps(Map) ,
-				 if mmbrVrbl-json is a List then call(delegate the work) saveProps(List),
-				 otherwise call(delegate the work) saveProp
-				 ,javadoc-draft2016.08.17.11.10*/
-				@Override public Tbl save() throws Exception{
-					if(json instanceof Map)
-						saveProps(TL.tl(),(Map)json);
-					else if(json instanceof List)
-						savePropList(TL.tl(),"",(List)json,prps());
-					else
-						saveProp(TL.tl(),"",Typ.typ(json),json,prps());
-					return this;}
-
-				void saveProps(TL tl,Map p){
-					if(jsonRef==null)
-						jsonRef=jrn(p);
-					Map<String,Json>props=prps();
-					try{for(Object k:p.keySet()){
-						Object v=p.get(k);
-						Typ typ=Typ.typ(v);
-						if( v instanceof Map )
-						{	int j=jr(v);if(j==-1)
-							savePropMap(tl,k+".",(Map)v,props);
-						else saveProp(tl,k.toString(),Typ.jsonRef,j,props);
-						}
-						else if(v instanceof List)
-							savePropList(tl,k+".",(List)v,props);
-						else saveProp(tl,k.toString(),typ,v,props);
-					}//for
-					}catch(Exception ex){}}//sav
-
-				void savePropMap(TL tl,String path,Map p,Map<String,Json>props){
-					if(jsonRef==null)
-						jsonRef=jrn(p);
-					try{for(Object k:p.keySet()){
-						Object v=p.get(k);
-						Typ typ=Typ.typ(v);
-						if( v instanceof Map )
-						{	int j=jr(v);if(j==-1)
-							savePropMap(tl,path+k+'.',(Map)v,props);
-						else saveProp(tl,path+k,Typ.jsonRef,j,props);
-						}
-						else if(v instanceof List)
-							savePropList(tl,path+k+".",(List)v,props);
-						else saveProp(tl,path+k,typ,v,props);
-					}//for
-					}catch(Exception ex){}}//sav
-
-				void savePropList(TL tl,String path,List p,Map<String,Json>props){
-					if(jsonRef==null)
-						jsonRef=jrn(p);int k=0,n=p.size();
-					try{for(;k<n;k++){
-						Object v=p.get(k);
-						Typ typ=Typ.typ(v);
-						if( v instanceof Map )
-						{	int j=jr(v);if(j==-1)
-							savePropMap(tl,path+k+'.',(Map)v,props);
-						else saveProp(tl,path+k,Typ.jsonRef,j,props);
-						}
-						else if(v instanceof List)
-							savePropList(tl,path+k+".",(List)v,props);
-						else saveProp(tl,path+k,typ,v,props);
-					}//for
-					}catch(Exception ex){}}//sav
-
-				static boolean propNotEq(Object a,Object b)
-				{if((a==null && b==null)
-					|| a==b || (a!=null && a.equals(b)))
-					return false;
-					if(a==null || b==null )
-						return true;
-					Class ac=a.getClass(),bc=b.getClass();
-					if(ac!=bc)
-						return true;
-					if(a instanceof Map)
-					{	Map am=(Map)a,bm=(Map)b;
-						if(am.size()!=bm.size())
-							return true;
-						for(Object k:am.keySet())
-						{Object ax=am.get(k),bx=bm.get(k);
-							if(propNotEq(ax,bx))
-								return true;
-						}
-					}//if Map
-					if(a instanceof List)
-					{List am=(List)a,bm=(List)b;int k=0,n=am.size();
-						if(n!=bm.size())
-							return true;
-						for(;k<n;k++)
-						{Object ax=am.get(k),bx=bm.get(k);
-							if(propNotEq(ax,bx))
-								return true;
-						}
-					}//if List
-					return false;
-				}
-
-				static final String SqlSv="replace into `"+dbtName
-				+"` (`"+C.no+"`,`"+C.jsonRef+"`,`"+
-				C.path+"`,`"+C.typ+"`,`"+C.json+"`)values(?,?,?,?,?)";
-
-				Json saveProp(TL tl,String path,Typ t,Object v, Map<String,Json>props ){
-					Json j=props==null?null:props.get(path);
-					try{boolean New=j==null||j.no==null;
-						if(New){if(j==null){
-							j=new Json();
-							j.path=path==null?"":path;
-							if(props!=null)
-								props.put(j.path,j);}
-							j.no=DB.q1int("select max(`"+C.no+"`)+1 from `"+dbtName+"`", 1);
-						}
-						if(New || propNotEq(v,j.json)){//int x=
-							DB.x(SqlSv,j.no,j.jsonRef=jsonRef,path,(j.typ=t).toString(),j.json=v);
-							Tbl.Log.log_(tl,Log.Entity.json, j.no, New?Log.Act.New:Log.Act.Update, j.json);
-						}
-					}catch(Exception ex){tl.error(ex,"TL.DB.Tbl.Json.saveProp:ex:path=",path,": json=",v);}
-					return j;}
-
-				void remOldPropsByPathStart(TL tl,String
-											pathStarts,Map<String,Json>props){
-					for(String k:props.keySet())try{
-						if(k.startsWith(pathStarts))
-						{	props.get(k).delete();
-							props.remove(k);
-						}
-					}catch(Exception ex){tl.error(ex,
-												  "TL.DB.Tbl.Json.remOldPropsByPathStart");}
-				}//remOldPropsByPathStart
-
-				void removeOldProps(TL tl,Map p,
-									String[]a,int i,int n,Json j,
-									Map<String,Json>props)
-				throws SQLException
-				{	if(i>=n)return;
-					Object o=p.get(a[i]);
-					if(o==null)
-					{j.delete();
-						props.remove(j.path);
-						return;
-					}else if(o instanceof Map)
-						removeOldProps(tl,(Map)o,a,i+1,n,j,props);
-					else if(o instanceof List)
-						removeOldProps(tl,(List)o,a,i+1,n,j,props);
-				}//removeOldProps
-
-				void removeOldProps(TL tl,List p,
-									String[]a,int i,int n,Json j,
-									Map<String,Json>props)
-				throws SQLException{
-					if(i>=n)return;
-					int k=Util.parseInt(a[i], -1);
-					Object o=p.get(k);
-					if(o==null)
-					{j.delete();
-						props.remove(j.path);
-						return;
-					}else if(o instanceof Map)
-						removeOldProps(tl,(Map)o,a,i+1,n,j,props);
-					else if(o instanceof List)
-						removeOldProps(tl,(List)o,a,i+1,n,j,props);
-				}
-
-				void removeOldProps(TL tl,Map p,Map<String,Json>props){
-					for(String k:props.keySet())try{
-						int di=k.indexOf(".");
-						if(di!=-1){String[]a=k.split(".");int n=a.length;
-							Object o=p.get(a[0]);
-							if(o==null)
-								remOldPropsByPathStart(tl,a[0]+".",props);
-							if(o instanceof Map)
-								removeOldProps(tl,(Map)o,a,1,n,props.get(k),props);
-							else if(o instanceof List)
-								removeOldProps(tl,(List)o,a,1,n,props.get(k),props);
-						}else{
-							Object o=p.get(k);
-							if(o==null)try{
-								Json j=props.get(k);
-								//DB.x("delete from json where no=",j.no);
-								//Tbl.Log.log_(tl,Log.Entity.json, j.no, Log.Act.Delete, j.jsonRef);
-								j.delete();
-							}catch(Exception ex){tl.error(ex,"removeOldProps");}
-						}//else
-					}//for k
-					catch(Exception ex){tl.error(ex,"TL.DB.Tbl.Json.removeOldProps");}
-				}//removeOldProps
-
-
-				static Map save(Map p){
-					//Object o=p.get(Jr);int i=o instanceof Number?((Number)o).intValue():jrmp1();
-					save(p,jrn(p));
-					return p;
-				}
-
-				static Map save(Map p,int jr){
-					Json j=new Json();
-					j.jsonRef=jr;j.json=p;
-					try{j.save();}catch(Exception ex){TL.tl().
-						error(ex, "TL.DB.Tbl.Json.save:map,jr");}
-					return p;}
-				static{registered.add(Json.class);}
-			}// class TL$DB$Json
-
-/*idea:rhino Tbl, need rhino wrapper for Overriding
-		getName ,@F , creationDBTIndices , pkc,pkv,columns
-		 , CI enums & cls
- JsTblTest=function JsTblTest(){Packages.eu059s.AppEU059S.TL.registerOp(this);}
- JsTblTest.prototype=JavaAdaptor(Packages.eu059s.AppEU059S.TL.DB.Tbl,{
- dbtName:'JsTblTest'
- ,getName:function(){return this.dbtName;}
- ,C:{
-    //enum columns,,,
-    cls:function(){return JsTblTest.prototype;}
-    				@Override public String text(){return name();}
-					@Override public Field f(){return Cols.f(name(), cls());}
-					@Override public TL.DB.Tbl tbl(){return TL.DB.Tbl.tbl(cls());}
-					@Override public void save(){tbl().save(this);}
-					@Override public Object load(){return tbl().load(this);}
-					@Override public Object value(){return val(tbl());}
-					@Override public Object value(Object v){return val(tbl(),v);}
-					@Override public Object val(TL.Form f){return f.v(this);}
-					@Override public Object val(TL.Form f,Object v){return f.v(this,v);}
-    }//C
- //@F ,,,
-
-				@Override public CI pkc(){return C.sid;}
-				@Override public Object pkv(){return sid;}
-				@Override public C[]columns(){return C.values();}
-				@Override public List creationDBTIndices(TL tl){
-					return Util.lst(
-									Util.lst("int(6) PRIMARY KEY NOT NULL AUTO_INCREMENT"//sid
-											 ,"int(6) NOT NULL"//uid
-											 ,"timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"//dt
-											 ,"timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'"//auth
-											 ,"timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'"//last
-											 ),Util.lst(C.dt,C.auth,C.last,Util.lst(C.uid,C.dt))
-									);/*
-
-									   CREATE TABLE `ssn` (
-									   `sid` int(6) NOT NULL AUTO_INCREMENT,
-									   `uid` int(6) NOT NULL ,
-									   `dt` timestamp not null,
-									   `auth` timestamp,
-									   `last` timestamp not null,
-									   PRIMARY KEY (`sid`),
-									   KEY `kDt` (`dt`),
-									   KEY `kAuth` (`auth`),
-									   KEY `kLast` (`last`)
-									   ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-									   * /}
-
- }//JsTblTest.prototype
-
-
-	idea: rhino Op sub class
-
-	*/
-
-		}//class Tbl
-	}//class DB
+			}//class Tbl
+		}//class DB
 
 	/**encapsulating Html-form fields, use annotation Form.F for defining/mapping member-variables to html-form-fields*/
 	public abstract static class Form{
-		//public final String name;
-		//public abstract Fld[]fields();
-		//public abstract Sql tbl();
 
-		//public Form(String name){this.name=name;}
 		@Override public String toString(){return toJson();}
 		public abstract String getName();
 		public String toJson(){Json.Output o= tl().jo().clrSW();
 			try {o.oForm(this, "", "");}
 			catch (IOException ex) {}return o.toString();}
 
-		//public Writer toJson(Writer w){Json.Output o= new Json.Output(w);try {o.oForm(this, "", "").toString();}catch (IOException ex) {}return w;}
+			/*public String[]prmsReq(String prefix){return prefix==null||prefix.length()<1?prmsReq(fields()):prmsReq(prefix,fields());}
 
-		public String[]prmsReq(String prefix){return prmsReq(prefix,fields());}
+			public static String[]prmsReq (String prefix,Field[]a){
+				if(prefix==null||prefix.length()<1)return prmsReq(a);
+				String[]r=new String[a.length];int i=-1;TL t=tl();
+				for(Object e:a)r[++i]=t.req(prefix+e);
+				return r;}
 
-		public static String[]prmsReq (String prefix,Field[]a){
-			String[]r=new String[a.length];int i=-1;TL t=tl();
-			for(Object e:a)r[++i]=t.req(prefix+e);
-			return r;}
+			public static String[]prmsReq (Field[]a){
+				String[]r=new String[a.length];int i=-1;TL t=tl();
+				for(Object e:a)r[++i]=t.req(e.toString());
+				return r;}
 
-		public static Object parse(String p,Class<?> c){
-			TL t=tl();if(c.isEnum()){
-				for(Object i:c.getEnumConstants())
-					if(i!=null&&i.toString().equals(p))
-						return i;}else
-							if(c.isAssignableFrom(Float.class))return Float.parseFloat(p);else
-								if(c.isAssignableFrom(Double.class))return Double.parseDouble(p);else
-									if(c.isAssignableFrom(Integer.class))return Integer.parseInt(p);else
-										if(c.isAssignableFrom(URL.class))try {return new URL("file:" +t.getServletContext().getContextPath()+'/'+p);}
-			catch (Exception ex) {t.error(ex,"TL.Form.parse:URL:p=",p," ,c=",c);}else
+			public static Object parse(String p,Class<?> c){
+				TL t=tl();if(c.isEnum()){
+					for(Object i:c.getEnumConstants())
+						if(i!=null&&i.toString().equals(p))
+							return i;}else
+				if(c.isAssignableFrom(Float.class))return Float.parseFloat(p);else
+				if(c.isAssignableFrom(Double.class))return Double.parseDouble(p);else
+				if(c.isAssignableFrom(Integer.class))return Integer.parseInt(p);else
+				if(c.isAssignableFrom(URL.class))try {return new URL("file:" +t.getServletContext().getContextPath()+'/'+p);}
+				catch (Exception ex) {t.error(ex,"TL.Form.parse:URL:p=",p," ,c=",c);}else
 				if(c.isAssignableFrom(String.class))return p;else
-					if(c.isAssignableFrom(Date.class))try {return Util.parseDate(p);}//Util.dateFormat.parse(p);}
-			catch (Exception ex) {t.error(ex,"TL.Form.parse:Date:p=",p," ,c=",c);}
-					else//if(c.isAssignableFrom(Map.class))
-						try{return Json.Parser.parse(p);}
-			catch (Exception ex) {t.error(ex,"TL.Form.parse:Json.Parser.parse:p=",p," ,c=",c);}
-			return null;}
+				if(c.isAssignableFrom(Date.class))try {return Util.parseDate(p);}//Util.dateFormat.parse(p);}
+				catch (Exception ex) {t.error(ex,"TL.Form.parse:Date:p=",p," ,c=",c);}
+				else//if(c.isAssignableFrom(Map.class))
+					try{return Json.Parser.parse(p);}
+					catch (Exception ex) {t.error(ex,"TL.Form.parse:Json.Parser.parse:p=",p," ,c=",c);}
+				return null;}*/
 
-		public Form readReq(String prefix){
-			TL t=tl();FI[]a=flds();for(FI f:a){
-				String s=t.req(prefix+f);
-				Class <?>c=s==null?null:f.f().getType();
-				Object v=null;try {
-					if(s!=null)v=parse(s,c);
-					v(f,v);//f.set(this, v);
-				}catch (Exception ex) {// IllegalArgumentException,IllegalAccessException
-					t.error(ex,"TL.Form.readReq:t=",this," ,field="
-							,f+" ,c=",c," ,s=",s," ,v=",v);}}
-			return this;}
+			public Form readReq(String prefix){
+				TL t=tl();FI[]a=flds();for(FI f:a){
+					String s=t.req(prefix==null||prefix.length()<1?prefix+f:f.toString());
+					Class <?>c=s==null?null:f.f().getType();
+					Object v=null;try {
+						if(s!=null)v=Util.parse(s,c);
+						v(f,v);//f.set(this, v);
+					}catch (Exception ex) {// IllegalArgumentException,IllegalAccessException
+						t.error(ex,"TL.Form.readReq:t=",this," ,field="
+								,f+" ,c=",c," ,s=",s," ,v=",v);}}
+				return this;}
 
 		public abstract FI[]flds();
 
@@ -2208,27 +1472,25 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 
 		public Field[]fields(){return fields(getClass());}
 
-		public static Field[]fields(Class<?> c){//this is beautiful(tear running down cheek)
-			Field[]a=c.getDeclaredFields();
-			List<Field>l=new LinkedList<Field>();
-			for(Field f:a){F i=f.getAnnotation(F.class);//getDeclaredAnnotation
-				if(i!=null)l.add(f);}
-			//if(this instanceof Sql){};//<enum>.values() =:= c.getEnumConstants()
-			Field[]r=new Field[l.size()];
-			l.toArray(r);
-			return r;}
+			public static Field[]fields(Class<?> c){//this is beautiful(tear running down cheek)
+				Field[]a=c.getDeclaredFields();
+				List<Field>l=new LinkedList<Field>();
+				for(Field f:a){F i=f.getAnnotation(F.class);
+					if(i!=null)l.add(f);}
+				Field[]r=new Field[l.size()];
+				l.toArray(r);
+				return r;}
 
 		public Form v(FI p,Object v){return v(p.f(),v);}//this is beautiful(tear running down cheek)
 		public Object v(FI p){return v(p.f());}//this is beautiful(tear running down cheek)
 
-		public Form v(Field p,Object v){//this is beautiful(tear running down cheek)
-			try{Class <?>t=p.getType();
-				//boolean b=v!=null&&p.isEnumConstant();
-				if(v!=null && !t.isAssignableFrom( v.getClass() ))//t.isEnum()||t.isAssignableFrom(URL.class))
-					v=parse(v instanceof String?(String)v:String.valueOf(v),t);
-				p.set(this,v);
-			}catch (Exception ex) {tl().error(ex,"TL.Form.v(",this,",",p,",",v,")");}
-			return this;}
+			public Form v(Field p,Object v){//this is beautiful(tear running down cheek)
+				try{Class <?>t=p.getType();
+					if(v!=null && !t.isAssignableFrom( v.getClass() ))//t.isEnum()||t.isAssignableFrom(URL.class))
+						v=Util.parse(v instanceof String?(String)v:String.valueOf(v),t);
+					p.set(this,v);
+				}catch (Exception ex) {tl().error(ex,"TL.Form.v(",this,",",p,",",v,")");}
+				return this;}
 
 		public Object v(Field p){//this is beautiful(tear running down cheek)
 			try{return p.get(this);}
@@ -2259,25 +1521,25 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 
 	public Json.Output o(Object...a)throws IOException{if(out!=null&&out.w!=null)for(Object s:a)out.w.write(s instanceof String?(String)s:String.valueOf(s));return out;}
 
-	public static class Json
-	{
-		public static class Output
-		{ public Writer w;//JspWriter jw;
-			public boolean initCache=false,includeObj=false,comment=false;
-			Map<Object, String> cache;
-			public static void out(Object o,Writer w,boolean initCache,boolean includeObj)
-					throws IOException{Json.Output t=new Json.Output(w,initCache,includeObj);t.o(o);if(t.cache!=null){t.cache.clear();t.cache=null;}}
-			public static String out(Object o,boolean initCache,boolean includeObj){StringWriter w=new StringWriter();
-				try{out(o,w,initCache,includeObj);}catch(Exception ex){TL.tl().log("Json.Output.out",ex);}return w.toString();}
-			public static String out(Object o){StringWriter w=new StringWriter();try{out(o,w,
-					false,false);}catch(Exception ex){TL.tl().log("Json.Output.out",ex);}return w.toString();}
-			public Output(){w=new StringWriter();}
-			public Output(Writer p){w=p;}
-			public Output(Writer p,boolean initCache,boolean includeObj)
-			{w=p;this.initCache=initCache;this.includeObj=includeObj;}
-			public Output(boolean initCache,boolean includeObj){this(new StringWriter(),initCache,includeObj);}
-			public Output(String p)throws IOException{w=new StringWriter();w(p);}
-			public Output(OutputStream p)throws Exception{w=new OutputStreamWriter(p);}
+		public static class Json
+		{
+			public static class Output
+			{ public Writer w;
+				public boolean initCache=false,includeObj=false,comment=false;
+				Map<Object, String> cache;
+				public static void out(Object o,Writer w,boolean initCache,boolean includeObj)
+						throws IOException{Json.Output t=new Json.Output(w,initCache,includeObj);t.o(o);if(t.cache!=null){t.cache.clear();t.cache=null;}}
+				public static String out(Object o,boolean initCache,boolean includeObj){StringWriter w=new StringWriter();
+					try{out(o,w,initCache,includeObj);}catch(Exception ex){TL.tl().log("Json.Output.out",ex);}return w.toString();}
+				public static String out(Object o){StringWriter w=new StringWriter();try{out(o,w,
+						false,false);}catch(Exception ex){TL.tl().log("Json.Output.out",ex);}return w.toString();}
+				public Output(){w=new StringWriter();}
+				public Output(Writer p){w=p;}
+				public Output(Writer p,boolean initCache,boolean includeObj)
+				{w=p;this.initCache=initCache;this.includeObj=includeObj;}
+				public Output(boolean initCache,boolean includeObj){this(new StringWriter(),initCache,includeObj);}
+				public Output(String p)throws IOException{w=new StringWriter();w(p);}
+				public Output(OutputStream p)throws Exception{w=new OutputStreamWriter(p);}
 
 			public String toString(){return w==null?null:w.toString();}
 			public String toStrin_(){String r=w==null?null:w.toString();clrSW();return r;}
@@ -2295,61 +1557,45 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 			public Output o(String ind,String path,Object[]a)throws IOException
 			{for(Object i:a)o(i,ind,path);return this;}
 
-			public Output o(Object a,String ind,String path)throws IOException
-			{if(cache!=null&&a!=null&&((!includeObj&&path!=null&&path.length()<1)||cache.containsKey(a)))
-			{Object p=cache.get(a);if(p!=null){o(p.toString());o("/*cacheReference*/");return this;}}
-				final boolean c=comment;
-				if(a==null)w("null"); //Object\n.p(ind)
-				else if(a instanceof String)oStr(String.valueOf(a),ind);
-				else if(a instanceof Boolean||a instanceof Number)w(a.toString());
-				else if(a instanceof TL.Form)oForm((TL.Form)a,ind,path);
-				else if(a instanceof Map<?,?>)oMap((Map)a,ind,path);
-				else if(a instanceof Collection<?>)oCollctn((Collection)a,ind,path);
-				else if(a instanceof Object[])oArray((Object[])a,ind,path);
-				else if(a.getClass().isArray())oarray(a,ind,path);
-				else if(a instanceof java.util.Date)oDt((java.util.Date)a,ind);
-				else if(a instanceof Iterator<?>)oItrtr((Iterator)a,ind,path);
-				else if(a instanceof Enumeration<?>)oEnumrtn((Enumeration)a,ind,path);
-				else if(a instanceof Throwable)oThrbl((Throwable)a,ind);
-				else if(a instanceof ResultSet)oResultSet(( ResultSet)a,ind,path);
-				else if(a instanceof ResultSetMetaData)oResultSetMetaData((ResultSetMetaData)a,ind,path);
-				//else if(a instanceof List<?>)oList((List<Object>)a,ind,cache,level);
-				else if(a instanceof TL)oTL((TL)a,ind,path);
-				else if(a instanceof ServletContext)oSC((ServletContext)a,ind,path);
-				else if(a instanceof ServletConfig)oSCnfg((ServletConfig)a,ind,path);
-				else if(a instanceof HttpServletRequest)oReq((HttpServletRequest)a,ind,path);
-				else if(a instanceof HttpSession)oSession((HttpSession)a,ind,path);
-				else if(a instanceof Cookie)oCookie((Cookie)a,ind,path);
-//		else if(a instanceof java.sql.ConnectionMetaData)oConnectionMetaData((java.sql.ConnectionMetaData)a,ind,path);
-					//else if(a instanceof Part)oPart((Part)a,ind,path);
-				else if(a instanceof java.util.UUID)w("\"").p(a.toString()).w(c?"\"/*uuid*/":"\"");
-				else{w("{\"class\":").oStr(a.getClass().getName(),ind)
-						.w(",\"str\":").oStr(String.valueOf(a),ind)
-						.w(",\"hashCode\":").oStr(Long.toHexString(a.hashCode()),ind);
-					if(c)w("}//Object&cachePath=\"").p(path).w("\"\n").p(ind);
-					else w("}");}return this;}
+				public Output o(Object a,String ind,String path)throws IOException
+				{if(cache!=null&&a!=null&&((!includeObj&&path!=null&&path.length()<1)||cache.containsKey(a)))
+				{Object p=cache.get(a);if(p!=null){o(p.toString());o("/*cacheReference*/");return this;}}
+					final boolean c=comment;
+					if(a==null)w("null"); //Object\n.p(ind)
+					else if(a instanceof String)oStr(String.valueOf(a),ind);
+					else if(a instanceof Boolean||a instanceof Number)w(a.toString());
+					else if(a instanceof TL.Form)oForm((TL.Form)a,ind,path);
+					else if(a instanceof Map<?,?>)oMap((Map)a,ind,path);
+					else if(a instanceof Collection<?>)oCollctn((Collection)a,ind,path);
+					else if(a instanceof Object[])oArray((Object[])a,ind,path);
+					else if(a.getClass().isArray())oarray(a,ind,path);
+					else if(a instanceof java.util.Date)oDt((java.util.Date)a,ind);
+					else if(a instanceof Iterator<?>)oItrtr((Iterator)a,ind,path);
+					else if(a instanceof Enumeration<?>)oEnumrtn((Enumeration)a,ind,path);
+					else if(a instanceof Throwable)oThrbl((Throwable)a,ind);
+					else if(a instanceof ResultSet)oResultSet(( ResultSet)a,ind,path);
+					else if(a instanceof ResultSetMetaData)oResultSetMetaData((ResultSetMetaData)a,ind,path);
+					else if(a instanceof TL)oTL((TL)a,ind,path);
+					else if(a instanceof ServletContext)oSC((ServletContext)a,ind,path);
+					else if(a instanceof ServletConfig)oSCnfg((ServletConfig)a,ind,path);
+					else if(a instanceof HttpServletRequest)oReq((HttpServletRequest)a,ind,path);
+					else if(a instanceof HttpSession)oSession((HttpSession)a,ind,path);
+					else if(a instanceof Cookie)oCookie((Cookie)a,ind,path);
+					else if(a instanceof java.util.UUID)w("\"").p(a.toString()).w(c?"\"/*uuid*/":"\"");
+					else{w("{\"class\":").oStr(a.getClass().getName(),ind)
+							.w(",\"str\":").oStr(String.valueOf(a),ind)
+							.w(",\"hashCode\":").oStr(Long.toHexString(a.hashCode()),ind);
+						if(c)w("}//Object&cachePath=\"").p(path).w("\"\n").p(ind);
+						else w("}");}return this;}
 
-	/*public Output oPart(Part p,String ind,String path)throws IOException{
-	String i2=ind+'\n';if(comment)w("{//javax.servlet.http.Part:").
-	w(p.getClass().toString()).w(':').oStr(path, ind).
-	w('\n').p(ind);else w("{");
-	w("\"name\":").oStr(p.getName(),ind).
-	w(",\"ContentType\":").oStr(p.getContentType(),ind).
-	//w(",\"SubmittedFileName\":").oStr(p.getSubmittedFileName(),ind).
-	w(",\"size\":").p(p.getSize()).w(",\"headers\":{");int comma=-1;
-	for(String f:p.getHeaderNames()){w(comma++ >0?',':' ')
-	.oStr(f,i2).w(':').o(p.getHeaders(f),i2,comment?path+'.'+f:path);
-	if(comment)w("//").w(f).w("\n").p(i2);}
-	return comment?w("}}//javax.servlet.http.Part:").oStr(path, ind).w('\n').w(ind):w("}}");}*/
-
-			public Output oFormFlds(TL.Form p,String ind,String path)throws IOException{
-				Field[]a=p.fields();String i2=ind+'\n';
-				w("\"name\":").oStr(p.getName(),ind);
-				for(Field f:a)
-				{	w(',').oStr(f.getName(),i2).w(':')
-						.o(p.v(f),ind,comment?path+'.'+f.getName():path);
-					if(comment)w("//").w(f.toString()).w("\n").p(i2);
-				}return this;}
+				public Output oFormFlds(TL.Form p,String ind,String path)throws IOException{
+					Field[]a=p.fields();String i2=ind+'\n';
+					w("\"name\":").oStr(p.getName(),ind);
+					for(Field f:a)
+					{	w(',').oStr(f.getName(),i2).w(':')
+							.o(p.v(f),ind,comment?path+'.'+f.getName():path);
+						if(comment)w("//").w(f.toString()).w("\n").p(i2);
+					}return this;}
 
 			public Output oForm(TL.Form p,String ind,String path)throws IOException{
 				if(p instanceof TL.DB.Tbl)return oDbTbl((TL.DB.Tbl)p,ind,path);
@@ -2781,34 +2027,37 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 	}//class Json
 
 
-	/** annotation to designate a java method as an ajax/xhr entry point of execution*/
-	@java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-	public static @interface Op{
-		boolean useClassName() default true;
-		//boolean caseSensitive() default true;
-		boolean nestJsonReq() default true;//if false , then only the returned-value from the method call is json-stringified as a response body, if true the returned-value is set in the json-request with prop-name "return"
-		//String prefix() default "";//prefix for parameter names
-		String urlPath() default "\n"; //if no method name match from parameters, then this string is mathed with the requested url, "*" means method will match any request path
-		String prmName() default "";
-	}//Op
+		/** annotation to designate a java method as an ajax/xhr entry point of execution*/
+		@java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+		public static @interface Op{
+			boolean useClassName() default true;
+			//boolean caseSensitive() default true;
+			boolean nestJsonReq() default true;//if false , then only the returned-value from the method call is json-stringified as a response body, if true the returned-value is set in the json-request with prop-name "return"
+			String httpMethod() default "";
+			String urlPath() default "\n"; //if no method name match from parameters, then this string is mathed with the requested url, "*" means method will match any request path
+			String prmName() default "";
+		}//Op
 
-	static Map<String,java.lang.reflect.Method>
-	ops=new HashMap<String,java.lang.reflect.Method>(),
-	url=new HashMap<String,java.lang.reflect.Method>();
+		static Map<String,java.lang.reflect.Method>
+				ops=new HashMap<String,java.lang.reflect.Method>(),
+				mth=new HashMap<String,java.lang.reflect.Method>(),
+				url=new HashMap<String,java.lang.reflect.Method>();
 
-	public static void registerOp(Class p){
-		java.lang.reflect.Method[]b=p.getMethods();
-		String cn=p.getSimpleName();
-		for(java.lang.reflect.Method m:b){
-			Op op= m.getAnnotation(Op.class);
-			if(op!=null)
-			{	String s=m.getName();
-				ops.put(op.useClassName()?cn+"."+s:s,m);
-				if(!"\n".equals(op.urlPath()))
-					url.put(op.urlPath(),m);
+		public static void registerOp(Class p){
+			java.lang.reflect.Method[]b=p.getMethods();
+			String cn=p.getSimpleName();
+			for(java.lang.reflect.Method m:b){
+				Op op= m.getAnnotation(Op.class);
+				if(op!=null)
+				{	String s=m.getName();
+					ops.put(op.useClassName()?cn+"."+s:s,m);
+					if(!"\n".equals(op.urlPath()))
+						url.put(op.urlPath(),m);
+					if(!"".equals(op.httpMethod()))
+						mth.put(op.urlPath(),m);
+				}
 			}
-		}
-	}//registerOp
+		}//registerOp
 
 
 	void respond(String contentType,String content){
@@ -2816,11 +2065,13 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 			rspns.setContentType(contentType);
 			o(content);}catch(Exception ex){error(ex,"TL.respond:");}}
 
-	public static void run(HttpServletRequest request,HttpServletResponse response,Writer out)throws IOException{
-		TL tl=null;try
-		{tl=TL.Enter(request,response,out);
-			tl.r("contentType","text/json");//tl.logOut=tl.var("logOut",false);
-			java.lang.reflect.Method op=ops.get(tl.req("op"));//Prm.op.toString()));
+		public static void run(HttpServletRequest request,HttpServletResponse response,Writer out)throws IOException{
+			TL tl=null;try
+			{tl=TL.Enter(request,response,out);
+				tl.r("contentType","text/json");//tl.logOut=tl.var("logOut",false);
+				java.lang.reflect.Method op=ops.get(tl.req("op"));//Prm.op.toString()));
+				if(op==null)
+					op=mth.get(tl.req.getMethod());
 
 			if(op==null) {String p=tl.req.getContextPath();
 				for (String s : url.keySet())
@@ -2855,11 +2106,11 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 						else f.readReq("");
 					}else
 					 args[i]=o=TL.class.equals(c)?tl
-						:AppEU059S.class.equals(c)?tl.a
-							// :c==HttpServletRequest.class?tl.xxx	///  xxx
-							// :c==HttpServletResponse.class?tl.rspns
-							//:c==HttpSession.class?tl.getSession()
-						:Map.class.equals(c)
+						//:AppEU059S.class.equals(c)?tl.a
+						// :c==HttpServletRequest.class?tl.xxx	///  xxx
+						// :c==HttpServletResponse.class?tl.rspns
+						//:c==HttpSession.class?tl.getSession()
+						:Map.class.isAssignableFrom(c)
 							&&(nm.indexOf("p")!=-1)
 							&&(nm.indexOf("r")!=-1)
 							&&(nm.indexOf("m")!=-1)?tl.json
@@ -2898,1225 +2149,12 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 		}finally{TL.Exit();}
 	}//run op servlet.service
 
-}//class TL //TL tl=null;try{tl=TL.Enter(request,out);
+}//class TL
 
 //public class AppEU059S
 
 	static final String SsnNm="AppEU059S"
-	,UploadPth="/eu059sUploads/";
-
-	public static AppEU059S app(){return app(TL.tl());}
-	public static AppEU059S app(TL tl){
-		Object o=tl.s(SsnNm);
-		if(o==null || !(o instanceof AppEU059S))
-			tl.s(SsnNm,o=new AppEU059S());
-		AppEU059S e=(AppEU059S)o;tl.a=e;//e.tl=tl;
-		return e;}
-
-	/**path to the uploaded files for Sheet (the sheet stored in the session)*/
-	public String getUploadPath(){return UploadPth;
-		/*//readVars();//if(proj.no!=sheet.p)proj.no=sheet.p;
-		if(bld.no==-1)//sheet.b
-			bld.no=sheet.b;
-		if(flr.no==-1)//!=sheet.f
-			flr.no=sheet.f;
-		return UploadPth//+proj.no+'/'+bld.no+'/'+flr.no+'/'+sheet.no+'/'
-		+sheet.p+'/'+sheet.b+'/'+sheet.f+'/'+sheet.no+'/';*/}
-
-	{	/*
-
-<servlet>
-	<servlet-name>EU059Servlet</servlet-name>
-	<servlet-class >eu059s.AppEU059S.Srvlt</servlet-class>
-</servlet>
-<servlet-mapping>
-	<servlet-name>EU059Servlet</servlet-name>
-	<url-pattern>/EU059S/*</url-pattern>
-</servlet-mapping>
-
-	void authenticate(Op op) throws Exception{
-
-		if(tl.usr==null&&op==Op.login){tl.logo("index:4:login");
-			TL.DB.Tbl.Usr u=TL.DB.Tbl.Usr.login();tl.logo("index:5:login");
-			if(u!=null){u.onLogin();
-				TL.DB.Tbl.Log.log(TL.DB.Tbl.Log.Entity.usr
-					, tl.usr.uid
-					, TL.DB.Tbl.Log.Act.Login
-					,TL.Util.mapCreate("usr",tl.usr,"request",tl.req));
-			}else// msg="incorrect login";
-				TL.DB.Tbl.Log.log(TL.DB.Tbl.Log.Entity.usr
-					, tl.usr.uid, TL.DB.Tbl.Log.Act.Log
-					,TL.Util.mapCreate("msg","incorrect login","request",tl.req));
-			//tl.logo("index:6:login:msg=",msg);
-		}
-
-		if(tl.usr==null && tl.getSession().isNew())
-			TL.DB.Tbl.Log.log(TL.DB.Tbl.Log.Entity.ssn, -1, TL.DB.Tbl.Log.Act.Log,
-				TL.Util.mapCreate("msg","new Connection","request",tl.req));
-
-		if(tl.usr!=null&&op==Op.logout)
-		{ TL.DB.Tbl.Log.log(TL.DB.Tbl.Log.Entity.usr, tl.usr.uid
-				, TL.DB.Tbl.Log.Act.Logout
-				,TL.Util.mapCreate("usr",tl.usr));
-			tl.ssn.onLogout();}
-
-		if(tl.usr==null){try{//tl.o("version 2016.05.04 08:36");
-			//pageContext.include("flat-login-form/index.html");
-			tl.o("<script>location=\"login.html\"</script>");
-		}catch(Exception x){tl.error(x,"AppEU059S.authenticate");}
-			tl.logo("index:8:end");
-			return;
-		}tl.logo("index:9");
-	}//authenticate
-
-	void jsp01() throws IOException {
-		tl.o("<!DOCTYPE HTML>\r\n"
-			 ,"<html>\r\n"
-			 ,"\t<head>\r\n"
-			 ,"\t\t<title>EU059S Structural Assessment of Underground Water Reservoirs</title>\r\n"
-			 ,"\t\t<meta charset=\"utf-8\" serverVersion=\"2016/05/16/17:56:00\"/>\r\n"
-			 ,"\t\t<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\r\n"
-			 ,"\t\t<!--[if lte IE 8]><script src=\"assets/js/ie/html5shiv.js\"></script><![endif]-->\r\n"
-			 ,"\t\t<link rel=\"stylesheet\" href=\"assets/css/main.css\" />\r\n"
-			 ,"\t\t<!--[if lte IE 9]><link rel=\"stylesheet\" href=\"assets/css/ie9.css\" /><![endif]-->\r\n"
-			 ,"\t\t<!--[if lte IE 8]><link rel=\"stylesheet\" href=\"assets/css/ie8.css\" /><![endif]-->\r\n"
-			 ,"<script src=\"app.js\"></script><script>AppEU059S.clkEdit=clkEdit=\r\n"
-			 ,"function clkEdit(evt){\r\n"
-			 ,"\tvar src=evt.target||event.srcElement\r\n"
-			 ,"\t//,p=src;//console.log(\"clkEdit\",evt,src)\r\n"
-			 ,"\t//while(p&&p.nodeName!='ARTICLE'){p=p.parentNode;}\r\n"
-			 ,"\r\n"
-			 ,"\tvar p=document.getElementsByClassName('editForm')[0]\r\n"
-			 ,"\t, a=p.getElementsByClassName('editable')\r\n"
-			 ,"\t,b=src.innerText=='EDIT'\r\n"
-			 ,"\t,v={},data\r\n"
-			 ,"\tp.aEdit=a;src.innerText=b?'Save':'EDIT'\r\n"
-			 ,"\tfor(var i =0;i<a.length;i++)\r\n"
-			 ,"\t{\ta[i].contentEditable=b;\r\n"
-			 ,"\t\ta[i].style.backgroundColor=b?'lightgray':''\r\n"
-			 ,"\t\tv[a[i].getAttribute('name')]=a[i].innerText;\r\n"
-			 ,"\t}data={op:'xhrEdit',entity:p.entity \r\n"
-			 ,"\t\t|| p.getAttribute('entity') ,pk:p.pk \r\n"
-			 ,"\t\t|| p.getAttribute('pk') ,v:v}\r\n"
-			 ,"\tconsole.log('clkEdit:src=',src,' ,p=',p,' ,a='\r\n"
-			 ,"\t\t,a,' ,b=',b,' ,v=',v ,' ,data=',data);\r\n"
-			 ,"\tif(!b)\r\n"
-			 ,"\t\tApp.xhr({data:data})\r\n"
-			 ,"}//function clkEdit(evt)\r\n"
-			 ,"</script>\r\n"
-			 ,"\t</head>\r\n"
-			 ,"\t<body>\r\n"
-			 ,"\r\n"
-			 ,"\t\t<!-- Wrapper -->\r\n"
-			 ,"\t\t\t<div id=\"wrapper\">\r\n"
-			 ,"\r\n"
-			 ,"\t\t\t\t<!-- Header -->\r\n"
-			 ,"\t\t\t\t\t<header id=\"header\">\r\n"
-			 //tl.o("\t\t\t\t\t\t<h1><a href=\"#\">Structural Assessment of Underground Water Reservoirs, EU059S</a></h1>\r\n");
-			 ,"\t\t\t\t\t\t<nav class=\"links\">\r\n"
-			 ,"\t\t\t\t\t\t\t<ul>\r\n"
-			 ,"\t\t\t\t\t\t\t\t<li><a href=\"?",Prm.screen,'=',Prm.Screen.ProjectsList
-			 ,"\">Projects</a></li>\r\n"
-			 ,"\t\t\t\t\t\t\t\t<li><a href=\"?",Prm.screen,'=',Prm.Screen.UsersList
-			 ,"\">Users</a></li>\r\n"
-			 ,"\t\t\t\t\t\t\t\t<li><a href=\"?",Prm.screen,'=',Prm.Screen.ReportsMenu
-			 ,"\">Reports</a></li>\r\n"
-			 ,"\t\t\t\t\t\t\t\t<li><a href=\"?",Prm.screen,'=',Prm.Screen.LogMenu
-			 ,"\">Logs</a></li>\r\n"
-			 ,"\t\t\t\t\t\t\t\t<li><a href=\"?",Prm.screen,'=',Prm.Screen.ConfigMenu
-			 ,"\">Configurations</a></li>\r\n"
-			 ,"\t\t\t\t\t\t\t</ul>\r\n"
-			 ,"\t\t\t\t\t\t</nav>\r\n"
-			 ,"\t\t\t\t\t\t<nav class=\"main\">\r\n"
-			 ,"\t\t\t\t\t\t\t<ul>\r\n"
-			 ,"\t\t\t\t\t\t\t\t<li class=\"search\">\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t<a class=\"fa-search\" href=\"#search\">Search</a>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t<form id=\"search\" method=\"get\" action=\"?",Prm.screen,'=',Prm.Screen.Search,'&',Prm.op,'=',Op.query
-			 ,"\">\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t\t<input type=\"text\" name=\"",Prm.query
-			 ,"\" placeholder=\"Search\" />\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t</form>\r\n"
-			 ,"\t\t\t\t\t\t\t\t</li>\r\n"
-			 ,"\t\t\t\t\t\t\t\t<li class=\"menu\">\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t<a class=\"fa-bars\" href=\"#menu\">Menu</a>\r\n"
-			 ,"\t\t\t\t\t\t\t\t</li>\r\n"
-			 ,"\t\t\t\t\t\t\t</ul>\r\n"
-			 ,"\t\t\t\t\t\t</nav>\r\n"
-			 ,"\t\t\t\t\t\t<h1><a href=\"#\">Structural Assessment of Underground <br/>Water Reservoirs, EU059S</a></h1>\r\n"
-			 ,"\t\t\t\t\t</header>\r\n"
-			 ,"\r\n"
-			 ,"\t\t\t\t<!-- Menu -->\r\n"
-			 ,"\t\t\t\t\t<section id=\"menu\">\r\n"
-			 ,"\r\n"
-			 ,"\t\t\t\t\t\t<!-- Search -->\r\n"
-			 ,"\t\t\t\t\t\t\t<section>\r\n"
-			 ,"\t\t\t\t\t\t\t\t<form id=\"search\" method=\"get\" action=\"?",Prm.screen,'=',Prm.Screen.Search,'&',Prm.op,'=',Op.query
-			 ,"\">\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t\t<input type=\"text\" name=\"",Prm.query
-			 ,"\" placeholder=\"Search\" />\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t</form>\r\n"
-			 ,"\t\t\t\t\t\t\t</section>\r\n"
-			 ,"\r\n"
-			 ,"\t\t\t\t\t\t<!-- Links -->\r\n"
-			 ,"\t\t\t\t\t\t\t<section>\r\n"
-			 ,"\t\t\t\t\t\t\t\t<ul class=\"links\">\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t<li>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t\t<a href=\"http://www.kisr.edu.kw\">\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t\t\t<h3>KISR</h3>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t\t\t<p>Kuwait Institute for Scientific Research</p>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t\t</a>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t</li>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t<li>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t\t<a href=\"#\">\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t\t\t<h3>EU</h3>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t\t\t<p>Energy & Building Research Center</p>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t\t</a>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t</li>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t<li>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t\t<a href=\"#\">\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t\t\t<h3>TED</h3>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t\t\t<p>Techno Economics Division</p>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t\t</a>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t</li>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t<li>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t\t<a href=\"#\">\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t\t\t<h3>EU059S</h3>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t\t\t<p>Project:Structural Assessment of Underground Water Reservoirs</p>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t\t</a>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t</li>");
-	}//jsp01
-
-	void jspMenu() throws IOException{
-		AppEU059S e=this;
-		if(e.screen==Prm.Screen.UsersList){
-			tl.o("\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t<li>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t<a href=\"#\">\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t\t<h3>New User</h3>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t\t<p><form method=\"post\"><input type=\"hidden\" name=\"",Prm.op
-				 ,"\" value=\"",Op.newUser
-				 ,"\"/><input type=\"submit\" value=\"Create\"/></form></p>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t</a>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t</li>");
-		}else if(e.screen==Prm.Screen.User){
-			tl.o("\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t<li>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t<a href=\"#\">\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t\t<h3>Delete User</h3>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t\t<p><form method=\"post\"><input type=\"hidden\" name=\"",Prm.op
-				 ,"\" value=\"",Op.deleteUser
-				 ,"\"/><input type=\"submit\" value=\"Delete\"/></form></p>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t</a>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t</li>");
-		}else if(e.screen==Prm.Screen.ProjectsList){
-			tl.o("\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t<li>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t<a href=\"#\">\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t\t<h3>New Project</h3>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t\t<p><form method=\"post\"><input type=\"hidden\" name=\"",Prm.op
-				 ,"\" value=\"",Op.newProject
-				 ,"\"/><input type=\"submit\" value=\"Create\"/></form></p>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t</a>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t</li>");
-		}else if(e.screen==Prm.Screen.ProjectScreen){
-			tl.o("\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t<li>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t<a href=\"#\">\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t\t<h3>Delete Project</h3>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t\t<p><form method=\"post\"><input type=\"hidden\" name=\"",Prm.op
-				 ,"\" value=\"",Op.deleteProject
-				 ,"\"/><input type=\"submit\" value=\"Delete\"/></form></p>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t</a>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t</li>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t<li>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t<a href=\"#\">\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t\t<h3>New Building</h3>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t\t<p><form method=\"post\"><input type=\"hidden\" name=\"",Prm.op
-				 ,"\" value=\"",Op.newBuilding
-				 ,"\"/><input type=\"submit\" value=\"Create\"/></form></p>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t</a>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t</li>");
-		}else if(e.screen==Prm.Screen.BuildingScreen){
-			tl.o("\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t<li>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t<a href=\"#\">\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t<h3>Delete Building</h3>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t<p><form method=\"post\"><input type=\"hidden\" name=\"",Prm.op
-				 ,"\" value=\"",Op.deleteBuilding
-				 ,"\"/><input type=\"submit\" value=\"Delete\"/></form></p>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t</a>\r\n"
-				 ,"\t\t\t\t\t\t\t\t</li>\r\n"
-				 ,"\t\t\t\t\t\t\t\t<li>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t<a href=\"#\">\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t<h3>New Floor</h3>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t<p><form method=\"post\"><input type=\"hidden\" name=\"",Prm.op
-				 ,"\" value=\"",Op.newFloor
-				 ,"\"/><input type=\"submit\" value=\"Create\"/></form></p>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t</a>\r\n"
-				 ,"\t\t\t\t\t\t\t\t</li>");
-		}else if(e.screen==Prm.Screen.FloorScreen){
-			tl.o("\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t<li>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t<a href=\"#\">\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t\t<h3>Delete Floor</h3>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t\t<p><form method=\"post\"><input type=\"hidden\" name=\"",Prm.op
-				 ,"\" value=\"",Op.deleteFloor
-				 ,"\"/><input type=\"submit\" value=\"Delete\"/></form></p>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t</a>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t</li>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t<li>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t<a href=\"#\">\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t\t<h3>New Sheet</h3>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t\t<p><form method=\"post\"><input type=\"hidden\" name=\"",Prm.op
-				 ,"\" value=\"",Op.newSheet
-				 ,"\"/><input type=\"submit\" value=\"Create\"/></form></p>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t\t</a>\r\n"
-				 ,"\t\t\t\t\t\t\t\t\t</li>");
-		}else if(e.screen==Prm.Screen.Sheet){
-			tl.o("<li><a href=\"#\"><h3>Delete Sheet</h3>\r\n"
-				 ,"<p><form method=\"post\"><input type=\"hidden\" name=\"",Prm.op
-				 ,"\" value=\"",Op.deleteSheet
-				 ,"\"/><input type=\"submit\" value=\"Delete\"/></form></p>\r\n"
-				 ,"</a></li>\r\n");
-		}
-		tl.o("\r\n"
-			 ,"\t\t\t\t\t\t\t\t</ul>\r\n"
-			 ,"\t\t\t\t\t\t\t</section>\r\n"
-			 ,"\r\n"
-			 ,"\t\t\t\t\t\t<!-- Actions -->\r\n"
-			 ,"\t\t\t\t\t\t\t<section>\r\n"
-			 ,"\t\t\t\t\t\t\t\t<ul class=\"actions vertical\">\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t<li><a href=\"?",Prm.op,'=',Op.logout
-			 ,"\" class=\"button big fit\">Logout</a></li>\r\n"
-			 ,"\t\t\t\t\t\t\t\t</ul>\r\n"
-			 ,"\t\t\t\t\t\t\t</section>\r\n"
-			 ,"\r\n"
-			 ,"\t\t\t\t\t</section>\r\n");
-	}//jspMenu
-
-	void jspMain() throws IOException{
-		tl.o("\r\n\t\t\t\t<!-- Main -->\r\n\t\t\t\t\t<div id=\"main\">\r\n");
-	}//jspMain
-
-	void jspScreenUsersList() throws IOException{
-		tl.o("\r\n"
-			 ,"<h1>Users</h1><table><tr>User-Name</tr><tr>User-Level</tr><\r\n"
-			 );
-		tl.o("</table><a href=\"?",Prm.op,'=',Op.newUser,"\">New User</a>","\r\n");
-	}//jspScreenUsersList
-
-	void jspScreenConfig() throws IOException{
-		tl.o("<h1>Config</h1>","Change Password");
-	}//jspScreenConfig
-
-	void jspScreenProjectsList() throws IOException{
-		AppEU059S e=this;int serialNo=0;//Project p=new Project();
-		tl.o("<h1>Projects</h1><table><tr><th>sn</th><th>Title</th><th>Desc</th><th>Created</th><th>by</th><th>Description</th><th>#Buildings</th><th>#Sheets</th></tr>");
-		for(TL.DB.Tbl row:e.proj.query(TL.DB.Tbl.where( )))try
-		{TL.DB.Tbl.Usr author=null; if(e.proj.json==null)e.proj.json=TL.Util.mapCreate();
-			try{author=usr(e.proj.json.get("author"));}
-			catch(Exception ex){tl.error(ex,"eu059s : project list for-loop:author ,proj=",e.proj);}
-			Object avatar=e.proj.json.get("avatar")
-			, uAvatar = author != null && author . json != null	? author . json . get ( "avatar" ):null
-			,authorName=author!=null && author.json!=null?author.json.get("name"):author!=null?author.un:"-";
-			++serialNo;// Object o=TL.Json.Parser.parse(json);Map l=(Map)((Map)o).get("labels");
-
-			tl.o("<tr entity=\"projects\" pk=",e.proj.no
-				 ,"><td>",serialNo,"</td>"
-				 ,"<td><h2 class=\"title\"><a href=\"?",Prm.screen,'=',Prm.Screen.ProjectScreen,'&',Prm.projNo,'=',e.proj.no
-				 ,"\" name=\"title\">",e.proj.json.get("title")
-				 ,"</a></h2></td>"
-				 ,"<td name=\"shortDesc\">",e.proj.json.get("shortDesc")
-				 ,"</td>\r\n"
-				 ,"<td class=\"meta\"><time class=\"published\" datetime=\"",e.proj.json.get("date")
-				 ,"\" name=\"date\">",e.proj.json.get("date")
-				 ,"</time></td>"
-				 ,"<td><a href=\"#\" class=\"author\"><span class=\"name\" name=\"author\" title=\"author name\">",authorName!=null?authorName:author!=null&&author.un!=null?author.un : "n/a"
-				 ,"<img src=\"images/",uAvatar==null?"avatar.jpg":uAvatar
-				 ,"\" alt=\"author image\" /></a></td>\r\n"
-				 //tl.o("\t\t\t< tr>\r\n");
-				 ,"<x-td><a href=\"#\" x-class=\"image featured\"><x-img src=\"images/",avatar!=null?avatar:(serialNo<10?"pic0"+serialNo+".jpg":"pic"+serialNo+".jpg")
-				 ,"\" alt=\"\" /></a></x-td>\r\n"
-				 ,"<td name=\"desc\">",e.proj.json.get("desc")
-				 ,"</td>"
-				 ,"<td class=\"stats\"><a title=\"number of buildings in this project\" class=\"icon fa-heart\" name=\"heart\">",TL.DB.q1int("select count(*) from buildings where p=?",-1,e.proj.no)
-				 ,"</a></td>"
-				 ,"<td><a title=\"number of sheets in this project\" href=\"#\" class=\"icon fa-comment\" name=\"comment\">",TL.DB.q1int("select count(*) from sheets where p=?",-1,e.proj.no)
-				 ,"</a></td footer></tr>\r\n");
-		}catch(Exception ex){tl.error(ex,"eu059s : Projects list for-loop ,proj=",e.proj);}
-		tl.o("</table><a href=\"?"
-			 ,Prm.screen,'=',Prm.Screen.ProjectScreen
-			 ,'&',Prm.op,'=',Op.newProject,"\">New Project</a>");
-	}//jspScreenProjectsList
-
-	void jspScreenProject() throws IOException, SQLException {
-		AppEU059S e=this;int serialNo=1;
-		serialNo=1;//if(e.proj.json==null)e.proj.json=TL.Util.mapCreate();TL.DB.Tbl.Usr author=null;try{author=usr(e.proj.json.get("author"));}catch(Exception ex){tl.error(ex,"eu059s : project-selected:author");}Object avatar=e.proj.json.get("avatar"),pTtl=e.proj.json.get("title"),uAvatar=author!=null && author.json!=null?author.json.get("avatar"):null,authorName=author!=null && author.json!=null?author.json.get("name"):author!=null?author.un:"-";
-
-		tl.o("<h1>Project</h1><table><tr><th>Title</th><th>Desc</th><th>Created</th><th>by</th><th>Description</th><th>Actions</th><th>#Buildings</th><th>#Sheets</th></tr>");
-		try
-		{ //if(e.proj.json==null)e.proj.json=TL.Util.mapCreate();try{author=usr(e.proj.json.get("author"));} catch(Exception ex){tl.error(ex,"eu059s : project :author ,proj=",e.proj);}
-			String pTtl=title(e.proj);
-			tl.o("<tr entity=\"projects\" pk=",e.proj.no
-				 ,screen==Prm.Screen.ProjectScreen?" class=\"editForm\"":""
-				 ,"><td><h2 class=\"title\"><a href=\"?"
-				 ,Prm.screen,'=',Prm.Screen.ProjectScreen,'&',Prm.projNo,'=',e.proj.no
-				 ,"\" name=\"title\""
-				 ,screen==Prm.Screen.ProjectScreen?" class=\"editable\">":">"
-				 ,pTtl,"</a></h2></td>"
-				 ,"<td name=\"shortDesc\""
-				 ,screen==Prm.Screen.ProjectScreen?" class=\"editable\">":">"
-				 ,e.proj.json.get("shortDesc"),"</td>\r\n"
-				 ,"<td class=\"meta\"><time class=\"published\" datetime=\"",e.proj.json.get("date")
-				 ,"\" name=\"date\">",e.proj.json.get("date"),"</time></td>"
-				 ,"<td><a href=\"#\" class=\"author\"><span class=\"name\" name=\"author\" title=\"author name\">"
-				 ,author(e.proj)//authorName!=null?authorName:author!=null&&author.un!=null?author.un : "n/a"
-				 ,"<img src=\"images/"
-				 ,"avatar.jpg"//uAvatar==null?"avatar.jpg":uAvatar
-				 ,"\" alt=\"author image\" /></a></td>\r\n"
-				 //,"<x-td><a href=\"#\" x-class=\"image featured\"><x-img src=\"images/",avatar!=null?avatar:serialNo<10?"pic0"+serialNo+".jpg":"pic"+serialNo+".jpg","\" alt=\"\" /></a></x-td>\r\n"
-				 ,"<td name=\"desc\"",screen==Prm.Screen.ProjectScreen?" class=\"editable\">":">"
-				 ,e.proj.json.get("desc"),"</td>"
-				 ,"<td footer class=\"actions\"><a href=\"?"
-				 ,Prm.screen,'=',Prm.Screen.ProjectScreen
-				 ,'&',Prm.projNo,'=',e.proj.no,"\" class=\"button big\">View</a>");
-			//  if(e.screen==Prm.Screen.ProjectScreen)
-			tl.o("<a onclick=\"clkEdit(event)\" class=\"button big\">Edit</a>\r\n"
-				 ,"<a onclick=\"confirm('delete project ",pTtl," ?')\" href=\"?"
-				 ,Prm.screen,'=',Prm.Screen.ProjectsList,'&'
-				 ,Prm.op,'=',Op.deleteProject,'&',Prm.projNo,'=',e.proj.no
-				 ,"\" class=\"button big\">Delete Project</a>"
-				 ,"<a href=\"?",Prm.screen,'=',Prm.Screen.BuildingScreen
-				 ,'&',Prm.op,'=',Op.newBuilding,'&',Prm.projNo,'=',e.proj.no
-				 ,"\" class=\"button big\">New Building</a>");
-
-			tl.o("</td>"
-				 ,"<td class=\"stats\"><a title=\"number of buildings in this project\" class=\"icon fa-heart\" name=\"heart\">"
-				 ,TL.DB.q1int("select count(*) from buildings where p=?",-1,e.proj.no)
-				 ,"</a></td><td><a title=\"number of sheets in this project\" href=\"#\" class=\"icon fa-comment\" name=\"comment\">"
-				 ,TL.DB.q1int("select count(*) from sheets where p=?",-1,e.proj.no)
-				 ,"</a></td footer></tr>\r\n");
-		}catch(Exception ex){tl.error(ex,"eu059s : Projects list for-loop ,proj=",e.proj);}
-		tl.o("</table>");
-		jspScreenBuildingList();
-	}//jspScreenProj
-
-	void jspIntro() throws IOException{
-		tl.o("\t\t\t\t\t</div>\r\n"
-			 ,"\r\n"
-			 ,"\t\t\t\t<!-- Sidebar -->\r\n"
-			 ,"\t\t\t\t\t<section x-id=\"sidebar\">\r\n"
-			 ,"\r\n"
-			 ,"\t\t\t\t\t\t<!-- Intro -->\r\n"
-			 ,"\t\t\t\t\t\t\t<section id=\"intro\">\r\n"
-			 ,"\t\t\t\t\t\t\t\t<a href=\"#\" class=\"logo\"><img src=\"images/logo.png\" alt=\"\" /></a>\r\n"
-			 ,"\t\t\t\t\t\t\t\t<header>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t<h2>Visual Assessment</h2>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t<p>Web-application</p>\r\n"
-			 ,"\t\t\t\t\t\t\t\t</header>\r\n"
-			 ,"\t\t\t\t\t\t\t</section>\r\n");
-	}//jspIntro
-
-	void jspScreenBuildingList() throws IOException, SQLException{
-		AppEU059S e=this;int serialNo=0;
-
-		tl.o("<h1>Buildings</h1><table><tr><th>sn</th><th>Title</th><th>Notes</th><th>Created</th><th>by</th><th>#Floors</th><th>#Sheets</th></tr>");
-
-		for(TL.DB.Tbl row:e.bld.query(TL.DB.Tbl.where(Building.C.p,e.proj.no )))
-		{TL.DB.Tbl.Usr author=usr(e.bld.json.get("author"));
-			Object avatar=e.bld.json.get("avatar")
-			, uAvatar = author != null && author . json != null
-			? author . json . get ( "avatar" ):null
-			,authorName=author!=null && author.json!=null
-			?author.json.get("name"):author!=null?author.un:"-";
-			++serialNo;
-
-
-			tl.o("<tr xclass=\"mini-post building\" entity=\"building\" pk=",e.bld.no
-				 ,">\r\n"
-				 ,"<td>",serialNo
-				 ,"</td>\r\n"
-				 ,"<td><h3><a href=\"?",Prm.screen,'=',Prm.Screen.BuildingScreen,'&',Prm.projNo,'=',e.proj.no,'&',Prm.buildingNo,'=',e.bld.no
-				 ,"\" name=\"title\">",e.bld.json.get("title")
-				 ,"</a></h3></td>\r\n"
-				 ,"<td>",e.bld.json.get("notes")
-				 ,"</td>\r\n"
-				 ,"<td><time class=\"published\" datetime=\"",tl.now ,'"','>',e.bld.json.get("date")
-				 ,"</time></td>\r\n"
-				 ,"<td><a href=\"#\" class=\"author\"><span class=\"name\" name=\"author\" title=\"author name\">",authorName!=null?authorName:author!=null&&author.un!=null?author.un : "n/a"
-				 ,"</span><img src=\"images/",uAvatar==null?"avatar.jpg":uAvatar
-				 ,"\" alt=\"author image\" /></a></td>\r\n"
-				 ,"<td class=\"stats\"><a title=\"number of floors in this building\" class=\"icon fa-heart\" name=\"heart\">",TL.DB.q1int("select count(*) from floors where b=?",-1,e.bld.no)
-				 ,"</a></td>\r\n"
-				 ,"<td><a title=\"number of sheets in this building\" href=\"#\" class=\"icon fa-comment\" name=\"comment\">",TL.DB.q1int("select count(*) from sheets where b=?",-1,e.bld.no)
-				 ,"</a></td></tr>\r\n");
-		}tl.o("</table>");
-	}//jspScreenBuildingList	//jspScreenProject
-
-	void jspScreenBuilding()throws IOException, SQLException{
-		AppEU059S e=this;int serialNo=1;
-		TL.DB.Tbl.Usr author=usr(e.bld.json.get("author"));
-		Object avatar=e.bld.json.get("avatar")
-		, uAvatar = author != null && author . json != null
-		? author . json . get ( "avatar" )
-		:null
-		,authorName=author!=null && author.json!=null
-		?author.json.get("name")
-		:author!=null?author.un
-		:"User";
-
-		tl.o("<h1>Building</h1><table><tr><th>Title</th><th>Notes</th><th>Created</th><th>by</th><th>Action</th><th>#Floors</th><th>#Sheets</th></tr>\n"
-			 ,"<tr xclass=\"mini-post building"
-			 ," editForm"//e.screen==Prm.Screen.BuildingScreen?" editForm":""
-			 ,"\" entity=\"building\" pk=\"",e.bld.no
-			 ,"\">\r\n"
-			 ,"<td><h3><a href=\"?",Prm.screen,'=',Prm.Screen.BuildingScreen,'&',Prm.buildingNo,'=',e.bld.no
-			 ,"\" name=\"title\" class=\"editable\">",e.bld.json.get("title")
-			 ,"</a></h3></td>\r\n"
-			 ,"<td class=\"editable\">",e.bld.json.get("notes")
-			 ,"</td>\r\n"
-			 ,"<td><time class=\"published\" datetime=\"",tl.now ,'"','>',e.bld.json.get("date")
-			 ,"</time></td>\r\n"
-			 ,"<td><a href=\"#\" class=\"author\"><span class=\"name\" name=\"author\" title=\"author name\">",authorName!=null?authorName:author!=null&&author.un!=null?author.un : "n/a"
-			 ,"</span><img src=\"images/",uAvatar==null?"avatar.jpg":uAvatar
-			 ,"\" alt=\"author image\" /></a></td>\r\n"
-			 ,"<td class=\"stats\" >\r\n");
-		//if(e.screen==Prm.Screen.BuildingScreen)
-		{
-			tl.o("<button onclick=\"clkEdit(event)\">EDIT</button>\r\n"
-				 ,"\t\t\t\t<button ><a href=\"?",Prm.op,'=',Op.newFloor
-				 ,"\">New Floor</a></button>\r\n"
-				 ,"\t\t\t\t<button ><a href=\"?",Prm.op,'=',Op.deleteBuilding
-				 ,"\">Delete Building</a></button>");
-		}
-		tl.o("</td>"
-			 ,"<td style=\"display:inline;	list-style: none;\" ><a title=\"number of floors in this building\" class=\"icon fa-heart\" name=\"heart\">",TL.DB.q1int("select count(*) from floors where b=?",-1,e.bld.no)
-			 ,"</a></td>\r\n"
-			 ,"<td style=\"display:inline;	list-style: none;\" ><a title=\"number of sheets in this project\" href=\"#\" class=\"icon fa-comment\" name=\"comment\">",TL.DB.q1int("select count(*) from sheets where b=?",-1,e.bld.no)
-			 ,"</a></td></tr></table>\r\n");
-		//if(e.screen==Prm.Screen.BuildingScreen)
-		{serialNo=0;
-			tl.o("<h1>Floors</h1><table><tr><th>sn</th><th>Title</th><th>Notes</th><th>Created</th><th>by</th><th>#Sheets</th></tr>");
-			for(TL.DB.Tbl row:e.flr.query(TL.DB.Tbl.where(Floor.C.b,e.bld.no )))
-			{ author=usr(e.bld.json.get("author"));
-				avatar=e.bld.json.get("avatar");
-				uAvatar = author != null && author . json != null
-				? author . json . get ( "avatar" ):null;
-				authorName=author!=null && author.json!=null
-				?author.json.get("name"):author!=null?author.un:"-";
-				++serialNo;
-
-
-				tl.o("<tr xclass=\"mini-post floor\" floorNo=",e.flr.no
-					 ,"><td>",serialNo
-					 ,"</td>\r\n"
-					 ,"<td><h3><a href=\"?",Prm.screen,'=',Prm.Screen.FloorScreen,'&',Prm.floorNo,'=',e.flr.no
-					 ,"\" name=\"title\">",e.flr.json.get("title")
-					 ,"</a></h3></td>\r\n"
-					 ,"<td>",e.flr.json.get("notes")
-					 ,"</td>\r\n"
-					 ,"<td><time class=\"published\" datetime=\"",tl.now ,'"','>',e.flr.json.get("date")
-					 ,"</time></td>\r\n"
-					 ,"<td><a href=\"#\" class=\"author\"><span class=\"name\" name=\"author\" title=\"author name\">",authorName!=null?authorName:author!=null&&author.un!=null?author.un : "n/a"
-					 ,"<img src=\"images/",uAvatar==null?"avatar.jpg":uAvatar
-					 ,"\" alt=\"author image\" /></a></td>\r\n"
-					 ,"<td class=\"stats\"><a title=\"number of sheets in this floor\" href=\"#\" class=\"icon fa-comment\" name=\"comment\">",TL.DB.q1int("select count(*) from sheets where f=?",-1,e.flr.no)
-					 ,"</a></td></tr>\r\n");
-			}tl.o("</table>\r\n");
-		}
-	}//jspNonBld
-
-	void jspScreenFloor() throws IOException,SQLException{
-		AppEU059S e=this;
-		tl.o("<h1>Floor</h1><table><tr><th>Title</th><th>Notes</th><th>Created</th><th>by</th><th>Action</th><th>#Sheets</th></tr>"
-
-			 ,"<tr"// xclass=\"mini-post floor");
-			 ,//e.screen==Prm.Screen.FloorScreen?:""
-			 " class=\"editForm\""
-			 ," entity=\"floor\" pk=\"",e.flr.no,"\">\r\n"
-			 ,"<td><h3><a href=\"?",Prm.screen,'=',Prm.Screen.FloorScreen
-			 ,'&',Prm.floorNo,'=',e.flr.no
-			 ,"\" name=\"title\" class=\"editable\">"
-			 ,e.flr.json.get("title")
-			 ,"</a></h3></td>\r\n"
-			 ,"<td class=\"editable\">"
-			 ,e.flr.json.get("notes")
-			 ,"</td>\r\n"
-			 ,"<td><time class=\"published\" datetime=\""
-			 ,tl.now ,'"','>',e.flr.json.get("date")
-			 ,"</time></td>\r\n"
-			 ,"<td><a href=\"#\" class=\"author\"><img src=\"images/"
-			 ,e.flr.json.get("avatar")
-			 ,"\" alt=\"\" /></a></td>"
-
-			 ,"<td><button onclick=\"clkEdit(event)\">EDIT</button>\r\n"
-			 ,"<form method=\"post\"><input type=\"hidden\" name=\""
-			 ,Prm.op,"\" value=\"",Op.deleteFloor
-			 ,"\"/><input type=\"submit\" value=\"Delete Floor\"/></form>\r\n"
-
-			 ,"<form method=\"post\"><input type=\"hidden\" name=\""
-			 ,Prm.op,"\" value=\"",Op.newSheet
-			 ,"\"/><input type=\"submit\" value=\"New Sheet\"/></form></td>\r\n"
-
-			 ,"<td class=\"stats\"><a title=\"number of sheets in this floor\" href=\"#\" class=\"icon fa-comment\" name=\"comment\">"
-			 ,TL.DB.q1int("select count(*) from sheets where f=?",-1,e.flr.no)
-			 ,"</a></td></tr></table>");
-		jspSheets();
-		//}//else , not floors
-	}
-
-	void jspPosts() throws IOException{
-		tl.o("\t\t\t\t\t\t\t\t</div>\r\n"
-			 ,"\t\t\t\t\t\t\t</section>\r\n"
-			 ,"\r\n"
-			 ,"\t\t\t\t\t\t<!-- Posts List -->\r\n"
-			 ,"\t\t\t\t\t\t\t<section>\r\n"
-			 ,"\t\t\t\t\t\t\t\t<ul class=\"posts\">\r\n");
-	}//jspPosts
-
-	void jspSheets()throws IOException, SQLException{//,int sIx
-		AppEU059S e=this;int serialNo=0,sIx=screen.ordinal();
-		//final int i0=Prm.Screen.ProjectScreen.ordinal(),i1=Prm.Screen.BuildingScreen.ordinal();
-		for(TL.DB.Tbl row:e.sheet.query(TL.DB.Tbl.where(
-														sIx==0?Sheet.C.p
-														:sIx==1?Sheet.C.b
-														:Sheet.C.f
-														,
-														sIx==0?e.proj.no
-														:sIx==1?e.bld.no
-														:e.flr.no )))
-		{	int sn=((serialNo++)%12)+1;
-			if(serialNo==1)
-				tl.o("<h1>Sheets</h1>");
-
-			tl.o("\r\n"
-				 ,"\t\t<li>\r\n"
-				 ,"\t\t\t<article>\r\n"
-				 ,"\t\t\t\t<header>\r\n"
-				 ,"\t\t\t\t\t<h3><a href=\"?",Prm.screen,'=',Prm.Screen.Sheet,'&',Prm.projNo,'=',e.sheet.p//e.proj.no);
-				 ,'&',Prm.buildingNo,'=',e.sheet.b//e.bld.no);
-				 ,'&',Prm.floorNo,'=',e.sheet.f//e.flr.no);
-				 ,'&',Prm.sheetNo,'=',e.sheet.no,'"','>',serialNo
-				 ,"</a></h3>\r\n"
-				 ,"\t\t\t\t\t<time class=\"published\" datetime=\"2015-10-15\">",e.sheet.dt//get("datetime") );
-				 ,"</time>\r\n"
-				 ,"\t\t\t\t</header>\r\n"
-				 ,"\t\t\t\t\t<a href=\"#\" class=\"image\"><img src=\"images/pic",sn<10?"0":"",sn
-				 ,".jpg\" alt=\"\" /></a>\r\n"
-				 ,"\t\t\t</article>\r\n"
-				 ,"\t\t</li>\r\n"
-				 ,"\t\t");
-		}//for row
-	}//jspSheets
-
-	void jspAbout_Footer() throws IOException{
-		tl.o("\r\n"
-			 ,"\t\t\t\t\t\t\t\t</ul>\r\n"
-			 ,"\t\t\t\t\t\t\t</section>\r\n"
-			 ,"\r\n"
-			 ,"\t\t\t\t\t\t<!-- About -->\r\n"
-			 ,"\t\t\t\t\t\t\t<section class=\"blurb\">\r\n"
-			 ,"\t\t\t\t\t\t\t\t<h2>About</h2>\r\n"
-			 ,"\t\t\t\t\t\t\t\t<p>The Project is headed by Dr Zafer Sakka zsakka@kisr.edu.kw , The Web-application is implemented by Mohamad Buhamad mbohamad@kisr.edu.kw</p>\r\n"
-			 ,"\t\t\t\t\t\t\t\t<ul class=\"actions\">\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t<li><a href=\"#\" class=\"button\">Learn More</a></li>\r\n"
-			 ,"\t\t\t\t\t\t\t\t</ul>\r\n"
-			 ,"\t\t\t\t\t\t\t</section>\r\n"
-			 ,"\r\n"
-			 ,"\t\t\t\t\t\t<!-- Footer -->\r\n"
-			 ,"\t\t\t\t\t\t\t<section id=\"footer\">\r\n"
-			 ,"\t\t\t\t\t\t\t\t<ul class=\"icons\">\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t<li><a href=\"#\" class=\"fa-twitter\"><span class=\"label\">Twitter</span></a></li>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t<li><a href=\"#\" class=\"fa-facebook\"><span class=\"label\">Facebook</span></a></li>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t<li><a href=\"#\" class=\"fa-instagram\"><span class=\"label\">Instagram</span></a></li>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t<li><a href=\"#\" class=\"fa-rss\"><span class=\"label\">RSS</span></a></li>\r\n"
-			 ,"\t\t\t\t\t\t\t\t\t<li><a href=\"#\" class=\"fa-envelope\"><span class=\"label\">Email</span></a></li>\r\n"
-			 ,"\t\t\t\t\t\t\t\t</ul>\r\n"
-			 ,"\t\t\t\t\t\t\t\t<p class=\"copyright\">&copy;K.I.S.R.</p>\r\n"
-			 ,"\t\t\t\t\t\t\t</section>\r\n"
-			 ,"\t\t\t\t\t</section>\r\n");
-	}//jspAbout_Footer
-
-	void jspSheet()throws IOException, SQLException{
-		AppEU059S e=this;
-		if(e.sheet!=null && e.sheet.no!=null && (e.sheet.jsonRef==null || e.sheet.m==null || e.sheet.m.get(TL.DB.Tbl.Json.Jr)==null))
-			try{	if(e.sheet.jsonRef==null)
-				e.sheet.jsonRef=TL.DB.q1int(
-											"select `"+Sheet.C.jsonRef
-											+"` from `"+e.sheet.getName()
-											+"` where `"+Sheet.C.no
-											+"`=?", -1, e.sheet.no);
-				if(e.sheet.m==null)
-					e.sheet.m=TL.Util.mapCreate(TL.DB.Tbl.Json.Jr, e.sheet.jsonRef);
-				else
-					e.sheet.m.put(TL.DB.Tbl.Json.Jr, e.sheet.jsonRef);
-				//e.sheet.m=TL.DB.Tbl.Json.LoadRef(e.sheet.m);
-			}catch(Exception ex){
-				tl.error(ex,"AppEU059S:SheetScreen:load Sheet and Json map");}
-		Object ft="-";
-		try{
-			e.sheet.m=TL.DB.Tbl.Json.LoadRef(e.sheet.m);
-			ft=e.flr.json.get("title");}
-		catch(Exception ex){tl.error(ex,"eu059s:ex:");}
-
-		tl.o("\r\n"
-			 ,"<script>\r\n"
-			 ,"sheet=",e.sheet.toJson()
-			 ,"\r\n"
-			 ,"sheet.json=",tl.jo().clrSW().o(e.sheet.get()).toString()
-			 ,"\r\n"
-			 ,"\r\n"
-			 ,"sheet.json.p={no:",e.proj.no
-			 ,",title:",tl.jo().clrSW().o(e.proj.json.get("title")).toString()
-			 ,"}\r\n"
-			 ,"sheet.json.b={no:",e.bld.no
-			 ,",title:",tl.jo().clrSW().o(e.bld.json.get("title")).toString()
-			 ,"}\r\n"
-			 ,"sheet.json.f={no:",e.flr.no
-			 ,",title:",tl.jo().clrSW().o(ft).toString(),'}'
-			 ,"\r\n"
-			 ,"sheet.json.u={no:",e.sheet.u
-			 ,",title:");
-
-		TL.DB.Tbl.Usr author=null;
-		try{author=usr(e.sheet.u);}
-		catch(Exception ex){tl.error(ex,"eu059s : sheet: usr: ",e.sheet);}
-		Object authorName=author!=null && author.json!=null
-		?author.json.get("name"):author!=null?author.un:"-";
-
-		tl.o( tl.jo().clrSW().o( authorName ).toString(),'}'
-			 ,"\r\n"
-			 ,"setFormData(sheet)\r\n"
-			 ,"</script>\r\n");
-	}//jspSheet
-
-	void jsp03() throws IOException{
-		tl.o("\r\n"
-			 ,"\t\t\t</div>\r\n"
-			 ,"\r\n"
-			 ,"\t\t<!-- Scripts -->\r\n"
-			 ,"\t\t\t<script src=\"assets/js/jquery.min.js\"></script>\r\n"
-			 ,"\t\t\t<script src=\"assets/js/skel.min.js\"></script>\r\n"
-			 ,"\t\t\t<script src=\"assets/js/util.js\"></script>\r\n"
-			 ,"\t\t\t<!--[if lte IE 8]><script src=\"assets/js/ie/respond.min.js\"></script><![endif]-->\r\n"
-			 ,"\t\t\t<script src=\"assets/js/main.js\"></script>\r\n");
-	}
-
-	public static void jspOld
-	(HttpServletRequest request
-	 ,HttpServletResponse response
-	 ,javax.servlet.http.HttpSession session
-	 ,JspWriter out
-	 ,javax.servlet.jsp.PageContext pageContext)
-	throws IOException, javax.servlet.ServletException
-	{TL tl=null;try{tl=TL.Enter(request,out);
-		Op op=tl.req(Prm.op.toString(),Op.none);tl.logo("index:1:",op);
-		response.setContentType("text/html; charset=UTF-8");
-		tl.logOut=tl.var("logOut",false);
-		AppEU059S e=AppEU059S.app(tl).appInit();
-		e.authenticate(op);
-		e.doOp(op);
-		int sIx=e.screen==Prm.Screen.ProjectScreen?0
-		:e.screen==Prm.Screen.BuildingScreen?1
-		:e.screen==Prm.Screen.FloorScreen?2
-		:e.screen==Prm.Screen.Sheet?3
-		:-1;
-		TL.DB.Tbl tbl=sIx==0?e.proj:sIx==1?
-		e.bld:sIx==2?e.flr:sIx==3?e.sheet:null;
-		e.jsp01();
-		e.jspMenu();
-
-		if(e.screen==Prm.Screen.Sheet)
-		{pageContext.include("fragment.html");
-			e.jspSheet();
-		}
-		else
-		{	e.jspMain();
-			if(e.screen==Prm.Screen.UsersList)
-				e.jspScreenUsersList();
-			else if(e.screen==Prm.Screen.ConfigMenu)
-				e.jspScreenConfig();
-			else if(e.screen==Prm.Screen.ProjectsList)
-				e.jspScreenProjectsList();
-			else if(e.screen==Prm.Screen.ProjectScreen)
-				e.jspScreenProject();
-			else if(sIx>0) {
-				//jsp breadcrumb proj
-				tl.o("<a href=\"?",Prm.screen,'=',Prm.Screen.ProjectScreen,'&',Prm.projNo,'=',e.proj.no,"\">",e.title(e.proj),"</a> / ");
-
-				if(e.screen==Prm.Screen.BuildingScreen)
-					e.jspScreenBuilding();//jsp bld
-				else {// jsp breadcrumb bld
-					tl.o("<a href=\"?",Prm.screen,'=',Prm.Screen.BuildingScreen,'&',Prm.buildingNo,'=',e.bld.no,"\">",e.title(e.bld),"</a> / ");
-
-					//if(e.screen==Prm.Screen.FloorScreen);
-					// jsp floor
-					e.jspScreenFloor();
-				}
-			}
-			e.jspIntro();
-			e.jspPosts();
-			//if(sIx>=0) e.jspSheets();
-			e.jspAbout_Footer();
-		}//! e.sheet
-		e.jsp03();
-	}
-		catch(Exception x){
-			if(tl!=null)
-				tl.error(x,"/adoqs/index.jsp:");
-			else
-				x.printStackTrace();}
-		finally{try{
-			List l=tl!=null && tl.response!=null?(
-												  List)tl.response.get(TL.DB.ItTbl.ErrorsList):null;
-			if(l!=null)//errors from TL.DB.ItTbl iterator
-				tl.o("<!--",l,"-->");
-		}catch(Exception ex){}
-			TL.Exit();
-		}
-		out.write("</body></html>");
-	}//jspOld
-	* /
-
- public static void jsp(HttpServletRequest request,HttpServletResponse response,Writer out)throws IOException{
-	TL tl=null;try
-	{tl=TL.Enter(request,response,out);
-		tl.r("contentType","text/json");//tl.logOut=tl.var("logOut",false);
-		Op op=tl.req(Prm.op.toString(),Op.none);
-		tl.log("jsp:version2017.02.09.17.10:op=",op);
-		//if((tl.usr!=null||tl.logOut)|| op==Op.login || op==Op.none)//TODO: AFTER TESTING DEVELOPMENT, REMOVE from if: logOut
-
-			op.doOp(AppEU059S.app(tl),tl.json);
-		// else TL.Util.mapSet(tl.response,"msg","Operation not authorized ,or not applicable","return",false);
-		if(tl.r("responseDone")==null)
-		{if(tl.r("responseContentTypeDone")==null)
-			response.setContentType(String.valueOf(tl.r("contentType")));
-			tl.getOut().o(tl.json);
-			tl.log("AppEU059S:xhr-response:",tl.jo().o(tl.json).toString());}
-		tl.getOut().flush();
-	}catch(Exception x){
-		if(tl!=null){
-			tl.error(x,"AppEU059S.jsp:");
-			tl.getOut().o(x);
-		}else
-			x.printStackTrace();
-	}finally{TL.Exit();}
- }
-/*
- void respond(String contentType,String content){
-	try{tl.r("responseDone",true);
-	tl.rspns.setContentType(contentType);
-	tl.o(content);}catch(Exception ex){tl.error(ex,"AppEU059S.respond:");}}
-
- enum Op{
-	 /**none is equivelant to bootstrapping the web-application system to Storage:key=app* /
- none{@Override void doOp(AppEU059S a,Map prms){//TODO: after the development stage of bootstrapping , change the respond to get from dbTbl-storage the js code path: "eu059s.bootStrap" ::= raw minimal js code to load LocalStorage "eu059s.BootStrap" and execute or do a xhr of xhr-op:eu059s.BootStrap
-	a.respond("text/html",//"<html><head><script src=\"sys.js\"></script></head><body></body></html>"
-	"<html><head><script>window.onload=function bootstrap(){"
-+"	var path='eu059s.files:sys.js',x=localStorage[path] \n"
-+"	function init(x){console.log('bootstrap.js:init:',x)\n"
-+"		var s=document.createElement('script');			\n"
-+"		document.body.appendChild(s);\n"
-+"		s.text=x;}				\n"
-+"	if(!x)						\n"
-+"	{function xhr(p){			\n"
-+"			if(!p)return p;		\n"
-+"			var ct='Content-Type',cs='charset'	\n"
-+"				,x=typeof XMLHttpRequest === 'undefined'\n"
-+"				?new ActiveXObject('microsoft.XMLHTTP')\n"
-+"				:new XMLHttpRequest();x.p=p;p.xhr=x;	\n"
-+"			x.open(p.method||'POST',p.url||'', p.onload )\n"
-+"			x.setRequestHeader(ct, 'text/json');\n"
-+"			x.setRequestHeader(cs, 'utf-8');	\n"
-+"			x.onload=p.onload					\n"
-+"			x.send(JSON.stringify(p.data));		\n"
-+"			console.log('xhr:response:',x.response,p,x); \n"
-+"			return x.response;					\n"
-+"		}//function xhr							\n"
-+"		xhr({data:{op:'StorageGet',path:path	\n"
-+"			,onload:function(e){				\n"
-+"			localStorage[path]=x=e&&(e.response	\n"
-+"				||(e.target&&e.target.response)	\n"
-+"				||(e.src&&e.src.response))		\n"
-+"			init(x);\n"
-+"		}//onload function\n"
-+"		}//data		\n"
-+"		}//xhr param\n"
-+"		)//xhr		\n"
-+"	}//if !x		\n"
-+"	else init(x)	\n"
-+"}//function bootstrap\n"
-+"</script></head><body></body></html>"
-	);}}
-
- ,login{@Override void doOp(AppEU059S a,Map prms){try{
-	TL.DB.Tbl.Usr u=TL.DB.Tbl.Usr.login();TL tl=a.tl;
-	if(u!=null){u.onLogin();
-		TL.DB.Tbl.Log.log(TL.DB.Tbl.Log.Entity.usr
-			, tl.usr.uid
-			, TL.DB.Tbl.Log.Act.Login
-			,TL.Util.mapCreate("usr",tl.usr,"request",tl.req));}
-	else// msg="incorrect login";
-		TL.DB.Tbl.Log.log(TL.DB.Tbl.Log.Entity.usr
-			, tl!=null&&tl.usr!=null?tl.usr.uid:-1
-			, TL.DB.Tbl.Log.Act.Log
-			,TL.Util.mapCreate(
-				"msg","incorrect login"
-				,"request",tl.req));}catch(Exception ex){
-					a.tl.error(ex,"AppEU059S.Op.login:");}}}
-
- ,logout{@Override void doOp(AppEU059S a,Map prms)
-	{try{TL.DB.Tbl.Log.log(TL.DB.Tbl.Log.Entity.usr, a.tl.usr.uid,TL.
-		DB.Tbl.Log.Act.Logout,TL.Util.mapCreate("usr",a.tl.usr));
-		a.tl.ssn.onLogout();}catch(Exception ex){
-			a.tl.error(ex,"AppEU059S.Op.logout:");}}}
-
- ,newProject{@Override void doOp(AppEU059S a,Map prms){
-	a.proj.no=null;//TL.DB.q1int("select max(`no`)+1 from projects;", 1);
-	a.proj.json=TL.Util.mapCreate("title","Project "+a.tl.now
-		, "date",TL.Util.formatDate( a.tl.now )
-		, "shortDesc","short Desc"//"avatar","avatar.jpg"
-		, "author",a.tl.usr.uid, "desc","description" );
-	try{a.proj.save();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.newProject:");}
-	a.tl.s(Prm.projNo.toString(),a.proj.no);//a.tl.s(Prm.screen.toString(),a.screen=Prm.Screen.ProjectScreen);
-	}}
-
- ,newBuilding{@Override void doOp(AppEU059S a,Map prms){
-	a.bld.no=null;a.bld.p=a.proj.no;
-	a.bld.json=TL.Util.mapCreate("date",TL.Util.formatDate( a.tl.now )
-		, "author",a.tl.usr.uid , "title","Building "+a.tl.now );//"avatar","avatar.jpg"
-	try{a.bld.save();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.newBuilding:");}
-	a.tl.s(Prm.buildingNo.toString(),a.bld.no);
-	a.tl.s(Prm.screen.toString(), Prm.Screen.BuildingScreen);}}
-
- ,newFloor{@Override void doOp(AppEU059S a,Map prms){
-	a.flr.no=null;a.flr.b=a.bld.no;a.flr.p=a.proj.no;
-	a.flr.json=TL.Util.mapCreate("date", TL.Util.formatDate( a.tl.now )
-		, "author",a.tl.usr.uid , "title","Floor "+a.tl.now);//"avatar","avatar.jpg"
-	try{a.flr.save();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.newFloor:");}
-	a.tl.s(Prm.floorNo.toString(),a.flr.no);
-	a.tl.s(Prm.screen.toString(), Prm.Screen.FloorScreen);}}
-
- ,newSheet{@Override void doOp(AppEU059S a,Map prms){
-	a.sheet.no=null;
-	a.sheet.dt=a.tl.now;a.sheet.u=a.tl.usr.uid;
-	a.sheet.p=a.proj.no;a.sheet.b=a.bld.no;a.sheet.f=a.flr.no;
-	//a.sheet.jsonRef=TL.DB.Tbl.Json.jrmp1();
-	//a.sheet.m=a.sheet.asMap();
-	//a.sheet.m.put("datetime", TL.Util.formatDate(a.sheet.dt ));
-	TL.DB.Tbl.Json j=a.sheet.json();
-	//a.sheet.m.put(j.Jr,j.jsonRef);
-	//sheet.jsonRef=j.jsonRef=j.jrmp1();//((Number)sheet.m.get(TL.DB.Tbl.Json.Jr)).intValue();
-	try{a.sheet.save();
-	//a.sheet.m.put("no", a.sheet.no);j.save(a.sheet.m);
-	}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.newSheet:");}
-	a.tl.s(Prm.sheetNo.toString(), a.sheet.no);//a.tl.s(Prm.screen.toString(), a.screen=Prm.Screen.Sheet);
-	}}
-
- ,newUser{@Override void doOp(AppEU059S a,Map prms){
-	TL.DB.Tbl.Usr u=new TL.DB.Tbl.Usr();
-	u.readReq("");//u .j=TL.Util.mapCreate name tel gender address email tel-ext id cid	"avatar","avatar.jpg"
-	u.uid=null;
-	try{u.save();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.newUser:");}
-	a.tl.s(Prm.screen.toString(), Prm.Screen.User);}}
-
- ,deleteProject{@Override void doOp(AppEU059S a,Map prms){
-	try{a.proj.delete();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.deleteProject:");}
-	a.tl.s(Prm.projNo.toString(),a.proj.no=-1);//a.screen=Prm.Screen.ProjectsList;
-	}}
-
- ,deleteBuilding{@Override void doOp(AppEU059S a,Map prms){
-	try{a.bld.delete();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.deleteBuilding:");}
-	a.tl.s(Prm.buildingNo.toString(),a.bld.no=-1);//a.screen=Prm.Screen.ProjectScreen;
-	}}
-
- ,deleteFloor{@Override void doOp(AppEU059S a,Map prms){
-	try{a.flr.delete();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.deleteFloor:");}
-	a.tl.s(Prm.floorNo.toString(),a.flr.no=-1);//a.screen=Prm.Screen.BuildingScreen;
-	}}
-
- ,deleteSheet{@Override void doOp(AppEU059S a,Map prms){
-	/*deleteImages();
-		void deleteImages(){try{
-			//delete folder//Integer jsonRef=sheet.jsonRef;	 //AppEU059S app=app(t);app.
-			String path=getUploadPath()
-			,real=TL.context.getRealPath(tl,path);//t.getServletContext().getRealPath(path);
-			File f=new File(real);
-			if(f.exists())
-				f.delete();
-		}catch(Exception ex){tl.error(ex,"deleteImages");}
-		}//deleteImages* /
-	try{a.sheet.delete();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.deleteSheet:");}
-	a.tl.s(Prm.sheetNo.toString(), a.sheet.no=-1);//a.screen=Prm.Screen.FloorScreen;
-	}}
-
- ,deleteUser{@Override void doOp(AppEU059S a,Map prms){
-	TL.DB.Tbl.Usr u=new TL.DB.Tbl.Usr();u.readReq("");
-	try{u.delete();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.deleteUser:");}
-	//a.tl.s(Prm.screen.toString(),a.screen=Prm.Screen.UsersList);
- }}
-/*,userChngPw{@Override void doOp(AppEU059S a,Map prms){}}
-,query{@Override void doOp(AppEU059S a,Map prms){/*
-	* search
-	* proj
-	* title
-	* short desc
-	* desc
-	* building title
-	* floor title
-	* sheet
-	* notes
-	* other txt,txt,txt
-	* usr full-name ,user-id , desc
-	* * /}}* /
-
- ,xhrEdit{@Override void doOp(AppEU059S a,Map prms){try{
-	a.tl.log("AppEU059S.Op.xhrEdit : op==xhrEdit");
-	//if(a.tl.response==null)a.tl.response=TL.Util.mapCreate();
-	TL.Util.mapSet(prms,"msg","um...");//a.tl.response
-	String entity=a.tl.req("entity");
-	Map v=(Map)a.tl.json.get("v");
-	Integer pk=a.tl.req("pk",-1);
-	TL.DB.Tbl t="project".equals(entity)?a.proj
-	:"building".equals(entity)?a.bld
-	:"floor".equals(entity)?a.flr:null;
-	a.tl.log("AppEU059S.Op.xhrEdit : entity=",entity," ,pk=",pk," ,v=",v ," ,t=",t);
-	if(t!=null && pk!=-1)
-	{t.load(pk);a.tl.log("AppEU059S.Op.xhrEdit : t!=null && pk!=-1");
-		Map j=a.getJ(t);
-		a.merge(j,v);
-		a.tl.log("AppEU059S.Op.xhrEdit : merge:",t);
-		t.save();
-		a.tl.log("AppEU059S.Op.xhrEdit : save");
-	}else a.tl.log("AppEU059S.Op.xhrEdit : else: t!=null && pk!=-1");
-	a.tl.getOut().o(prms);//a.tl.response
-	a.tl.log("AppEU059S.Op.xhrEdit : return");
-	}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.xhrEdit:");}}}
-
- ,saveSheet{@Override void doOp(AppEU059S a,Map prms){try{
-	a.tl.log("op-saveSheet");
-	TL.DB.Tbl.Json json=a.sheet.json();
-	Map old=null,j=null;//a.sheet.m,j=a.sheet.m=(Map) (json.json=a.tl.json.get("json"));
-	//a.sheet.fromMap(j);
-	for(int i=0;i<4;i++)try{
-		String n="img"+(i+1);
-		Object o=a.tl.json.get(n);//Map m=(Map)tl.json.get(n);
-		if(o==null && old!=null)
-			o=old.get(n);
-		if(o!=null &&(!(o instanceof String) || o.toString().trim().length()>0))
-			j.put(n, o);
-	}catch(Exception ex){
-		a.tl.error(ex,"AppEU059S.saveSheet");}
-	j.put("no", a.sheet.no);
-	json.save();
-	a.sheet.save();}catch(Exception ex){a.tl.error(ex,"AppEU059S.Op.saveSheet:");}
-	}}
- //,getImg
-
- ,StorageList{@Override void doOp(AppEU059S a,Map prms){
-	Storage.C[]x={Storage.C.no,Storage.C.path,Storage.C.contentType,Storage.C.lastModified};
-	a.storage.readReq("");
-	StringBuilder sql=new StringBuilder("select ");
-	TL.DB.Tbl.Cols.generate(sql,x)
-		.append(" from ").append(Storage.dbtName)
-		.append(" where `").append(Storage.C.lastModified).append("`>?");
-	List<Object>l=TL.Util.lst(x),r;
-
-	prms.put("return",l);//a.tl.response
-	for (TL.DB.ItTbl.ItRow i:TL.DB.ItTbl.it( sql.toString()
-		,a.storage.lastModified)) {
-		l.add(r=TL.Util.lst());
-		for (Storage.C c:x)
-			r.add(i.next());}}}
-
- ,StorageGet{@Override void doOp(AppEU059S a,Map prms){
-	try{a.storage.readReq("");a.storage.load();prms.put("return",a.storage);} catch (Exception e) {
-		a.tl.error(e,"AppEU059S.Op.StorageGet");}}}
-
- ,StorageContent{@Override void doOp(AppEU059S a,Map prms){
-	try{a.storage.readReq("");a.storage.load();//prms.put("return",a);
-	//set response headers: lastModified,
-	a.respond(a.storage.contentType,a.storage.data);
-	} catch (Exception e) {
-		a.tl.error(e,"Storage.Op.StorageContent");}}}/*
-
- ,StorageScript{@Override void doOp(AppEU059S a,Map prms){
-	try{a.storage.readReq("");a.storage.load();//prms.put("return",a);
-	//set response headers: lastModified,
-	a.respond(a.storage.contentType,a.storage.data);
-	} catch (Exception e) {
-		a.tl.error(e,"AppEU059S.Op.get");}}}
-
- ,StorageCss{@Override void doOp(AppEU059S a,Map prms){
-	try{a.storage.readReq("");a.storage.load();prms.put("return",a);} catch (Exception e) {
-		a.tl.error(e,"AppEU059S.Op.get");}}}
-
- ,StorageImg{@Override void doOp(AppEU059S a,Map prms){
-	try{a.storage.readReq("");a.storage.load();prms.put("return",a);} catch (Exception e) {
-		a.tl.error(e,"AppEU059S.Op.get");}}}* /
-
- ,StorageSet{@Override void doOp(AppEU059S a,Map prms) {
-	try{a.storage.readReq_save();prms.put("return",true);} catch (Exception e) {
-		a.tl.error(e,"AppEU059S.Op.StorageSet");}}}
-
- ,StorageNew{@Override void doOp(AppEU059S a,Map prms) {
-	try{int no=a.storage.no=a.storage.maxPlus1(Storage.C.no);
-	prms.put("return",no);
-	a.storage.readReq_saveNew();} catch (Exception e) {
-		a.tl.error(e,"AppEU059S.Op.StorageNew");}}}
-
- ,StorageDelete{@Override void doOp(AppEU059S a,Map prms) {
-	try{a.storage.readReq("");
-	prms.put("return",a.storage.delete());} catch (Exception e) {
-		a.tl.error(e,"AppEU059S.Op.StorageDelete");}}}
-
- //,StorageSyncOffline{@Override void doOp(TL tl,Map prms){}}
- ;
- void doOp(AppEU059S a,Map params){params.put("msg","op not implemented");}
- }//enum Op
-
-//public interface IOp{public void doOp(AppEU059S a,Map params);}
-
-public static class Srvlt extends HttpServlet{
- @Override public void service(HttpServletRequest q,HttpServletResponse r)
-	throws IOException, javax.servlet.ServletException{jsp(q,r,r.getWriter());}//jsp
-
- //@Override  public void init(){}//Servlet.init
-}//public static class Srvlt extends HttpServlet
-
-
-	enum Prm{screen(Screen.class),op(Op.class)
-		,projNo(Integer.class)
-		,buildingNo(Integer.class)
-		,floorNo(Integer.class)
-		,sheetNo(Integer.class)
-		,query(String.class)
-		,entity(String.class)
-		,pk(Integer.class),v(Map.class)
-		,userLevel(String.class)
-		;Class<?>c;Prm(Class<?>p){c=p;}
-
-		enum Screen {ProjectsList,ProjectScreen,BuildingScreen
-			,FloorScreen,UsersList,User,Sheet
-			,ReportsMenu
-			,LogMenu
-			,ConfigMenu
-			,Search
-		}//Screen
-
-		enum UserLevel{Manage,Edit,View ,Suspended}
-
-	}//enum Prm
-
-	static TL .DB.Tbl.Usr usr(Object uid){
-		TL .DB.Tbl.Usr u=new TL .DB.Tbl.Usr();
-		u.load(uid);return u;}
-
-	static Map getJ(TL.DB.Tbl p){
-		Map r=null;
-		if(p instanceof Project){Project x=(Project)p;
-			r=x.json;
-		}else if(p instanceof Building){Building x=(Building)p;
-			r=x.json;
-		}else if(p instanceof Floor){Floor x=(Floor)p;
-			r=x.json;
-		}else if(p instanceof Sheet)
-		{Sheet x=(Sheet)p;
-			r=x.get();}
-		return r;}
-
-	static Map merge(Map dst,Map src){
-		if(dst!=null&& src!=null)for(Object k:src.keySet())
-			dst.put(k, src.get(k));
-		return dst;
-	}
-
-	AppEU059S appInit(){try{
-		//screen=tl.var(Prm.screen.toString(),Prm.Screen.ProjectsList);
-		if( tl.s(SsnNm)!=this )
-			tl.s( SsnNm , this );
-		//proj=(Project)tl.s("proj");
-		Integer n=tl.var(Prm.projNo.toString(),-1).intValue();//proj.no);
-		if(n!=proj.no && n!=-1)
-			proj.load(n);
-
-		//bld=(Building)tl.s("bld");
-		n=tl.var(Prm.buildingNo.toString(),-1).intValue();//bld.no);
-		if(n!=bld.no && n!=-1)
-			bld.load(n);
-
-		n=tl.var(Prm.floorNo.toString(),-1).intValue();//flr.no);
-		if(n!=flr.no && n!=-1)
-			flr.load(n);
-
-		n=tl.var(Prm.sheetNo.toString(),-1).intValue();//sheet.no);
-		if(n!=sheet.no){if( n!=-1)
-		{	sheet.load(n);
-			TL.DB.Tbl.Json j=sheet.json();
-			//j.json=sheet.m=j.LoadRef(j.jsonRef);
-			//if(sheet.f!=flr.no)flr.load(sheet.f);
-		}//else sheet.m=null;
-		}
-		/*if(sheet!=null && sheet.no!=null && sheet.jsonRef==null)
-			sheet.jsonRef=TL.DB.q1int(
-				"select `"+Sheet.C.jsonRef
-				+"` from `"+sheet.getName()
-				+"` where `"+Sheet.C.no
-				+"`=?", -1, sheet.no);
-
-		/*sheet=(Sheet)tl.s("sheet");
-		 if(sheet==null)
-		 {//sheet=new;
-		 sheet.no=tl.var(Prm.sheetNo.toString(),-1).intValue();
-		 if(sheet.no!=-1)
-		 {	sheet.load();
-		 TL.DB.Tbl.Json j=sheet.json();
-		 j.load();
-		 if(j.json instanceof Map)
-		 {	sheet.m=(Map)j.json;
-		 sheet.m.get(TL.DB.Tbl.Json.Jr);
-		 }
-		 }
-		 tl.s("sheet",sheet);
-		 }else
-		 {Number n=tl.var(Prm.sheetNo.toString(),sheet.no);
-		 if(n!=sheet.no)
-		 sheet.load(n);
-		 }
-		 * /
-		 if(sheet!=null && flr!=null && flr.no!=null && sheet.f!=null && sheet.f!=-1 && sheet.f!=flr.no)flr.load(sheet.f);
-		 if(flr!=null && bld!=null && flr.no!=null && bld.no!=null && flr.b!=-1 && flr.b!=bld.no)bld.load(flr.b);
-		 if( bld!=null && proj!=null && bld.no!=null && proj.no!=null && bld.p!=-1 && bld.p!=proj.no)proj.load(bld.p);* /
-	}catch(Exception ex){
-		tl.error(ex,SsnNm,".appInit");}
-		return this;
-}//appInit
-
-	String title(TL.DB.Tbl t){Map j=getJ(t);
-		Object ttl=j==null?null:j.get("title");
-		String r=ttl==null?"title"+t:ttl.toString();
-		return r;}
-
-	String author(TL.DB.Tbl t){
-		Map j=getJ(t);
-		TL.DB.Tbl.Usr author=null;
-		Object a=j==null?null:j.get("author");
-		if(a!=null)try{author=usr(a);}
-		catch(Exception ex){tl.error(ex,"AppEU059S.author");}
-		Object authorName=author!=null && author.json!=null?author.json.get("name"):author!=null?author.un:null;
-		String retVal= authorName==null?"author:"+t : authorName.toString();
-		return retVal;}
-
-public Project proj=new Project();
-public Building bld=new Building();
-public Floor flr=new Floor();
-public Sheet sheet=new Sheet();
-public Storage storage=new Storage();
-//public Prm.Screen screen;
-public TL tl;
-
-*/
-	}
+	,UploadPath="/eu059sUploads/";
 
 	public static class Project extends TL.DB.Tbl {//implements Serializable
 		public static final String dbtName="projects";
@@ -4124,28 +2162,7 @@ public TL tl;
 			return TL.Util.lst(
 							   TL.Util.lst("int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT"//p
 										   ,"text"//json
-										   ));
-			/*projects,sheets,imgs
-
-			 CREATE TABLE `projects` (
-			 `no` int(11) NOT NULL,
-			 `title` varchar(255) DEFAULT NULL,
-			 `j` json DEFAULT NULL,
-			 PRIMARY KEY (`no`)
-			 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
-			 insert into projects values();
-
-			 CREATE TABLE `sheets` (
-			 `no` int(11) NOT NULL,
-			 `p` int(11) DEFAULT NULL,
-			 `b` int(11) DEFAULT NULL,
-			 `f` int(11) DEFAULT NULL,
-			 `n` int(11) DEFAULT NULL,
-			 `j` json DEFAULT NULL,
-			 PRIMARY KEY (`no`)
-			 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-			 */}
+										   ));}
 		@Override public String getName(){return dbtName;}//public	Ssn(){super(Name);}
 		@TL.Form.F public Integer no;
 		@TL.Form.F(json=true) public Map json;
@@ -4179,16 +2196,7 @@ public TL tl;
 							   TL.Util.lst("int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT"//no
 										   ,"int(11) NOT NULL"//p
 										   ,"text"//json
-										   ),TL.Util.lst(TL.Util.lst(C.p)));
-			/*
-			 CREATE TABLE `buildings` (
-			 `no` int(11) NOT NULL primary key,
-			 `p` int(11) NOT NULL ,
-			 `j` json DEFAULT NULL,
-			 KEY (`p`)
-			 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
-			 insert into projects values();
-			 */}
+										   ),TL.Util.lst(TL.Util.lst(C.p)));}
 		@Override public String getName(){return dbtName;}
 		@TL.Form.F public Integer no,p;
 		@TL.Form.F(json=true) public Map json;
@@ -4224,16 +2232,7 @@ public TL tl;
 				   ,"int(11) NOT NULL"//p
 				   ,"int(11) NOT NULL"//b
 				   ,"text"//json
-				   ),TL.Util.lst(TL.Util.lst(C.p,C.b)));/*
-				 CREATE TABLE `floors` (
-				 `no` int(11) NOT NULL primary key,
-				 `p` int(11) NOT NULL,
-				 `b` int(11) NOT NULL,
-				 `j` json DEFAULT NULL,
-				 KEY (`p`,`b`)
-				 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
-				 insert into floors values();
-				 */}
+				   ),TL.Util.lst(TL.Util.lst(C.p,C.b)));}
 
 		@Override public String getName(){return dbtName;}//public	Ssn(){super(Name);}
 		@TL.Form.F public Integer no,p,b;
@@ -4365,28 +2364,6 @@ public @TL.Form.F Radio1_3 PopoutSize;//3
 @TL.Form.F public Radio1_2 SpallSize;//2
 @TL.Form.F public String notes;//2
 @TL.Form.F(json=true) public Map json;
-
-		public Map get() {//if(m==null)m=TL.Util.mapCreate("title","-");return m;
-			return null;}
-
-		public TL.DB.Tbl.Json json() {/*
-			TL.DB.Tbl.Json j=new TL.DB.Tbl.Json();
-			j.jsonRef=jsonRef;
-			j.json=get();
-			if(jsonRef==null)
-				j.jsonRef=jsonRef=TL.DB.Tbl.Json.jrn(j.json);//(Integer)j.mv().get(j.Jr);
-			return j;*/return null;}
-
-		public Object get(String p) {
-			return get().get(p);}
-
-		public Map set(TL.DB.Tbl.Json p) throws Exception{/*
-			if(p!=null){ if(jsonRef!=p.jsonRef)
-			{jsonRef=p.jsonRef;
-				save();
-			}	m=p.mv();
-			}*/
-			return get();}
 
 		public enum C implements TL.DB.Tbl.CI{no,p,b,f,u,dt//,datetime
 
@@ -4853,7 +2830,7 @@ public static class Dbg{
 			@Override public String getServletPath() {return null;}
 			@Override public HttpSession getSession() {return ssn;}
 			@Override public HttpSession getSession(boolean p) {return ssn;}
-			@Override public Principal getUserPrincipal() {return null;}
+			//@Override public Principal getUserPrincipal() {return null;}
 			@Override public boolean isRequestedSessionIdFromCookie() {return false;}
 			@Override public boolean isRequestedSessionIdFromURL() {return false;}
 			@Override public boolean isRequestedSessionIdFromUrl() {return false;}
@@ -4954,7 +2931,7 @@ public static class Dbg{
 			}//public static class SrvltWrtr extends java.io.Writer
 		}//class Rsp
 
-		public static class PC extends PageContext{
+		public static class PC extends javax.servlet.jsp.PageContext{
 
 			@Override public void forward(String arg0) throws ServletException, IOException {}
 			@Override public Exception getException() {return null;}
@@ -4977,14 +2954,14 @@ public static class Dbg{
 			@Override public Enumeration<String> getAttributeNamesInScope(int arg0){return null;}
 			@Override public int getAttributesScope(String arg0) {TL.tl().log("Dbg.PC.getAttributesScope:not implemented:return null");return 0;}
 
-			@Override public ExpressionEvaluator getExpressionEvaluator(){return null;}
-			@Override public JspWriter getOut(){TL.tl().log("Dbg.PC.getOut:not implemented:return null");return null;}
-			@Override public VariableResolver getVariableResolver(){return null;}
+			@Override public javax.servlet.jsp.el.ExpressionEvaluator getExpressionEvaluator(){return null;}
+			@Override public javax.servlet.jsp.JspWriter getOut(){TL.tl().log("Dbg.PC.getOut:not implemented:return null");return null;}
+			@Override public javax.servlet.jsp.el.VariableResolver getVariableResolver(){return null;}
 			@Override public void removeAttribute(String arg0){TL.tl().log("Dbg.PC.removeAttribute a:not implemented:return null");}
 			@Override public void removeAttribute(String arg0, int arg1){TL.tl().log("Dbg.PC.removeAttribute a,b:not implemented:return null");}
 			@Override public void setAttribute(String arg0, Object arg1) {TL.tl().log("Dbg.PC.setAttribute a,b:not implemented:return null");}
 			@Override public void setAttribute(String arg0, Object arg1, int arg2) {TL.tl().log("Dbg.PC.setAttribute a,b,c:not implemented:return null");}
-			@Override public javax.el.ELContext getELContext(){TL.tl().log("Dbg.PC.getELContext:not implemented:return null");return null;}
+			@Override public javax.servlet.jsp.el.ELContext getELContext(){TL.tl().log("Dbg.PC.getELContext:not implemented:return null");return null;}
 //public static class ELContext{}
 		}//class PC
 
@@ -5059,7 +3036,7 @@ public static class Dbg{
 			@Override public Map<String, ? extends FilterRegistration> getFilterRegistrations(){return null;}
 			@Override public String getInitParameter(String p){return null;}
 			@Override public Enumeration<String> getInitParameterNames(){return null;}
-			@Override public JspConfigDescriptor getJspConfigDescriptor(){return null;}
+			@Override public javax.servlet.jsp.el.JspConfigDescriptor getJspConfigDescriptor(){return null;}
 			@Override public int getMajorVersion(){return 0;}
 			@Override public String getMimeType(String p){return null;}
 			@Override public int getMinorVersion(){return 0;}
