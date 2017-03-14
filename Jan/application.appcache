@@ -1,0 +1,10 @@
+CACHE MANIFEST
+#version m13 h12 d6 , m40 ,m35 h23 d4 M3 , m42 h10 d28 M2 y2017
+index.html
+sys.js
+
+NETWORK
+xhr.jsp
+
+FALLBACK
+xhr.jsp index.html

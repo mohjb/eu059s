@@ -2122,13 +2122,13 @@ public static class TL {
 			try{return p.get(this);}
 			catch (Exception ex) {//IllegalArgumentException,IllegalAccessException
 				tl().error(ex,"TL.Form.v(",this,",",p,")");return null;}}
-		
-		
+
+
 		/**Field annotation to designate a java member for use in a Html-Form-field/parameter*/
 		@java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
 		public @interface F{	boolean prmPw() default false;boolean json() default false; }
-		
-		
+
+
 		/**Interface for enum-items from different forms and sql-tables ,
 		 * the enum items represent a reference Column Fields for identifing the column and selection.*/
 		public interface FI{//<T>
@@ -2143,8 +2143,8 @@ public static class TL {
 		}//interface I
 
 	}//public abstract static class Form
-	
-	
+
+
 	public Json.Output o(Object...a)throws IOException{if(out!=null&&out.w!=null)for(Object s:a)out.w.write(s instanceof String?(String)s:String.valueOf(s));return out;}
 
 	public static class Json
@@ -2912,29 +2912,29 @@ replacing html with jsonBld
 	}//jsp01*/
 /*
 removed from side menu
-	Prm.Screen.userList  
+	Prm.Screen.userList
 		Op.newUser
-		
+
 	Prm.Screen.userScreen
 		Op.deleteUser
-	
+
 	Prm.Screen.projectScreen
 		Op.newProject
 		Op.deleteProject
 		Op.newBuilding
-	
+
 	Prm.Screen.BuildingScreen
 		Op.deleteBuilding
 		Op.newFloor
-		
+
 	Prm.Screen.FloorScreen
 		Op.deleteFloor
 		Op.newSheet
-		
+
 	Prm.Screen.Sheet
 		Op.deleteSheet
-		
-		
+
+
 	Op.logout
 * /
 
@@ -3358,7 +3358,7 @@ removed from side menu
 		tl.logOut=tl.var("logOut",false);
 		App e=App.app(tl);
 		e.authentication(op);
-		//if op.opList , else 
+		//if op.opList , else
 		op.doOp(tl,e,tl.json);
 		response.setContentType("text/json");
 		tl.getOut().o(tl.response);
@@ -3452,7 +3452,7 @@ removed from side menu
 	 * notes
 	 * other txt,txt,txt
 	 * usr full-name ,user-id , desc
-	 * 
+	 *
 	}}*/
 	//case listSheets:break;
 	//case editUser	:u=new TL.DB.Tbl.Usr();u.readReq_save();break;

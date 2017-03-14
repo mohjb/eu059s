@@ -1153,16 +1153,19 @@ public static class TL {
 				o.w(']');
 			} catch (IOException e){tl().error(e,"TL.DB.Tbl.outputJson:");}
 			}//outputJson(Object...where)
+
 public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extends Tbl>>();
 
  static void check(TL tl){
 	for(Class<? extends Tbl>c:registered)try
 	{String n=c.getName(),n2=".checkDBTCreation."+n;
-	 if( tl.a(n2)==null){
+		Object o=tl.a(n2);
+		tl.log("TL.DB.Tbl.check:",n2,":",o);
+	 if( o==null){
 		Tbl t=c.newInstance();
 		t.checkDBTCreation(tl);
 		tl.a(n2,tl.now);
-	}}catch(Exception ex){}
+	}}catch(Exception ex){tl.error(ex,"eu059s.AppE059S.TL.DB.Tbl.check");}
  }
 
 			/**represents a row in the `usr` mysql table ,
@@ -1173,7 +1176,19 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 				static final String dbtName="Usr";
 				/**the attribute-name	in the session*/
 				public final static String prefix=dbtName;
+				/*used by HttpServletRequest.getPrincipal()
+				public class Prncipl implements java.security.Principal{
 
+					@Override public boolean equals(Object another) {return false;}
+
+					@Override public String toString() {return null;}
+
+					@Override public int hashCode() {return 0;}
+
+					@Override public String getName() {return null;}
+
+					@Override public boolean implies(javax.security.auth.Subject subject) {return false;}
+				}//public static class Prncipl extends java.security.Principal*/
 				//public Usr(){super(Name);}
 				@Override public String getName(){return dbtName;}
 				@F public Integer uid;
@@ -1254,7 +1269,7 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 								,Util.lst(C.un)
 								,Util.lst(Util.lst("1","admin","admin","{title:\"admin\",avatar:\"avatar.jpg\"}"))
 						);}
-					static{registered.add(Usr.class);}
+					static{registered.add(Usr.class);Dbg.p("eu059s.AppEU059S.TL.DB.Tbl.Usr:registered.add(.class)");}
 				}//class Usr
 
 			public static class Ssn extends Tbl {//implements Serializable
@@ -1308,7 +1323,7 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 										,"timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'"//last
 								),Util.lst(C.dt,C.auth,C.last,Util.lst(C.uid,C.dt))
 						);}
-					static{registered.add(Ssn.class);}
+					static{registered.add(Ssn.class);Dbg.p("eu059s.AppEU059S.TL.DB.Tbl.Ssn:registered.add(.class)");}
 				}//class Ssn
 
 			public static class Log extends Tbl {//implements Serializable
@@ -1379,7 +1394,7 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 						);t.log("TL.DB.Tbl.Log.log_:",e,",",pk,",",act,",",val);}
 					catch(Exception x){t.error(x,"TL.DB.Tbl.Log.log:ex:");}
 					return r;}
-				static{registered.add(Log.class);}
+				static{registered.add(Log.class);Dbg.p("eu059s.AppEU059S.TL.DB.Tbl.Log:registered.add(.class)");}
 			}//class Log
 
 			}//class Tbl
@@ -2045,16 +2060,20 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 
 		public static void registerOp(Class p){
 			java.lang.reflect.Method[]b=p.getMethods();
+			Dbg.p("TL.registerOp:begin:classPrm=",p,",methods=",b);
 			String cn=p.getSimpleName();
 			for(java.lang.reflect.Method m:b){
 				Op op= m.getAnnotation(Op.class);
 				if(op!=null)
 				{	String s=m.getName();
+					Dbg.p("TL.registerOp:cn=",cn," ,mthdName=",s,",annotation=",op,",m=",m);
 					ops.put(op.useClassName()?cn+"."+s:s,m);
-					if(!"\n".equals(op.urlPath()))
-						url.put(op.urlPath(),m);
-					if(!"".equals(op.httpMethod()))
-						mth.put(op.urlPath(),m);
+					if(!"\n".equals(op.urlPath())){
+						url.put(op.urlPath(),m);Dbg.p("TL.registerOp: ,mthdName=",s,"urlPath registered:",op.urlPath());
+					}
+					if(!"".equals(op.httpMethod())){
+						mth.put(op.httpMethod(),m);Dbg.p("TL.registerOp: ,mthdName=",s,"httpMethod registered:",op.httpMethod());
+					}
 				}
 			}
 		}//registerOp
@@ -2080,12 +2099,15 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 						if(!"*".equals(s))break;
 					}
 			}
-			tl.log("jsp:version2017.02.09.17.10:op=",op);
+			tl.log("jsp:version2017.02.09.17.10,2017.02.26.11.08:op=",op);
 			//if((tl.usr!=null||tl.logOut)|| op==Op.login || op==Op.none)//TODO: AFTER TESTING DEVELOPMENT, REMOVE from if: logOut
 
 			//op.doOp(AppEU059S.app(tl),tl.json);
 			Object retVal=null;
-			if(op!=null){
+			if(op==null){
+				tl.log("TL.run:null-op:ops=",ops," ,mth=",mth," ,url=",url);
+				bootstrap(tl);
+			}else{
 				Class[]prmTypes=op.getParameterTypes();//int n=prmTypes==null?0:prmTypes.length;
 				Class cl=op.getDeclaringClass();
 				Annotation[][] tv=op.getParameterAnnotations();//java.lang.reflect.TypeVariable<java.lang.reflect.Method>[]tv=op.getTypeParameters();
@@ -2185,7 +2207,7 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 		@Override public TL.DB.Tbl.CI pkc(){return C.no;}
 		@Override public Object pkv(){return no;}
 		@Override public C[]columns(){return C.values();}
-		static{registered.add(Project.class);}
+		static{registered.add(Project.class);Dbg.p("eu059s.AppEU059S.Project:TL.DB.Tbl.registered.add(.class)");}
 	}//class Project
 
 
@@ -2219,7 +2241,7 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 		@Override public TL.DB.Tbl.CI pkc(){return C.no;}
 		@Override public Object pkv(){return no;}
 		@Override public C[]columns(){return C.values();}
-		static{registered.add(Building.class);}
+		static{registered.add(Building.class);Dbg.p("eu059s.AppEU059S.Building:TL.DB.Tbl.registered.add(.class)");}
 	}//class Building
 
 
@@ -2256,7 +2278,7 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 		@Override public TL.DB.Tbl.CI pkc(){return C.no;}
 		@Override public Object pkv(){return no;}
 		@Override public C[]columns(){return C.values();}
-		static{registered.add(Floor.class);}
+		static{registered.add(Floor.class);Dbg.p("eu059s.AppEU059S.Floor:TL.DB.Tbl.registered.add(.class)");}
 	}//class Floor
 
 
@@ -2645,7 +2667,7 @@ public @TL.Form.F Radio1_3 PopoutSize;//3
 	tl.error(ex, "AppEU059S.Sheet.checkTableCreation");}
 	}//checkTableCreation*/}
 
-		static{registered.add(Sheet.class);}
+		static{registered.add(Sheet.class);Dbg.p("eu059s.AppEU059S.Sheet:TL.DB.Tbl.registered.add(.class)");}
 
 	}//class Sheet
 
@@ -2742,7 +2764,9 @@ CREATE TABLE `Storage` (
 		} catch (Exception e) {
 			tl.error(e,"Storage.Storage.set");}
 		return 0;}
-	static{registered.add(Storage.class);TL.registerOp(Storage.class);}
+	static{
+		Dbg.p("eu059s.AppEU059S.Storage:TL.DB.Tbl.registered.add(.class);\nTL.registerOp(Storage.class);");
+ 		registered.add(Storage.class);TL.registerOp(Storage.class);}
 }//class Storage
 
 
@@ -2830,7 +2854,7 @@ public static class Dbg{
 			@Override public String getServletPath() {return null;}
 			@Override public HttpSession getSession() {return ssn;}
 			@Override public HttpSession getSession(boolean p) {return ssn;}
-			//@Override public Principal getUserPrincipal() {return null;}
+			@Override public java.security.Principal getUserPrincipal() {return null;}
 			@Override public boolean isRequestedSessionIdFromCookie() {return false;}
 			@Override public boolean isRequestedSessionIdFromURL() {return false;}
 			@Override public boolean isRequestedSessionIdFromUrl() {return false;}
@@ -2839,6 +2863,7 @@ public static class Dbg{
 			@Override public void login(String p, String p2) throws ServletException {}
 			@Override public void logout() throws ServletException {}
 			@Override public <T extends HttpUpgradeHandler> T upgrade(Class<T> p) throws IOException, ServletException {return null;}
+
 		}//class Req
 
 		//////////////////////////////////////////////////////////////////////
@@ -2961,7 +2986,7 @@ public static class Dbg{
 			@Override public void removeAttribute(String arg0, int arg1){TL.tl().log("Dbg.PC.removeAttribute a,b:not implemented:return null");}
 			@Override public void setAttribute(String arg0, Object arg1) {TL.tl().log("Dbg.PC.setAttribute a,b:not implemented:return null");}
 			@Override public void setAttribute(String arg0, Object arg1, int arg2) {TL.tl().log("Dbg.PC.setAttribute a,b,c:not implemented:return null");}
-			@Override public javax.servlet.jsp.el.ELContext getELContext(){TL.tl().log("Dbg.PC.getELContext:not implemented:return null");return null;}
+			@Override public javax.el.ELContext getELContext(){TL.tl().log("Dbg.PC.getELContext:not implemented:return null");return null;}
 //public static class ELContext{}
 		}//class PC
 
@@ -3036,14 +3061,14 @@ public static class Dbg{
 			@Override public Map<String, ? extends FilterRegistration> getFilterRegistrations(){return null;}
 			@Override public String getInitParameter(String p){return null;}
 			@Override public Enumeration<String> getInitParameterNames(){return null;}
-			@Override public javax.servlet.jsp.el.JspConfigDescriptor getJspConfigDescriptor(){return null;}
+			@Override public javax.servlet.descriptor.JspConfigDescriptor getJspConfigDescriptor(){return null;}
 			@Override public int getMajorVersion(){return 0;}
 			@Override public String getMimeType(String p){return null;}
 			@Override public int getMinorVersion(){return 0;}
 			@Override public RequestDispatcher getNamedDispatcher(String p){return null;}
 			@Override public String getRealPath(String p){return null;}
 			@Override public RequestDispatcher getRequestDispatcher(String p){return null;}
-			@Override public URL getResource(String arg0) throws MalformedURLException {return null;}
+			@Override public java.net.URL getResource(String arg0) throws java.net.MalformedURLException {return null;}
 			@Override public InputStream getResourceAsStream(String p){return null;}
 			@Override public Set<String> getResourcePaths(String p){return null;}
 			@Override public String getServerInfo(){return null;}
@@ -3070,11 +3095,12 @@ public static class Dbg{
 
  }//class Dbg
 
- public static @TL.Op(urlPath ="*")void firstPage(TL tl){//TODO: after the development stage of bootstrapping , change the respond to get from dbTbl-storage the js code path: "eu059s.bootStrap" ::= raw minimal js code to load LocalStorage "eu059s.BootStrap" and execute or do a xhr of xhr-op:eu059s.BootStrap
+ public static @TL.Op(urlPath ="*")void bootstrap(TL tl){//TODO: after the development stage of bootstrapping , change the respond to get from dbTbl-storage the js code path: "eu059s.bootStrap" ::= raw minimal js code to load LocalStorage "eu059s.BootStrap" and execute or do a xhr of xhr-op:eu059s.BootStrap
+	tl.log("eu059s.AppEU059S.bootstrap:call:",tl);
 	tl.respond("text/html",
 "<html><head><script>window.onload=function bootstrap(){"
 		+"	var path='eu059s.files:sys.js',x=localStorage[path] \n"
-		+"	function init(x){console.log('bootstrap.js:init:',x)\n"
+		+"	function init(x){console.log('bootstrap.init:',x)\n"
 		+"		var s=document.createElement('script');			\n"
 		+"		document.body.appendChild(s);\n"
 		+"		s.text=x;}				\n"
@@ -3093,11 +3119,12 @@ public static class Dbg{
 		+"			console.log('xhr:response:',x.response,p,x); \n"
 		+"			return x.response;					\n"
 		+"		}//function xhr							\n"
-		+"		xhr({data:{op:'StorageGet',path:path	\n"
+		+"		xhr({data:{op:'Storage.get',path:path	\n"
 		+"			,onload:function(e){				\n"
 		+"			localStorage[path]=x=e&&(e.response	\n"
 		+"				||(e.target&&e.target.response)	\n"
-		+"				||(e.src&&e.src.response))		\n"
+		+"				||(e.src&&e.src.response))		\n" +
+		"console.log('bootstrap:xhrCaller:rsp=',x,',localStorage[path]=',localStorage[path])\n"
 		+"			init(x);\n"
 		+"		}//onload function\n"
 		+"		}//data		\n"
@@ -3105,7 +3132,8 @@ public static class Dbg{
 		+"		)//xhr		\n"
 		+"	}//if !x		\n"
 		+"	else init(x)	\n"
-		+"}//function bootstrap\n"
+		+"}//function bootstrap\n" +
+		"if(document.body)window.onload()\n"
 		+"</script></head><body></body></html>"
 	);}
 
@@ -3131,6 +3159,23 @@ public static class Dbg{
 	Dbg.p("Dbg.main:end");
  }//main
 
-static{TL.registerOp( AppEU059S.class);}
+static{
+ 	TL.registerOp( AppEU059S.class);
+ 	TL.registerOp( Storage.class);
+	//Class<? extends TL.DB.Tbl>
+		Object	[] a
+	= {
+			TL.DB.Tbl.Usr.class,
+			TL.DB.Tbl.Ssn.class,
+			TL.DB.Tbl.Log.class,
+			Project.class,
+			Building.class,
+			Floor.class,
+			Sheet.class,
+			Storage.class};
+	for (Object o:a ) {
+		TL.DB.Tbl.registered.add((Class<? extends TL.DB.Tbl>)o);
+	}
+ }
 
 }//class AppEU059S

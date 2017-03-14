@@ -1,5 +1,6 @@
 sys=window.sys=
-{//2015-06-09-13-30
+{
+//2015-06-09-13-30
 did:function sys_did(id,n){if(!n)return document.getElementById(id);
 	var r=n;n=n.firstChild;while(n)if(n.id==id)return n;else n=n.nextSibling;
 	n=r.firstChild;while(n)if(r=did(id,n))return r;else n=n.nextSibling;}
@@ -402,7 +403,7 @@ xhr:function sys_xhr(p){
 		,x=typeof XMLHttpRequest === "undefined"
 		?new ActiveXObject("microsoft.XMLHTTP")
 		:new XMLHttpRequest();x.p=p;p.xhr=x;
-	x.open(p.method||'POST',p.url||'', p.onload );
+	x.open(p.method||'POST',p.url||'xhr.jsp', p.onload );
 	if(p.headers)for(var i in p.headers)
 		x.setRequestHeader(i,p.headers[i]);//console.log('scriptedReq:header['+i+']:'+headers[i]);
 	if(!p.headers || !p.headers[ct])x.setRequestHeader(ct, 'text/json');//'application/x-www-form-urlencoded');
@@ -416,305 +417,37 @@ xhr:function sys_xhr(p){
 	return x.response;//p.asJson?JSON.parse ( x . responseText ) : x . responseText ;
 	}//function xhr
 
-,toJsonBld:{
- toJb:function(o,stack){
-	var n=o&&o.constructor&&o.constructor.name
-	,f=sys.toJsonBld[n]
-	return f?f(o):sys.toJsonBld.props(o);}
- ,isInStack:function(o,stack){
-	for(var i=0;i<stack.length;i++)
-		if(o==stack[i][1]){
-			var x=stack[0][0].meta
-			if(!x)stack[0][0].meta=x={};
-			if(!x.loop)
-				x.loop=[];
-			x.loop.push(stack[i][1]);
-			return stack[i][0];}
-	if(stack[0]&&stack[0][0]&&stack[0][0].meta&&stack[0][0].meta.loop){
-		var x=stack[0][0].meta.loop
-		for(var i=0;i<x.length;i++)
-			if(x[i]==o)
-				console.log('inLoop',o);
- }}
- ,props:function(o,stack){
-	var classNames=[
-	'CSSStyleRule'
-	,'CSSImportRule'
-	,'CSSMediaRule'
-	,'StyleSheet'
-	,'CSSFontFaceRule'
-	,'CSSGroupingRule'
-	,'CSSKeyframeRule'
-	,'CSSKeyframesRule'
-	,'CSSNamespaceRule'
-	,'CSSPageRule'
-	,'CSSRule'
-	,'CSSSupportsRule'
-	,'CSSViewportRule'];
-	if(o){var a={},stk=stack||[],sf=[a,o],f
-	,x=sys.toJsonBld.isInStack(o,stack);if(x)return x;stk.push(sf)
-	,n=o&&o.constructor&&o.constructor.name;
-		if(n)a.constructorName=n;
-		for(var i in o)
-		{x=o[i];
-			if(x!=undefined&&x!=null){//&&x!=''
-			n=x&&x.constructor&&x.constructor.name
-			f=sys.toJsonBld[n];if(f)a[i]=f(x)
-			else{f=classNames[n]
-			a[i]=f?sys.toJsonBld.props(x):x}}}
-		stk.pop();
-		return a;}}
- ,list:function(o,stack){
-	var a=[]
-	,stk=stack||[],sf=[a,o]
-	,n=sys.toJsonBld.isInStack(o,stack);
-	if(n)return n;stk.push(sf)
-	n=(o&&o.length)||0;
-	for(var i =0;i<n;i++)
-		a.push(sys.toJsonBld.toJb(o[i]))
-	stk.pop();
-	return a;}
- ,'StyleSheetList':function(o,stack){return sys.toJsonBld.list(o,stack);}
- ,'CSSRuleList':function(o,stack){return sys.toJsonBld.list(o,stack);}
- ,'CSSStyleSheet':function(o,stack){
-	var a={},b=['href','type','title','disabled','media']
-	,stk=stack||[],sf=[a,o]
-	,n=sys.toJsonBld.isInStack(o,stack);
-	if(n)return n;stk.push(sf)
-	for(var i=0;i<b.length;i++)
-	{n=b[i],x=o[n];if(x&&x!='')
-		a[n]=x;}
-	b=o.rules||o.cssRules//CSSRuleList
-	if(b)a.s=sys.toJsonBld.list(b,stack);
-	//for(var i=0;b&&b.length&&i<b.length;i++)c.push(sys.toJsonBld.toJb(b[i]))
-	stk.pop();
-	return a;}
- ,'CSSStyleDeclaration':function(o,stack){
-	var n=o&&o.length||0,a={x:{}}
-	,stk=stack||[],sf=[a,o]
-	,n=sys.toJsonBld.isInStack(o,stack);
-	if(n)return n;stk.push(sf)
-	x=o.cssText;if(x!=undefined&&x!='')
-		a.t=x// this is a string that has packed
-	//selectorText and braces encompassing o.style.cssText
-	for(var i=0,k;i<n;i++)
-	{k=o[i]
-		a[k]=o[k]
-	}
-	for(var i in o){
-		x=o[i];
-		if(x&&x!=''&&i!='parentRule')//&&a[i]==undefined)
-			a.x[i]=x;}
-	stk.pop();
-	return a;}
-,
-dom2json:function dom2json(n,meta,stack){
-	function indexOf(a,e){var i=a.length-1;for(;i>=0&&a[i]!=e;i--);return i;}
-	var r={n:n.nodeName},a=n.attributes,stk=stack||[],sf=[r,n]
-	,x=sys.toJsonBld.isInStack(n,stack);if(x)return x;stk.push(sf)
-	x=a&&a.length
-	if(n.id)r.id=n.id;if(!meta){stk[0][0].meta=meta={}}
-	if(x)for(var i=0;i<x;i++)
-	{	var nm=a[i].name,v=a[i].value;
-		if( v!=undefined && nm!='id' && nm!='style' )
-		{if(!r.a)r.a={};
-			r.a[nm]=v;}
-	}
-	if(n.style && n.style.cssText){
-		var m,v,z;a= n.style.cssText.split(';')
-		if(a  ){r.s={}; //&&(! z.trim || z.trim())
-		  for(var i in a){
-			z=a[i].split(':');m=z[0];v=z[1];
-			if( m && m.trim) m=m.trim();
-			if( v && v.trim) v=v.trim();
-			if(v!=undefined && (v.length==undefined || v.length>0))//&& (!v.trim || v.trim()))
-				r.s[m]=v;
-	}}}
-	if(n.nodeName=='LINK'){
-		if(!meta.links)meta.links=[];meta.links.push(sf)
-		console.log('stackFrame:links:stackFrame=',sf,',meta=',meta,',stack=',stk,',currentObj=',r,n);
-	}else if(n.nodeName=='SCRIPT'){
-		if(!meta.scripts)meta.scripts=[];meta.scripts.push(sf)
-		console.log('stackFrame:scripts:stackFrame=',sf,',meta=',meta,',stack=',stk,',currentObj=',r,n);
-	}else if(n.nodeName=='IMG'){
-		if(!meta.imgs)meta.imgs=[];meta.imgs.push(sf)
-		if(!meta.imgsBase64)meta.imgsBase64={}
-		var src=n.src,z=meta.imgsBase64[src];
-		if(z)
-			console.log('dom2json:img:repeated-src:previous result:',z,', current-img:',n);
-		else{z=meta.imgsBase64[src]={src:src}
-			var canvas = document.createElement('CANVAS');
-			var ctx = canvas.getContext('2d');
-			canvas.height = n.height;
-			canvas.width = n.width;
-			ctx.drawImage(n, 0, 0);
-			z.base64 = canvas.toDataURL('png');}
-
-		console.log('dom2json:imgs:stackFrame=',sf,',meta=',meta
-			,',stack=',stk,',currentObj=',r,n,',meta.imgsBase64[',src,']=',z);
-	}if(n.src){
-		if(!meta.src)meta.src=[];meta.src.push(sf)
-		console.log('stackFrame:src:stackFrame=',sf,',meta=',meta,',stack=',stk,',currentObj=',r,n);
-	}if(n.href){
-		if(!meta.href)meta.href=[];meta.href.push(sf)
-		console.log('stackFrame:href:stackFrame=',sf,',meta=',meta,',stack=',stk,',currentObj=',r,n);
-	}
-
-	x=n.firstChild;
-	if(x&&!x.nextSibling&&x.nodeType==Node.TEXT_NODE)
-	{var v=x.value||x.data;if(v.trim())
-		r.t=v;}
-	else if(x )//&& x.nodeName!='SCRIPT')
-	{r.c=[];while(x)
-	 {	if(x.nodeType==Node.ELEMENT_NODE)
-		{var z=sys.toJsonBld.dom2json(x,meta,stk)
-			r.c.push(z);
-		}//if(x.nodeName!='SCRIPT')
-		else if(x.nodeType==Node.TEXT_NODE)
-		{var v=x.value||x.data;if(v.trim())	r.c.push(v);}
-		else console.log('sys.toJsonBld.dom2json:unknown nodeType:',x);
-		x=x.nextSibling;}}
-	if(!stack)
-		meta.css=r.css=sys.toJsonBld.toJb(document.styleSheets,[])
-	else sf.pop()
-	return r;}//dom2json
-
- ,init:function(){
-	var a=[{},{}]
-	a[2]=sys.toJsonBld.dom2json(document.head,a[0],[])
-	a[3]=sys.toJsonBld.dom2json(document.body,a[1])//,cssSheetList2jb(document.styleSheets)
-	return a;
- }//init:function
-}//sys.toJsonBld
-
-
-
-/*dbCache-sections
-	Files
-		images
-		css
-		Html
-			login
-
-			enum Screen
-				ProjectsList
-				,ProjectScreen
-				,BuildingScreen
-				,FloorScreen
-				,UsersList
-				,User
-				,Sheet
-				,ReportsMenu
-				,LogMenu
-				,ConfigMenu
-				,Search
-
-		js
-
-	dbTables
-		Projects
-			Buildings
-				Floors
-					Sheets
-
-	uploads
-	Log
-	Offline
-
-
-Screens
-	ProjectsList
-		Buildings
-	Buildings
-	Floor
-	UsersList
-	Config
-	Report
-	Log
-
-Server op (xhr)
-	getDbProjBdlngFlr  ,each project is loaded seperatly (packaged with proj are all buildings and Floors), sheets are loaded seperatly based on each dbTblFloor
-	getDbSheets	//must pageanate 1MBytes
-	--getSheetUploads, just use http-get
-	getAppBootStrap, includes screens( jsonBld of html +css) and js app-lib
-	login,logout
-	,newProject,newBuilding,newFloor,newSheet,newUser
-	,deleteProject,deleteBuilding,deleteFloor
-	,deleteSheet,deleteUser,userChngPw,query
-	,xhrEdit,saveSheet
-	,syncLastModified //check LM of proj,bld,flr,sheet,files,uploads,Logs,User,UserActivity
-	,syncOffline
-
-lastModified based synchronisation between client-LocalStorage and server-DB
-
-*/
-
 ,bootStrap:{
 	init:function(){
-		/*call StorageList
-		,asking for all Storage-entries past client-side-value lastModifies //depricated::check if     firstTime-run, if so, then load application
-			( files( html(,,,) , css(,,,)
-				, js(sys.js
-					, app.js(db)
-					, each screen
-					, each component
-					)
-				)
-			 ,db(projectsList , proj/bld/flr , not sheets)
-			 ,uploads,users
-			)
-		check storage howMuch up-to-date lastModified
-			prepare the list of lastModified entities
-				files
-				db
-		*/
-
-		/*files:
-		eu059s.file.login.html	// todo:include all login dependencies
-		eu059s.file.main.html
-		eu059s.file.main.css
-		eu059s.file.sheet.html
-		eu059s.file.
-
-		*/
-		sys.bootStrap.introspection.init()
+		sys.gui.introspection.storage.resetList()
 	}//init
-
-	,introspection:{
-	/*Introspection:build gui for application-heirarchy, and operations
-		files-list + files
-		images-list + images
-		db:projList + proj/bld/flr
-		//lclStrg
-		//lastModified
-		//offline
-		//SrvrOp
-	*/
-	init:function(a,p){
-		/*
-		a:2d-array from server:AppEU059s.Op.StorageList, first line is header names
-		[[	Storage.C.no	,	Storage.C.path	,	Storage.C.contentType	,	Storage.C.lastModified] // data is not included
-			,
-			,
-			,
-			[,,,]
-			,
-			,
-			,
-		]
-		*/if(!a)a=[['Storage.C.no' , 'Storage.C.path' , 'Storage.C.contentType' , 'Storage.C.lastModified','Storage.C.data']]
+}//bootStrap
+ ,gui:{
+  introspection:{
+   storage:{
+	init:function(parent){
+	 sys.gui.introspection.storage.resetList(parent);
+	}//init
+	,resetList:function(parent){var args={data:{op:sys.Op.StorageList} ,parent:parent
+		,onload:function(xhr,args){
+			if(!args){
+				args=xhr.response||(xhr.target&&xhr.target.response )
+				args=JSON.parse(args);}
+			sys.gui.introspection.storage.bldScreen(args['return'],args.parent,args);}}
+		sys.xhr(args);
+	}
+	,bldScreen:function(a,p){
+		if(!a)a=[['Storage.C.no' , 'Storage.C.path' , 'Storage.C.contentType' , 'Storage.C.lastModified','Storage.C.data']]
 		if(!p)p=document.body
-		var ttl='sys.bootStrap.introspection.storageEntriesTable';sys.dce('h1',p,ttl)
-		var h=a.splice(0,1)[0],b=
-		[	{	t:'Reload all Storage entries'
-				,req:{	'op':sys.Op.StorageList
-					,onload: //sys.bootStrap.introspection.init
-					function(){console.log(ttl,'Reload all Storage entries','xhr-onload',arguments);}
-				}
+		else p.innerHTML='';
+		var b,ttl='sys.gui.introspection.storageEntriesTable';sys.dce('h1',p,ttl)
+		b=[	{	t:'Reload all Storage entries'
+				,c:function(){console.log(ttl,'Reload all Storage entries','sys.gui.introspection.storage.bldScreen.btn.onclick',arguments);
+					sys.gui.introspection.storage.resetList();}
 			}
 			,{	t:'New Storage entry'
 				,c:function(){
-					var sc=sys.dbSchema.storage
+					var sc=sys.dbSchema.storage.def.columns
 					,formH=[{t:sc[0].name,readonly:true}
 						,sc[1]
 						,[sc[2].name,sc[2].type]
@@ -739,7 +472,7 @@ lastModified based synchronisation between client-LocalStorage and server-DB
 								console.log('Op.StorageNew:xhr.onload',arguments
 									,'TODO:need to implement js-onxhr-ok for gui/dom '
 								);//console.log
-								var tb,tbl=sys.bootStrap.introspection.storageEntriesTable
+								var tb,tbl=sys.gui.introspection.storage.entriesTable
 								if(!tbl)
 									return;
 								tb=(tbl.tBodies[0]||tbl.createTBody())//if(!tb)return;
@@ -771,14 +504,10 @@ lastModified based synchronisation between client-LocalStorage and server-DB
 			}//button:new Entry
 		]//array b
 		b.map(function(o,i){if(o.req)sys.dcbx(p,o.t,o.req);else sys.dcb(p,o.t,o.c);})
-		sys.bootStrap.introspection.storageEntriesTable=sys.bldTbl(
-			{	c:a
-				,headings:h
-				//,onDoneRow:function(tr,rObj,rIx,bObj)
-				,onDoneCell:function(td,cellObj,rowIx,cellIx,rObj,bObj)
+		var funcOnDoneCell=function funcOnDoneCell(td,cellObj,rowIx,cellIx,rObj,bObj)
 				{var obj={td:td,cellObj:cellObj,cellIx:cellIx,rowObj:rObj,rowIx:rowIx,tbodyParam:bObj}
-				,str='sys.bootStrap.introspection.init.bldTbl.cell:Storage.C.'
-				// console.log('sys.bootStrap.introspection.init.bldTbl.onDoneCell:td,cellObj,rowIx,cellIx,rObj,bObj:',obj)
+				,str='sys.gui.introspection.storage.resetList:bldTbl.cell:Storage.C.'
+				// console.log('sys.gui.introspection.init.bldTbl.onDoneCell:td,cellObj,rowIx,cellIx,rObj,bObj:',obj)
 					if(cellIx==0){//Storage.C.no //primary-key
 						sys.dcb(td,'delete',function(){
 							console.log(str,'no:td.onclick:',obj)
@@ -804,268 +533,171 @@ lastModified based synchronisation between client-LocalStorage and server-DB
 							console.log(str,'lastModified:td.onclick:',obj)
 						})
 					}
-					/*add buttons: reload,delete //depricated::save(check is there are changes)
-						,rename-path
-						,change-contentType drop-down-select
-						,edit-data-as(
-							plain-text (js ,or other) //maybe in the future color-code js-src-code
-							, wysiwyg-html // onButtonSave dom2json
-							, img upload/drag-n-drop
-							, css introspection
-							, json tree)
-					* /
-					var b=
-					[0,	{	t:'reload',param:obj
-							,req:{	'op':sys.Op.StorageGet,param:rObj
-								//,onload:sys.bootStrap.introspection.init
-							}
-						}
-						,{	t:'delete',param:obj,clk:function(){t:''
-								,req:{'op':sys.Op.StorageGet,param:rObj
-									,onload:function(){
-										console.log('Op.StorageNew:xhr.onload-ok',arguments
-											,'TODO:need to implement js-onxhr-ok for gui/dom '
-										);
-									}
-								}
-							}
-						}
-						,{	t:'rename-path',param:obj,clk:function(){t:''
-								,req:{'op':sys.Op.StorageGet,param:rObj
-								,onload:function(){
-									console.log('Op.StorageNew:xhr.onload-ok',arguments
-										,'TODO:need to implement js-onxhr-ok for gui/dom '
-									);
-								}}
-							}
-						}
-						,{	t:'change-contentType'/*drop-down-select:
-								plain-text
-								, wysiwyg-html
-								, img upload/drag-n-drop
-								, css introspection
-								, json tree* /,param:obj,clk:function(){t:''
-									,req:{'op':sys.Op.StorageGet,param:rObj
-									,onload:function(){
-										console.log('Op.StorageNew:xhr.onload-ok',arguments
-											,'TODO:need to implement js-onxhr-ok for gui/dom '
-										);
-									}
-								}
-							}
-						}
-						,{	t:'edit-data',param:obj,clk:function(){t:''
-								,req:{'op':sys.Op.StorageGet,param:rObj
-									,onload:function(){
-										console.log('Op.StorageNew:xhr.onload-ok',arguments
-											,'TODO:need to implement js-onxhr-ok for gui/dom '
-										);
-									}
-								}
-							}
-						}
-					]*/
 				}
+		function reformatSqlQueryHeadingsForBldTbl(h){
+			/*sqlQueryHeading:[{name:<str:colName>,,,} ,,,] , output:[<str:colName>,,,]*/
+			var a=[];for(var i=0;i<h.length;i++)a[i]=h[i].name
+			return a;}
+		sys.gui.introspection.storage.entriesTable=sys.bldTbl(
+			{	c:a.a
+				,headings:reformatSqlQueryHeadingsForBldTbl(a.h)
+				,onDoneCell:funcOnDoneCell
 			},p)
-	}//introspection.init
-
-
-	,bldFilesList:function(filesList,p){
-		//get-list from srvr, add entry , delete-entry, edit-entry
-	 }//bldFilesList:function
-	,bldFiles:function(files,p){}
-	/*,bldImgsList:function(imgsList,p){}
-	,bldImgs:function(imgs,p){}
-	,bldDbProjsList:function(projsList,p){}
-	,bldDbProjBldFlr:function(pbf,p){}*/
-	,props:{//json-props introspection (build gui/dom) , basically used with jsonRef=0
-		init:function(o,p){
-			/*
-
-			*/
-		}//props.init
-	}//props
-	}//introspection
-}//bootStrap
-,dbSchema:{//server-side database tables
-	storage:[//columns
-		 {name:'no',type:'integer'}
-		,{name:'path',type:'text'}
-		,{name:'contentType',type:['text/plain','text/html'
+	}//introspection.storage.bldScreen
+//   storage
+	}//introspection.storage
+  }//introspection
+	,login:{bld:function(p){},submit:function(p){},wrong:function(p){}}
+	,main:{}
+	,project:{list:{},form:{},component:{}}
+	,building:{list:{},form:{},component:{}}
+	,floor:{list:{},form:{},component:{}}
+	,sheet:{list:{},form:{},component:{},help:{}}
+	,usr:{list:{},form:{},component:{}}
+	,report:{list:{},form:{},component:{}}
+	,search:{list:{},form:{},component:{}}
+}//gui
+,dbSchema:{tables:{
+	storage:{def:{columns:[//columns
+		 {name:'no',type:'integer',pk:1}
+		,{name:'path',type:'text',indices:[{name:'path',at:0}]}
+		,{name:'contentType',type:'enum','enum':['text/plain','text/html'
 			,'text/json','text/javascript','image/png','text/css']}
-		,{name:'lastModified',type:'date-time'}
+		,{name:'lastModified',type:'date-time',readonly:1,indices:[{name:'lastModified',at:0}]}
 		,{name:'data',type:'textarea'}
-	  ]//dbTbl storage
-	,project:[
-		{name:'no',type:'Integer'}
-		,{name:'json',type:'json'}
-	]//dbTbl Project
-	,building:[
-		{name:'no',type:'Integer'}
-		,{name:'p',type:'Integer'}
-		,{name:'json',type:'json'}
-	]//dbTbl Building
-	,floor:[
-		{name:'no',type:'Integer'}
-		,{name:'p',type:'Integer'}
-		,{name:'b',type:'Integer'}
-		,{name:'json',type:'json'}
-	]//dbTbl Floor
-	,sheet:[
-		{name:'no'				,type:'Integer',readonly:1	,filter:	3}
-		,{name:'p'				,type:'Integer',readonly:1	,filter:1}
-		,{name:'b'				,type:'Integer',readonly:1	,filter:2}
-		,{name:'f'				,type:'Integer',readonly:1	,filter:	3}
-		,{name:'u'				,type:'Integer',readonly:1	,filter:8}
-		,{name:'dt'				,type:'date-time',readonly:1,filter:0}
-,{name:'TypeofMemberBeam'		,type:'checkbox'			,filter:	9}
-,{name:'TypeofMemberColunm'		,type:'checkbox'			,filter:	9}
-,{name:'TypeofMemberSlab'		,type:'checkbox'			,filter:	9}
-,{name:'TypeofMemberStairs'		,type:'checkbox'			,filter:	9}
-,{name:'TypeofMemberMansory'	,type:'checkbox'			,filter:	9}
-,{name:'TypeofMemberRC'			,type:'checkbox'			,filter:	9}
-,{name:'TypeofMemberFoundation'	,type:'checkbox'			,filter:	9}
-,{name:'TypeofMemberOther'		,type:'checkbox'			,filter:	9}
-,{name:'TypeofMemberOtherText'	,type:'text'				,filter:	9}
-,{name:'exposure_wetDry'		,type:'checkbox'			,filter:12}
-,{name:'exposure_chemical'		,type:'checkbox'			,filter:12}
-,{name:'exposure_erosion'		,type:'checkbox'			,filter:12}
-,{name:'exposure_elec'			,type:'checkbox'			,filter:12}
-,{name:'exposure_heat'			,type:'checkbox'			,filter:12}
-,{name:'LoadingCondition_Dead'	,type:'checkbox'			,filter:12}
-,{name:'LoadingCondition_Live'	,type:'checkbox'			,filter:12}
-,{name:'LoadingCondition_Impact',type:'checkbox'			,filter:12}
-,{name:'LoadingCondition_Vibration',type:'checkbox'			,filter:12}
-,{name:'LoadingCondition_Traffic',type:'checkbox'			,filter:12}
-,{name:'LoadingCondition_Seismic',type:'checkbox'			,filter:12}
-,{name:'LoadingCondition_Other'	,type:'checkbox'			,filter:12}
-,{name:'LoadingConditionOther'	,type:'text'				,filter:12}
-,{name:'GeneralCondition'		,type:'radio',min:1,max:3	,filter:	10}
-,{name:'Distress_Cracking'		,type:'checkbox'			,filter:11}
-,{name:'Distress_Staining'		,type:'checkbox'			,filter:11}
-,{name:'Distress_Surface'		,type:'checkbox'			,filter:11}
-,{name:'Distress_Leaking'		,type:'checkbox'			,filter:11}
-,{name:'Cracking_Checking'		,type:'checkbox'			,filter:	4}
-,{name:'Cracking_Craze'			,type:'checkbox'			,filter:	4}
-,{name:'Cracking_D'				,type:'checkbox'			,filter:	4}
-,{name:'Cracking_Diagnol'		,type:'checkbox'			,filter:	4}
-,{name:'Cracking_Hairline'		,type:'checkbox'			,filter:	4}
-,{name:'Cracking_Longitudinal'	,type:'checkbox'			,filter:	4}
-,{name:'Cracking_Map'			,type:'checkbox'			,filter:	4}
-,{name:'Cracking_Pattern'		,type:'checkbox'			,filter:	4}
-,{name:'Cracking_Plastic'		,type:'checkbox'			,filter:	4}
-,{name:'Cracking_Random'		,type:'checkbox'			,filter:	4}
-,{name:'Cracking_Shrinkage'		,type:'checkbox'			,filter:	4}
-,{name:'Cracking_Temperature'	,type:'checkbox'			,filter:	4}
-,{name:'Cracking_Transverse'	,type:'checkbox'			,filter:	4}
-,{name:'width'			,min:0	,type:'number',step:.05		,filter:	4}
-,{name:'Leaching'				,type:'checkbox'			,filter:	4}
-,{name:'WorkingOrDormant'		,type:'radio',min:1,max:2	,filter:	4}
-,{name:'Textural_AirVoid'		,type:'checkbox'			,filter:6}
-,{name:'Textural_Blistering'	,type:'checkbox'			,filter:6}
-,{name:'Textural_Bugholes'		,type:'checkbox'			,filter:6}
-,{name:'Textural_ColdJoints'	,type:'checkbox'			,filter:6}
-,{name:'Textural_ColdLines'		,type:'checkbox'			,filter:6}
-,{name:'Textural_Discoloration'	,type:'checkbox'			,filter:6}
-,{name:'Textural_Honeycomb'		,type:'checkbox'			,filter:6}
-,{name:'Textural_Incrustation'	,type:'checkbox'			,filter:6}
-,{name:'Textural_Laitance'		,type:'checkbox'			,filter:6}
-,{name:'Textural_SandPocket'	,type:'checkbox'			,filter:6}
-,{name:'Textural_SandStreak'	,type:'checkbox'			,filter:6}
-,{name:'Textural_Segregation'	,type:'checkbox'			,filter:6}
-,{name:'Textural_Staining'		,type:'checkbox'			,filter:6}
-,{name:'Textural_Stalactite'	,type:'checkbox'			,filter:6}
-,{name:'Textural_Stalagmite'	,type:'checkbox'			,filter:6}
-,{name:'Textural_Stratification',type:'checkbox'			,filter:6}
-,{name:'Distresses_Chalking'	,type:'checkbox'			,filter:	5}
-,{name:'Distresses_Deflection'	,type:'checkbox'			,filter:	5}
-,{name:'Distresses_Delamination',type:'checkbox'			,filter:	5}
-,{name:'Distresses_Distortion'	,type:'checkbox'			,filter:	5}
-,{name:'Distresses_Dusting'		,type:'checkbox'			,filter:	5}
-,{name:'Distresses_Exfoliation'	,type:'checkbox'			,filter:	5}
-,{name:'Distresses_Leakage'		,type:'checkbox'			,filter:	5}
-,{name:'Distresses_Peeling'		,type:'checkbox'			,filter:	5}
-,{name:'Distresses_Warping'		,type:'checkbox'			,filter:	5}
-,{name:'Distresses_Curling'		,type:'checkbox'			,filter:	5}
-,{name:'Distresses_Deformation'	,type:'checkbox'			,filter:	5}
-,{name:'Distresses_Disintegration',type:'checkbox'			,filter:	5}
-,{name:'Distresses_DrummyArea'	,type:'checkbox'			,filter:	5}
-,{name:'Distresses_Efflorescence',type:'checkbox'			,filter:	5}
-,{name:'Distresses_Exudation'	,type:'checkbox'			,filter:	5}
-,{name:'Distresses_MortarFlaking',type:'checkbox'			,filter:	5}
-,{name:'Distresses_Pitting'		,type:'checkbox'			,filter:	5}
-,{name:'JointDeficiencies'		,type:'checkbox',master:1	,filter:	5}
-,{name:'Spall'					,type:'checkbox'	,m:1	,filter:	5}
-,{name:'SealantFailure'			,type:'checkbox'	,m:1	,filter:	5}
-,{name:'Leakage'				,type:'checkbox'	,m:1	,filter:	5}
-,{name:'Fault'					,type:'checkbox'	,m:1	,filter:	5}
-,{name:'Popout'					,type:'checkbox'			,filter:	5}
-,{name:'PopoutSize'				,type:'radio',min:1,max:3	,filter:	5}
-,{name:'isScaling'				,type:'checkbox'			,filter:	5}
-,{name:'Scaling'				,type:'radio',min:1,max:4	,filter:	5}
-,{name:'Exposed'				,type:'checkbox'			,filter:7}
-,{name:'Corroded'				,type:'checkbox'			,filter:7}
-,{name:'Snapped'				,type:'checkbox'			,filter:7}
-,{name:'isSpall'				,type:'checkbox'			,filter:	5}
-,{name:'SpallSize'				,type:'radio',min:1,max:2	,filter:	5}
-		,{name:'notes'			,type:'textarea'}
-		,{name:'json'			,type:'hidden'}
-	]//dbTbl Sheet
+	],indices:{path:['path'],'lastModified':['lastModified']}}}//dbTbl storage
+	,usr:{def:{columns:[{name:'uid',type:'integer',pk:1}
+		,{name:'un',type:'text',unique:1,indices:[{name:'un',at:0}]}
+		,{name:'pw',type:'text',password:1}
+		,{name:'firstName',type:'text'},{name:'lastName',type:'text'}
+		,{name:'email',type:'text'},{name:'tel',type:'text'},{name:'tel2',type:'text'}
+		,{name:'level',type:'enum','enum':['viewer','inspector','fullAccess']}
+		,{name:'notes',type:'text'}
+		,{name:'created',type:'date-time',readonly:1}
+		,{name:'lastModified'	,type:'date-time',readonly:1,indices:[{name:'lastModified',at:0}]}
+		],indices:{'lastModified':['lastModified']}
+		 ,unique:{'title':['un']}}}
+	,projects:{def:{columns:[
+		{name:'no',type:'Integer',pk:1}
+		,{name:'title',type:'text',unique:1}
+		,{name:'owner',type:'integer',readonly:1,fk:{entity:'usr',col:'uid'}}
+		,{name:'created',type:'date-time',readonly:1}
+		,{name:'lastModified',type:'date-time',readonly:1,indices:[{name:'lastModified',at:0}]}
+		,{name:'notes',type:'text'}
+	],indices:{'lastModified':['lastModified']}
+	 ,unique:{'title':['title']}}}//dbTbl Project
+	,buildings:{def:{columns:[
+		{name:'no',type:'Integer',pk:1}//inbound floors,sheets
+		,{name:'p',type:'Integer',readonly:1,fk:{entity:'projects',col:'no'}}
+		,{name:'title',type:'text',unique:'p'}
+		,{name:'owner',type:'integer',readonly:1,fk:{entity:'usr',col:'uid'}}
+		,{name:'created',type:'date-time',readonly:1}
+		,{name:'lastModified',type:'date-time',readonly:1,indices:[{name:'lastModified',at:0}]}
+		,{name:'notes',type:'text'}
+	],indices:{'lastModified':['lastModified']}
+	 ,unique:{'title':['p','title']}}}//dbTbl Building
+	,floors:{def:{columns:[
+		{name:'no',type:'Integer',pk:1}
+		,{name:'p',type:'Integer',readonly:1,fk:{entity:'projects',col:'no'}}
+		,{name:'b',type:'Integer',readonly:1,fk:{entity:'buildings',col:'no'}}
+		,{name:'title',type:'text',unique:'b'}
+		,{name:'owner',type:'integer',readonly:1,fk:{entity:'usr',col:'uid'}}
+		,{name:'created',type:'date-time',readonly:1}
+		,{name:'lastModified',type:'date-time',readonly:1,indices:[{name:'lastModified',at:0}]}
+		,{name:'notes',type:'text'}
+	 ],indices:{'lastModified':['lastModified']}
+	  ,unique :{'title':['b','title']}
+	 }}//dbTbl Floor
+	,sheet:{def:{columns:[
+		{name:'no',type:'Integer',pk:1,readonly:1	,filter:	3}
+		,{name:'p',type:'Integer',readonly:1,fk:{entity:'projects',col:'no'},filter:1}
+		,{name:'b',type:'Integer',readonly:1,fk:{entity:'buildings',col:'no'}	,filter:2}
+		,{name:'f',type:'Integer',readonly:1,fk:{entity:'floors',col:'no'}	,filter:	3}
+		,{name:'owner',type:'integer',readonly:1,fk:{entity:'usr',col:'uid'}}
+		,{name:'created',type:'date-time',readonly:1,filter:0,indices:[{key:'k2-created',at:1}]}
+		,{name:'lastModified'	,type:'date-time',readonly:1,filter:0,indices:[{name:'lastModified',at:0}]}
+		,{name:'notes',type:'text',indices:[{key:'k1-notes',at:1}]}
+		,{name:'TypeofMember'	,type:'set','set':['Beam','Colunm','Slab','Stairs','Mansory','RC','Foundation','Other',''],filter:9,indices:[{key:'k4-typeMember',at:1}]}
+		,{name:'TypeofMemberText',type:'text',enableCondition:'TypeofMember.Other',filter:9,indices:[{key:'k4-typeMember',at:2}]}
+		,{name:'location',type:'GIS.POINT',indices:[{key:'k5-location',at:1}]}
+		,{name:'exposure',type:'set','set':['wetDry','chemical','erosion','elec','heat'],filter:12,indices:[{key:'k6-exposure',at:1}]}
+		,{name:'LoadingCondition',type:'set','set':['Dead','Live','Impact','Vibration','Traffic','Seismic','Other'],filter:12,indices:[{key:'k7-LoadingCondition',at:1}]}
+		,{name:'LoadingConditionText',type:'text',enableCondition:'LoadingCondition.Other',filter:0,indices:[{key:'k7-LoadingCondition',at:2}]}
+		,{name:'GeneralCondition',type:'enum','enum':['Good','Satisfactory','Poor'],filter:12,indices:[{key:'k8-GeneralCondition',at:1}]}
+		,{name:'Distress',type:'set','set':['Cracking','Staining','Surface','Leaking'],filter:12,indices:[{key:'k9-Distress',at:1}]}
+		,{name:'Cracking',type:'set','set':['Checking','Craze','D','Diagnol','Hairline','Longitudinal','Map','Pattern','Plastic','Random','Shrinkage','Temperature','Transverse'],filter:12,indices:[{key:'k10-Cracking',at:1}]}
+		,{name:'width',type:{type:'number',min:0,step:0.05},enableCondition:'filter12',filter:12,indices:[{key:'k11-width',at:1}]}
+		,{name:'WorkingOrDormant',type:'enum','enum':['Working ','Dormant'],filter:12,indices:[{key:'k12-WorkingOrDormant',at:1}]}
+		,{name:'Textural',type:'set','set':['AirVoid','Blistering','Bugholes','ColdJoints','ColdLines','Discoloration','Honeycomb','Incrustation','Laitance','SandPocket','SandStreak','Segregation','Staining','Stalactite','Stalagmite','Stratification'],filter:12,indices:[{key:'k13-Textural',at:1}]}
+		,{name:'Distresses',type:'set','set':['Chalking','Deflection','Delamination','Distortion','Dusting','Exfoliation','Leakage','Peeling','Warping','Curling','Deformation','Disintegration','DrummyArea','Efflorescence','Exudation','MortarFlaking','Pitting'],filter:12,indices:[{key:'k14-Distresses',at:1}]}
+		,{name:'JointDeficiencies',type:'enum','enum':['f','on'],filter:12,indices:[{key:'k15-JointDeficiencies',at:1}]}
+		,{name:'Joint',type:'set','set':['Spall','SealantFailure','Leakage','Fault'],enableCondition:'JointDeficiencies.on',filter:12,indices:[{key:'k15-JointDeficiencies',at:2}]}
+		,{name:'Popout',type:'enum','enum':['f','on'],filter:12,indices:[{key:'k16-Popout',at:1}]}
+		,{name:'PopoutSize',type:'set','set':['Small','Medium','Large'],enableCondition:'Popout.on',filter:12,indices:[{key:'',at:1}]}
+		,{name:'isScaling',type:'enum','enum':['f','on'],filter:12,indices:[{key:'k17-isScaling',at:1}]}
+		,{name:'Scaling',type:'enum','enum':['Light','Medium','Severe','Very severe'],enableCondition:'isScaling.on',filter:12,indices:[{key:'k17-isScaling',at:2}]}
+		,{name:'Reinforcement',type:'set','set':['Exposed','Corroded','Snapped'],filter:12,indices:[{key:'k18-Reinforcement',at:1}]}
+		,{name:'isSpall',type:'enum','enum':['f','on'],filter:12,indices:[{key:'k19-Spall',at:1}]}
+		,{name:'SpallSize',type:'enum','enum':['Small','Large'],enableCondition:'isSpall.on',filter:12,indices:[{key:'k19-Spall',at:2}]}
+		,{name:'img1',type:'image/url'},{name:'img2',type:'image/url'},{name:'img3',type:'image/url'},{name:'img4',type:'image/url'}
+	]//columns
+	,indices:{
+		'k1-notes':['p','notes']
+		,'k2-created':['p','created']
+		,'lastModified':['lastModified']
+		,'k4-typeMember':['p','TypeofMember','TypeofMemberText']
+		,'k5-location':['p','location']
+		,'k6-exposure':['p','exposure']
+		,'k7-LoadingCondition':['p','LoadingCondition','LoadingConditionText']
+		,'k8-GeneralCondition':['p','GeneralCondition']
+		,'k9-Distress':['p','Distress']
+		,'k10-Cracking':['p','Cracking']
+		,'k11-width':['p','width']
+		,'k12-WorkingOrDormant':['p','WorkingOrDormant']
+		,'k13-Textural':['p','WorkingOrDormant']
+		,'k14-Distresses':['p','Distresses']
+		,'k15-JointDeficiencies':['p','JointDeficiencies','Joint']
+		,'k16-Popout':['p','Popout','PopoutSize']
+		,'k17-isScaling':['p','isScaling','Scaling']
+		,'k18-Reinforcement':['p','Reinforcement']
+		,'k19-Spall':['p','isSpall','SpallSize']
+	}//sheets.indices
+	}//sheets.def
+	}//dbTbl Sheet
+	,help:{def:{columns:[
+		{name:'field',type:'text',indices:[{name:'field',at:0}]}
+		,{name:'html',type:'text'}
+		,{name:'usr',type:'integer',readonly:1,fk:{entity:'usr',col:'uid'}}
+		,{name:'lastModified',type:'date-time',indices:[{name:'lastModified',at:0}]}
+	]}}
+}//tables
+,util:{
+	initTbl:function(tbl,data){}
+	,addRow:function(tbl,row){}
+	,delRow:function(tbl,row){}
+	,updCol:function(tbl,row,colName,val){}
+	,updInx:function(tbl,row,colName,val){}
+	,delInx:function(tbl,row,colName,val){}
+	,q:function(tbl,conds){}//the quering is in the Report-stage of development
+}
 }//dbSchema
-,storageLib:{//methods for LocalStorage , and sync-ing with server
-
-	files:{//css + html + js
-	}//files
-	,imgs:{}
-	,projects:{}
-	//,lib:{}//js with lastModified
-	,offline:{}
-	,lastModified:[]
-}//storageLib
 
 ,Op:{//client facade reflection of server-Op,
- getAppBootStrap:function(){//, includes screens( jsonBld of html +css) and js app-lib
+ login:'Usr.login'//function(){}
+ ,logout:'Usr.logout'//function(){}
+ ,StorageList:'Storage.list'
+ ,StorageGet:'Storage.get'
+ ,StorageContent:'Storage.content'
+ ,StorageDelete:'Storage.delete'
+ ,StorageSet:'Storage.set'
+ ,StorageNew:'Storage.New'
 
-	}//getAppBootStrap:function
- ,login:function(){}
- ,logout:function(){}
- ,StorageList:'StorageList'
- ,StorageGet:'StorageGet'
- ,StorageScript:'StorageScript'
- ,StorageCss:'StorageCss'
- ,StorageImg:'StorageImg'
- ,StorageSet:'StorageSet'
- ,StorageNew:'StorageNew'
-
- /*,StorageDelete:'StorageDelete',StorageSyncOffline:'StorageSyncOffline'
-
- ,getDbProjBdlngFlr:function(){}  //,each project is loaded seperatly (packaged with proj are all buildings and Floors)
- ,getDbSheets:function(){}	//sheets are loaded seperatly based on each dbTblFloor //must pageanate 1MBytes
- ,getSheetUploadsInfo:function(){}//info like lastModified , as for the content, just use http-get to get the content
- ,newProject:function(){}
- ,newBuilding:function(){}
- ,newFloor:function(){}
- ,newSheet:function(){}
- ,newUser:function(){}
- ,deleteProject:function(){}
- ,deleteBuilding:function(){}
- ,deleteFloor:function(){}
- ,deleteSheet:function(){}
- ,deleteUser:function(){}
- ,userChngPw:function(){}
- ,query:function(){}
- ,xhrEdit:function(){}
- ,saveSheet:function(){}
- ,syncLastModified:function(){} //check LM of proj,bld,flr,sheet,files,uploads,Logs,User,UserActivity
- ,syncOffline:function(){}
-		,introspectProps:function(){}
-		,introspectPropSet:function(){}
-		,introspectPropRem:function(){}
-		,introspectLog:function(){}*/
 }//Op
 
 }//sys
 
 console.log('sys.js loaded.');
-
-window.onload=sys.bootStrap.init
+ if(document.body)
+    sys.bootStrap.init()
+ else
+    window.onload=sys.bootStrap.init
