@@ -55,18 +55,20 @@ did:function sys_did(id,n){if(!n)return document.getElementById(id);
 	; or params canbe string, or array:call bldTbl
 	; parent: domElement */
 bld:function sys_bld(params,parent){
- var t=sys;try{if(typeof(params)=='string')return t.dct(params,parent);
- var p=params,n=p.n?document.createElement(p.n):p.t!=undefined?document.createTextNode(p.t):p;
-	if(p.n&&(p.t!=undefined))n.appendChild(document.createTextNode(p.t));
-	if(p.n&&p.n.toLowerCase()=='input')n.type=(p.a?p.a.type:0)||'text';
+ var t=sys;try{
+	if(!params)return params;else if(params instanceof Array)return t.bldTbl(params,parent);
+	if(typeof(params)=='string')return t.dct(params,parent);
+ var p=params,n=p.n?document.createElement(p.n):p.t!=undefined?document.createTextNode(p.t):p,nl=p&&p.n&&p.n.toLowerCase();
+	if(p.n&&(p.t!=undefined))n.innerHTML=p.t;//n.appendChild(document.createTextNode(p.t));//changed:2017.03.18.06.04
+	if(p.n&&nl=='input')n.type=(p.a?p.a.type:0)||'text';
 	if(p.id)n.id=p.id;
 	if(p.name||(p.a&&p.a.name))n.name=p.name||p.a.name;
 	if(p.clk)n.onclick=p.clk;
 	if(p.chng)n.onchange=p.chng;
 	if(p.s)for(var i in p.s)n.style[i]=p.s[i];
-	if(p.a)for(var i in p.a)n[i]=p.a[i];
-	if(p.c){if(p.n&&p.n.toLowerCase()=='select')t.bldSlct(p,n);
-		else if(p.n&&p.n.toLowerCase()=='table')t.bldTbl (p,n);
+	if(p.a)for(var i in p.a)if(i=='class')n.className=p.a[i];else n.setAttribute(i,n[i]=p.a[i]);
+	if(p.c){if(nl=='select')t.bldSlct(p,n);
+		else if(nl=='table')t.bldTbl (p,n);
 		else for(var i=0;i<p.c.length;i++)
 		 if(typeof(p.c[i])=='string')//t.dct(p.c[i],n);
 			n.appendChild(document.createTextNode(p.c[i]));
@@ -75,7 +77,10 @@ bld:function sys_bld(params,parent){
 	}
 	//if(p.clpsbl)n=t.createCollapsable(p.clpsbl,parent,p.id,n);else
 	if(parent)parent.appendChild(n);
-	}catch(ex){console.error('sys.bld:ex',ex);}return n;
+	}catch(ex){
+		console.error('sys.bld:ex',ex);
+		}
+ return n;
 }//function bld
 
 ,/** params: same as bld.params
@@ -412,15 +417,28 @@ xhr:function sys_xhr(p){
 	if(p.onprogress)x.onprogress=p.onprogress
 	if(p.onerror)x.onerror=p.onerror
 	if(p.responseType)x.responseType=p.responseType
+	try{
 	x.send((typeof p.data)=='string'?p.data:JSON.stringify(p.data));
+	}catch(ex){console.error('sys.xhr:',ex,arguments);}
 	console.log('xhr:response:',x.response,p,x);
 	return x.response;//p.asJson?JSON.parse ( x . responseText ) : x . responseText ;
 	}//function xhr
 
 ,bootStrap:{
-	init:function(){
+	init:function(){try{
 		sys.gui.introspection.storage.resetList()
+		}catch(ex){console.error('sys.bootStrap.init:sys.gui.introspection.storage.resetList():',ex);}
+		if(sys.bootStrap.onloadA)
+		 for(var i=0,a=sys.bootStrap.onloadA;i<a.length;i++)try{
+			 a[i][0](a[i][1],i)
+	 }catch(ex){console.error('sys.bootStrap.init.onloadA:',ex);}
 	}//init
+	,addOnload:function addOnload(f,o){
+		if(document.body)f(o);else{
+		if(!sys.bootStrap.onloadA)
+		sys.bootStrap.onloadA=[];
+		sys.bootStrap.onloadA.push([f,o]);
+	}}
 }//bootStrap
  ,gui:{
   introspection:{

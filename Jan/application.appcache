@@ -2,6 +2,33 @@ CACHE MANIFEST
 #version m13 h12 d6 , m40 ,m35 h23 d4 M3 , m42 h10 d28 M2 y2017
 index.html
 sys.js
+main.css
+login.css
+logo.png
+ie9.css
+ie8.css
+html5shiv.js
+jquery.min.js
+skel.min.js
+util.js
+respond.min.js
+main.js
+login.style.css
+logo.xcf.png
+login.index.js
+fontawesome-webfont.eot
+fontawesome-webfont.woff
+fontawesome-webfont.woff2
+fontawesome-webfont.ttf
+fontawesome-webfont.svg
+fontawesome-webfont.otf
+login.font.woff2
+login.font.latin100.woff2
+login.font.latin300.woff2
+login.font.latin400.woff2
+login.font.latin500.woff2
+login.font.latin700.woff2
+
 
 NETWORK
 xhr.jsp
