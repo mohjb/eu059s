@@ -1,9 +1,9 @@
 <html ><head><script src="sys.js"></script><script>
 app={
 init:function appInit(){
-function aBld(params,parent){
- var t=sys;try{if(typeof(params)=='string')return t.dct(params,parent);
- var p=params,n=parent;
+ function aBld(params,parent){
+	var t=sys;try{if(typeof(params)=='string')return t.dct(params,parent);
+	var p=params,n=parent;
 	if(p.n&&(p.t!=undefined))n.appendChild(document.createTextNode(p.t));
 	if(p.n&&p.n.toLowerCase()=='input')n.type=(p.a?p.a.type:0)||'text';
 	if(p.id)n.id=p.id;
@@ -22,10 +22,10 @@ function aBld(params,parent){
 	}
 	//if(p.clpsbl)n=t.createCollapsable(p.clpsbl,parent,p.id,n);else
 	}catch(ex){console.error('sys.bld:ex',ex);}return n;
-}//function bld
+ }//function bld
 	for(var i=0,a=app.main;i<a.length;i++)
 	aBld(a[i],document[a[i].n.toLowerCase()]);
-	}
+}//function appInit
 ,login:{
                         "n": "BODY",
                         "s": {

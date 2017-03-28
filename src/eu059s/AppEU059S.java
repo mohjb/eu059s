@@ -2287,6 +2287,344 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 
 		@Override public String getName(){return dbtName;}//public	Ssn(){super(Name);}
 		public enum Checkbox{f,on}
+		//public enum Radio1_2{v1,v2}
+		public enum Radio1_3{v1,v2,v3}
+		public enum Radio1_4{v1,v2,v3,v4}
+
+		@TL.Form.F public Integer no,p,b,f,owner;
+		@TL.Form.F public Date created,lastModified;
+		@TL.Form.F public String notes;
+		@TL.Form.F public Set<ETypeofMember>TypeofMember;public enum ETypeofMember
+		{Beam,Colunm,Slab,Stairs,Mansory,RC,Foundation,Other}//on
+	
+		@TL.Form.F public String TypeofMemberOtherText,location;
+		@TL.Form.F public Set<Exposure> exposure; public enum Exposure
+		{wetDry,chemical,erosion,elec,heat}
+		
+@TL.Form.F public Set<ELoadingCondition>LoadingCondition;public enum ELoadingCondition
+{Dead,Live,Impact,Vibration,Traffic,Seismic,Other}//7
+
+		@TL.Form.F public String loadingConditionText;
+		@TL.Form.F public EGeneralCondition GeneralCondition;public enum EGeneralCondition{Good,Satisfactory,Poor}
+		@TL.Form.F public Set<EDistress>Distress;public enum EDistress
+		{Cracking,Staining,Surface,Leaking,Checking,Craze,D//on----------------------------- replace the dash : -cracks // done/fixed
+		,Diagnol,Hairline,Longitudinal,Map,Pattern,Plastic,Random,Shrinkage,Temperature,Transverse}//on
+
+@TL.Form.F public Double width;// steps of 0.05, minimum is 0
+@TL.Form.F public Checkbox Leaching;//on
+@TL.Form.F public EWorkingOrDormant WorkingOrDormant;public enum EWorkingOrDormant{Working,Dormant}//2
+@TL.Form.F public Set<ETextural>textural ;public enum ETextural
+{AirVoid,Blistering,Bugholes,ColdJoints,ColdLines,Discoloration,Honeycomb,Incrustation,Laitance,SandPocket,SandStreak,Segregation,Staining,Stalactite,Stalagmite,Stratification}
+
+@TL.Form.F public Set<EDistresses>Distresses;public enum EDistresses
+{Chalking,Deflection,Delamination,Distortion,Dusting,Exfoliation,Leakage,Peeling,Warping,Curling,Deformation,Disintegration,DrummyArea,Efflorescence,Exudation,MortarFlaking,Pitting}
+
+
+@TL.Form.F public Checkbox JointDeficiencies;
+
+@TL.Form.F public Set<EJoint>Joint;public enum EJoint{Spall,SealantFailure,Leakage,Fault}
+
+@TL.Form.F public Checkbox Popout;//on
+public @TL.Form.F Radio1_3 PopoutSize;//3
+@TL.Form.F public Checkbox isScaling;//on
+@TL.Form.F public Radio1_4 Scaling;//4
+@TL.Form.F public Checkbox Exposed
+,Corroded
+,Snapped
+,isSpall;//on
+@TL.Form.F public Radio1_2 SpallSize;//2
+@TL.Form.F public String notes;//2
+@TL.Form.F(json=true) public Map json;
+
+		public enum C implements TL.DB.Tbl.CI{no,p,b,f,u,dt//,datetime
+
+			,TypeofMemberBeam,TypeofMemberColunm,TypeofMemberSlab,TypeofMemberStairs
+			,TypeofMemberMansory,TypeofMemberRC,TypeofMemberFoundation,TypeofMemberOther
+			,TypeofMemberOtherText
+
+			,location
+
+			,exposure_wetDry,exposure_chemical,exposure_erosion,exposure_elec,exposure_heat
+
+			,LoadingCondition_Dead,LoadingCondition_Live,LoadingCondition_Impact,LoadingCondition_Vibration
+			,LoadingCondition_Traffic,LoadingCondition_Seismic,LoadingCondition_Other
+			,LoadingConditionOther
+
+			,GeneralCondition//1_3
+
+			,Distress_Cracking,Distress_Staining,Distress_Surface,Distress_Leaking
+
+			,Cracking_Checking,Cracking_Craze
+			,Cracking_D//------------------------------- replace dash with underscore : Cracking_D-cracks
+			,Cracking_Diagnol,Cracking_Hairline
+			,Cracking_Longitudinal,Cracking_Map,Cracking_Pattern,Cracking_Plastic,Cracking_Random
+			,Cracking_Shrinkage,Cracking_Temperature,Cracking_Transverse
+
+			,width
+			,Leaching
+
+			,WorkingOrDormant//1_2
+
+			,Textural_AirVoid,Textural_Blistering,Textural_Bugholes,Textural_ColdJoints
+			,Textural_ColdLines,Textural_Discoloration,Textural_Honeycomb,Textural_Incrustation
+			,Textural_Laitance,Textural_SandPocket,Textural_SandStreak,Textural_Segregation
+			,Textural_Staining,Textural_Stalactite,Textural_Stalagmite,Textural_Stratification
+
+			,Distresses_Chalking,Distresses_Deflection,Distresses_Delamination,Distresses_Distortion
+			,Distresses_Dusting,Distresses_Exfoliation,Distresses_Leakage,Distresses_Peeling
+			,Distresses_Warping,Distresses_Curling,Distresses_Deformation,Distresses_Disintegration
+			,Distresses_DrummyArea,Distresses_Efflorescence,Distresses_Exudation,Distresses_MortarFlaking
+			,Distresses_Pitting
+
+			,JointDeficiencies
+			,Spall
+			,SealantFailure
+			,Leakage
+			,Fault
+			,Popout
+
+			,PopoutSize//1_3
+
+			,isScaling
+
+			,Scaling//1_4
+
+			,Exposed
+			,Corroded
+			,Snapped
+
+			,isSpall//1_2
+			,SpallSize
+			,notes
+			,json
+			;
+
+			@Override public Class<? extends TL.DB.Tbl>cls(){return Sheet.class;}
+			@Override public Class<? extends TL.Form>clss(){return cls();}
+			@Override public String text(){return name();}
+			@Override public Field f(){return TL.DB.Tbl.Cols.f(name(), cls());}
+			@Override public TL.DB.Tbl tbl(){return TL.DB.Tbl.tbl(cls());}
+			@Override public void save(){tbl().save(this);}
+			@Override public Object load(){return tbl().load(this);}
+			@Override public Object value(){return val(tbl());}
+			@Override public Object value(Object v){return val(tbl(),v);}
+			@Override public Object val(TL.Form f){return f.v(this);}
+			@Override public Object val(TL.Form f,Object v){return f.v(this,v);}
+		}//C
+
+		@Override public TL.DB.Tbl.CI pkc(){return C.no;}
+		@Override public Object pkv(){return no;}
+		@Override public C[]columns(){return C.values();}
+
+		@Override public List creationDBTIndices(TL tl){
+			final String cb="enum('f','on') NOT NULL DEFAULT 'f'"
+			,r1_2="enum('v1','v2') "// NOT NULL DEFAULT 'v1'"
+			,r1_3="enum('v1','v2','v3') "
+			,r1_4="enum('v1','v2','v3','v4')";
+			return TL.Util.lst(
+				TL.Util.lst("int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT"//no
+,"int(11) NOT NULL"//p
+,"int(11) NOT NULL"//b
+,"int(11) NOT NULL"//f
+,"int(11) NOT NULL"//u
+,"timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP "//dt
+//,"timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP "//datetime
+,cb//TypeofMemberBeam;
+,cb//TypeofMemberColunm;
+,cb//TypeofMemberSlab;
+,cb//TypeofMemberStairs;
+,cb//TypeofMemberMansory;
+,cb//TypeofMemberRC;
+,cb//TypeofMemberFoundation;
+,cb//TypeofMemberOther;//on
+,"text"//TypeofMemberOtherText,
+,"text"// location;
+
+,cb// exposure_wetDry;
+,cb//exposure_chemical;//2
+,cb// exposure_erosion;
+,cb//exposure_elec;//4
+,cb// exposure_heat;
+,cb//LoadingCondition_Dead;
+,cb//LoadingCondition_Live;
+,cb//LoadingCondition_Impact;
+,cb//LoadingCondition_Vibration;
+,cb//LoadingCondition_Traffic;//5
+,cb// LoadingCondition_Seismic;
+,cb//LoadingCondition_Other;//7
+,"text"// LoadingConditionOther;
+,r1_3//					@F Radio1_3 GeneralCondition;
+,cb// Distress_Cracking;
+,cb//Distress_Staining;
+,cb//Distress_Surface;
+,cb//Distress_Leaking;
+,cb//Cracking_Checking;
+,cb//Cracking_Craze;
+,cb//Cracking_D
+,cb//Cracking_Diagnol;
+,cb//Cracking_Hairline;
+,cb//Cracking_Longitudinal;
+,cb//Cracking_Map;
+,cb//Cracking_Pattern;
+,cb//Cracking_Plastic;
+,cb//Cracking_Random;
+,cb//Cracking_Shrinkage;
+,cb//Cracking_Temperature;
+,cb//Cracking_Transverse;
+,"decimal(6,2)"//			@F Double width;// steps of 0.05, minimum is 0
+,cb//Leaching;//on
+,r1_2//			@F Radio1_2 WorkingOrDormant;//2
+,cb//Textural_AirVoid;//on
+,cb// Textural_Blistering;//on
+,cb// Textural_Bugholes;//on
+,cb// Textural_ColdJoints;//on
+,cb// Textural_ColdLines;//on
+,cb// Textural_Discoloration;//on
+,cb// Textural_Honeycomb;//on
+,cb// Textural_Incrustation;//on
+,cb// Textural_Laitance;//on
+,cb// Textural_SandPocket;//on
+,cb// Textural_SandStreak;//on
+,cb// Textural_Segregation;//on
+,cb// Textural_Staining;//on
+,cb// Textural_Stalactite;//on
+,cb// Textural_Stalagmite;//on
+,cb// Textural_Stratification;//on
+,cb// Distresses_Chalking;//on
+,cb// Distresses_Deflection;//on
+,cb// Distresses_Delamination;//on
+,cb// Distresses_Distortion;//on
+,cb// Distresses_Dusting;//on
+,cb// Distresses_Exfoliation;//on
+,cb// Distresses_Leakage;//on
+,cb// Distresses_Peeling;//on
+,cb// Distresses_Warping;//on
+,cb// Distresses_Curling;//on
+,cb// Distresses_Deformation;//on
+,cb// Distresses_Disintegration;//on
+,cb// Distresses_DrummyArea;//on
+,cb// Distresses_Efflorescence;//on
+,cb// Distresses_Exudation;//on
+,cb// Distresses_MortarFlaking;//on
+,cb// Distresses_Pitting;//on
+,cb// JointDeficiencies;//on
+,cb// Spall;//on
+,cb// SealantFailure;//on
+,cb// Leakage;//on
+,cb// Fault;//on
+,cb// Popout;//on
+,r1_3//			@F Radio1_3 PopoutSize;//3
+,cb// isScaling;//on
+,r1_4//			@F Radio1_4 Scaling;//4
+,cb// Exposed;//on
+,cb// Corroded;//on
+,cb// Snapped;//on
+,cb// isSpall;//on
+,r1_2//			@F Radio1_2 SpallSize;//2
+,"text"//notes
+,"text"//json
+					),TL.Util.lst(
+	 TL.Util.lst(C.p,C.b,C.f,C.u)										//1
+	,TL.Util.lst(C.u,C.p,C.no)											//2
+	,TL.Util.lst(C.dt)													//3
+	,TL.Util.lst(C.p,C.TypeofMemberBeam,C.TypeofMemberColunm			//4
+ ,C.b),TL.Util.lst(C.p,C. TypeofMemberSlab,C.TypeofMemberStairs			//5
+ ,C.b),TL.Util.lst(C.p,C. TypeofMemberMansory,C.TypeofMemberRC			//6
+ ,C.b),TL.Util.lst(C.p,C. TypeofMemberFoundation						//7
+ ,C.b),TL.Util.lst(C.p,C. TypeofMemberOther,TL.Util.lst(C.TypeofMemberOtherText,200)//8
+ ,C.b),TL.Util.lst(C.p,TL.Util.lst(C.location,200)				//text(255) //9
+ ,C.b),TL.Util.lst(C.p,C. exposure_wetDry,C.exposure_chemical			//10
+ ,C.b),TL.Util.lst(C.p,C. exposure_erosion,C. exposure_elec				//1
+ ,C.b),TL.Util.lst(C.p,C. exposure_heat									//2
+ ,C.b),TL.Util.lst(C.p,C. LoadingCondition_Dead,C. LoadingCondition_Live//3
+ ,C.b),TL.Util.lst(C.p,C. LoadingCondition_Impact,C. LoadingCondition_Vibration//4
+ ,C.b),TL.Util.lst(C.p,C. LoadingCondition_Traffic,C. LoadingCondition_Seismic//5
+ ,C.b),TL.Util.lst(C.p,C. LoadingCondition_Other,TL.Util.lst(C. LoadingConditionOther,200)//text(255)//6
+ ,C.b),TL.Util.lst(C.p,C. GeneralCondition								//7
+ ,C.b),TL.Util.lst(C.p,C. Distress_Cracking,C.Distress_Staining			//8
+ ,C.b),TL.Util.lst(C.p,C. Distress_Surface,C. Distress_Leaking				//9
+ ,C.b),TL.Util.lst(C.p,C. Cracking_Checking,C. Cracking_Craze			//20
+ ,C.b),TL.Util.lst(C.p,C. Cracking_D,C. Cracking_Diagnol				//1
+ ,C.b),TL.Util.lst(C.p,C. Cracking_Hairline,C. Cracking_Longitudinal	//2
+ ,C.b),TL.Util.lst(C.p,C. Cracking_Map,C. Cracking_Pattern				//3
+ ,C.b),TL.Util.lst(C.p,C. Cracking_Plastic,C. Cracking_Random			//4
+ ,C.b),TL.Util.lst(C.p,C. Cracking_Shrinkage,C. Cracking_Temperature	//5
+ ,C.b),TL.Util.lst(C.p,C. Cracking_Transverse,C.Leaching				//6
+ ,C.b),TL.Util.lst(C.p,C. width//number									//7
+ ,C.b),TL.Util.lst(C.p,C. WorkingOrDormant								//8
+ ,C.b),TL.Util.lst(C.p,C. Textural_AirVoid,C. Textural_Blistering,C. Textural_ColdJoints,C. Textural_Discoloration,C. Textural_Incrustation,C. Textural_SandPocket,C. Textural_Segregation,C. Textural_Stalactite,C. Textural_Stratification,C. Textural_Bugholes,C. Textural_ColdLines,C. Textural_Honeycomb,C. Textural_Laitance//,C. Textural_SandStreak//,C. Textural_Staining//,C. Textural_Stalagmite		   //9
+ ,C.b),TL.Util.lst(C.p,C. Textural_Bugholes,C. Textural_ColdJoints,C. Textural_Stratification,C. Textural_Stalactite,C. Textural_Segregation,C. Textural_SandPocket,C. Textural_Incrustation,C. Textural_Discoloration,C. Textural_Stalagmite,C. Textural_Staining,C. Textural_SandStreak,C. Textural_Laitance,C. Textural_Honeycomb//,C. Textural_ColdLines		  //30
+ ,C.b),TL.Util.lst(C.p,C. Textural_ColdLines,C. Textural_Discoloration	//1
+ ,C.b),TL.Util.lst(C.p,C. Textural_Honeycomb,C. Textural_Incrustation	//2
+ ,C.b),TL.Util.lst(C.p,C. Textural_Laitance,C. Textural_SandPocket		//3
+ ,C.b),TL.Util.lst(C.p,C. Textural_SandStreak,C. Textural_Segregation	//4
+ ,C.b),TL.Util.lst(C.p,C. Textural_Staining,C. Textural_Stalactite		//5
+ ,C.b),TL.Util.lst(C.p,C. Textural_Stalagmite,C. Textural_Stratification//6
+ ,C.b),TL.Util.lst(C.p,C. Distresses_Chalking,C. Distresses_Deflection	//7
+ ,C.b),TL.Util.lst(C.p,C. Distresses_Delamination,C. Distresses_Distortion//8
+ ,C.b),TL.Util.lst(C.p,C. Distresses_Dusting,C. Distresses_Exfoliation	//9
+ ,C.b),TL.Util.lst(C.p,C. Distresses_Leakage,C. Distresses_Peeling		//40
+ ,C.b),TL.Util.lst(C.p,C. Distresses_Warping,C. Distresses_Curling		//1
+ ,C.b),TL.Util.lst(C.p,C. Distresses_Deformation,C.Distresses_Disintegration//2
+ ,C.b),TL.Util.lst(C.p,C. Distresses_DrummyArea,C. Distresses_Efflorescence //3
+ ,C.b),TL.Util.lst(C.p,C. Distresses_Exudation,C. Distresses_MortarFlaking  //4
+ ,C.b),TL.Util.lst(C.p,C. Distresses_Pitting							//5
+ ,C.b),TL.Util.lst(C.p,C. JointDeficiencies,C. Spall,C. SealantFailure,C. Leakage,C. Fault//6
+ ,C.b),TL.Util.lst(C.p,C. JointDeficiencies,C. SealantFailure,C. Fault,C. Leakage,C. Spall//7
+ ,C.b),TL.Util.lst(C.p,C. JointDeficiencies,C. Leakage,C. Fault,C. SealantFailure,C. Spall//8
+ ,C.b),TL.Util.lst(C.p,C. JointDeficiencies,C. Fault,C. Leakage,C. Spall,C. SealantFailure//9
+ ,C.b),TL.Util.lst(C.p,C. Popout,C. PopoutSize							//50
+ ,C.b),TL.Util.lst(C.p,C. isScaling,C. Scaling							//1
+ ,C.b),TL.Util.lst(C.p,C. Exposed,C. Corroded,C. Snapped				//2
+ ,C.b),TL.Util.lst(C.p,C. Corroded,C. Snapped,C. Exposed				//3
+ ,C.b),TL.Util.lst(C.p,C. Snapped,C. Corroded,C. Exposed				//4
+ ,C.b),TL.Util.lst(C.p,C. isSpall,C. SpallSize							//5
+ ,C.b),TL.Util.lst(C.p,TL.Util.lst(C. notes,200)						//6
+ ,C.b)			));
+/*	CREATE TABLE `sheets` (
+	`no` int(11) NOT NULL,
+	`p` int(11) DEFAULT NULL,
+	`b` int(11) DEFAULT NULL,
+	`f` int(11) DEFAULT NULL,
+	`jsonRef` int(18) NOT NULL,
+	`dt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	`u` int(11) DEFAULT NULL,
+	PRIMARY KEY (`no`)
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+
+	public static void checkTableCreation(TL tl){
+	String sql="CREATE TABLE `"+dbtName+"` (\n" +
+	"`"+C.no+"` int(11) NOT NULL primary key,\n" +
+	"`"+C.p+"` int(11) NOT NULL,\n" +
+	"`"+C.b+"` int(11) NOT NULL,\n" +
+	"`"+C.f+"` int(11) NOT NULL,\n" +
+	"`"+C.u+"` int(11) NOT NULL,\n" +
+	"`"+C.jsonRef+"` int(24) NOT NULL,\n" +
+	"`"+C.dt+"` timestamp NOT NULL,\n" +
+	"KEY (`"+C.p+"`,`"+C.b+"`,`"+C.f+"`),\n" +
+	"KEY (`"+C.jsonRef+"`)\n" +
+	"KEY (`"+C.dt+"`)\n" +
+	") ENGINE=InnoDB DEFAULT CHARSET=utf8 ;";
+	try {
+	Object o=TL.DB.q("desc "+dbtName,0);
+	if(o==null){
+	int x=TL.DB.x(sql);
+	tl.log("AppEU059S.Sheet.checkTableCreation:",x,sql);
+	}
+	} catch (SQLException ex) {
+	tl.error(ex, "AppEU059S.Sheet.checkTableCreation");}
+	}//checkTableCreation*/}
+
+		static{registered.add(Sheet.class);Dbg.p("eu059s.AppEU059S.Sheet:TL.DB.Tbl.registered.add(.class)");}
+
+	}//class Sheet
+
+	public static class SheetOld extends TL.DB.Tbl {//implements Serializable
+		public static final String dbtName="sheets";
+
+		@Override public String getName(){return dbtName;}//public	Ssn(){super(Name);}
+		public enum Checkbox{f,on}
 		public enum Radio1_2{v1,v2}
 		public enum Radio1_3{v1,v2,v3}
 		public enum Radio1_4{v1,v2,v3,v4}
@@ -2669,7 +3007,7 @@ public @TL.Form.F Radio1_3 PopoutSize;//3
 
 		static{registered.add(Sheet.class);Dbg.p("eu059s.AppEU059S.Sheet:TL.DB.Tbl.registered.add(.class)");}
 
-	}//class Sheet
+	}//class SheetOld
 
 public static class Storage extends TL.DB.Tbl {//implements Serializable
 	public static final String dbtName="Storage";

@@ -651,7 +651,7 @@ xhr:function sys_xhr(p){
 		,{name:'JointDeficiencies',type:'enum','enum':['f','on'],filter:12,indices:[{key:'k15-JointDeficiencies',at:1}]}
 		,{name:'Joint',type:'set','set':['Spall','SealantFailure','Leakage','Fault'],enableCondition:'JointDeficiencies.on',filter:12,indices:[{key:'k15-JointDeficiencies',at:2}]}
 		,{name:'Popout',type:'enum','enum':['f','on'],filter:12,indices:[{key:'k16-Popout',at:1}]}
-		,{name:'PopoutSize',type:'set','set':['Small','Medium','Large'],enableCondition:'Popout.on',filter:12,indices:[{key:'',at:1}]}
+		,{name:'PopoutSize',type:'enum','enum':['Small','Medium','Large'],enableCondition:'Popout.on',filter:12,indices:[{key:'k16-Popout',at:2}]}
 		,{name:'isScaling',type:'enum','enum':['f','on'],filter:12,indices:[{key:'k17-isScaling',at:1}]}
 		,{name:'Scaling',type:'enum','enum':['Light','Medium','Severe','Very severe'],enableCondition:'isScaling.on',filter:12,indices:[{key:'k17-isScaling',at:2}]}
 		,{name:'Reinforcement',type:'set','set':['Exposed','Corroded','Snapped'],filter:12,indices:[{key:'k18-Reinforcement',at:1}]}
