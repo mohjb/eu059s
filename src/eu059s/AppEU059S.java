@@ -1172,7 +1172,7 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 			 * a sub class from TL.DB.Tbl,
 			 * hence has built-in methods to operate with
 			 * the mysql-table, like querying and and updating*/
-			public static class Usr extends Tbl{
+ public static class Usr extends Tbl{
 				static final String dbtName="Usr";
 				/**the attribute-name	in the session*/
 				public final static String prefix=dbtName;
@@ -1194,7 +1194,10 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 				@F public Integer uid;
 				@F public String un;
 				@F(prmPw=true) public String pw;
-				@F(json=true) public Map json;
+
+				@F public String firstName,lastName,email,tel,tel2,notes;
+				@F public Level level=Level.viewer;public enum Level{viewer,inspector,fullAccess}
+				@F public Date created,lastModified;
 
 				/**load uid by un,pw , load from mysql*/
 				public Integer loadUid()throws Exception{
@@ -1209,7 +1212,7 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 				/**returns null if the credentials are invalid,
 				 * the credentials are username and password
 				 * which are read from the http-request
-				 * parameters "un" , "pw" */
+				 * parameters "un" , "pw" * /
 				public static Usr login()throws Exception{//String un,String pw
 					Usr u=new Usr();TL tl=TL.tl();
 					u.readReq(prefix+".");tl.logo("Usr.login:",u);
@@ -1217,7 +1220,7 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 					tl.log("Usr.login:u=",u);//n=",u.un," ,pw=",u.pw);
 					if(u!=null&&u.uid!=null)u.load();
 					else u=null;tl.logo("Usr.login:4:",u);
-					return u;}
+					return u;}*/
 
 				/**update the member variables , load from the mysql table*/
 				public void onLogin()throws Exception{
@@ -1242,7 +1245,7 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 				/**update the member variables , save to the mysql table*/
 				public void onSignup()throws Exception{onLogin();save();}
 
-				public enum C implements CI{uid,un,pw,json;
+				public enum C implements CI{uid,un,pw,firstName,lastName,email,tel,tel2,notes,level,created,lastModified;
 					@Override public Class<? extends TL.DB.Tbl>cls(){return Usr.class;}
 					@Override public Class<? extends TL.Form>clss(){return cls();}
 					@Override public String text(){return name();}
@@ -1261,16 +1264,76 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 					@Override public C[]columns(){return C.values();}
 					@Override public List creationDBTIndices(TL tl){
 						return Util.lst(
-								Util.lst("int(6) NOT NULL AUTO_INCREMENT PRIMARY KEY "//uid
-										,"varchar(255) not null"//un
-										,"varchar(255) not null"//pw
-										,"text"//json
-								)
-								,Util.lst(C.un)
-								,Util.lst(Util.lst("1","admin","admin","{title:\"admin\",avatar:\"avatar.jpg\"}"))
+							Util.lst("int(6) NOT NULL AUTO_INCREMENT PRIMARY KEY "//uid
+								,"varchar(255) not null"//un
+								,"varchar(255) not null"//pw
+								,"varchar(255) not null"//firstName
+								,"varchar(255) not null"//lastName
+								,"varchar(255) not null"//email
+								,"varchar(255) not null"//tel
+								,"varchar(255) not null"//tel2
+								,"varchar(255) not null"//notes
+								,"enum('viewer','inspector','fullAccess') not null default 'viewer'"//level
+								,"timestamp "//created
+								,"timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP "//lastModified
+							)
+							,Util.lst(C.un)
+							,Util.lst(Util.lst("1","admin","admin","{title:\"admin\",avatar:\"avatar.jpg\"}"))
 						);}
 					static{registered.add(Usr.class);Dbg.p("eu059s.AppEU059S.TL.DB.Tbl.Usr:registered.add(.class)");}
-				}//class Usr
+
+
+
+				public	static @TL.Op Tbl login(@TL.Op(prmName="Usr") Usr u,TL tl)
+				{try{u.loadUid();if(u!=null&&u.uid!=null){u.load();u.onLogin();return u;}
+					} catch (Exception e) {
+						tl.error(e,"AppEU059S.Usr.:op");}
+					return null;}
+
+
+				public	static @TL.Op Usr logout(@TL.Op(prmName="Usr") Usr p,TL tl)
+				{try{if(tl.usr!=null &&p!=null && tl.usr.uid==p.uid)
+						tl.ssn.onLogout();
+						return p;
+					} catch (Exception e) {
+						tl.error(e,"AppEU059S.Usr.logout:op");}
+					return null;}
+
+
+				public	static @TL.Op int New(@TL.Op(prmName="Usr") Usr p,TL tl)
+				{int no=-1;
+					try{no=p.uid=p.maxPlus1(C.uid);
+						p.save();
+					} catch (Exception e) {
+						tl.error(e,"AppEU059S.Usr.New:op");}
+					return no;}
+
+				public static @TL.Op Usr set(@TL.Op(prmName="Usr") Usr p,TL tl){
+					try{p.save();} catch (Exception e) {
+						tl.error(e,"AppEU059S.Usr.set");}
+					return p;}
+
+				public static @TL.Op int delete(@TL.Op(prmName="uid") int no,TL tl){
+					try{Usr s=new Usr();s.uid=no;return s.delete();
+					} catch (Exception e) {
+						tl.error(e,"AppEU059S.Usr.delete");}
+					return 0;}
+
+				public static @TL.Op Usr get(@TL.Op(prmName="uid") int no,TL tl){Usr p=null;
+					try{p=new Usr();p.load(no);
+					} catch (Exception e) {
+						tl.error(e,"AppEU059S.Usr.get");}
+					return p;}
+
+				public static @TL.Op List list(@TL.Op(prmName="lastModified") Date lm,TL tl){List l=null;
+					try{String sql="select `"+C.uid+"`,`"+C.lastModified
+							+"` from "+dbtName+" where `"+C.lastModified+"`>?";
+						l=TL.DB.l(sql.toString(),lm);
+					} catch (Exception e) {
+						tl.error(e,"AppEU059S.Usr.list");}
+					return l;}
+
+ }//class Usr
 
 			public static class Ssn extends Tbl {//implements Serializable
 				public static final String dbtName="ssn";
@@ -1478,6 +1541,25 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 			for(Field f:a){i++;
 				r.put(f.getName(),v(a[i]));
 			}return r;}
+
+		public Form copy(){
+			Form r=null;try{r=getClass().newInstance();
+			r.copy(this);
+			}catch(Exception ex){
+				TL.tl().error(ex,"Form.copy");
+			}
+			return r;}
+
+		public Form copy(Form src){
+			Field[]a=fields();try{
+				int i=-1;
+				for(Field f:a){i++;
+					f.set(this,src.v(a[i]));
+				}
+			}catch(Exception ex){
+				TL.tl().error(ex,"Form.copy");
+			}
+			return this;}
 
 		public Form fromMap (Map p){
 			Field[]a=fields();
@@ -2051,6 +2133,7 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 			String httpMethod() default "";
 			String urlPath() default "\n"; //if no method name match from parameters, then this string is mathed with the requested url, "*" means method will match any request path
 			String prmName() default "";
+			boolean noUsrRequired() default false;
 		}//Op
 
 		static Map<String,java.lang.reflect.Method>
@@ -2094,26 +2177,24 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 
 			if(op==null) {String p=tl.req.getContextPath();
 				for (String s : url.keySet())
-					if ( p.startsWith(s) || "*".equals(s) ) {//s == null || s.length() < 1 ||
+					if ( p.startsWith(s) || "*".equals(s) ) {
 						op = url.get(s);
 						if(!"*".equals(s))break;
 					}
 			}
-			tl.log("jsp:version2017.02.09.17.10,2017.02.26.11.08:op=",op);
-			//if((tl.usr!=null||tl.logOut)|| op==Op.login || op==Op.none)//TODO: AFTER TESTING DEVELOPMENT, REMOVE from if: logOut
+			//tl.log("jsp:version2017.02.09.17.10,2017.02.26.11.08:op=",op);
 
-			//op.doOp(AppEU059S.app(tl),tl.json);
 			Object retVal=null;
 			if(op==null){
 				tl.log("TL.run:null-op:ops=",ops," ,mth=",mth," ,url=",url);
 				bootstrap(tl);
 			}else{
-				Class[]prmTypes=op.getParameterTypes();//int n=prmTypes==null?0:prmTypes.length;
+				Class[]prmTypes=op.getParameterTypes();
 				Class cl=op.getDeclaringClass();
-				Annotation[][] tv=op.getParameterAnnotations();//java.lang.reflect.TypeVariable<java.lang.reflect.Method>[]tv=op.getTypeParameters();
+				Annotation[][] tv=op.getParameterAnnotations();
 				int n=tv==null?0:tv.length,i=-1;
 				Object[]args=new Object[n];
-				for(Annotation[]t:tv)try{//java.lang.reflect.TypeVariable<java.lang.reflect.Method>t
+				for(Annotation[]t:tv)try{
 					Op pp=t.length>0&&t[0] instanceof Op?(Op)t[0]:null;
 					Class c=prmTypes[++i];
 					String nm=pp!=null?pp.prmName():"arg"+i;//t.getName();
@@ -2138,7 +2219,9 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 							&&(nm.indexOf("m")!=-1)?tl.json
 						:tl.req(nm,c);
 				}catch(Exception ex){tl.error(ex,"TL.run:arg:i=",i);}
-				retVal=n==0?op.invoke(cl)
+				Op pp=op==null?null :op.getAnnotation(Op.class);
+				if(tl.usr != null || (pp!=null && pp.noUsrRequired()))
+				 retVal=n==0?op.invoke(cl)
 					:n==1?op.invoke(cl,args[0])
 					:n==2?op.invoke(cl,args[0],args[1])
 					:n==3?op.invoke(cl,args[0],args[1],args[2])
@@ -2151,7 +2234,6 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 					:n==7?op.invoke(cl,args[0],args[1]
 						,args[2],args[3],args[4],args[5],args[6])
 					:op.invoke(cl,args);
-				Op pp=op.getAnnotation(Op.class);
 				if(pp!=null && pp.nestJsonReq() && tl.json!=null){
 					tl.json.put("return",retVal);retVal=tl.json;}
 			}
@@ -2178,74 +2260,186 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 	static final String SsnNm="AppEU059S"
 	,UploadPath="/eu059sUploads/";
 
-	public static class Project extends TL.DB.Tbl {//implements Serializable
-		public static final String dbtName="projects";
-		@Override public List creationDBTIndices(TL tl){
-			return TL.Util.lst(
-							   TL.Util.lst("int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT"//p
-										   ,"text"//json
-										   ));}
-		@Override public String getName(){return dbtName;}//public	Ssn(){super(Name);}
-		@TL.Form.F public Integer no;
-		@TL.Form.F(json=true) public Map json;
+ public static class Project extends TL.DB.Tbl {//implements Serializable
+	public static final String dbtName="projects";
 
-		public enum C implements TL.DB.Tbl.CI{no,json;
-			@Override public Class<? extends TL.DB.Tbl>cls(){return Project.class;}
-			@Override public Class<? extends TL.Form>clss(){return cls();}
-			@Override public String text(){return name();}
-			@Override public Field f(){return TL.DB.Tbl.Cols.f(name(), cls());}
-			@Override public TL.DB.Tbl tbl(){return TL.DB.Tbl.tbl(cls());}
-			@Override public void save(){tbl().save(this);}
-			@Override public Object load(){return tbl().load(this);}
-			@Override public Object value(){return val(tbl());}
-			@Override public Object value(Object v){return val(tbl(),v);}
-			@Override public Object val(TL.Form f){return f.v(this);}
-			@Override public Object val(TL.Form f,Object v){return f.v(this,v);}
+	@Override public List creationDBTIndices(TL tl){
+		return TL.Util.lst(
+			TL.Util.lst("int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT"//p
+				,"text"//json
+				));}
 
-		}//C
+	@Override public String getName(){return dbtName;}//public	Ssn(){super(Name);}
+	@TL.Form.F public Integer no,owner;
+	@TL.Form.F public Date created,lastModified;
+	@TL.Form.F public String title,notes;
 
-		@Override public TL.DB.Tbl.CI pkc(){return C.no;}
-		@Override public Object pkv(){return no;}
-		@Override public C[]columns(){return C.values();}
-		static{registered.add(Project.class);Dbg.p("eu059s.AppEU059S.Project:TL.DB.Tbl.registered.add(.class)");}
-	}//class Project
+	public enum C implements TL.DB.Tbl.CI{no,owner,created,lastModified,title,notes;
+		@Override public Class<? extends TL.DB.Tbl>cls(){return Project.class;}
+		@Override public Class<? extends TL.Form>clss(){return cls();}
+		@Override public String text(){return name();}
+		@Override public Field f(){return TL.DB.Tbl.Cols.f(name(), cls());}
+		@Override public TL.DB.Tbl tbl(){return TL.DB.Tbl.tbl(cls());}
+		@Override public void save(){tbl().save(this);}
+		@Override public Object load(){return tbl().load(this);}
+		@Override public Object value(){return val(tbl());}
+		@Override public Object value(Object v){return val(tbl(),v);}
+		@Override public Object val(TL.Form f){return f.v(this);}
+		@Override public Object val(TL.Form f,Object v){return f.v(this,v);}
 
+	}//C
 
-	public static class Building extends TL.DB.Tbl {//implements Serializable
-		public static final String dbtName="buildings";
-		@Override public List creationDBTIndices(TL tl){
-			return TL.Util.lst(
-							   TL.Util.lst("int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT"//no
-										   ,"int(11) NOT NULL"//p
-										   ,"text"//json
-										   ),TL.Util.lst(TL.Util.lst(C.p)));}
-		@Override public String getName(){return dbtName;}
-		@TL.Form.F public Integer no,p;
-		@TL.Form.F(json=true) public Map json;
-
-		public enum C implements TL.DB.Tbl.CI{no,p,json;
-			@Override public Class<? extends TL.DB.Tbl>cls(){return Building.class;}
-			@Override public Class<? extends TL.Form>clss(){return cls();}
-			@Override public String text(){return name();}
-			@Override public Field f(){return TL.DB.Tbl.Cols.f(name(), cls());}
-			@Override public TL.DB.Tbl tbl(){return TL.DB.Tbl.tbl(cls());}
-			@Override public void save(){tbl().save(this);}
-			@Override public Object load(){return tbl().load(this);}
-			@Override public Object value(){return val(tbl());}
-			@Override public Object value(Object v){return val(tbl(),v);}
-			@Override public Object val(TL.Form f){return f.v(this);}
-			@Override public Object val(TL.Form f,Object v){return f.v(this,v);}
-
-		}//C
-
-		@Override public TL.DB.Tbl.CI pkc(){return C.no;}
-		@Override public Object pkv(){return no;}
-		@Override public C[]columns(){return C.values();}
-		static{registered.add(Building.class);Dbg.p("eu059s.AppEU059S.Building:TL.DB.Tbl.registered.add(.class)");}
-	}//class Building
+	@Override public TL.DB.Tbl.CI pkc(){return C.no;}
+	@Override public Object pkv(){return no;}
+	@Override public C[]columns(){return C.values();}
+	static{registered.add(Project.class);Dbg.p("eu059s.AppEU059S.Project:TL.DB.Tbl.registered.add(.class)");}
 
 
-	public static class Floor extends TL.DB.Tbl {//implements Serializable
+ public	static @TL.Op ResultSet listrs(@TL.Op(prmName="lastModified") Date lastModified,TL tl){ResultSet rs=null;
+	try{StringBuilder sql=new StringBuilder("select * from ")
+			.append(dbtName).append(" where `").append(C.lastModified).append("`>?");
+		rs=TL.DB.r(sql.toString(),lastModified);
+	} catch (Exception e) {
+		tl.error(e,"AppEU059S.Storage.list:op");}
+	return rs;}
+
+ public	static @TL.Op int New(@TL.Op(prmName="project") Project project,TL tl) {int no=-1;
+	try{no=project.no=project.maxPlus1(C.no);
+		project.save();
+		} catch (Exception e) {
+			tl.error(e,"AppEU059S.Project.New:op");}
+		return no;}
+
+ public static @TL.Op Map load(@TL.Op(prmName="no") int no,TL tl){
+	Map m=null,mb,mf,ms;
+	try{Project p=new Project();p.load(no);
+		m=p.asMap();
+		List bl=TL.Util.lst(),fl,sl;
+		m.put("buildings",bl);
+		Sheet s=new Sheet();
+		Floor f=new Floor();
+		Building b=new Building();
+		for(TL.DB.Tbl t:b.query(b.where(Building.C.p,no))){
+			mb=t.asMap();
+			bl.add(mb);
+			mb.put("floors",fl=TL.Util.lst());
+			for(TL.DB.Tbl tf:f.query(f.where(Floor.C.b,b.no))){
+				mf=tf.asMap();
+				fl.add(mf);
+				mf.put("sheets",sl=TL.Util.lst());
+				for(TL.DB.Tbl ts:s.query(s.where(Sheet.C.f,f.no))){
+					ms=TL.Util.mapCreate("no",s.no
+						,Sheet.C.owner.toString(),s.owner
+						,Sheet.C.lastModified.toString(),s.lastModified);
+					sl.add(ms);
+				}
+			}
+		}
+	} catch (Exception e) {
+		tl.error(e,"AppEU059S.Project.load:op");}
+		return m;}
+
+ public static @TL.Op Project set(@TL.Op(prmName="project") Project s,TL tl){
+	try{s.save();} catch (Exception e) {
+		tl.error(e,"AppEU059S.Project.set");}
+	return s;}
+
+ public static @TL.Op int delete(@TL.Op(prmName="no") int no,TL tl){
+	try{Project s=new Project();s.no=no;return s.delete();
+	} catch (Exception e) {
+		tl.error(e,"AppEU059S.Project.delete");}
+	 return 0;}
+
+	 public static @TL.Op Project get(@TL.Op(prmName="no") int no,TL tl){Project p=null;
+		 try{p=new Project();p.load(no);
+		 } catch (Exception e) {
+			 tl.error(e,"AppEU059S.Project.get");}
+		 return p;}
+
+	 public static @TL.Op List list(@TL.Op(prmName="lastModified") Date lm,TL tl){List l=null;
+		 try{String sql="select `"+C.no+"`,`"+C.owner+"`,`"+C.lastModified
+				 +"` from "+dbtName+" where `"+C.lastModified+"`>?";
+			 l=TL.DB.l(sql.toString(),lm);
+		 } catch (Exception e) {
+			 tl.error(e,"AppEU059S.Project.list");}
+		 return l;}
+
+ }//class Project
+
+
+ public static class Building extends TL.DB.Tbl {//implements Serializable
+	public static final String dbtName="buildings";
+	@Override public List creationDBTIndices(TL tl){
+		return TL.Util.lst(
+			TL.Util.lst("int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT"//no
+			   ,"int(11) NOT NULL"//p
+			   ,"text"//json
+			   ),TL.Util.lst(TL.Util.lst(C.p)));}
+
+	@Override public String getName(){return dbtName;}
+	@TL.Form.F public Integer no,p,owner;
+	@TL.Form.F public Date created,lastModified;
+	@TL.Form.F public String title,notes;
+
+	public enum C implements TL.DB.Tbl.CI{no,p,owner,created,lastModified,title,notes;
+		@Override public Class<? extends TL.DB.Tbl>cls(){return Building.class;}
+		@Override public Class<? extends TL.Form>clss(){return cls();}
+		@Override public String text(){return name();}
+		@Override public Field f(){return TL.DB.Tbl.Cols.f(name(), cls());}
+		@Override public TL.DB.Tbl tbl(){return TL.DB.Tbl.tbl(cls());}
+		@Override public void save(){tbl().save(this);}
+		@Override public Object load(){return tbl().load(this);}
+		@Override public Object value(){return val(tbl());}
+		@Override public Object value(Object v){return val(tbl(),v);}
+		@Override public Object val(TL.Form f){return f.v(this);}
+		@Override public Object val(TL.Form f,Object v){return f.v(this,v);}
+
+	}//C
+
+	@Override public TL.DB.Tbl.CI pkc(){return C.no;}
+	@Override public Object pkv(){return no;}
+	@Override public C[]columns(){return C.values();}
+
+	static{registered.add(Building.class);Dbg.p("eu059s.AppEU059S.Building:TL.DB.Tbl.registered.add(.class)");}
+
+
+	 public	static @TL.Op int New(@TL.Op(prmName="building") Building p,TL tl)
+	 {int no=-1;
+		 try{no=p.no=p.maxPlus1(C.no);
+			 p.save();
+		 } catch (Exception e) {
+			 tl.error(e,"AppEU059S.Building.New:op");}
+		 return no;}
+
+	 public static @TL.Op Building set(@TL.Op(prmName="building") Building p,TL tl){
+		 try{p.save();} catch (Exception e) {
+			 tl.error(e,"AppEU059S.Building.set");}
+		 return p;}
+
+	 public static @TL.Op int delete(@TL.Op(prmName="no") int no,TL tl){
+		 try{Building s=new Building();s.no=no;return s.delete();
+		 } catch (Exception e) {
+			 tl.error(e,"AppEU059S.Building.delete");}
+		 return 0;}
+
+	 public static @TL.Op Building get(@TL.Op(prmName="no") int no,TL tl){Building p=null;
+		 try{p=new Building();p.load(no);
+		 } catch (Exception e) {
+			 tl.error(e,"AppEU059S.Building.get");}
+		 return p;}
+
+	 public static @TL.Op List list(@TL.Op(prmName="lastModified") Date lm,TL tl){List l=null;
+		 try{String sql="select `"+C.no+"`,`"+C.owner+"`,`"+C.lastModified
+				 +"` from "+dbtName+" where `"+C.lastModified+"`>?";
+			 l=TL.DB.l(sql.toString(),lm);
+		 } catch (Exception e) {
+			 tl.error(e,"AppEU059S.Building.list");}
+		 return l;}
+
+ }//class Building
+
+
+ public static class Floor extends TL.DB.Tbl {//implements Serializable
 		public static final String dbtName="floors";
 
 		@Override public List creationDBTIndices(TL tl){
@@ -2257,10 +2451,11 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 				   ),TL.Util.lst(TL.Util.lst(C.p,C.b)));}
 
 		@Override public String getName(){return dbtName;}//public	Ssn(){super(Name);}
-		@TL.Form.F public Integer no,p,b;
-		@TL.Form.F(json=true) public Map json;
+		@TL.Form.F public Integer no,p,b,owner;
+		@TL.Form.F public Date created,lastModified;
+		@TL.Form.F public String title,notes;
 
-		public enum C implements TL.DB.Tbl.CI{no,p,b,json;
+		public enum C implements TL.DB.Tbl.CI{no,p,b,owner,created,lastModified,title,notes;
 			@Override public Class<? extends TL.DB.Tbl>cls(){return Floor.class;}
 			@Override public Class<? extends TL.Form>clss(){return cls();}
 			@Override public String text(){return name();}
@@ -2279,735 +2474,254 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 		@Override public Object pkv(){return no;}
 		@Override public C[]columns(){return C.values();}
 		static{registered.add(Floor.class);Dbg.p("eu059s.AppEU059S.Floor:TL.DB.Tbl.registered.add(.class)");}
-	}//class Floor
 
 
-	public static class Sheet extends TL.DB.Tbl {//implements Serializable
+	 public	static @TL.Op int New(@TL.Op(prmName="floor") Floor p,TL tl)
+	 {int no=-1;
+		 try{no=p.no=p.maxPlus1(C.no);
+			 p.save();
+		 } catch (Exception e) {
+			 tl.error(e,"AppEU059S.Floor.New:op");}
+		 return no;}
+
+	 public static @TL.Op Floor set(@TL.Op(prmName="floor") Floor p,TL tl){
+		 try{p.save();} catch (Exception e) {
+			 tl.error(e,"AppEU059S.Floor.set");}
+		 return p;}
+
+	 public static @TL.Op int delete(@TL.Op(prmName="no") int no,TL tl){
+		 try{Floor s=new Floor();s.no=no;return s.delete();
+		 } catch (Exception e) {
+			 tl.error(e,"AppEU059S.Floor.delete");}
+		 return 0;}
+
+	 public static @TL.Op Floor get(@TL.Op(prmName="no") int no,TL tl){Floor p=null;
+		 try{p=new Floor();p.load(no);
+		 } catch (Exception e) {
+			 tl.error(e,"AppEU059S.Floor.get");}
+		 return p;}
+
+	 public static @TL.Op List list(@TL.Op(prmName="lastModified") Date lm,TL tl){List l=null;
+		 try{String sql="select `"+C.no+"`,`"+C.owner+"`,`"+C.lastModified
+				 +"` from "+dbtName+" where `"+C.lastModified+"`>?";
+			 l=TL.DB.l(sql.toString(),lm);
+		 } catch (Exception e) {
+			 tl.error(e,"AppEU059S.Floor.list");}
+		 return l;}
+
+ }//class Floor
+
+
+ public static class Sheet extends TL.DB.Tbl {//implements Serializable
 		public static final String dbtName="sheets";
 
 		@Override public String getName(){return dbtName;}//public	Ssn(){super(Name);}
 		public enum Checkbox{f,on}
-		//public enum Radio1_2{v1,v2}
-		public enum Radio1_3{v1,v2,v3}
-		public enum Radio1_4{v1,v2,v3,v4}
+		//public enum Radio1_2{v1,v2}public enum Radio1_3{v1,v2,v3}public enum Radio1_4{v1,v2,v3,v4}
 
 		@TL.Form.F public Integer no,p,b,f,owner;
 		@TL.Form.F public Date created,lastModified;
 		@TL.Form.F public String notes;
-		@TL.Form.F public Set<ETypeofMember>TypeofMember;public enum ETypeofMember
+		@TL.Form.F public EnumSet<TypeOfMember>TypeofMember;public enum TypeOfMember
 		{Beam,Colunm,Slab,Stairs,Mansory,RC,Foundation,Other}//on
 	
-		@TL.Form.F public String TypeofMemberOtherText,location;
-		@TL.Form.F public Set<Exposure> exposure; public enum Exposure
+		@TL.Form.F public String TypeofMemberOtherText,Location;
+		@TL.Form.F public EnumSet<EXposure> Exposure; public enum EXposure
 		{wetDry,chemical,erosion,elec,heat}
 		
-@TL.Form.F public Set<ELoadingCondition>LoadingCondition;public enum ELoadingCondition
+@TL.Form.F public EnumSet<Loadingcondition>LoadingCondition;public enum Loadingcondition
 {Dead,Live,Impact,Vibration,Traffic,Seismic,Other}//7
 
-		@TL.Form.F public String loadingConditionText;
-		@TL.Form.F public EGeneralCondition GeneralCondition;public enum EGeneralCondition{Good,Satisfactory,Poor}
-		@TL.Form.F public Set<EDistress>Distress;public enum EDistress
-		{Cracking,Staining,Surface,Leaking,Checking,Craze,D//on----------------------------- replace the dash : -cracks // done/fixed
+		@TL.Form.F public String LoadingConditionText;
+		@TL.Form.F public GeneralCondition GeneralCondition;public enum GeneralCondition{Good,Satisfactory,Poor}
+		@TL.Form.F public EnumSet<CRacking >Cracking ;public enum CRacking
+	 {Cracking,Staining,Surface,Leaking,Checking,Craze,D//on----------------------------- replace the dash : -cracks // done/fixed
 		,Diagnol,Hairline,Longitudinal,Map,Pattern,Plastic,Random,Shrinkage,Temperature,Transverse}//on
 
-@TL.Form.F public Double width;// steps of 0.05, minimum is 0
-@TL.Form.F public Checkbox Leaching;//on
-@TL.Form.F public EWorkingOrDormant WorkingOrDormant;public enum EWorkingOrDormant{Working,Dormant}//2
-@TL.Form.F public Set<ETextural>textural ;public enum ETextural
-{AirVoid,Blistering,Bugholes,ColdJoints,ColdLines,Discoloration,Honeycomb,Incrustation,Laitance,SandPocket,SandStreak,Segregation,Staining,Stalactite,Stalagmite,Stratification}
+ @TL.Form.F public Double width;// steps of 0.05, minimum is 0
+ @TL.Form.F public Checkbox Leaching;//on
+ @TL.Form.F public WorkingOrDormant WorkingOrDormant;public enum WorkingOrDormant{Working,Dormant}//2
 
-@TL.Form.F public Set<EDistresses>Distresses;public enum EDistresses
-{Chalking,Deflection,Delamination,Distortion,Dusting,Exfoliation,Leakage,Peeling,Warping,Curling,Deformation,Disintegration,DrummyArea,Efflorescence,Exudation,MortarFlaking,Pitting}
+ @TL.Form.F public EnumSet<TExtural>Textural ;public enum TExtural
+ {AirVoid,Blistering,Bugholes,ColdJoints,ColdLines,Discoloration,Honeycomb,Incrustation,Laitance,SandPocket,SandStreak,Segregation,Staining,Stalactite,Stalagmite,Stratification}
+
+ @TL.Form.F public EnumSet<DIstresses>Distresses;public enum DIstresses
+ {Chalking,Deflection,Delamination,Distortion,Dusting,Exfoliation,Leakage,Peeling,Warping,Curling,Deformation,Disintegration,DrummyArea,Efflorescence,Exudation,MortarFlaking,Pitting}
 
 
-@TL.Form.F public Checkbox JointDeficiencies;
+ @TL.Form.F public Checkbox JointDeficiencies;
+ @TL.Form.F public EnumSet<JOint>Joint;public enum JOint{Spall,SealantFailure,Leakage,Fault}
 
-@TL.Form.F public Set<EJoint>Joint;public enum EJoint{Spall,SealantFailure,Leakage,Fault}
+ @TL.Form.F public Checkbox Popout;//on
+ public @TL.Form.F PopOutSize PopoutSize;//3
+ public enum PopOutSize{Small,Medium,Large}
 
-@TL.Form.F public Checkbox Popout;//on
-public @TL.Form.F Radio1_3 PopoutSize;//3
-@TL.Form.F public Checkbox isScaling;//on
-@TL.Form.F public Radio1_4 Scaling;//4
-@TL.Form.F public Checkbox Exposed
-,Corroded
-,Snapped
-,isSpall;//on
-@TL.Form.F public Radio1_2 SpallSize;//2
-@TL.Form.F public String notes;//2
-@TL.Form.F(json=true) public Map json;
+ @TL.Form.F public Checkbox isScaling;//on
+ @TL.Form.F public SCaling Scaling;//4
+	 public enum SCaling{Light,Medium,Severe,VerySevere}
 
-		public enum C implements TL.DB.Tbl.CI{no,p,b,f,u,dt//,datetime
+ @TL.Form.F public EnumSet<REinforcement>Reinforcement;
+ public enum REinforcement{Exposed,Corroded,Snapped,isSpall}//on
 
-			,TypeofMemberBeam,TypeofMemberColunm,TypeofMemberSlab,TypeofMemberStairs
-			,TypeofMemberMansory,TypeofMemberRC,TypeofMemberFoundation,TypeofMemberOther
-			,TypeofMemberOtherText
+ @TL.Form.F public Checkbox isSpall;
 
-			,location
+ public enum SPallSize{Small,Large}
+ @TL.Form.F public SPallSize SpallSize;//2
 
-			,exposure_wetDry,exposure_chemical,exposure_erosion,exposure_elec,exposure_heat
+ @TL.Form.F public String img1,img2,img3,img4;
 
-			,LoadingCondition_Dead,LoadingCondition_Live,LoadingCondition_Impact,LoadingCondition_Vibration
-			,LoadingCondition_Traffic,LoadingCondition_Seismic,LoadingCondition_Other
-			,LoadingConditionOther
+	 static String enum2str(Set p){
+		 StringBuilder b=new StringBuilder();boolean comma=false;
+		 for(Object o:p){if(comma)b.append(',');else comma=true;
+			 b.append('\'').append(o).append('\'');}
+		 return b.toString();}
 
-			,GeneralCondition//1_3
+	static String enum2str(Object[]a){//Class<? extends Enum>p
+	 	StringBuilder b=new StringBuilder();boolean comma=false;
+	 	for(Object o:a){if(comma)b.append(',');else comma=true;
+			b.append('\'').append(o).append('\'');}
+	 return b.toString();}
 
-			,Distress_Cracking,Distress_Staining,Distress_Surface,Distress_Leaking
+	public enum C implements TL.DB.Tbl.CI{
+		no,p,b,f,owner,created,lastModified,notes
+		,TypeofMember,TypeofMemberOtherText
+		,Location
+		,Exposure
+		,LoadingCondition,LoadingConditionOther
+		,GeneralCondition//1_3
+		,Distress
+		,Cracking
+		,width
+		,Leaching
+		,WorkingOrDormant//1_2
+		,Textural
+		,Distresses
+		,JointDeficiencies,Joint
+		,Popout,PopoutSize//1_3
+		,isScaling,Scaling//1_4
+		,Reinforcement
+		,isSpall,SpallSize//1_2
+		,img1,img2,img3,img4
+		;
 
-			,Cracking_Checking,Cracking_Craze
-			,Cracking_D//------------------------------- replace dash with underscore : Cracking_D-cracks
-			,Cracking_Diagnol,Cracking_Hairline
-			,Cracking_Longitudinal,Cracking_Map,Cracking_Pattern,Cracking_Plastic,Cracking_Random
-			,Cracking_Shrinkage,Cracking_Temperature,Cracking_Transverse
-
-			,width
-			,Leaching
-
-			,WorkingOrDormant//1_2
-
-			,Textural_AirVoid,Textural_Blistering,Textural_Bugholes,Textural_ColdJoints
-			,Textural_ColdLines,Textural_Discoloration,Textural_Honeycomb,Textural_Incrustation
-			,Textural_Laitance,Textural_SandPocket,Textural_SandStreak,Textural_Segregation
-			,Textural_Staining,Textural_Stalactite,Textural_Stalagmite,Textural_Stratification
-
-			,Distresses_Chalking,Distresses_Deflection,Distresses_Delamination,Distresses_Distortion
-			,Distresses_Dusting,Distresses_Exfoliation,Distresses_Leakage,Distresses_Peeling
-			,Distresses_Warping,Distresses_Curling,Distresses_Deformation,Distresses_Disintegration
-			,Distresses_DrummyArea,Distresses_Efflorescence,Distresses_Exudation,Distresses_MortarFlaking
-			,Distresses_Pitting
-
-			,JointDeficiencies
-			,Spall
-			,SealantFailure
-			,Leakage
-			,Fault
-			,Popout
-
-			,PopoutSize//1_3
-
-			,isScaling
-
-			,Scaling//1_4
-
-			,Exposed
-			,Corroded
-			,Snapped
-
-			,isSpall//1_2
-			,SpallSize
-			,notes
-			,json
-			;
-
-			@Override public Class<? extends TL.DB.Tbl>cls(){return Sheet.class;}
-			@Override public Class<? extends TL.Form>clss(){return cls();}
-			@Override public String text(){return name();}
-			@Override public Field f(){return TL.DB.Tbl.Cols.f(name(), cls());}
-			@Override public TL.DB.Tbl tbl(){return TL.DB.Tbl.tbl(cls());}
-			@Override public void save(){tbl().save(this);}
-			@Override public Object load(){return tbl().load(this);}
-			@Override public Object value(){return val(tbl());}
-			@Override public Object value(Object v){return val(tbl(),v);}
-			@Override public Object val(TL.Form f){return f.v(this);}
-			@Override public Object val(TL.Form f,Object v){return f.v(this,v);}
-		}//C
+		@Override public Class<? extends TL.DB.Tbl>cls(){return Sheet.class;}
+		@Override public Class<? extends TL.Form>clss(){return cls();}
+		@Override public String text(){return name();}
+		@Override public Field f(){return TL.DB.Tbl.Cols.f(name(), cls());}
+		@Override public TL.DB.Tbl tbl(){return TL.DB.Tbl.tbl(cls());}
+		@Override public void save(){tbl().save(this);}
+		@Override public Object load(){return tbl().load(this);}
+		@Override public Object value(){return val(tbl());}
+		@Override public Object value(Object v){return val(tbl(),v);}
+		@Override public Object val(TL.Form f){return f.v(this);}
+		@Override public Object val(TL.Form f,Object v){return f.v(this,v);}
+	}//C
 
 		@Override public TL.DB.Tbl.CI pkc(){return C.no;}
 		@Override public Object pkv(){return no;}
 		@Override public C[]columns(){return C.values();}
 
 		@Override public List creationDBTIndices(TL tl){
-			final String cb="enum('f','on') NOT NULL DEFAULT 'f'"
-			,r1_2="enum('v1','v2') "// NOT NULL DEFAULT 'v1'"
-			,r1_3="enum('v1','v2','v3') "
-			,r1_4="enum('v1','v2','v3','v4')";
+			final String cb="enum('f','on') NOT NULL DEFAULT 'f'";
 			return TL.Util.lst(
 				TL.Util.lst("int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT"//no
 ,"int(11) NOT NULL"//p
 ,"int(11) NOT NULL"//b
 ,"int(11) NOT NULL"//f
-,"int(11) NOT NULL"//u
-,"timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP "//dt
-//,"timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP "//datetime
-,cb//TypeofMemberBeam;
-,cb//TypeofMemberColunm;
-,cb//TypeofMemberSlab;
-,cb//TypeofMemberStairs;
-,cb//TypeofMemberMansory;
-,cb//TypeofMemberRC;
-,cb//TypeofMemberFoundation;
-,cb//TypeofMemberOther;//on
+,"int(11) NOT NULL"//owner
+,"timestamp "//created
+,"timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP "//lastModified
+,"set("+enum2str(TypeOfMember.values())+")"//TypeofMember
 ,"text"//TypeofMemberOtherText,
-,"text"// location;
+,"Point"// Location;
 
-,cb// exposure_wetDry;
-,cb//exposure_chemical;//2
-,cb// exposure_erosion;
-,cb//exposure_elec;//4
-,cb// exposure_heat;
-,cb//LoadingCondition_Dead;
-,cb//LoadingCondition_Live;
-,cb//LoadingCondition_Impact;
-,cb//LoadingCondition_Vibration;
-,cb//LoadingCondition_Traffic;//5
-,cb// LoadingCondition_Seismic;
-,cb//LoadingCondition_Other;//7
-,"text"// LoadingConditionOther;
-,r1_3//					@F Radio1_3 GeneralCondition;
-,cb// Distress_Cracking;
-,cb//Distress_Staining;
-,cb//Distress_Surface;
-,cb//Distress_Leaking;
-,cb//Cracking_Checking;
-,cb//Cracking_Craze;
-,cb//Cracking_D
-,cb//Cracking_Diagnol;
-,cb//Cracking_Hairline;
-,cb//Cracking_Longitudinal;
-,cb//Cracking_Map;
-,cb//Cracking_Pattern;
-,cb//Cracking_Plastic;
-,cb//Cracking_Random;
-,cb//Cracking_Shrinkage;
-,cb//Cracking_Temperature;
-,cb//Cracking_Transverse;
+,"set("+enum2str(EXposure.values())+")"// Exposure
+,"set("+enum2str(Loadingcondition.values())+")"//LoadingCondition
+,"text"// LoadingConditionText;
+,"set("+enum2str(GeneralCondition.values())+")"// GeneralCondition;
+,"set("+enum2str(CRacking .values())+")"// Cracking
 ,"decimal(6,2)"//			@F Double width;// steps of 0.05, minimum is 0
 ,cb//Leaching;//on
-,r1_2//			@F Radio1_2 WorkingOrDormant;//2
-,cb//Textural_AirVoid;//on
-,cb// Textural_Blistering;//on
-,cb// Textural_Bugholes;//on
-,cb// Textural_ColdJoints;//on
-,cb// Textural_ColdLines;//on
-,cb// Textural_Discoloration;//on
-,cb// Textural_Honeycomb;//on
-,cb// Textural_Incrustation;//on
-,cb// Textural_Laitance;//on
-,cb// Textural_SandPocket;//on
-,cb// Textural_SandStreak;//on
-,cb// Textural_Segregation;//on
-,cb// Textural_Staining;//on
-,cb// Textural_Stalactite;//on
-,cb// Textural_Stalagmite;//on
-,cb// Textural_Stratification;//on
-,cb// Distresses_Chalking;//on
-,cb// Distresses_Deflection;//on
-,cb// Distresses_Delamination;//on
-,cb// Distresses_Distortion;//on
-,cb// Distresses_Dusting;//on
-,cb// Distresses_Exfoliation;//on
-,cb// Distresses_Leakage;//on
-,cb// Distresses_Peeling;//on
-,cb// Distresses_Warping;//on
-,cb// Distresses_Curling;//on
-,cb// Distresses_Deformation;//on
-,cb// Distresses_Disintegration;//on
-,cb// Distresses_DrummyArea;//on
-,cb// Distresses_Efflorescence;//on
-,cb// Distresses_Exudation;//on
-,cb// Distresses_MortarFlaking;//on
-,cb// Distresses_Pitting;//on
+,"enum("+enum2str(WorkingOrDormant.values())+")"//			@F Radio1_2 WorkingOrDormant;//2
+,"set("+enum2str(TExtural.values() )+")"//Textural
+,"set("+enum2str(DIstresses.values() )+")"//Distresses
 ,cb// JointDeficiencies;//on
-,cb// Spall;//on
-,cb// SealantFailure;//on
-,cb// Leakage;//on
-,cb// Fault;//on
+,"set("+enum2str(JOint.values() )+")"//Joint
 ,cb// Popout;//on
-,r1_3//			@F Radio1_3 PopoutSize;//3
+,"enum("+enum2str(PopoutSize.values())+")"//			@F Radio1_3 PopoutSize;//3
 ,cb// isScaling;//on
-,r1_4//			@F Radio1_4 Scaling;//4
-,cb// Exposed;//on
-,cb// Corroded;//on
-,cb// Snapped;//on
+,"enum("+enum2str(SCaling.values())+")"//			@F Radio1_4 Scaling;//4
+,"set("+enum2str(REinforcement.values() )+")"//Reinforcement
 ,cb// isSpall;//on
-,r1_2//			@F Radio1_2 SpallSize;//2
-,"text"//notes
-,"text"//json
-					),TL.Util.lst(
-	 TL.Util.lst(C.p,C.b,C.f,C.u)										//1
-	,TL.Util.lst(C.u,C.p,C.no)											//2
-	,TL.Util.lst(C.dt)													//3
-	,TL.Util.lst(C.p,C.TypeofMemberBeam,C.TypeofMemberColunm			//4
- ,C.b),TL.Util.lst(C.p,C. TypeofMemberSlab,C.TypeofMemberStairs			//5
- ,C.b),TL.Util.lst(C.p,C. TypeofMemberMansory,C.TypeofMemberRC			//6
- ,C.b),TL.Util.lst(C.p,C. TypeofMemberFoundation						//7
- ,C.b),TL.Util.lst(C.p,C. TypeofMemberOther,TL.Util.lst(C.TypeofMemberOtherText,200)//8
- ,C.b),TL.Util.lst(C.p,TL.Util.lst(C.location,200)				//text(255) //9
- ,C.b),TL.Util.lst(C.p,C. exposure_wetDry,C.exposure_chemical			//10
- ,C.b),TL.Util.lst(C.p,C. exposure_erosion,C. exposure_elec				//1
- ,C.b),TL.Util.lst(C.p,C. exposure_heat									//2
- ,C.b),TL.Util.lst(C.p,C. LoadingCondition_Dead,C. LoadingCondition_Live//3
- ,C.b),TL.Util.lst(C.p,C. LoadingCondition_Impact,C. LoadingCondition_Vibration//4
- ,C.b),TL.Util.lst(C.p,C. LoadingCondition_Traffic,C. LoadingCondition_Seismic//5
- ,C.b),TL.Util.lst(C.p,C. LoadingCondition_Other,TL.Util.lst(C. LoadingConditionOther,200)//text(255)//6
+,"enum("+enum2str(SPallSize.values())+")"//			@F Radio1_2 SpallSize;//2
+,"text"//img1
+,"text"//img2
+,"text"//img3
+,"text"//img4
+),TL.Util.lst(
+	 TL.Util.lst(C.p,C.b,C.f,C.owner)									//1
+	,TL.Util.lst(C.owner,C.p,C.no)										//2
+	,TL.Util.lst(C.created)												//3
+	,TL.Util.lst(C.lastModified)										//4
+	,TL.Util.lst(C.p,C.TypeofMember,TL.Util.lst(C.TypeofMemberOtherText,200)//5
+ ,C.b),TL.Util.lst(C.p,TL.Util.lst(C.Location,200)				//text(255) //6
+ ,C.b),TL.Util.lst(C.p,C. Exposure								//7
+ ,C.b),TL.Util.lst(C.p,C. LoadingCondition,TL.Util.lst(C. LoadingConditionOther,200)//text(255)//8
  ,C.b),TL.Util.lst(C.p,C. GeneralCondition								//7
- ,C.b),TL.Util.lst(C.p,C. Distress_Cracking,C.Distress_Staining			//8
- ,C.b),TL.Util.lst(C.p,C. Distress_Surface,C. Distress_Leaking				//9
- ,C.b),TL.Util.lst(C.p,C. Cracking_Checking,C. Cracking_Craze			//20
- ,C.b),TL.Util.lst(C.p,C. Cracking_D,C. Cracking_Diagnol				//1
- ,C.b),TL.Util.lst(C.p,C. Cracking_Hairline,C. Cracking_Longitudinal	//2
- ,C.b),TL.Util.lst(C.p,C. Cracking_Map,C. Cracking_Pattern				//3
- ,C.b),TL.Util.lst(C.p,C. Cracking_Plastic,C. Cracking_Random			//4
- ,C.b),TL.Util.lst(C.p,C. Cracking_Shrinkage,C. Cracking_Temperature	//5
- ,C.b),TL.Util.lst(C.p,C. Cracking_Transverse,C.Leaching				//6
- ,C.b),TL.Util.lst(C.p,C. width//number									//7
- ,C.b),TL.Util.lst(C.p,C. WorkingOrDormant								//8
- ,C.b),TL.Util.lst(C.p,C. Textural_AirVoid,C. Textural_Blistering,C. Textural_ColdJoints,C. Textural_Discoloration,C. Textural_Incrustation,C. Textural_SandPocket,C. Textural_Segregation,C. Textural_Stalactite,C. Textural_Stratification,C. Textural_Bugholes,C. Textural_ColdLines,C. Textural_Honeycomb,C. Textural_Laitance//,C. Textural_SandStreak//,C. Textural_Staining//,C. Textural_Stalagmite		   //9
- ,C.b),TL.Util.lst(C.p,C. Textural_Bugholes,C. Textural_ColdJoints,C. Textural_Stratification,C. Textural_Stalactite,C. Textural_Segregation,C. Textural_SandPocket,C. Textural_Incrustation,C. Textural_Discoloration,C. Textural_Stalagmite,C. Textural_Staining,C. Textural_SandStreak,C. Textural_Laitance,C. Textural_Honeycomb//,C. Textural_ColdLines		  //30
- ,C.b),TL.Util.lst(C.p,C. Textural_ColdLines,C. Textural_Discoloration	//1
- ,C.b),TL.Util.lst(C.p,C. Textural_Honeycomb,C. Textural_Incrustation	//2
- ,C.b),TL.Util.lst(C.p,C. Textural_Laitance,C. Textural_SandPocket		//3
- ,C.b),TL.Util.lst(C.p,C. Textural_SandStreak,C. Textural_Segregation	//4
- ,C.b),TL.Util.lst(C.p,C. Textural_Staining,C. Textural_Stalactite		//5
- ,C.b),TL.Util.lst(C.p,C. Textural_Stalagmite,C. Textural_Stratification//6
- ,C.b),TL.Util.lst(C.p,C. Distresses_Chalking,C. Distresses_Deflection	//7
- ,C.b),TL.Util.lst(C.p,C. Distresses_Delamination,C. Distresses_Distortion//8
- ,C.b),TL.Util.lst(C.p,C. Distresses_Dusting,C. Distresses_Exfoliation	//9
- ,C.b),TL.Util.lst(C.p,C. Distresses_Leakage,C. Distresses_Peeling		//40
- ,C.b),TL.Util.lst(C.p,C. Distresses_Warping,C. Distresses_Curling		//1
- ,C.b),TL.Util.lst(C.p,C. Distresses_Deformation,C.Distresses_Disintegration//2
- ,C.b),TL.Util.lst(C.p,C. Distresses_DrummyArea,C. Distresses_Efflorescence //3
- ,C.b),TL.Util.lst(C.p,C. Distresses_Exudation,C. Distresses_MortarFlaking  //4
- ,C.b),TL.Util.lst(C.p,C. Distresses_Pitting							//5
- ,C.b),TL.Util.lst(C.p,C. JointDeficiencies,C. Spall,C. SealantFailure,C. Leakage,C. Fault//6
- ,C.b),TL.Util.lst(C.p,C. JointDeficiencies,C. SealantFailure,C. Fault,C. Leakage,C. Spall//7
- ,C.b),TL.Util.lst(C.p,C. JointDeficiencies,C. Leakage,C. Fault,C. SealantFailure,C. Spall//8
- ,C.b),TL.Util.lst(C.p,C. JointDeficiencies,C. Fault,C. Leakage,C. Spall,C. SealantFailure//9
- ,C.b),TL.Util.lst(C.p,C. Popout,C. PopoutSize							//50
- ,C.b),TL.Util.lst(C.p,C. isScaling,C. Scaling							//1
- ,C.b),TL.Util.lst(C.p,C. Exposed,C. Corroded,C. Snapped				//2
- ,C.b),TL.Util.lst(C.p,C. Corroded,C. Snapped,C. Exposed				//3
- ,C.b),TL.Util.lst(C.p,C. Snapped,C. Corroded,C. Exposed				//4
+ ,C.b),TL.Util.lst(C.p,C. Distress										//8
+ ,C.b),TL.Util.lst(C.p,C. Cracking										//9
+ ,C.b),TL.Util.lst(C.p,C. Leaching										//10
+ ,C.b),TL.Util.lst(C.p,C. width//number									//11
+ ,C.b),TL.Util.lst(C.p,C. WorkingOrDormant								//12
+ ,C.b),TL.Util.lst(C.p,C. Textural										//13
+ ,C.b),TL.Util.lst(C.p,C. Distresses									//14
+ ,C.b),TL.Util.lst(C.p,C. JointDeficiencies,C.Joint						//15
+ ,C.b),TL.Util.lst(C.p,C. Popout,C. PopoutSize							//16
+ ,C.b),TL.Util.lst(C.p,C. isScaling,C. Scaling							//17
+ ,C.b),TL.Util.lst(C.p,C. Reinforcement									//18
  ,C.b),TL.Util.lst(C.p,C. isSpall,C. SpallSize							//5
  ,C.b),TL.Util.lst(C.p,TL.Util.lst(C. notes,200)						//6
  ,C.b)			));
-/*	CREATE TABLE `sheets` (
-	`no` int(11) NOT NULL,
-	`p` int(11) DEFAULT NULL,
-	`b` int(11) DEFAULT NULL,
-	`f` int(11) DEFAULT NULL,
-	`jsonRef` int(18) NOT NULL,
-	`dt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-	`u` int(11) DEFAULT NULL,
-	PRIMARY KEY (`no`)
-	) ENGINE=InnoDB DEFAULT CHARSET=utf8
-
-
-	public static void checkTableCreation(TL tl){
-	String sql="CREATE TABLE `"+dbtName+"` (\n" +
-	"`"+C.no+"` int(11) NOT NULL primary key,\n" +
-	"`"+C.p+"` int(11) NOT NULL,\n" +
-	"`"+C.b+"` int(11) NOT NULL,\n" +
-	"`"+C.f+"` int(11) NOT NULL,\n" +
-	"`"+C.u+"` int(11) NOT NULL,\n" +
-	"`"+C.jsonRef+"` int(24) NOT NULL,\n" +
-	"`"+C.dt+"` timestamp NOT NULL,\n" +
-	"KEY (`"+C.p+"`,`"+C.b+"`,`"+C.f+"`),\n" +
-	"KEY (`"+C.jsonRef+"`)\n" +
-	"KEY (`"+C.dt+"`)\n" +
-	") ENGINE=InnoDB DEFAULT CHARSET=utf8 ;";
-	try {
-	Object o=TL.DB.q("desc "+dbtName,0);
-	if(o==null){
-	int x=TL.DB.x(sql);
-	tl.log("AppEU059S.Sheet.checkTableCreation:",x,sql);
-	}
-	} catch (SQLException ex) {
-	tl.error(ex, "AppEU059S.Sheet.checkTableCreation");}
-	}//checkTableCreation*/}
+ }
 
 		static{registered.add(Sheet.class);Dbg.p("eu059s.AppEU059S.Sheet:TL.DB.Tbl.registered.add(.class)");}
 
-	}//class Sheet
 
-	public static class SheetOld extends TL.DB.Tbl {//implements Serializable
-		public static final String dbtName="sheets";
+	 public	static @TL.Op int New(@TL.Op(prmName="sheet") Sheet p,TL tl)
+	 {int no=-1;
+		 try{no=p.no=p.maxPlus1(C.no);
+			 p.save();
+		 } catch (Exception e) {
+			 tl.error(e,"AppEU059S.Sheet.New:op");}
+		 return no;}
 
-		@Override public String getName(){return dbtName;}//public	Ssn(){super(Name);}
-		public enum Checkbox{f,on}
-		public enum Radio1_2{v1,v2}
-		public enum Radio1_3{v1,v2,v3}
-		public enum Radio1_4{v1,v2,v3,v4}
+	 public static @TL.Op Sheet get(@TL.Op(prmName="no") int no,TL tl){Sheet p=null;
+		 try{p=new Sheet();p.load(no);
+		 } catch (Exception e) {
+			 tl.error(e,"AppEU059S.Sheet.get");}
+		 return p;}
 
-		@TL.Form.F public Integer no,p,b,f,u;
-		@TL.Form.F public Date dt;//,datetime;
+	 public static @TL.Op Sheet set(@TL.Op(prmName="sheet") Sheet p,TL tl){
+		 try{p.save();} catch (Exception e) {
+			 tl.error(e,"AppEU059S.Sheet.set");}
+		 return p;}
 
-		@TL.Form.F public Checkbox TypeofMemberBeam
-		,TypeofMemberColunm
-,TypeofMemberSlab
-,TypeofMemberStairs
-,TypeofMemberMansory
-,TypeofMemberRC
-,TypeofMemberFoundation
-,TypeofMemberOther;//on
-		@TL.Form.F public String TypeofMemberOtherText,location;
-		@TL.Form.F public Checkbox exposure_wetDry
-,exposure_chemical
-,exposure_erosion
-,exposure_elec
-,exposure_heat
-,LoadingCondition_Dead
-,LoadingCondition_Live
-,LoadingCondition_Impact
-,LoadingCondition_Vibration
-,LoadingCondition_Traffic
-,LoadingCondition_Seismic
-,LoadingCondition_Other;//7
-		@TL.Form.F public String LoadingConditionOther;
-		@TL.Form.F public Radio1_3 GeneralCondition;
-		@TL.Form.F public Checkbox Distress_Cracking
-,Distress_Staining
-,Distress_Surface
-,Distress_Leaking
-,Cracking_Checking
-,Cracking_Craze
-,Cracking_D//on----------------------------- replace the dash : -cracks // done/fixed
-,Cracking_Diagnol
-,Cracking_Hairline
-,Cracking_Longitudinal
-,Cracking_Map
-,Cracking_Pattern
-,Cracking_Plastic
-,Cracking_Random
-,Cracking_Shrinkage
-,Cracking_Temperature
-,Cracking_Transverse;//on
-@TL.Form.F public Double width;// steps of 0.05, minimum is 0
-@TL.Form.F public Checkbox Leaching;//on
-@TL.Form.F public Radio1_2 WorkingOrDormant;//2
-@TL.Form.F public Checkbox Textural_AirVoid
-,Textural_Blistering
-,Textural_Bugholes
-,Textural_ColdJoints
-,Textural_ColdLines
-,Textural_Discoloration
-,Textural_Honeycomb
-,Textural_Incrustation
-,Textural_Laitance
-,Textural_SandPocket
-,Textural_SandStreak
-,Textural_Segregation
-,Textural_Staining
-,Textural_Stalactite
-,Textural_Stalagmite
-,Textural_Stratification
-,Distresses_Chalking
-,Distresses_Deflection
-,Distresses_Delamination
-,Distresses_Distortion
-,Distresses_Dusting
-,Distresses_Exfoliation
-,Distresses_Leakage
-,Distresses_Peeling
-,Distresses_Warping
-,Distresses_Curling
-,Distresses_Deformation
-,Distresses_Disintegration
-,Distresses_DrummyArea
-,Distresses_Efflorescence
-,Distresses_Exudation
-,Distresses_MortarFlaking
-,Distresses_Pitting
-,JointDeficiencies
-,Spall
-,SealantFailure
-,Leakage
-,Fault
-,Popout;//on
-public @TL.Form.F Radio1_3 PopoutSize;//3
-@TL.Form.F public Checkbox isScaling;//on
-@TL.Form.F public Radio1_4 Scaling;//4
-@TL.Form.F public Checkbox Exposed
-,Corroded
-,Snapped
-,isSpall;//on
-@TL.Form.F public Radio1_2 SpallSize;//2
-@TL.Form.F public String notes;//2
-@TL.Form.F(json=true) public Map json;
+	 public static @TL.Op int delete(@TL.Op(prmName="no") int no,TL tl){
+		 try{Sheet s=new Sheet();s.no=no;return s.delete();
+		 } catch (Exception e) {
+			 tl.error(e,"AppEU059S.Sheet.delete");}
+		 return 0;}
 
-		public enum C implements TL.DB.Tbl.CI{no,p,b,f,u,dt//,datetime
+	 public static @TL.Op List list(@TL.Op(prmName="lastModified") Date lm,TL tl){List l=null;
+		 try{String sql="select `"+C.no+"`,`"+C.owner+"`,`"+C.lastModified
+				 +"` from "+dbtName+" where `"+C.lastModified+"`>?";
+		 	l=TL.DB.l(sql.toString(),lm);
+		 } catch (Exception e) {
+			 tl.error(e,"AppEU059S.Sheet.list");}
+		 return l;}
 
-			,TypeofMemberBeam,TypeofMemberColunm,TypeofMemberSlab,TypeofMemberStairs
-			,TypeofMemberMansory,TypeofMemberRC,TypeofMemberFoundation,TypeofMemberOther
-			,TypeofMemberOtherText
+ }//class Sheet
 
-			,location
-
-			,exposure_wetDry,exposure_chemical,exposure_erosion,exposure_elec,exposure_heat
-
-			,LoadingCondition_Dead,LoadingCondition_Live,LoadingCondition_Impact,LoadingCondition_Vibration
-			,LoadingCondition_Traffic,LoadingCondition_Seismic,LoadingCondition_Other
-			,LoadingConditionOther
-
-			,GeneralCondition//1_3
-
-			,Distress_Cracking,Distress_Staining,Distress_Surface,Distress_Leaking
-
-			,Cracking_Checking,Cracking_Craze
-			,Cracking_D//------------------------------- replace dash with underscore : Cracking_D-cracks
-			,Cracking_Diagnol,Cracking_Hairline
-			,Cracking_Longitudinal,Cracking_Map,Cracking_Pattern,Cracking_Plastic,Cracking_Random
-			,Cracking_Shrinkage,Cracking_Temperature,Cracking_Transverse
-
-			,width
-			,Leaching
-
-			,WorkingOrDormant//1_2
-
-			,Textural_AirVoid,Textural_Blistering,Textural_Bugholes,Textural_ColdJoints
-			,Textural_ColdLines,Textural_Discoloration,Textural_Honeycomb,Textural_Incrustation
-			,Textural_Laitance,Textural_SandPocket,Textural_SandStreak,Textural_Segregation
-			,Textural_Staining,Textural_Stalactite,Textural_Stalagmite,Textural_Stratification
-
-			,Distresses_Chalking,Distresses_Deflection,Distresses_Delamination,Distresses_Distortion
-			,Distresses_Dusting,Distresses_Exfoliation,Distresses_Leakage,Distresses_Peeling
-			,Distresses_Warping,Distresses_Curling,Distresses_Deformation,Distresses_Disintegration
-			,Distresses_DrummyArea,Distresses_Efflorescence,Distresses_Exudation,Distresses_MortarFlaking
-			,Distresses_Pitting
-
-			,JointDeficiencies
-			,Spall
-			,SealantFailure
-			,Leakage
-			,Fault
-			,Popout
-
-			,PopoutSize//1_3
-
-			,isScaling
-
-			,Scaling//1_4
-
-			,Exposed
-			,Corroded
-			,Snapped
-
-			,isSpall//1_2
-			,SpallSize
-			,notes
-			,json
-			;
-
-			@Override public Class<? extends TL.DB.Tbl>cls(){return Sheet.class;}
-			@Override public Class<? extends TL.Form>clss(){return cls();}
-			@Override public String text(){return name();}
-			@Override public Field f(){return TL.DB.Tbl.Cols.f(name(), cls());}
-			@Override public TL.DB.Tbl tbl(){return TL.DB.Tbl.tbl(cls());}
-			@Override public void save(){tbl().save(this);}
-			@Override public Object load(){return tbl().load(this);}
-			@Override public Object value(){return val(tbl());}
-			@Override public Object value(Object v){return val(tbl(),v);}
-			@Override public Object val(TL.Form f){return f.v(this);}
-			@Override public Object val(TL.Form f,Object v){return f.v(this,v);}
-		}//C
-
-		@Override public TL.DB.Tbl.CI pkc(){return C.no;}
-		@Override public Object pkv(){return no;}
-		@Override public C[]columns(){return C.values();}
-
-		@Override public List creationDBTIndices(TL tl){
-			final String cb="enum('f','on') NOT NULL DEFAULT 'f'"
-			,r1_2="enum('v1','v2') "// NOT NULL DEFAULT 'v1'"
-			,r1_3="enum('v1','v2','v3') "
-			,r1_4="enum('v1','v2','v3','v4')";
-			return TL.Util.lst(
-				TL.Util.lst("int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT"//no
-,"int(11) NOT NULL"//p
-,"int(11) NOT NULL"//b
-,"int(11) NOT NULL"//f
-,"int(11) NOT NULL"//u
-,"timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP "//dt
-//,"timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP "//datetime
-,cb//TypeofMemberBeam;
-,cb//TypeofMemberColunm;
-,cb//TypeofMemberSlab;
-,cb//TypeofMemberStairs;
-,cb//TypeofMemberMansory;
-,cb//TypeofMemberRC;
-,cb//TypeofMemberFoundation;
-,cb//TypeofMemberOther;//on
-,"text"//TypeofMemberOtherText,
-,"text"// location;
-
-,cb// exposure_wetDry;
-,cb//exposure_chemical;//2
-,cb// exposure_erosion;
-,cb//exposure_elec;//4
-,cb// exposure_heat;
-,cb//LoadingCondition_Dead;
-,cb//LoadingCondition_Live;
-,cb//LoadingCondition_Impact;
-,cb//LoadingCondition_Vibration;
-,cb//LoadingCondition_Traffic;//5
-,cb// LoadingCondition_Seismic;
-,cb//LoadingCondition_Other;//7
-,"text"// LoadingConditionOther;
-,r1_3//					@F Radio1_3 GeneralCondition;
-,cb// Distress_Cracking;
-,cb//Distress_Staining;
-,cb//Distress_Surface;
-,cb//Distress_Leaking;
-,cb//Cracking_Checking;
-,cb//Cracking_Craze;
-,cb//Cracking_D
-,cb//Cracking_Diagnol;
-,cb//Cracking_Hairline;
-,cb//Cracking_Longitudinal;
-,cb//Cracking_Map;
-,cb//Cracking_Pattern;
-,cb//Cracking_Plastic;
-,cb//Cracking_Random;
-,cb//Cracking_Shrinkage;
-,cb//Cracking_Temperature;
-,cb//Cracking_Transverse;
-,"decimal(6,2)"//			@F Double width;// steps of 0.05, minimum is 0
-,cb//Leaching;//on
-,r1_2//			@F Radio1_2 WorkingOrDormant;//2
-,cb//Textural_AirVoid;//on
-,cb// Textural_Blistering;//on
-,cb// Textural_Bugholes;//on
-,cb// Textural_ColdJoints;//on
-,cb// Textural_ColdLines;//on
-,cb// Textural_Discoloration;//on
-,cb// Textural_Honeycomb;//on
-,cb// Textural_Incrustation;//on
-,cb// Textural_Laitance;//on
-,cb// Textural_SandPocket;//on
-,cb// Textural_SandStreak;//on
-,cb// Textural_Segregation;//on
-,cb// Textural_Staining;//on
-,cb// Textural_Stalactite;//on
-,cb// Textural_Stalagmite;//on
-,cb// Textural_Stratification;//on
-,cb// Distresses_Chalking;//on
-,cb// Distresses_Deflection;//on
-,cb// Distresses_Delamination;//on
-,cb// Distresses_Distortion;//on
-,cb// Distresses_Dusting;//on
-,cb// Distresses_Exfoliation;//on
-,cb// Distresses_Leakage;//on
-,cb// Distresses_Peeling;//on
-,cb// Distresses_Warping;//on
-,cb// Distresses_Curling;//on
-,cb// Distresses_Deformation;//on
-,cb// Distresses_Disintegration;//on
-,cb// Distresses_DrummyArea;//on
-,cb// Distresses_Efflorescence;//on
-,cb// Distresses_Exudation;//on
-,cb// Distresses_MortarFlaking;//on
-,cb// Distresses_Pitting;//on
-,cb// JointDeficiencies;//on
-,cb// Spall;//on
-,cb// SealantFailure;//on
-,cb// Leakage;//on
-,cb// Fault;//on
-,cb// Popout;//on
-,r1_3//			@F Radio1_3 PopoutSize;//3
-,cb// isScaling;//on
-,r1_4//			@F Radio1_4 Scaling;//4
-,cb// Exposed;//on
-,cb// Corroded;//on
-,cb// Snapped;//on
-,cb// isSpall;//on
-,r1_2//			@F Radio1_2 SpallSize;//2
-,"text"//notes
-,"text"//json
-					),TL.Util.lst(
-	 TL.Util.lst(C.p,C.b,C.f,C.u)										//1
-	,TL.Util.lst(C.u,C.p,C.no)											//2
-	,TL.Util.lst(C.dt)													//3
-	,TL.Util.lst(C.p,C.TypeofMemberBeam,C.TypeofMemberColunm			//4
- ,C.b),TL.Util.lst(C.p,C. TypeofMemberSlab,C.TypeofMemberStairs			//5
- ,C.b),TL.Util.lst(C.p,C. TypeofMemberMansory,C.TypeofMemberRC			//6
- ,C.b),TL.Util.lst(C.p,C. TypeofMemberFoundation						//7
- ,C.b),TL.Util.lst(C.p,C. TypeofMemberOther,TL.Util.lst(C.TypeofMemberOtherText,200)//8
- ,C.b),TL.Util.lst(C.p,TL.Util.lst(C.location,200)				//text(255) //9
- ,C.b),TL.Util.lst(C.p,C. exposure_wetDry,C.exposure_chemical			//10
- ,C.b),TL.Util.lst(C.p,C. exposure_erosion,C. exposure_elec				//1
- ,C.b),TL.Util.lst(C.p,C. exposure_heat									//2
- ,C.b),TL.Util.lst(C.p,C. LoadingCondition_Dead,C. LoadingCondition_Live//3
- ,C.b),TL.Util.lst(C.p,C. LoadingCondition_Impact,C. LoadingCondition_Vibration//4
- ,C.b),TL.Util.lst(C.p,C. LoadingCondition_Traffic,C. LoadingCondition_Seismic//5
- ,C.b),TL.Util.lst(C.p,C. LoadingCondition_Other,TL.Util.lst(C. LoadingConditionOther,200)//text(255)//6
- ,C.b),TL.Util.lst(C.p,C. GeneralCondition								//7
- ,C.b),TL.Util.lst(C.p,C. Distress_Cracking,C.Distress_Staining			//8
- ,C.b),TL.Util.lst(C.p,C. Distress_Surface,C. Distress_Leaking				//9
- ,C.b),TL.Util.lst(C.p,C. Cracking_Checking,C. Cracking_Craze			//20
- ,C.b),TL.Util.lst(C.p,C. Cracking_D,C. Cracking_Diagnol				//1
- ,C.b),TL.Util.lst(C.p,C. Cracking_Hairline,C. Cracking_Longitudinal	//2
- ,C.b),TL.Util.lst(C.p,C. Cracking_Map,C. Cracking_Pattern				//3
- ,C.b),TL.Util.lst(C.p,C. Cracking_Plastic,C. Cracking_Random			//4
- ,C.b),TL.Util.lst(C.p,C. Cracking_Shrinkage,C. Cracking_Temperature	//5
- ,C.b),TL.Util.lst(C.p,C. Cracking_Transverse,C.Leaching				//6
- ,C.b),TL.Util.lst(C.p,C. width//number									//7
- ,C.b),TL.Util.lst(C.p,C. WorkingOrDormant								//8
- ,C.b),TL.Util.lst(C.p,C. Textural_AirVoid,C. Textural_Blistering,C. Textural_ColdJoints,C. Textural_Discoloration,C. Textural_Incrustation,C. Textural_SandPocket,C. Textural_Segregation,C. Textural_Stalactite,C. Textural_Stratification,C. Textural_Bugholes,C. Textural_ColdLines,C. Textural_Honeycomb,C. Textural_Laitance//,C. Textural_SandStreak//,C. Textural_Staining//,C. Textural_Stalagmite		   //9
- ,C.b),TL.Util.lst(C.p,C. Textural_Bugholes,C. Textural_ColdJoints,C. Textural_Stratification,C. Textural_Stalactite,C. Textural_Segregation,C. Textural_SandPocket,C. Textural_Incrustation,C. Textural_Discoloration,C. Textural_Stalagmite,C. Textural_Staining,C. Textural_SandStreak,C. Textural_Laitance,C. Textural_Honeycomb//,C. Textural_ColdLines		  //30
- ,C.b),TL.Util.lst(C.p,C. Textural_ColdLines,C. Textural_Discoloration	//1
- ,C.b),TL.Util.lst(C.p,C. Textural_Honeycomb,C. Textural_Incrustation	//2
- ,C.b),TL.Util.lst(C.p,C. Textural_Laitance,C. Textural_SandPocket		//3
- ,C.b),TL.Util.lst(C.p,C. Textural_SandStreak,C. Textural_Segregation	//4
- ,C.b),TL.Util.lst(C.p,C. Textural_Staining,C. Textural_Stalactite		//5
- ,C.b),TL.Util.lst(C.p,C. Textural_Stalagmite,C. Textural_Stratification//6
- ,C.b),TL.Util.lst(C.p,C. Distresses_Chalking,C. Distresses_Deflection	//7
- ,C.b),TL.Util.lst(C.p,C. Distresses_Delamination,C. Distresses_Distortion//8
- ,C.b),TL.Util.lst(C.p,C. Distresses_Dusting,C. Distresses_Exfoliation	//9
- ,C.b),TL.Util.lst(C.p,C. Distresses_Leakage,C. Distresses_Peeling		//40
- ,C.b),TL.Util.lst(C.p,C. Distresses_Warping,C. Distresses_Curling		//1
- ,C.b),TL.Util.lst(C.p,C. Distresses_Deformation,C.Distresses_Disintegration//2
- ,C.b),TL.Util.lst(C.p,C. Distresses_DrummyArea,C. Distresses_Efflorescence //3
- ,C.b),TL.Util.lst(C.p,C. Distresses_Exudation,C. Distresses_MortarFlaking  //4
- ,C.b),TL.Util.lst(C.p,C. Distresses_Pitting							//5
- ,C.b),TL.Util.lst(C.p,C. JointDeficiencies,C. Spall,C. SealantFailure,C. Leakage,C. Fault//6
- ,C.b),TL.Util.lst(C.p,C. JointDeficiencies,C. SealantFailure,C. Fault,C. Leakage,C. Spall//7
- ,C.b),TL.Util.lst(C.p,C. JointDeficiencies,C. Leakage,C. Fault,C. SealantFailure,C. Spall//8
- ,C.b),TL.Util.lst(C.p,C. JointDeficiencies,C. Fault,C. Leakage,C. Spall,C. SealantFailure//9
- ,C.b),TL.Util.lst(C.p,C. Popout,C. PopoutSize							//50
- ,C.b),TL.Util.lst(C.p,C. isScaling,C. Scaling							//1
- ,C.b),TL.Util.lst(C.p,C. Exposed,C. Corroded,C. Snapped				//2
- ,C.b),TL.Util.lst(C.p,C. Corroded,C. Snapped,C. Exposed				//3
- ,C.b),TL.Util.lst(C.p,C. Snapped,C. Corroded,C. Exposed				//4
- ,C.b),TL.Util.lst(C.p,C. isSpall,C. SpallSize							//5
- ,C.b),TL.Util.lst(C.p,TL.Util.lst(C. notes,200)						//6
- ,C.b)			));
-/*	CREATE TABLE `sheets` (
-	`no` int(11) NOT NULL,
-	`p` int(11) DEFAULT NULL,
-	`b` int(11) DEFAULT NULL,
-	`f` int(11) DEFAULT NULL,
-	`jsonRef` int(18) NOT NULL,
-	`dt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-	`u` int(11) DEFAULT NULL,
-	PRIMARY KEY (`no`)
-	) ENGINE=InnoDB DEFAULT CHARSET=utf8
-
-
-	public static void checkTableCreation(TL tl){
-	String sql="CREATE TABLE `"+dbtName+"` (\n" +
-	"`"+C.no+"` int(11) NOT NULL primary key,\n" +
-	"`"+C.p+"` int(11) NOT NULL,\n" +
-	"`"+C.b+"` int(11) NOT NULL,\n" +
-	"`"+C.f+"` int(11) NOT NULL,\n" +
-	"`"+C.u+"` int(11) NOT NULL,\n" +
-	"`"+C.jsonRef+"` int(24) NOT NULL,\n" +
-	"`"+C.dt+"` timestamp NOT NULL,\n" +
-	"KEY (`"+C.p+"`,`"+C.b+"`,`"+C.f+"`),\n" +
-	"KEY (`"+C.jsonRef+"`)\n" +
-	"KEY (`"+C.dt+"`)\n" +
-	") ENGINE=InnoDB DEFAULT CHARSET=utf8 ;";
-	try {
-	Object o=TL.DB.q("desc "+dbtName,0);
-	if(o==null){
-	int x=TL.DB.x(sql);
-	tl.log("AppEU059S.Sheet.checkTableCreation:",x,sql);
-	}
-	} catch (SQLException ex) {
-	tl.error(ex, "AppEU059S.Sheet.checkTableCreation");}
-	}//checkTableCreation*/}
-
-		static{registered.add(Sheet.class);Dbg.p("eu059s.AppEU059S.Sheet:TL.DB.Tbl.registered.add(.class)");}
-
-	}//class SheetOld
 
 public static class Storage extends TL.DB.Tbl {//implements Serializable
 	public static final String dbtName="Storage";
@@ -3042,7 +2756,7 @@ public static class Storage extends TL.DB.Tbl {//implements Serializable
 				,"MEDIUMTEXT NOT NULL"//data
 				,"varchar(255) NOT NULL"//contentType
 				,"timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP "//lastModified
-				,"varchar(255) NOT NULL"//
+				//,"varchar(255) NOT NULL"//
 			), TL.Util.lst(
 				TL.Util.lst(C.path,C.lastModified),
 				TL.Util.lst(C.lastModified,C.path)));/*
@@ -3067,7 +2781,7 @@ CREATE TABLE `Storage` (
 			tl.error(e,"AppEU059S.Storage.New:op");}
 		return no;}
 
- public	static @TL.Op ResultSet list(@TL.Op(prmName="lastModified") Date lastModified,TL tl){ResultSet rs=null;
+ public	static @TL.Op ResultSet listRS(@TL.Op(prmName="lastModified") Date lastModified,TL tl){ResultSet rs=null;
 		try{C[]x={C.no,C.path,C.contentType,C.lastModified};
 			StringBuilder sql=new StringBuilder("select ");
 			TL.DB.Tbl.Cols.generate(sql,x)
@@ -3088,20 +2802,30 @@ CREATE TABLE `Storage` (
 		try{s=new Storage();s.loadBy(C.path,path);
 			tl.respond(s.contentType,s.data);
 		} catch (Exception e) {
-			tl.error(e,"Storage.Storage.content");}
+			tl.error(e,"AppEU059S.Storage.content");}
 		return s;}
 
  public static @TL.Op Storage set(@TL.Op(prmName="storage") Storage s,TL tl){
 		try{s.save();
 		} catch (Exception e) {
-			tl.error(e,"Storage.Storage.set");}
+			tl.error(e,"AppEU059S.Storage.set");}
 		return s;}
 
  public static @TL.Op int delete(@TL.Op(prmName="no") int no,TL tl){
 		try{Storage s=new Storage();s.no=no;return s.delete();
 		} catch (Exception e) {
-			tl.error(e,"Storage.Storage.set");}
+			tl.error(e,"AppEU059S.Storage.delete");}
 		return 0;}
+
+
+	public static @TL.Op List list(@TL.Op(prmName="lastModified") Date lm,TL tl){List l=null;
+		try{String sql="select `"+C.no+"`,`"+C.lastModified
+				+"` from "+dbtName+" where `"+C.lastModified+"`>?";
+			l=TL.DB.l(sql.toString(),lm);
+		} catch (Exception e) {
+			tl.error(e,"AppEU059S.Floor.list");}
+		return l;}
+
 	static{
 		Dbg.p("eu059s.AppEU059S.Storage:TL.DB.Tbl.registered.add(.class);\nTL.registerOp(Storage.class);");
  		registered.add(Storage.class);TL.registerOp(Storage.class);}
@@ -3433,7 +3157,7 @@ public static class Dbg{
 
  }//class Dbg
 
- public static @TL.Op(urlPath ="*")void bootstrap(TL tl){//TODO: after the development stage of bootstrapping , change the respond to get from dbTbl-storage the js code path: "eu059s.bootStrap" ::= raw minimal js code to load LocalStorage "eu059s.BootStrap" and execute or do a xhr of xhr-op:eu059s.BootStrap
+ public static @TL.Op(urlPath ="*" , noUsrRequired = true)void bootstrap(TL tl){//TODO: after the development stage of bootstrapping , change the respond to get from dbTbl-storage the js code path: "eu059s.bootStrap" ::= raw minimal js code to load LocalStorage "eu059s.BootStrap" and execute or do a xhr of xhr-op:eu059s.BootStrap
 	tl.log("eu059s.AppEU059S.bootstrap:call:",tl);
 	tl.respond("text/html",
 "<html><head><script>window.onload=function bootstrap(){"
@@ -3475,6 +3199,22 @@ public static class Dbg{
 		+"</script></head><body></body></html>"
 	);}
 
+
+ public static @TL.Op Map list(@TL.Op(prmName="lastModified") Date lm,TL tl){
+ 	Map m=new HashMap<String,List<Map<String,Object>>>();
+	try{List l=null;
+		l=Project	.list(lm,tl);if(l!=null && l.size()>0)m.put("projects"	,l);
+		l=Building	.list(lm,tl);if(l!=null && l.size()>0)m.put("buildings"	,l);
+		l=Floor		.list(lm,tl);if(l!=null && l.size()>0)m.put("floors"	,l);
+		l=Sheet		.list(lm,tl);if(l!=null && l.size()>0)m.put("sheets"	,l);
+		l=Storage	.list(lm,tl);if(l!=null && l.size()>0)m.put("storage"	,l);
+		l=TL.DB.Tbl.Usr.list(lm,tl);if(l!=null&&l.size()>0)m.put("users"	,l);
+		//l=Help	.list(lm,tl);if(l!=null && l.size()>0)m.put("",l);
+		//l=Config	.list(lm,tl);if(l!=null && l.size()>0)m.put("",l);
+	} catch (Exception e) {
+		tl.error(e,"AppEU059S.list");}
+	return m;}
+
  public static void main(String[]args){
  Dbg.p("DebugXhr.main:begin");
 	final String prms=",storage:{path:'eu059s.files:dbg.txt',contentType:'text/Javascript',lastModified:1487164764805,data:'dbgOk'},path:'eu059s.files:dbg.txt',lastModified:1486164764805,no:0,logOut:true}";
@@ -3499,7 +3239,6 @@ public static class Dbg{
 
 static{
  	TL.registerOp( AppEU059S.class);
- 	TL.registerOp( Storage.class);
 	//Class<? extends TL.DB.Tbl>
 		Object	[] a
 	= {
@@ -3511,9 +3250,202 @@ static{
 			Floor.class,
 			Sheet.class,
 			Storage.class};
-	for (Object o:a ) {
-		TL.DB.Tbl.registered.add((Class<? extends TL.DB.Tbl>)o);
+	for (Object o:a ) {Class<? extends TL.DB.Tbl>c=null;
+		c=(Class<? extends TL.DB.Tbl>)o;
+		TL.DB.Tbl.registered.add(c);
+		TL.registerOp( c);
 	}
  }
+
+ /*	create database eu2017;
+use eu2017;
+
+CREATE TABLE `usr` (
+  `uid` int(11) NOT NULL,
+  `un` varchar(255) DEFAULT NULL,
+  `pw` varchar(255) DEFAULT NULL,
+  `firstName` varchar(255),
+  `lastName` varchar(255),
+  `email` varchar(255),
+  `tel` varchar(255),
+  `tel2` varchar(255),
+  `notes` text,
+  `level` enum('viewer','inspector','fullAccess') not null default 'viewer',
+  `created` timestamp NOT NULL ,
+  `lastModified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`uid`),
+  unique(`un`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+insert into usr values(1,'admin',password('admin'),'admin','admin','mbohamad@kisr.edu.kw','24989512','99876454','admin','fullAccess',now(),now());
+
+CREATE TABLE `projects` (
+  `no` int(6) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) not null,
+  `owner` int(11) not null,
+  `created` timestamp NOT NULL,
+  `lastModified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `notes` text ,-- tinymce
+  PRIMARY KEY (`no`),
+  unique(`title`),
+  FOREIGN KEY (owner) REFERENCES usr(uid) ON DELETE CASCADE,
+  key(`notes`(250)),
+  key(`created`),
+  key(`lastModified`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `buildings` (
+  `no` int(11) NOT NULL,
+  `p` int(11) NOT NULL ,
+  `title` varchar(255) not null,
+  `owner` int(11) not null,
+  `created` timestamp NOT NULL,
+  `lastModified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `notes` text ,-- tinymce
+  PRIMARY KEY (`no`),
+  unique(`p`,`title`),
+  FOREIGN KEY (owner) REFERENCES usr(uid) ON DELETE CASCADE,
+  FOREIGN KEY (p) REFERENCES projects(no) ON DELETE CASCADE,
+  key(p,`notes`(250)),
+  key(p,`created`),
+  key(p,`lastModified`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `floors` (
+  `no` int(11)NOT NULL,
+  `p` int(11) NOT NULL,
+  `b` int(11) NOT NULL,
+  `owner` int(11)not null,
+  `title` varchar(255)Not null,
+  `created` timestamp NOT NULL,
+  `lastModified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `notes` text,-- tinymce
+  unique(`b`,`title`),
+  FOREIGN KEY (owner) REFERENCES usr(uid) ON DELETE CASCADE,
+  FOREIGN KEY (p) REFERENCES projects (no) ON DELETE CASCADE,
+  FOREIGN KEY (b) REFERENCES buildings(no) ON DELETE CASCADE,
+  PRIMARY KEY (`no`),
+  key(p,`notes`(250)),
+  key(p,`created`),
+  key(p,`lastModified`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- should show in tinymce, in sheet screen, one field at a time if the user (selects) a field. in help-mode of the sheet gui
+CREATE TABLE `help` (
+  `no` int(11) NOT NULL AUTO_INCREMENT,
+	`field` varchar(255),-- this should be enum , and each field in sheets would be the enum item
+	`html` text,-- tinymce
+  `lastModified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`no`),
+  unique (`field`),
+  KEY (`lastModified`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+
+CREATE TABLE `ssn` (
+  `sid` int(6) NOT NULL AUTO_INCREMENT,
+  `uid` int(6) NOT NULL,
+  `created` timestamp NOT NULL ,
+  `auth` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `last` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`sid`),
+  FOREIGN KEY (uid) REFERENCES usr(uid) ON DELETE CASCADE,
+  KEY `kDt` (`created`),
+  KEY `kAuth` (`auth`),
+  KEY `kLast` (`last`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+-- storage table is for js-localStorage, indirectly for "client-side generated gui", but as for scafolding NO gui
+CREATE TABLE `storage` (
+  `no` int(11) NOT NULL AUTO_INCREMENT,
+  `path` varchar(255) NOT NULL,
+  `data` mediumtext NOT NULL,
+  `contentType` varchar(255) NOT NULL,
+  `created` timestamp NOT NULL ,
+  `lastModified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`no`),
+  KEY `path` (`path`,`lastModified`),
+  KEY `lastModified` (`lastModified`,`path`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `log` (
+  `no` int(24) NOT NULL AUTO_INCREMENT,
+  `dt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `uid` int(11) NOT NULL,
+  `entity` enum('projects','usr','sheets','imgs','ssn','log','buildings','floors','storage','help') DEFAULT NULL,
+  `pk` int(11) DEFAULT NULL,
+  `act` enum('New','Update','Delete','Login','Logout','Log','Error') DEFAULT NULL,
+  `json` text,
+  PRIMARY KEY (`no`),
+  FOREIGN KEY (uid) REFERENCES usr(uid) ON DELETE CASCADE,
+  KEY `dt` (`dt`),
+  KEY `entity` (`entity`,`act`,`dt`),
+  KEY `entity_2` (`entity`,`pk`,`dt`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+CREATE TABLE `sheets` (
+  `no` int(11) NOT NULL AUTO_INCREMENT,
+  `p` int(11) NOT NULL,
+  `b` int(11) NOT NULL,
+  `f` int(11) NOT NULL,
+  `owner` int(11)not null,
+  `created` timestamp NOT NULL,
+  `lastModified` timestamp NOT NULL,
+  `notes` text,-- tinymce
+  `TypeofMember` set('Beam','Colunm','Slab','Stairs','Mansory','RC','Foundation','Other') NOT NULL ,
+  `TypeofMemberText` text,
+  `location` POINT,
+  `exposure` set('wetDry','chemical','erosion','elec','heat') NOT NULL ,
+  `LoadingCondition` set('Dead','Live','Impact','Vibration','Traffic','Seismic','Other' ) NOT NULL ,
+  `LoadingConditionText` text,
+  `GeneralCondition` enum('Good','Satisfactory','Poor') DEFAULT NULL,
+  `Distress` set('Cracking','Staining','Surface','Leaking') NOT NULL ,
+  `Cracking` set('Checking','Craze','D','Diagnol','Hairline','Longitudinal','Map','Pattern','Plastic','Random','Shrinkage','Temperature','Transverse','Leaching') NOT NULL ,
+  `width` decimal(6,2) DEFAULT NULL,
+  `WorkingOrDormant` enum('Working ','Dormant') DEFAULT NULL,
+  `Textural` set('AirVoid','Blistering','Bugholes','ColdJoints','ColdLines','Discoloration','Honeycomb','Incrustation','Laitance','SandPocket','SandStreak','Segregation','Staining','Stalactite','Stalagmite','Stratification') NOT NULL ,
+  `Distresses` set('Chalking','Deflection','Delamination','Distortion','Dusting','Exfoliation','Leakage','Peeling','Warping','Curling','Deformation','Disintegration','DrummyArea','Efflorescence','Exudation','MortarFlaking','Pitting') NOT NULL ,
+  `JointDeficiencies` enum('f','on') NOT NULL DEFAULT 'f',
+  `Joint` set('Spall','SealantFailure','Leakage','Fault') NOT NULL ,
+  `Popout` enum('f','on') NOT NULL DEFAULT 'f',
+  `PopoutSize` enum('Small','Medium','Large') DEFAULT NULL,
+  `isScaling` enum('f','on') NOT NULL DEFAULT 'f',
+  `Scaling` enum('Light','Medium','Severe','Very severe') DEFAULT NULL,
+  `Reinforcement` set('Exposed','Corroded','Snapped') NOT NULL ,
+  `isSpall` enum('f','on') NOT NULL DEFAULT 'f',
+  `SpallSize` enum('Small','Large') DEFAULT NULL,
+  `img1`text,-- uploaded img path
+  `img2`text,-- uploaded img path
+  `img3`text,-- uploaded img path
+  `img4`text,-- uploaded img path
+  PRIMARY KEY (`no`),
+  FOREIGN KEY (owner) REFERENCES usr(uid)ON DELETE CASCADE,
+  FOREIGN KEY(p) REFERENCES projects(no) ON DELETE CASCADE,
+  FOREIGN KEY(b)REFERENCES buildings(no) ON DELETE CASCADE,
+  FOREIGN KEY (f) REFERENCES floors (no) ON DELETE CASCADE,
+  key(p,`notes`(250)),
+  key(p,`created`),
+  key(p,`lastModified`),
+  KEY (`p`,`TypeofMember`,`TypeofMemberText`(200),`b`),
+  KEY (`p`,`location`,`b`),
+  KEY (`p`,`exposure`,`b`),
+  KEY (`p`,`LoadingCondition`,`LoadingConditionText`(200),`b`),
+  KEY (`p`,`GeneralCondition`,`b`),
+  KEY (`p`,`Distress`,`b`),
+  KEY (`p`,`Cracking`,`b`),
+  KEY (`p`,`width`,`b`),
+  KEY (`p`,`WorkingOrDormant`,`b`),
+  KEY (`p`,`Textural`,`b`),
+  KEY (`p`,`Distresses`,`b`),
+  KEY (`p`,`JointDeficiencies`,`Joint`,`b`),
+  KEY (`p`,`Popout`,`PopoutSize`,`b`),
+  KEY (`p`,`isScaling`,`Scaling`,`b`),
+  KEY (`p`,`Reinforcement`,`b`),
+  KEY (`p`,`isSpall`,`SpallSize`,`b`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+*/
 
 }//class AppEU059S
