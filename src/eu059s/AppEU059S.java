@@ -41,7 +41,7 @@ public static class TL {
 			}
 
 		static String getRealPath(TL t,String path){
-			String real=t.getServletContext().getRealPath(path);
+			String real=t.h.getServletContext().getRealPath(path);
 			boolean b=true;
 			try{File f=null;
 				if(real==null){int i=0;
@@ -78,102 +78,89 @@ public static class TL {
 	/**wrapping JspWriter or any other servlet writer in "out" */
 	Json.Output out,/**jo is a single instanceof StringWriter buffer*/jo;
 	/**the static/class variable "tl"*/ static ThreadLocal<TL> tl=new ThreadLocal<TL>();
-	public boolean logOut=false;
+	public boolean logOut=false;H h=new H();
 	public static final String CommentHtml[]={"\n<!--","-->\n"},CommentJson[]={"\n/*","\n*/"};
 	public String comments[]=CommentJson;
-	public HttpServletRequest req;
-	public HttpServletResponse rspns;
+	public TL(HttpServletRequest r,HttpServletResponse n,Writer o){h.req=r;h.rspns=n;out=new Json.Output(o);}
 
-		public TL(HttpServletRequest r,HttpServletResponse n,Writer o){req=r;rspns=n;out=new Json.Output(o);}
 
-		public Json.Output jo(){if(jo==null)try{jo=new Json.Output();}catch(Exception x){error(x,"moh.TL.jo:IOEx:");}return jo;}
-		public Json.Output getOut() throws IOException{return out;}
-		public HttpServletRequest getRequest(){return req;}
-		public HttpSession getSession(){return req.getSession();}
-		public ServletContext getServletContext(){return getSession().getServletContext();}
-		/**sets a new TL-instance to the localThread*/
+	public Json.Output getOut() throws IOException {return out;}
+	public Json.Output jo(){if(jo==null)try{jo=new Json.Output();}catch(Exception x){error(x,"moh.TL.jo:IOEx:");}return jo;}
 
-		public static TL Enter(HttpServletRequest r,HttpServletResponse response,Writer out)
-				throws IOException
-		{TL p;tl.set(p=new TL(r,response,out!=null?out:response.getWriter()));
-			p.onEnter();
-			return p;}
+	/**
+	 * sets a new TL-instance to the localThread
+	 */
+	public static TL Enter(HttpServletRequest r,HttpServletResponse response,Writer out)
+			throws IOException
+	{TL p;tl.set(p=new TL(r,response,out!=null?out:response.getWriter()));
+		p.onEnter();
+		return p;}
 
-		private void onEnter()throws IOException
-		{ip=getRequest().getRemoteAddr();
-			now=new Date();
-			try{Object o=req.getContentType();
-				o=o==null?null
-						:o.toString().contains("json")?Json.Parser.parse(req)
-						:o.toString().contains("part")?getMultiParts():null;
-				json=o instanceof Map<?, ?>?(Map<String, Object>)o:null;//req.getParameterMap() ;
+	private void onEnter()throws IOException
+	{ip=h.getRequest().getRemoteAddr();
+		now=new Date();
+		try{Object o=h.req.getContentType();
+			o=o==null?null
+					:o.toString().contains("json")?Json.Parser.parse(h.req)
+					:o.toString().contains("part")?h.getMultiParts():null;
+			json=o instanceof Map<?, ?>?(Map<String, Object>)o:null;//req.getParameterMap() ;
 
-				logOut=var("logOut",logOut);
-				if(getSession().isNew())DB.Tbl.check(this);
-				DB.Tbl.Ssn.onEnter();
-			}catch(Exception ex){error(ex,"TL.onEnter");}
-			//if(pages==null){rsp.setHeader("Retry-After", "60");rsp.sendError(503,"pages null");throw new Exception("pages null");}
-			if(logOut)out.w(comments[0]).w("TL.tl.onEnter:\n").o(this).w(comments[1]);
-		}//onEnter
+			logOut=h.var("logOut",logOut);
+			if(h.getSession().isNew())DB.Tbl.check(this);
+			DB.Tbl.Ssn.onEnter();
+		}catch(Exception ex){error(ex,"TL.onEnter");}
+		//if(pages==null){rsp.setHeader("Retry-After", "60");rsp.sendError(503,"pages null");throw new Exception("pages null");}
+		if(logOut)out.w(comments[0]).w("TL.tl.onEnter:\n").o(this).w(comments[1]);
+	}//onEnter
 
-		private void onExit(){usr=null;ssn=null;ip=null;now=null;req=null;json=null;out=jo=null;rspns=null;}
+	private void onExit(){usr=null;ssn=null;ip=null;now=null;h.req=null;json=null;out=jo=null;h.rspns=null;}
 
 	/**unsets the localThread, and unset local variables*/
 	public static void Exit()//throws Exception
 	{TL p=TL.tl();if(p==null)return;
-		DB.close((Connection)p.r(context.DB.reqCon.str));
+		DB.close((Connection)p.h.r(context.DB.reqCon.str));
 		p.onExit();tl.set(null);}
 
- Map getMultiParts(){
-	Map<Object,Object>m=null;
-		if(ServletFileUpload.isMultipartContent(req))try
-		{DiskFileItemFactory factory=new DiskFileItemFactory();
-			factory.setSizeThreshold(40000000);//MemoryThreshold);
-			String path=AppEU059S.UploadPath;//app(this).getUploadPath();
-			String real=TL.context.getRealPath(this, path);//getServletContext().getRealPath(path);
-			File f=null,uploadDir;
+	/**get the TL-instance for the current Thread*/
+	public static TL tl(){Object o=tl.get();return o instanceof TL?(TL)o:null;}
 
-			uploadDir=new File(real);
-			if( ! uploadDir.exists() )
-				uploadDir.mkdirs();//mkDir();
-			factory.setRepository(uploadDir);
-			ServletFileUpload upload=new ServletFileUpload(factory);
-			List<FileItem>formItems=upload.parseRequest(req);
-			if(formItems!=null && formItems.size()>0 )
-			{	m=new HashMap<Object,Object>();
-				for(FileItem item:formItems)
-				{	String fieldNm=item.getFieldName();
-					boolean fld=item.isFormField();//mem=item.isInMemory(),
-					if(fld)
-					{String v=item.getString();
-						Object o=v;
-						if(fieldNm.indexOf("json")!=-1)
-							o=Json.Parser.parse(v);
-						m.put(fieldNm, o);
-					}else{
-						long sz=item.getSize();
-						if(sz>0){
-							String ct=item.getContentType()
-							,nm=item.getName();
-							int count=0;
-							f=new File(uploadDir,nm);
-							while(f.exists())
-								f=new File(uploadDir,(count++)+'.'+nm);
-							m.put(fieldNm,Util.mapCreate(//"name",fieldNm,
-								"contentType",ct,"size",sz
-								,"fileName",path+f.getName()
+	////////////////////////////////
+	public String logo(Object...a){String s=null;
+		if(a!=null&&a.length>0)
+			try{Json.Output o=tl().jo().clrSW();
+				for(Object i:a)o.o(i);
+				s=o.toStrin_();
+				h.getServletContext().log(s);//CHANGED 2016.08.17.10.00
+				if(logOut){out.flush().
+						w(comments[0]//"\n/*"
+						).w(s).w(comments[1]//"*/\n"
+				);}}catch(Exception ex){ex.printStackTrace();}return s;}
 
-								));
-							item.write(f);
-						}//if sz > 0
-					}//if isField else
-				}//for(FileItem item:formItems)
-			}//if(formItems!=null && formItems.size()>0 )
-		}catch(Exception ex){
-			error(ex,"TL.getMultiParts");}
-		//if(ServletFileUpload.isMultipartContent(req))
-		return m;
-	}//Map getMultiParts()
+	/**calls the servlet log method*/
+	public void log(Object...s){logA(s);}
+	public void logA(Object[]s){try{
+		jo().clrSW();
+		for(Object t:s)jo.w(String.valueOf(t));
+		String t=jo.toStrin_();
+		h.getServletContext().log(t);
+		if(logOut)out.flush().w(comments[0]).w(t).w(comments[1]);
+	}catch(Exception ex){ex.printStackTrace();}}
+
+	public void error(Throwable x,Object...p){try{
+		String s=jo().clrSW().w("error:").o(p,x).toString();
+		h.getServletContext().log(s);
+		if(logOut)out.w(comments[0]//"\n/*
+		).w("error:").w(s.replaceAll("<", "&lt;"))
+				.w("\n---\n").o(x).w(comments[1]
+				);if(x!=null)x.printStackTrace();}
+	catch(Exception ex){ex.printStackTrace();}}
+
+	/**get a pooled jdbc-connection for the current Thread, calling the function dbc()*/
+	Connection dbc()throws SQLException
+	{TL p=this;Object s=context.DB.reqCon.str,o=p.h.r(s);
+		if(o==null||!(o instanceof Connection))
+			p.h.r(s,o=DB.c());
+		return (Connection)o;}
 
 	public static class Util{//utility methods
 
@@ -187,11 +174,11 @@ public static class TL {
 		{for(int i=0;i<p.length;i+=2)m.put(p[i],p[i+1]);return m;}
 
 		public final static java.text.SimpleDateFormat
-		dateFormat=new java.text.SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+				dateFormat=new java.text.SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
 
 		public static Integer[]parseInts(String s){
 			java.util.Scanner b=new java.util.Scanner(s),
-			c=b.useDelimiter("[\\s\\.\\-/\\:A-Za-z,]+");
+					c=b.useDelimiter("[\\s\\.\\-/\\:A-Za-z,]+");
 			List<Integer>l=new LinkedList<Integer>();
 			while(c.hasNextInt()){
 				//if(c.hasNextInt())else c.skip();
@@ -223,7 +210,7 @@ public static class TL {
 			else if(c=='\r')b.append('\\').append('r');
 			else if(c=='\t')b.append('\\').append('t');
 			else if(c=='\'')b.append('\\').append('\'');
-				else b.append(c);}return b.append('"').toString();}
+			else b.append(c);}return b.append('"').toString();}
 
 		/**return the integer-index of the occurrence of element-e in the array-a, or returns -1 if not found*/
 		public static int indexOf(Object[]a,Object e){int i=a.length;while(--i>-1&&(e!=a[i])&&(e==null||!e.equals(a[i])));return i;}
@@ -234,208 +221,291 @@ public static class TL {
 
 		public static List<Object>lst(Object...p){List<Object>r=new LinkedList<Object>();for(Object o:p)r.add(o);return r;}
 
-			public static boolean isNum(String v){
-				int i=-1,n=v!=null?v.length():0;
-				char c='\0';
-				boolean b=n>0;
-				while(b&& c!='.'&& i<n)
-				{c=++i<n?v.charAt(i):'\0';
-					b= Character.isDigit(c)||c=='.';
-				}
-				if(c=='.') while(b&& i<n)
-				{c=++i<n?v.charAt(i):'\0';
-					b= Character.isDigit(c);
-				};
-				return b;
+		public static boolean isNum(String v){
+			int i=-1,n=v!=null?v.length():0;
+			char c='\0';
+			boolean b=n>0;
+			while(b&& c!='.'&& i<n)
+			{c=++i<n?v.charAt(i):'\0';
+				b= Character.isDigit(c)||c=='.';
 			}
-			public static int parseInt(String v,int dv)
-			{if(isNum(v) )try{dv=Integer.parseInt(v);}
-			catch(Exception ex){//changed 2016.06.27 18:28
-				TL.tl().error(ex, "TL.Util.parseInt:",v,dv);
-			}return dv;}
+			if(c=='.') while(b&& i<n)
+			{c=++i<n?v.charAt(i):'\0';
+				b= Character.isDigit(c);
+			};
+			return b;
+		}
+		public static int parseInt(String v,int dv)
+		{if(isNum(v) )try{dv=Integer.parseInt(v);}
+		catch(Exception ex){//changed 2016.06.27 18:28
+			TL.tl().error(ex, "TL.Util.parseInt:",v,dv);
+		}return dv;}
 
 		public static <T>T parse(String s,T defval){
-		 if(s!=null)try{
-			Class<T> ct=(Class<T>) defval.getClass();
-			Class c=ct;
-			boolean b=c==null?false:c.isEnum();
+			if(s!=null)try{
+				Class<T> ct=(Class<T>) defval.getClass();
+				Class c=ct;
+				boolean b=c==null?false:c.isEnum();
 				if(!b){c=ct.getEnclosingClass();b=c==null?false:c.isEnum();}
 				if(b){
 					for(Object o:c.getEnumConstants())
 						if(s.equalsIgnoreCase(o.toString()))
 							return (T)o;
 				}}catch(Exception x){//changed 2016.06.27 18:28
-					TL.tl().error(x, "TL.Util.<T>T parse(String s,T defval):",s,defval);}
+				TL.tl().error(x, "TL.Util.<T>T parse(String s,T defval):",s,defval);}
 			return defval;}
 
-			public static Object parse(String s,Class c){
-				if(s!=null)try{if(String.class.equals(c))return s;
-				else if(Number.class.isAssignableFrom(c)||c.isPrimitive()) {
-					if (Integer.class.equals(c)|| "int"   .equals(c.getName())) return new Integer(s);
-					else if (Double .class.equals(c)|| "double".equals(c.getName())) return new Double(s);
-					else if (Float  .class.equals(c)|| "float" .equals(c.getName())) return new Float(s);
-					else if (Short  .class.equals(c)|| "short" .equals(c.getName())) return new Short(s);
-					else if (Long   .class.equals(c)|| "long"  .equals(c.getName())) return new Long(s);
-					else if (Byte   .class.equals(c)|| "byte"  .equals(c.getName())) return new Byte(s);
-				}///else return new Integer(s);}
-				else if(Boolean.class.equals(c)||(c.isPrimitive()&&"boolean".equals(c.getName())))return new Boolean(s);
-				else if(Date.class.equals(c))return parseDate(s);
-				else if(Character.class.isAssignableFrom(c)||(c.isPrimitive()&&"char".equals(c.getName())))
-					return s.length()<1?'\0':s.charAt(0);
-				else if(java.net.URL.class.isAssignableFrom(c))try {return new java.net.URL(
-						"file:" +TL.tl().getServletContext().getContextPath()+'/'+s);}
-				catch (Exception ex) {TL.tl().error(ex,"TL.Util.parse:URL:p=",s," ,c=",c);}
-					boolean b=c==null?false:c.isEnum();
-					if(!b){Class ct=c.getEnclosingClass();b=ct==null?false:ct.isEnum();if(b)c=ct;}
-					if(b){
-						for(Object o:c.getEnumConstants())
-							if(s.equalsIgnoreCase(o.toString()))
-								return o;
-					}
-					return Json.Parser.parse(s);
-				}catch(Exception x){//changed 2016.06.27 18:28
-					TL.tl().error(x, "TL.Util.<T>T parse(String s,Class):",s,c);}
-				return s;}
+		public static Object parse(String s,Class c){
+			if(s!=null)try{if(String.class.equals(c))return s;
+			else if(Number.class.isAssignableFrom(c)||c.isPrimitive()) {
+				if (Integer.class.equals(c)|| "int"   .equals(c.getName())) return new Integer(s);
+				else if (Double .class.equals(c)|| "double".equals(c.getName())) return new Double(s);
+				else if (Float  .class.equals(c)|| "float" .equals(c.getName())) return new Float(s);
+				else if (Short  .class.equals(c)|| "short" .equals(c.getName())) return new Short(s);
+				else if (Long   .class.equals(c)|| "long"  .equals(c.getName())) return new Long(s);
+				else if (Byte   .class.equals(c)|| "byte"  .equals(c.getName())) return new Byte(s);
+			}///else return new Integer(s);}
+			else if(Boolean.class.equals(c)||(c.isPrimitive()&&"boolean".equals(c.getName())))return new Boolean(s);
+			else if(Date.class.equals(c))return parseDate(s);
+			else if(Character.class.isAssignableFrom(c)||(c.isPrimitive()&&"char".equals(c.getName())))
+				return s.length()<1?'\0':s.charAt(0);
+			else if(java.net.URL.class.isAssignableFrom(c))try {return new java.net.URL(
+					"file:" +TL.tl().h.getServletContext().getContextPath()+'/'+s);}
+			catch (Exception ex) {TL.tl().error(ex,"TL.Util.parse:URL:p=",s," ,c=",c);}
+				boolean b=c==null?false:c.isEnum();
+				if(!b){Class ct=c.getEnclosingClass();b=ct==null?false:ct.isEnum();if(b)c=ct;}
+				if(b){
+					for(Object o:c.getEnumConstants())
+						if(s.equalsIgnoreCase(o.toString()))
+							return o;
+				}
+				return Json.Parser.parse(s);
+			}catch(Exception x){//changed 2016.06.27 18:28
+				TL.tl().error(x, "TL.Util.<T>T parse(String s,Class):",s,c);}
+			return s;}
 
 	}//class util
 
-		/**get the TL-instance for the current Thread*/
-		public static TL tl(){Object o=tl.get();return o instanceof TL?(TL)o:null;}
+public static class H {
+		public HttpServletRequest req;
+		public HttpServletResponse rspns;
 
-	/**get a request-scope attribute*/
-	public Object r(Object n){return req.getAttribute(String.valueOf(n));}
+		public HttpServletRequest getRequest() {return req;}
 
-	/**set a request-scope attribute*/
-	public Object r(Object n,Object v){req.setAttribute(String.valueOf(n),v);return v;}
+		public HttpSession getSession() {return req.getSession();}
 
-	/**get a session-scope attribute*/
-	public Object s(Object n){return getSession().getAttribute(String.valueOf(n));}
+		public ServletContext getServletContext() {return getSession().getServletContext();}
 
-	/**set a session-scope attribute*/
-	public Object s(Object n,Object v){getSession().setAttribute(String.valueOf(n),v);return v;}
+		Map getMultiParts() {
+			Map<Object, Object> m = null;
+			if (ServletFileUpload.isMultipartContent(req)) try {
+				DiskFileItemFactory factory = new DiskFileItemFactory();
+				factory.setSizeThreshold(40000000);//MemoryThreshold);
+				String path = AppEU059S.UploadPath;//app(this).getUploadPath();
+				String real = TL.context.getRealPath(tl(), path);//getServletContext().getRealPath(path);
+				File f = null, uploadDir;
 
-	/**get an application-scope attribute*/
-	public Object a(Object n){return getServletContext().getAttribute(String.valueOf(n));}
+				uploadDir = new File(real);
+				if (!uploadDir.exists())
+					uploadDir.mkdirs();//mkDir();
+				factory.setRepository(uploadDir);
+				ServletFileUpload upload = new ServletFileUpload(factory);
+				List<FileItem> formItems = upload.parseRequest(req);
+				if (formItems != null && formItems.size() > 0) {
+					m = new HashMap<Object, Object>();
+					for (FileItem item : formItems) {
+						String fieldNm = item.getFieldName();
+						boolean fld = item.isFormField();//mem=item.isInMemory(),
+						if (fld) {
+							String v = item.getString();
+							Object o = v;
+							if (fieldNm.indexOf("json") != -1)
+								o = Json.Parser.parse(v);
+							m.put(fieldNm, o);
+						} else {
+							long sz = item.getSize();
+							if (sz > 0) {
+								String ct = item.getContentType(), nm = item.getName();
+								int count = 0;
+								f = new File(uploadDir, nm);
+								while (f.exists())
+									f = new File(uploadDir, (count++) + '.' + nm);
+								m.put(fieldNm, Util.mapCreate(//"name",fieldNm,
+										"contentType", ct, "size", sz
+										, "fileName", path + f.getName()
 
-	/**set an application-scope attribute*/
-	public void a(Object n,Object v){getServletContext().setAttribute(String.valueOf(n),v);}
-
-
-		/**get variable, a variable is considered
-		 1: a parameter from the http request
-		 2: if the request-parameter is not null then set it in the session with the attribute-name pn
-		 3: if the request-parameter is null then get pn attribute from the session
-		 4: if both the request-parameter and the session attribute are null then return null
-		 @parameters String pn Parameter/attribute Name
-		 HttpSession ss the session to get/set the attribute
-		 HttpServletRequest rq the http-request to get the parameter from.
-		 @return variable value.*/
-		public Object var(String pn)
-		{HttpSession ss=getSession();
-			Object r=null;try{Object sVal=ss.getAttribute(pn);String reqv=req(pn);
-			if(reqv!=null&&!reqv.equals(sVal)){ss.setAttribute(pn,r=reqv);//logo("TL.var(",pn,")reqVal:sesssion.set=",r);
+								));
+								item.write(f);
+							}//if sz > 0
+						}//if isField else
+					}//for(FileItem item:formItems)
+				}//if(formItems!=null && formItems.size()>0 )
+			} catch (Exception ex) {
+				tl().error(ex, "TL.getMultiParts");
 			}
-			else if(sVal!=null){r=sVal; //logo("TL.var(",pn,")sessionVal=",r);
-			}}catch(Exception ex){ex.printStackTrace();}return r;}
+			//if(ServletFileUpload.isMultipartContent(req))
+			return m;
+		}//Map getMultiParts()
 
-	public Number var(String pn,Number r)
-	{Object x=var(pn);return x==null?r:x instanceof Number?(Number)x:Double.parseDouble(x.toString());}
+		/**
+		 * get a request-scope attribute
+		 */
+		public Object r(Object n) {
+			return req.getAttribute(String.valueOf(n));
+		}
 
-	public String var(String pn,String r)
-	{Object x=var(pn);return x==null?r:String.valueOf(x);}
+		/**
+		 * set a request-scope attribute
+		 */
+		public Object r(Object n, Object v) {
+			req.setAttribute(String.valueOf(n), v);
+			return v;
+		}
 
-	public boolean var(String pn,boolean r)
-	{Object x=var(pn);return x==null?r:x instanceof
-		Boolean?(Boolean)x:Boolean.parseBoolean(x.toString());}
+		/**
+		 * get a session-scope attribute
+		 */
+		public Object s(Object n) {
+			return getSession().getAttribute(String.valueOf(n));
+		}
 
-	/**mostly used for enums , e.g. "enum Screen"*/
- public <T>T var(String n,T defVal) {
-	String r=req(n);
-		if(r!=null)
-			s(n,defVal=Util.parse(r,defVal));
-		else{
-			Object s=s(n);
-			if(s==null)
-				s(n,defVal);
-			else{Class c=defVal.getClass();
-				if(c.isAssignableFrom(s.getClass()))
-					defVal=(T)s;//s(n,defVal=(T)s); //changed 2016.07.18
-				else
-					log("TL.var(",n,",<T>",defVal,"):defVal not instanceof ssnVal:",s);//added 2016.07.18
+		/**
+		 * set a session-scope attribute
+		 */
+		public Object s(Object n, Object v) {
+			getSession().setAttribute(String.valueOf(n), v);
+			return v;
+		}
+
+		/**
+		 * get an application-scope attribute
+		 */
+		public Object a(Object n) {
+			return getServletContext().getAttribute(String.valueOf(n));
+		}
+
+		/**
+		 * set an application-scope attribute
+		 */
+		public void a(Object n, Object v) {
+			getServletContext().setAttribute(String.valueOf(n), v);
+		}
+
+
+		/**
+		 * get variable, a variable is considered
+		 * 1: a parameter from the http request
+		 * 2: if the request-parameter is not null then set it in the session with the attribute-name pn
+		 * 3: if the request-parameter is null then get pn attribute from the session
+		 * 4: if both the request-parameter and the session attribute are null then return null
+		 *
+		 * @return variable value.
+		 * @parameters String pn Parameter/attribute Name
+		 * HttpSession ss the session to get/set the attribute
+		 * HttpServletRequest rq the http-request to get the parameter from.
+		 */
+		public Object var(String pn) {
+			HttpSession ss = getSession();
+			Object r = null;
+			try {
+				Object sVal = ss.getAttribute(pn);
+				String reqv = req(pn);
+				if (reqv != null && !reqv.equals(sVal)) {
+					ss.setAttribute(pn, r = reqv);//logo("TL.var(",pn,")reqVal:sesssion.set=",r);
+				} else if (sVal != null) {
+					r = sVal; //logo("TL.var(",pn,")sessionVal=",r);
+				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
-		}return defVal;
-	}
+			return r;
+		}
 
-		public String req(String n){
-			if(json!=null )
-			{Object o=json.get(n);if(o!=null)return o.toString();}
-			String r=req.getParameter(n);
-			if(r==null)r=req.getHeader(n);
-			if(logOut)log("TL.req(",n,"):",r);
-			return r;}
+		public Number var(String pn, Number r) {
+			Object x = var(pn);
+			return x == null ? r : x instanceof Number ? (Number) x : Double.parseDouble(x.toString());
+		}
 
-	public int req(String n,int defval)
-	{String s=req(n);
-		int r=Util.parseInt(s, defval);
-		return r;}
+		public String var(String pn, String r) {
+			Object x = var(pn);
+			return x == null ? r : String.valueOf(x);
+		}
 
-		public Date req(String n,Date defval)
-		{String s=req(n);if(s!=null)
-			defval=Util.parseDate(s);
-			return defval;}
+		public boolean var(String pn, boolean r) {
+			Object x = var(pn);
+			return x == null ? r : x instanceof
+					Boolean ? (Boolean) x : Boolean.parseBoolean(x.toString());
+		}
 
-		public double req(String n,double defval)
-		{String s=req(n);if(s!=null)
-			try{defval=Double.parseDouble(s);}catch(Exception x){}
-			return defval;}
+		/**
+		 * mostly used for enums , e.g. "enum Screen"
+		 */
+		public <T> T var(String n, T defVal) {
+			String r = req(n);
+			if (r != null)
+				s(n, defVal = Util.parse(r, defVal));
+			else {
+				Object s = s(n);
+				if (s == null)
+					s(n, defVal);
+				else {
+					Class c = defVal.getClass();
+					if (c.isAssignableFrom(s.getClass()))
+						defVal = (T) s;//s(n,defVal=(T)s); //changed 2016.07.18
+					else
+						tl().log("TL.var(", n, ",<T>", defVal, "):defVal not instanceof ssnVal:", s);//added 2016.07.18
+				}
+			}
+			return defVal;
+		}
 
-	public <T>T req(String n,T defVal)
-	{String s=req(n);if(s!=null)
-		defVal=Util.parse(s,defVal);
-		return defVal;}
+		public String req(String n) {TL t=tl();
+			if (t.json != null) {
+				Object o = t.json.get(n);
+				if (o != null) return o.toString();
+			}
+			String r = req.getParameter(n);
+			if (r == null) r = req.getHeader(n);
+			if (t.logOut) t.log("TL.req(", n, "):", r);
+			return r;
+		}
 
-	public Object req(String n,Class c)
-	{String s=req(n);//if(s!=null)
-		Object o=Util.parse(s,c);
-		return o;}
+		public int req(String n, int defval) {
+			String s = req(n);
+			int r = Util.parseInt(s, defval);
+			return r;
+		}
 
-		////////////////////////////////
-		public String logo(Object...a){String s=null;
-			if(a!=null&&a.length>0)
-				try{Json.Output o=tl().jo().clrSW();
-					for(Object i:a)o.o(i);
-					s=o.toStrin_();
-					getServletContext().log(s);//CHANGED 2016.08.17.10.00
-					if(logOut){out.flush().
-							w(comments[0]//"\n/*"
-							).w(s).w(comments[1]//"*/\n"
-					);}}catch(Exception ex){ex.printStackTrace();}return s;}
+		public Date req(String n, Date defval) {
+			String s = req(n);
+			if (s != null)
+				defval = Util.parseDate(s);
+			return defval;
+		}
 
-		/**calls the servlet log method*/
-		public void log(Object...s){logA(s);}
-		public void logA(Object[]s){try{
-			jo().clrSW();
-			for(Object t:s)jo.w(String.valueOf(t));
-			String t=jo.toStrin_();
-			getServletContext().log(t);
-			if(logOut)out.flush().w(comments[0]).w(t).w(comments[1]);
-		}catch(Exception ex){ex.printStackTrace();}}
+		public double req(String n, double defval) {
+			String s = req(n);
+			if (s != null)
+				try {
+					defval = Double.parseDouble(s);
+				} catch (Exception x) {
+				}
+			return defval;
+		}
 
-	public void error(Throwable x,Object...p){try{
-		String s=jo().clrSW().w("error:").o(p,x).toString();
-		getServletContext().log(s);
-		if(logOut)out.w(comments[0]//"\n/*
-			).w("error:").w(s.replaceAll("<", "&lt;"))
-					.w("\n---\n").o(x).w(comments[1]
-					);if(x!=null)x.printStackTrace();}
-		catch(Exception ex){ex.printStackTrace();}}
+		public <T> T req(String n, T defVal) {
+			String s = req(n);
+			if (s != null)
+				defVal = Util.parse(s, defVal);
+			return defVal;
+		}
 
-	/**get a pooled jdbc-connection for the current Thread, calling the function dbc()*/
-	Connection dbc()throws SQLException
-	{TL p=this;Object s=context.DB.reqCon.str,o=p.r(s);
-		if(o==null||!(o instanceof Connection))
-			p.r(s,o=DB.c());
-		return (Connection)o;}
+		public Object req(String n, Class c) {
+			String s = req(n);//if(s!=null)
+			Object o = Util.parse(s, c);
+			return o;
+		}
+	}//class H
 
 		public static class DB
 		{
@@ -444,12 +514,12 @@ public static class TL {
 			 sets the pool as an application-scope attribute named context.DB.pool.str
 			 when first time called, all next calls uses this context.DB.pool.str*/
 			public static synchronized Connection c()throws SQLException
-			{ TL t=tl();Connection r=(Connection)t.r(context.DB.reqCon.str);if(r!=null)return r;
+			{ TL t=tl();Connection r=(Connection)t.h.r(context.DB.reqCon.str);if(r!=null)return r;
 				Object[]a={0,0,0};
-				MysqlConnectionPoolDataSource d=(MysqlConnectionPoolDataSource)t.a(context.DB.pool.str);
+				MysqlConnectionPoolDataSource d=(MysqlConnectionPoolDataSource)t.h.a(context.DB.pool.str);
 				r=d==null?null:d.getPooledConnection().getConnection();
 				if(r!=null)//changed 2016.07.18
-					t.r(context.DB.reqCon.str,r);
+					t.h.r(context.DB.reqCon.str,r);
 				else try
 				{try{int x=context.getContextIndex(t);t.log("TL.DB.c:1:getContextIndex:",x);
 					if(x!=-1)
@@ -477,7 +547,7 @@ public static class TL {
 				 +"/"+context.DB.dbName.str
 				 ,context.DB.un.str,context.DB.pw.str
 				 );
-				t.r(context.DB.reqCon.str,r);
+				t.h.r(context.DB.reqCon.str,r);
 			}catch(Throwable e){t.error(e,"TL.DB.DriverManager:");}
 			return r;}
 
@@ -495,8 +565,8 @@ public static class TL {
 			s=context.DB.pw.a[Math.min(context.DB.pw.a.length-1,ipw)];if(t.logOut)ss+="\npw:"+s;
 			d.setPassword(s);
 			Connection r=d.getPooledConnection().getConnection();
-			t.a(context.DB.pool.str,d);
-			t.r(context.DB.reqCon.str,r);
+			t.h.a(context.DB.pool.str,d);
+			t.h.r(context.DB.reqCon.str,r);
 			Object[]a={d,r,ss};
 			return a;}
 
@@ -521,8 +591,8 @@ public static class TL {
 
 		/**@return a jdbc-PreparedStatement stored in the application-scope, when first time called,this function creates the PreparedStatement and set it in the application scope with the attribute-name nm parameter*/
 		public static PreparedStatement Ps(String nm,String sql)throws Exception
-		{TL tl=TL.tl();Object[]a=(Object[])tl.a(nm);
-			if(a==null){a=new Object[2];a[0]=c().prepareStatement(sql);tl.a(nm,a);}
+		{TL tl=TL.tl();Object[]a=(Object[])tl.h.a(nm);
+			if(a==null){a=new Object[2];a[0]=c().prepareStatement(sql);tl.h.a(nm,a);}
 			else {tl.log("Ps:1:else:tl.now="+tl.now+", a[1]="+a[1]);
 				if( (tl.now.getTime()-((java.util.Date)a[1]).getTime()) >1000*60*5)
 				{try{((PreparedStatement)a[0]).getConnection().close();}
@@ -546,7 +616,7 @@ public static class TL {
 		public static void close(Statement s){try{Connection c=s.getConnection();s.close();close(c);}catch(Exception e){e.printStackTrace();}}
 		public static void close(Connection c){
 			try{if(c!=null){
-				tl().r("java.sql.Connection",null);
+				tl().h.r("java.sql.Connection",null);
 				c.close();}
 			}catch(Exception e){e.printStackTrace();}}
 
@@ -750,9 +820,9 @@ public static class TL {
 				static final String StrSsnTbls="TL.DB.Tbl.tbls";
 				//public Map<Class<? extends DB.Tbl.Sql>,DB.Tbl.Sql>tbls;
 				public static Tbl tbl(Class<? extends Tbl>p){
-					TL t=tl();Object o=t.s(StrSsnTbls);
+					TL t=tl();Object o=t.h.s(StrSsnTbls);
 					Map<Class<? extends Tbl>,Tbl>tbls=o instanceof Map?(Map)o:null;
-					if(tbls==null)t.s(StrSsnTbls,tbls=new HashMap<Class<? extends Tbl>,Tbl>());
+					if(tbls==null)t.h.s(StrSsnTbls,tbls=new HashMap<Class<? extends Tbl>,Tbl>());
 					Tbl r=tbls.get(p);if(r==null)try {tbls.put(p, r=p.newInstance());}
 
 					catch(Exception ex){t.error(ex,"TL.DB.Tbl.tbl(Class<TL.DB.Tbl>",p,"):Exception:");}
@@ -1159,20 +1229,64 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
  static void check(TL tl){
 	for(Class<? extends Tbl>c:registered)try
 	{String n=c.getName(),n2=".checkDBTCreation."+n;
-		Object o=tl.a(n2);
+		Object o=tl.h.a(n2);
 		tl.log("TL.DB.Tbl.check:",n2,":",o);
 	 if( o==null){
 		Tbl t=c.newInstance();
 		t.checkDBTCreation(tl);
-		tl.a(n2,tl.now);
+		tl.h.a(n2,tl.now);
 	}}catch(Exception ex){tl.error(ex,"eu059s.AppE059S.TL.DB.Tbl.check");}
  }
+
+ /**abstract Table DB.Tbl, with Op:New,set,delete,list(lastModified),get*/
+ public static abstract class ATbl extends Tbl{
+	public static ATbl newInst(Class <? extends ATbl>c){try{
+		ATbl p=c.newInstance();
+		return p;
+	}catch(Exception ex){}return null;}
+
+	public	static @TL.Op int create(@TL.Op(prmName="row") ATbl p,TL tl)
+	{int no=-1;
+		 try{CI pkc=p.pkc();
+		 p.v(pkc,p.maxPlus1(pkc ));//p.pkc()
+			 p.save();
+		 } catch (Exception e) {
+			 tl.error(e,"AppEU059S.ATbl.New:op");}
+		 return no;}
+
+	 public static @TL.Op ATbl update(@TL.Op(prmName="row") ATbl p,TL tl){
+		 try{p.save();} catch (Exception e) {
+			 tl.error(e,"AppEU059S.Usr.set");}
+		 return p;}
+
+	 public static @TL.Op int delete(@TL.Op(prmName="row") ATbl p,TL tl){
+		 try{ return p.delete();
+		 } catch (Exception e) {
+			 tl.error(e,"AppEU059S.ATbl.delete");}
+		 return 0;}
+
+	 public static @TL.Op ATbl get(@TL.Op(prmName="row") ATbl p,TL tl){
+		 try{p.load();
+		 } catch (Exception e) {
+			 tl.error(e,"AppEU059S.ATbl.get");}
+		 return p;}
+
+	public static @TL.Op List list(@TL.Op(prmName="lastModified") Date lm,TL tl){List l=null;
+		try{Class<? extends ATbl>c=null;
+			ATbl p=newInst(c);
+			CI pk=p.pkc();
+			String sql="select `"+pk+"`,`lastModified` from "+p.getName()+" where `lastModified`>?";
+			 l=TL.DB.l(sql.toString(),lm);
+		} catch (Exception e) {
+			tl.error(e,"AppEU059S.ATbl.list");}
+		return l;}
+ }//class ATbl
 
 			/**represents a row in the `usr` mysql table ,
 			 * a sub class from TL.DB.Tbl,
 			 * hence has built-in methods to operate with
 			 * the mysql-table, like querying and and updating*/
- public static class Usr extends Tbl{
+ public static class Usr extends ATbl{
 				static final String dbtName="Usr";
 				/**the attribute-name	in the session*/
 				public final static String prefix=dbtName;
@@ -1233,11 +1347,11 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 					n.last=new Date();
 					n.save();
 					n.usr=this;
-					tl.s(Ssn.SessionAttrib,n);
-					Object o=tl.s(StrSsnTbls);
+					tl.h.s(Ssn.SessionAttrib,n);
+					Object o=tl.h.s(StrSsnTbls);
 					Map<Class<? extends TL.DB.Tbl>,TL.DB.Tbl>
 					tbls=o instanceof Map?(Map)o:null;
-					if(tbls==null)tl.s(StrSsnTbls,tbls=new
+					if(tbls==null)tl.h.s(StrSsnTbls,tbls=new
 							java.util.HashMap<Class<? extends TL.DB.Tbl>,TL.DB.Tbl>());
 					tbls.put(Usr.class, tl.usr);
 					tbls.put(Ssn.class, n);tl.logo("Usr.onLogin:n:",this);}
@@ -1299,7 +1413,7 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 						tl.error(e,"AppEU059S.Usr.logout:op");}
 					return null;}
 
-
+/*
 				public	static @TL.Op int New(@TL.Op(prmName="Usr") Usr p,TL tl)
 				{int no=-1;
 					try{no=p.uid=p.maxPlus1(C.uid);
@@ -1332,7 +1446,7 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 					} catch (Exception e) {
 						tl.error(e,"AppEU059S.Usr.list");}
 					return l;}
-
+*/
  }//class Usr
 
 			public static class Ssn extends Tbl {//implements Serializable
@@ -1346,13 +1460,13 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 
 				public void onLogout()throws Exception{
 					TL tl=TL.tl();tl.ssn=null;tl.usr=null;
-					tl.s(Ssn.SessionAttrib,null);
-					HttpSession s=tl.getSession();
+					tl.h.s(Ssn.SessionAttrib,null);
+					HttpSession s=tl.h.getSession();
 					s.setMaxInactiveInterval(1);
 				}
 
 				public static void onEnter(){
-					TL tl=TL.tl();Object o=tl.s(Ssn.SessionAttrib);
+					TL tl=TL.tl();Object o=tl.h.s(Ssn.SessionAttrib);
 					if(o instanceof Ssn){
 						Ssn n=(Ssn)o;
 						tl.ssn=n;tl.usr=n.usr;
@@ -1505,7 +1619,7 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 
 			public Form readReq(String prefix){
 				TL t=tl();FI[]a=flds();for(FI f:a){
-					String s=t.req(prefix==null||prefix.length()<1?prefix+f:f.toString());
+					String s=t.h.req(prefix==null||prefix.length()<1?prefix+f:f.toString());
 					Class <?>c=s==null?null:f.f().getType();
 					Object v=null;try {
 						if(s!=null)v=Util.parse(s,c);
@@ -1908,9 +2022,9 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 						.w(",\"now\":").o(y.now,i2,c?path+".now":path)
 						.w(",\"json\":").o(y.json,i2,c?path+".json":path)
 						//.w(",\"response\":").o(y.response,i2,c?path+".response":path)
-						.w(",\"Request\":").o(y.getRequest(),i2,c?path+".request":path)
+						.w(",\"Request\":").o(y.h.getRequest(),i2,c?path+".request":path)
 						//.w(",\"Session\":").o(y.getSession(false))
-						.w(",\"application\":").o(y.getServletContext(),i2,c?path+".application":path)
+						.w(",\"application\":").o(y.h.getServletContext(),i2,c?path+".application":path)
 				//.w(",\"config\":").o(y.req.getServletContext().getServletConfig(),i2,c?path+".config":path)
 				//.w(",\"Page\":").o(y.srvlt,i2,c?path+".Page":path)
 				//.w(",\"Response\":").o(y.rspns,i2,c?path+".Response":path)
@@ -2163,19 +2277,19 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 
 
 	void respond(String contentType,String content){
-		try{r("responseDone",true);
-			rspns.setContentType(contentType);
+		try{h.r("responseDone",true);
+			h.rspns.setContentType(contentType);
 			o(content);}catch(Exception ex){error(ex,"TL.respond:");}}
 
 		public static void run(HttpServletRequest request,HttpServletResponse response,Writer out)throws IOException{
 			TL tl=null;try
 			{tl=TL.Enter(request,response,out);
-				tl.r("contentType","text/json");//tl.logOut=tl.var("logOut",false);
-				java.lang.reflect.Method op=ops.get(tl.req("op"));//Prm.op.toString()));
+				tl.h.r("contentType","text/json");//tl.logOut=tl.var("logOut",false);
+				java.lang.reflect.Method op=ops.get(tl.h.req("op"));//Prm.op.toString()));
 				if(op==null)
-					op=mth.get(tl.req.getMethod());
+					op=mth.get(tl.h.req.getMethod());
 
-			if(op==null) {String p=tl.req.getContextPath();
+			if(op==null) {String p=tl.h.req.getContextPath();
 				for (String s : url.keySet())
 					if ( p.startsWith(s) || "*".equals(s) ) {
 						op = url.get(s);
@@ -2217,7 +2331,7 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 							&&(nm.indexOf("p")!=-1)
 							&&(nm.indexOf("r")!=-1)
 							&&(nm.indexOf("m")!=-1)?tl.json
-						:tl.req(nm,c);
+						:tl.h.req(nm,c);
 				}catch(Exception ex){tl.error(ex,"TL.run:arg:i=",i);}
 				Op pp=op==null?null :op.getAnnotation(Op.class);
 				if(tl.usr != null || (pp!=null && pp.noUsrRequired()))
@@ -2238,9 +2352,9 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 					tl.json.put("return",retVal);retVal=tl.json;}
 			}
 			// else TL.Util.mapSet(tl.response,"msg","Operation not authorized ,or not applicable","return",false);
-			if(tl.r("responseDone")==null)
-			{if(tl.r("responseContentTypeDone")==null)
-				response.setContentType(String.valueOf(tl.r("contentType")));
+			if(tl.h.r("responseDone")==null)
+			{if(tl.h.r("responseContentTypeDone")==null)
+				response.setContentType(String.valueOf(tl.h.r("contentType")));
 				tl.getOut().o(retVal);
 				tl.log("AppEU059S.TL.run:xhr-response:",tl.jo().o(retVal).toString());}
 			tl.getOut().flush();
@@ -2260,7 +2374,7 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 	static final String SsnNm="AppEU059S"
 	,UploadPath="/eu059sUploads/";
 
- public static class Project extends TL.DB.Tbl {//implements Serializable
+ public static class Project extends TL.DB.Tbl.ATbl {//implements Serializable
 	public static final String dbtName="projects";
 
 	@Override public List creationDBTIndices(TL tl){
@@ -2295,7 +2409,8 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 	static{registered.add(Project.class);Dbg.p("eu059s.AppEU059S.Project:TL.DB.Tbl.registered.add(.class)");}
 
 
- public	static @TL.Op ResultSet listrs(@TL.Op(prmName="lastModified") Date lastModified,TL tl){ResultSet rs=null;
+ public	static @TL.Op ResultSet listrs(@TL.Op(prmName="lastModified") Date lastModified,TL tl){
+	ResultSet rs=null;
 	try{StringBuilder sql=new StringBuilder("select * from ")
 			.append(dbtName).append(" where `").append(C.lastModified).append("`>?");
 		rs=TL.DB.r(sql.toString(),lastModified);
@@ -2303,41 +2418,13 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 		tl.error(e,"AppEU059S.Storage.list:op");}
 	return rs;}
 
- public	static @TL.Op int New(@TL.Op(prmName="project") Project project,TL tl) {int no=-1;
-	try{no=project.no=project.maxPlus1(C.no);
-		project.save();
-		} catch (Exception e) {
-			tl.error(e,"AppEU059S.Project.New:op");}
-		return no;}
-
- public static @TL.Op Map load(@TL.Op(prmName="no") int no,TL tl){
-	Map m=null,mb,mf,ms;
-	try{Project p=new Project();p.load(no);
-		m=p.asMap();
-		List bl=TL.Util.lst(),fl,sl;
-		m.put("buildings",bl);
-		Sheet s=new Sheet();
-		Floor f=new Floor();
-		Building b=new Building();
-		for(TL.DB.Tbl t:b.query(b.where(Building.C.p,no))){
-			mb=t.asMap();
-			bl.add(mb);
-			mb.put("floors",fl=TL.Util.lst());
-			for(TL.DB.Tbl tf:f.query(f.where(Floor.C.b,b.no))){
-				mf=tf.asMap();
-				fl.add(mf);
-				mf.put("sheets",sl=TL.Util.lst());
-				for(TL.DB.Tbl ts:s.query(s.where(Sheet.C.f,f.no))){
-					ms=TL.Util.mapCreate("no",s.no
-						,Sheet.C.owner.toString(),s.owner
-						,Sheet.C.lastModified.toString(),s.lastModified);
-					sl.add(ms);
-				}
-			}
-		}
-	} catch (Exception e) {
-		tl.error(e,"AppEU059S.Project.load:op");}
-		return m;}
+/*
+	 public	static @TL.Op int New(@TL.Op(prmName="project") Project project,TL tl) {int no=-1;
+		 try{no=project.no=project.maxPlus1(C.no);
+			 project.save();
+		 } catch (Exception e) {
+			 tl.error(e,"AppEU059S.Project.New:op");}
+		 return no;}
 
  public static @TL.Op Project set(@TL.Op(prmName="project") Project s,TL tl){
 	try{s.save();} catch (Exception e) {
@@ -2363,11 +2450,40 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 		 } catch (Exception e) {
 			 tl.error(e,"AppEU059S.Project.list");}
 		 return l;}
+*/
 
+	 public static @TL.Op Map load(@TL.Op(prmName="no") int no,TL tl){
+		 Map m=null,mb,mf,ms;
+		 try{Project p=new Project();p.load(no);
+			 m=p.asMap();
+			 List bl=TL.Util.lst(),fl,sl;
+			 m.put("buildings",bl);
+			 Sheet s=new Sheet();
+			 Floor f=new Floor();
+			 Building b=new Building();
+			 for(TL.DB.Tbl t:b.query(b.where(Building.C.p,no))){
+				 mb=t.asMap();
+				 bl.add(mb);
+				 mb.put("floors",fl=TL.Util.lst());
+				 for(TL.DB.Tbl tf:f.query(f.where(Floor.C.b,b.no))){
+					 mf=tf.asMap();
+					 fl.add(mf);
+					 mf.put("sheets",sl=TL.Util.lst());
+					 for(TL.DB.Tbl ts:s.query(s.where(Sheet.C.f,f.no))){
+						 ms=TL.Util.mapCreate("no",s.no
+								 ,Sheet.C.owner.toString(),s.owner
+								 ,Sheet.C.lastModified.toString(),s.lastModified);
+						 sl.add(ms);
+					 }
+				 }
+			 }
+		 } catch (Exception e) {
+			 tl.error(e,"AppEU059S.Project.load:op");}
+		 return m;}
  }//class Project
 
 
- public static class Building extends TL.DB.Tbl {//implements Serializable
+ public static class Building extends TL.DB.Tbl.ATbl {//implements Serializable
 	public static final String dbtName="buildings";
 	@Override public List creationDBTIndices(TL tl){
 		return TL.Util.lst(
@@ -2402,44 +2518,10 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 
 	static{registered.add(Building.class);Dbg.p("eu059s.AppEU059S.Building:TL.DB.Tbl.registered.add(.class)");}
 
-
-	 public	static @TL.Op int New(@TL.Op(prmName="building") Building p,TL tl)
-	 {int no=-1;
-		 try{no=p.no=p.maxPlus1(C.no);
-			 p.save();
-		 } catch (Exception e) {
-			 tl.error(e,"AppEU059S.Building.New:op");}
-		 return no;}
-
-	 public static @TL.Op Building set(@TL.Op(prmName="building") Building p,TL tl){
-		 try{p.save();} catch (Exception e) {
-			 tl.error(e,"AppEU059S.Building.set");}
-		 return p;}
-
-	 public static @TL.Op int delete(@TL.Op(prmName="no") int no,TL tl){
-		 try{Building s=new Building();s.no=no;return s.delete();
-		 } catch (Exception e) {
-			 tl.error(e,"AppEU059S.Building.delete");}
-		 return 0;}
-
-	 public static @TL.Op Building get(@TL.Op(prmName="no") int no,TL tl){Building p=null;
-		 try{p=new Building();p.load(no);
-		 } catch (Exception e) {
-			 tl.error(e,"AppEU059S.Building.get");}
-		 return p;}
-
-	 public static @TL.Op List list(@TL.Op(prmName="lastModified") Date lm,TL tl){List l=null;
-		 try{String sql="select `"+C.no+"`,`"+C.owner+"`,`"+C.lastModified
-				 +"` from "+dbtName+" where `"+C.lastModified+"`>?";
-			 l=TL.DB.l(sql.toString(),lm);
-		 } catch (Exception e) {
-			 tl.error(e,"AppEU059S.Building.list");}
-		 return l;}
-
  }//class Building
 
 
- public static class Floor extends TL.DB.Tbl {//implements Serializable
+ public static class Floor extends TL.DB.Tbl.ATbl {//implements Serializable
 		public static final String dbtName="floors";
 
 		@Override public List creationDBTIndices(TL tl){
@@ -2475,44 +2557,10 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 		@Override public C[]columns(){return C.values();}
 		static{registered.add(Floor.class);Dbg.p("eu059s.AppEU059S.Floor:TL.DB.Tbl.registered.add(.class)");}
 
-
-	 public	static @TL.Op int New(@TL.Op(prmName="floor") Floor p,TL tl)
-	 {int no=-1;
-		 try{no=p.no=p.maxPlus1(C.no);
-			 p.save();
-		 } catch (Exception e) {
-			 tl.error(e,"AppEU059S.Floor.New:op");}
-		 return no;}
-
-	 public static @TL.Op Floor set(@TL.Op(prmName="floor") Floor p,TL tl){
-		 try{p.save();} catch (Exception e) {
-			 tl.error(e,"AppEU059S.Floor.set");}
-		 return p;}
-
-	 public static @TL.Op int delete(@TL.Op(prmName="no") int no,TL tl){
-		 try{Floor s=new Floor();s.no=no;return s.delete();
-		 } catch (Exception e) {
-			 tl.error(e,"AppEU059S.Floor.delete");}
-		 return 0;}
-
-	 public static @TL.Op Floor get(@TL.Op(prmName="no") int no,TL tl){Floor p=null;
-		 try{p=new Floor();p.load(no);
-		 } catch (Exception e) {
-			 tl.error(e,"AppEU059S.Floor.get");}
-		 return p;}
-
-	 public static @TL.Op List list(@TL.Op(prmName="lastModified") Date lm,TL tl){List l=null;
-		 try{String sql="select `"+C.no+"`,`"+C.owner+"`,`"+C.lastModified
-				 +"` from "+dbtName+" where `"+C.lastModified+"`>?";
-			 l=TL.DB.l(sql.toString(),lm);
-		 } catch (Exception e) {
-			 tl.error(e,"AppEU059S.Floor.list");}
-		 return l;}
-
  }//class Floor
 
 
- public static class Sheet extends TL.DB.Tbl {//implements Serializable
+ public static class Sheet extends TL.DB.Tbl.ATbl {//implements Serializable
 		public static final String dbtName="sheets";
 
 		@Override public String getName(){return dbtName;}//public	Ssn(){super(Name);}
@@ -2686,44 +2734,10 @@ public static List<Class<? extends Tbl>>registered=new LinkedList<Class<? extend
 
 		static{registered.add(Sheet.class);Dbg.p("eu059s.AppEU059S.Sheet:TL.DB.Tbl.registered.add(.class)");}
 
-
-	 public	static @TL.Op int New(@TL.Op(prmName="sheet") Sheet p,TL tl)
-	 {int no=-1;
-		 try{no=p.no=p.maxPlus1(C.no);
-			 p.save();
-		 } catch (Exception e) {
-			 tl.error(e,"AppEU059S.Sheet.New:op");}
-		 return no;}
-
-	 public static @TL.Op Sheet get(@TL.Op(prmName="no") int no,TL tl){Sheet p=null;
-		 try{p=new Sheet();p.load(no);
-		 } catch (Exception e) {
-			 tl.error(e,"AppEU059S.Sheet.get");}
-		 return p;}
-
-	 public static @TL.Op Sheet set(@TL.Op(prmName="sheet") Sheet p,TL tl){
-		 try{p.save();} catch (Exception e) {
-			 tl.error(e,"AppEU059S.Sheet.set");}
-		 return p;}
-
-	 public static @TL.Op int delete(@TL.Op(prmName="no") int no,TL tl){
-		 try{Sheet s=new Sheet();s.no=no;return s.delete();
-		 } catch (Exception e) {
-			 tl.error(e,"AppEU059S.Sheet.delete");}
-		 return 0;}
-
-	 public static @TL.Op List list(@TL.Op(prmName="lastModified") Date lm,TL tl){List l=null;
-		 try{String sql="select `"+C.no+"`,`"+C.owner+"`,`"+C.lastModified
-				 +"` from "+dbtName+" where `"+C.lastModified+"`>?";
-		 	l=TL.DB.l(sql.toString(),lm);
-		 } catch (Exception e) {
-			 tl.error(e,"AppEU059S.Sheet.list");}
-		 return l;}
-
  }//class Sheet
 
 
-public static class Storage extends TL.DB.Tbl {//implements Serializable
+public static class Storage extends TL.DB.Tbl.ATbl {//implements Serializable
 	public static final String dbtName="Storage";
 
 	@Override public String getName(){return dbtName;}//public	Ssn(){super(Name);}
@@ -2774,13 +2788,6 @@ CREATE TABLE `Storage` (
 
 // Map vals(C except){}
 
- public	static @TL.Op int New(@TL.Op(prmName="storage") Storage storage,TL tl){int no=-1;
-		try{no=storage.no=storage.maxPlus1(C.no);
-			storage.save();
-			} catch (Exception e) {
-			tl.error(e,"AppEU059S.Storage.New:op");}
-		return no;}
-
  public	static @TL.Op ResultSet listRS(@TL.Op(prmName="lastModified") Date lastModified,TL tl){ResultSet rs=null;
 		try{C[]x={C.no,C.path,C.contentType,C.lastModified};
 			StringBuilder sql=new StringBuilder("select ");
@@ -2804,27 +2811,6 @@ CREATE TABLE `Storage` (
 		} catch (Exception e) {
 			tl.error(e,"AppEU059S.Storage.content");}
 		return s;}
-
- public static @TL.Op Storage set(@TL.Op(prmName="storage") Storage s,TL tl){
-		try{s.save();
-		} catch (Exception e) {
-			tl.error(e,"AppEU059S.Storage.set");}
-		return s;}
-
- public static @TL.Op int delete(@TL.Op(prmName="no") int no,TL tl){
-		try{Storage s=new Storage();s.no=no;return s.delete();
-		} catch (Exception e) {
-			tl.error(e,"AppEU059S.Storage.delete");}
-		return 0;}
-
-
-	public static @TL.Op List list(@TL.Op(prmName="lastModified") Date lm,TL tl){List l=null;
-		try{String sql="select `"+C.no+"`,`"+C.lastModified
-				+"` from "+dbtName+" where `"+C.lastModified+"`>?";
-			l=TL.DB.l(sql.toString(),lm);
-		} catch (Exception e) {
-			tl.error(e,"AppEU059S.Floor.list");}
-		return l;}
 
 	static{
 		Dbg.p("eu059s.AppEU059S.Storage:TL.DB.Tbl.registered.add(.class);\nTL.registerOp(Storage.class);");

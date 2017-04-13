@@ -637,8 +637,8 @@ xhr:function sys_xhr(p){
 		,{name:'notes',type:'text',indices:[{key:'k1-notes',at:1}]}
 		,{name:'TypeofMember'	,type:'set','set':['Beam','Colunm','Slab','Stairs','Mansory','RC','Foundation','Other',''],filter:9,indices:[{key:'k4-typeMember',at:1}]}
 		,{name:'TypeofMemberText',type:'text',enableCondition:'TypeofMember.Other',filter:9,indices:[{key:'k4-typeMember',at:2}]}
-		,{name:'location',type:'GIS.POINT',indices:[{key:'k5-location',at:1}]}
-		,{name:'exposure',type:'set','set':['wetDry','chemical','erosion','elec','heat'],filter:12,indices:[{key:'k6-exposure',at:1}]}
+		,{name:'Location',type:'GIS.POINT',indices:[{key:'k5-location',at:1}]}
+		,{name:'Exposure',type:'set','set':['wetDry','chemical','erosion','elec','heat'],filter:12,indices:[{key:'k6-exposure',at:1}]}
 		,{name:'LoadingCondition',type:'set','set':['Dead','Live','Impact','Vibration','Traffic','Seismic','Other'],filter:12,indices:[{key:'k7-LoadingCondition',at:1}]}
 		,{name:'LoadingConditionText',type:'text',enableCondition:'LoadingCondition.Other',filter:0,indices:[{key:'k7-LoadingCondition',at:2}]}
 		,{name:'GeneralCondition',type:'enum','enum':['Good','Satisfactory','Poor'],filter:12,indices:[{key:'k8-GeneralCondition',at:1}]}
@@ -653,7 +653,7 @@ xhr:function sys_xhr(p){
 		,{name:'Popout',type:'enum','enum':['f','on'],filter:12,indices:[{key:'k16-Popout',at:1}]}
 		,{name:'PopoutSize',type:'enum','enum':['Small','Medium','Large'],enableCondition:'Popout.on',filter:12,indices:[{key:'k16-Popout',at:2}]}
 		,{name:'isScaling',type:'enum','enum':['f','on'],filter:12,indices:[{key:'k17-isScaling',at:1}]}
-		,{name:'Scaling',type:'enum','enum':['Light','Medium','Severe','Very severe'],enableCondition:'isScaling.on',filter:12,indices:[{key:'k17-isScaling',at:2}]}
+		,{name:'Scaling',type:'enum','enum':['Light','Medium','Severe','VerySevere'],enableCondition:'isScaling.on',filter:12,indices:[{key:'k17-isScaling',at:2}]}
 		,{name:'Reinforcement',type:'set','set':['Exposed','Corroded','Snapped'],filter:12,indices:[{key:'k18-Reinforcement',at:1}]}
 		,{name:'isSpall',type:'enum','enum':['f','on'],filter:12,indices:[{key:'k19-Spall',at:1}]}
 		,{name:'SpallSize',type:'enum','enum':['Small','Large'],enableCondition:'isSpall.on',filter:12,indices:[{key:'k19-Spall',at:2}]}
@@ -664,15 +664,15 @@ xhr:function sys_xhr(p){
 		,'k2-created':['p','created']
 		,'lastModified':['lastModified']
 		,'k4-typeMember':['p','TypeofMember','TypeofMemberText']
-		,'k5-location':['p','location']
-		,'k6-exposure':['p','exposure']
+		,'k5-Location':['p','Location']
+		,'k6-exposure':['p','Exposure']
 		,'k7-LoadingCondition':['p','LoadingCondition','LoadingConditionText']
 		,'k8-GeneralCondition':['p','GeneralCondition']
 		,'k9-Distress':['p','Distress']
 		,'k10-Cracking':['p','Cracking']
 		,'k11-width':['p','width']
 		,'k12-WorkingOrDormant':['p','WorkingOrDormant']
-		,'k13-Textural':['p','WorkingOrDormant']
+		,'k13-Textural':['p','Textural']
 		,'k14-Distresses':['p','Distresses']
 		,'k15-JointDeficiencies':['p','JointDeficiencies','Joint']
 		,'k16-Popout':['p','Popout','PopoutSize']
