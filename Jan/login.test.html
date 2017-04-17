@@ -1,0 +1,271 @@
+<html ><head><script src="sys.js"></script><script>
+app={
+init:function appInit(){
+ function aBld(params,parent){
+	var t=sys;try{if(typeof(params)=='string')return t.dct(params,parent);
+	var p=params,n=parent;
+	if(p.n&&(p.t!=undefined))n.appendChild(document.createTextNode(p.t));
+	if(p.n&&p.n.toLowerCase()=='input')n.type=(p.a?p.a.type:0)||'text';
+	if(p.id)n.id=p.id;
+	if(p.name||(p.a&&p.a.name))n.name=p.name||p.a.name;
+	if(p.clk)n.onclick=p.clk;
+	if(p.chng)n.onchange=p.chng;
+	if(p.s)for(var i in p.s)n.style[i]=p.s[i];
+	if(p.a)for(var i in p.a)n[i]=p.a[i];
+	if(p.c){if(p.n&&p.n.toLowerCase()=='select')t.bldSlct(p,n);
+		else if(p.n&&p.n.toLowerCase()=='table')t.bldTbl (p,n);
+		else for(var i=0;i<p.c.length;i++)
+		 if(typeof(p.c[i])=='string')//t.dct(p.c[i],n);
+			n.appendChild(document.createTextNode(p.c[i]));
+		else
+			t.bld(p.c[i],n);
+	}
+	//if(p.clpsbl)n=t.createCollapsable(p.clpsbl,parent,p.id,n);else
+	}catch(ex){console.error('sys.bld:ex',ex);}return n;
+ }//function bld
+	var a=[app.login],i=0;
+	aBld(a[i],document[a[i].n.toLowerCase()]);
+}//function appInit
+,login:{"n": "BODY",
+"s": {
+		"background-image": "url(\"logo.xcf.png\")",
+		"background-repeat": "repeat"
+	},
+	"c": [
+		{
+			"n": "IMG",
+			"a": {
+				"src": "kisr50.png"
+			},
+			"s": {
+				"text-align": "center",
+				"display": "block"
+			}
+		},
+		{
+			"n": "DIV",
+			"a": {
+				"class": "pen-title"
+			},
+			"c": [
+				{
+					"n": "H1",
+					"t": "Visual Assessment"
+				}
+			]
+		},
+		{
+			"n": "DIV",
+			"a": {
+				"class": "module form-module"
+			},
+			"c": [
+				{
+					"n": "DIV",
+					"a": {
+						"class": "toggle"
+					},
+					"c": [
+						{
+							"n": "I",
+							"a": {
+								"class": "fa fa-times fa-pencil"
+							}
+						},
+						{
+							"n": "DIV",
+							"a": {
+								"class": "tooltip"
+							}
+						}
+					]
+				},
+				{
+					"n": "DIV",
+					"a": {
+						"class": "form"
+					},
+					"c": [
+						{
+							"n": "H2",
+							"t": "Login to your account"
+						},
+						{
+							"n": "FORM",
+							"a": {
+								"method": "post",
+								"action": "javascript:app.login.clkLogin(event)"
+							},
+							"c": [
+								{
+									"n": "INPUT",
+									"a": {
+										"type": "text",
+										"name": "Usr.un",
+										"placeholder": "Username"
+									}
+								},
+								{
+									"n": "INPUT",
+									"a": {
+										"type": "password",
+										"name": "Usr.pw",
+										"placeholder": "Password"
+									}
+								},
+								{
+									"n": "INPUT",
+									"a": {
+										"type": "hidden",
+										"name": "op",
+										"value": "login"
+									}
+								},
+								{
+									"n": "BUTTON",
+									"a": {
+										"onclick": "app.login.clkLogin(event)"
+									},
+									"t": "Login"
+								}
+							]
+						}
+					]
+				},
+				{
+					"n": "DIV",
+					"a": {
+						"class": "form"
+					},
+					"c": [
+						{
+							"n": "H2",
+							"t": "Create an account"
+						},
+						{
+							"n": "FORM",
+							"c": [
+								{
+									"n": "INPUT",
+									"a": {
+										"type": "text",
+										"placeholder": "Username"
+									}
+								},
+								{
+									"n": "INPUT",
+									"a": {
+										"type": "password",
+										"placeholder": "Password"
+									}
+								},
+								{
+									"n": "INPUT",
+									"a": {
+										"type": "email",
+										"placeholder": "Email Address"
+									}
+								},
+								{
+									"n": "INPUT",
+									"a": {
+										"type": "tel",
+										"placeholder": "Phone Number"
+									}
+								},
+								{
+									"n": "BUTTON",
+									"t": "Register"
+								}
+							]
+						}
+					]
+				},
+				{
+					"n": "DIV",
+					"a": {
+						"class": "cta"
+					},
+					"c": [
+						{
+							"n": "A",
+							"a": {
+								"href": "#"
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"n": "SCRIPT",
+			"a": {
+				"src": "login.jquery.min.js"
+			}
+		},
+		{
+			"n": "SCRIPT",
+			"a": {
+				"src": "login.vLmRVp.js"
+			}
+		},
+		{
+			"n": "LINK",
+			"a": {
+				"href": "login.style.css",
+				"rel": "stylesheet",
+				"class": "--apng-checked"
+			}
+		},
+		{
+			"n": "A",
+			"a": {
+				"href": "index.html",
+				"class": "at-button"
+			},
+			"c": [
+				{
+					"n": "I",
+					"a": {
+						"class": "material-icons"
+					},
+					"t": "link"
+				}
+			]
+		},
+		{
+			"n": "SCRIPT",
+			"a": {
+				"src": "login.index.js"
+			}
+		}
+	]
+	,cryp0:function(p,d){var x=(p+d-32)%127;return x<32?x+32:x;}
+	,cryp1:function(p,d){var x=p&&p.charCodeAt&&app.login.cryp0(p.charCodeAt(0),0);
+		if(p&&p.length)for(var i=1;i<p.length;i++)
+			x=app.login.cryp0(p.charCodeAt(i),x);
+		return x;}
+	,cryp2:function(p,d){var a=[d=p&&p.charCodeAt&&app.login.cryp0(p.charCodeAt(0),d)];
+		if(p&&p.length)for(var i=1;i<p.length;i++)
+			a.push(d=p&&p.charCodeAt&&app.login.cryp0(p.charCodeAt(i),d));
+		return a;}
+	,clkLogin:function app_login_clkLogin(e){console.log('app_login_clkLogin',this,arguments);if(!e){
+		var fn=document.getElementsByTagName('form')[0]
+		,f=[fn.firstElementChild.value,fn.firstElementChild.nextSibling.value]//	btoa('m')	"bQ=="	;	atob('bQ==')	"m"
+		,u=app.login.usrs[f[0]]
+		f[1]=btoa(app.login.cryp2(f[1],app.login.cryp1(f[0])))
+		console.log('app_login_clkLogin',this,fn,f,u);
+		if(u && f[1]==u.pw ){
+			console.log('Offline-User Found');
+		}else{
+			console.log('No offline user found');
+		}
+	}}
+	,Level:{viewer:0,inspector:1,fullAccess:2}
+	,Usr:{uid:0,un:0,pw:0,firstName:0,lastName:0,email:0,tel:0,tel2:0,notes:0,level:0,created:0,lastModified:0}
+	,usrs:{moh:{uid:0,un:'moh',pw:"MTE1",firstName:0,lastName:0,email:0,tel:0,tel2:0,notes:0,level:0,created:0,lastModified:0}
+	}//usrs
+  }//login
+}//app
+sys.bootStrap.addOnload(app.init,app);
+</script></head><body></body></html>
