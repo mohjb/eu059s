@@ -33,6 +33,7 @@ did:function sys_did(id,n){if(!n)return document.getElementById(id);
  	chng:(optional) a ref to a function which will be a onchange handler
  	s:(optional) object , where properties are set into the created-node's style
  	a:(optional) object , where properties are set into the created-node's properties and attributes
+	onBld:function(params,n,parent)
  	c:(optional) array
  		, recursive function call to this bld function
  		, but with items of c as the param and this node as a parent
@@ -67,7 +68,10 @@ bld:function sys_bld(params,parent){
 	if(p.chng)n.onchange=p.chng;
 	if(p.s)for(var i in p.s)n.style[i]=p.s[i];
 	if(p.a)for(var i in p.a)if(i=='class')n.className=p.a[i];else n.setAttribute(i,n[i]=p.a[i]);
-	if(p.c){if(nl=='select')t.bldSlct(p,n);
+	if(p.onBld)try{
+		p.onBld(p,n,parent)//should we take return value to determine if we should use p.c?
+	}catch(ex){console.error(ex,'sys.bld:p.onBld');}
+	else if(p.c){if(nl=='select')t.bldSlct(p,n);
 		else if(nl=='table')t.bldTbl (p,n);
 		else for(var i=0;i<p.c.length;i++)
 		 if(typeof(p.c[i])=='string')//t.dct(p.c[i],n);
