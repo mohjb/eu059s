@@ -54,7 +54,19 @@ did:function sys_did(id,n){if(!n)return document.getElementById(id);
 	,(depricated)clpsbl:string-title:collapsable
 
 	; or params canbe string, or array:call bldTbl
-	; parent: domElement */
+	; parent: domElement 
+	
+	code:
+		{n:'for',var:<str:varName>,arg:<str-eval or obj, to iterate-over>,obj:<str or obj>, range:[<int:from>,<int:to>,<int:step>]}
+			{n:'if',arg}
+				{n:'attrib',attrib:<str>}
+		tag
+		prop
+		setProp
+		
+	arg:
+		argument for 
+	*/
 bld:function sys_bld(params,parent){
  var t=sys;try{
 	if(!params)return params;else if(params instanceof Array)return t.bldTbl(params,parent);

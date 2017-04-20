@@ -776,7 +776,6 @@ init:function appMainInit(){for(var i=0,a=app.main.a;i<a.length;i++)
 		for(var i=0;i<a.length;i++){
 			
 		}//for
-		
 	}
 	,a:[
 			{
