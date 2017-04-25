@@ -228,7 +228,7 @@ init:function appInit(){
 			a.push(d=p&&p.charCodeAt&&app.login.cryp0(p.charCodeAt(i),d));
 		return a;}
 	,aBld:function aBld(params,parent){
-		var t=sys;try{if(typeof(params)=='string')return t.dct(params,parent);
+		try{if(typeof(params)=='string')return sys.dct(params,parent);
 		var p=params,n=parent;
 		if(p.n&&(p.t!=undefined))n.appendChild(document.createTextNode(p.t));
 		if(p.n&&p.n.toLowerCase()=='input')n.type=(p.a?p.a.type:0)||'text';
@@ -238,16 +238,16 @@ init:function appInit(){
 		if(p.chng)n.onchange=p.chng;
 		if(p.s)for(var i in p.s)n.style[i]=p.s[i];
 		if(p.a)for(var i in p.a)n[i]=p.a[i];
-		if(p.c){if(p.n&&p.n.toLowerCase()=='select')t.bldSlct(p,n);
-			else if(p.n&&p.n.toLowerCase()=='table')t.bldTbl (p,n);
+		if(p.c){if(p.n&&p.n.toLowerCase()=='select')sys.bldSlct(p,n);
+			else if(p.n&&p.n.toLowerCase()=='table')sys.bldTbl (p,n);
 			else for(var i=0;i<p.c.length;i++)
-			 if(typeof(p.c[i])=='string')//t.dct(p.c[i],n);
+			 if(typeof(p.c[i])=='string')//sys.dct(p.c[i],n);
 				n.appendChild(document.createTextNode(p.c[i]));
 			else
-				t.bld(p.c[i],n);
+				sys.bld(p.c[i],n);
 		}
-		//if(p.clpsbl)n=t.createCollapsable(p.clpsbl,parent,p.id,n);else
-		}catch(ex){console.error('sys.bld:ex',ex);}return n;
+		//if(p.clpsbl)n=sys.createCollapsable(p.clpsbl,parent,p.id,n);else
+		}catch(ex){console.error('app.aBld:ex',ex);}return n;
 	}//function bld
 	,clkLogin:function app_login_clkLogin(e){console.log('app_login_clkLogin',this,arguments);
 		if(!e){

@@ -25,7 +25,7 @@ did:function sys_did(id,n){if(!n)return document.getElementById(id);
  if params is an array , then bldTbl is called
  otherwise if params isnt a string(it is assumed that params is an object)
  where params should have properties:
- 	n:string : name of element
+ 	n:string : (n)ame of element
  	t:(optional) string , create child text node and set the text to t
  	id:(optional)
  	name(optional)
@@ -38,11 +38,8 @@ did:function sys_did(id,n){if(!n)return document.getElementById(id);
  		, recursive function call to this bld function
  		, but with items of c as the param and this node as a parent
  		, Hence The POWER of this bld-function
-
  when params.n is "select" or "table", the internal implementation uses the functions bldSlct or bldTbl
  when params.n is "bldForm" or "bldModal" or "bldDataGrid", the named-function is called on params
-
-
  BuildDomTree params::= id
 	,n:nodeName
 	,t:text
@@ -52,7 +49,6 @@ did:function sys_did(id,n){if(!n)return document.getElementById(id);
 	,c:jsarray-children-recursive-params
 	,s:jsobj-style
 	,(depricated)clpsbl:string-title:collapsable
-
 	; or params canbe string, or array:call bldTbl
 	; parent: domElement 
 	
@@ -67,11 +63,13 @@ did:function sys_did(id,n){if(!n)return document.getElementById(id);
 	arg:
 		argument for 
 	*/
-bld:function sys_bld(params,parent){
- var t=sys;try{
-	if(!params)return params;else if(params instanceof Array)return t.bldTbl(params,parent);
-	if(typeof(params)=='string')return t.dct(params,parent);
- var p=params,n=p.n?document.createElement(p.n):p.t!=undefined?document.createTextNode(p.t):p,nl=p&&p.n&&p.n.toLowerCase();
+bld:function sys_bld(params,parent,stack){
+ try{if(!params)return params;else 
+	if(params instanceof Array)return sys.bldTbl(params,parent,stack);
+	if(typeof(params)=='string')return sys.dct(params,parent);
+ var p=params,n=p.n?document.createElement(p.n)
+	:p.sys!=undefined?document.createTextNode(p.t):p
+	,nl=p&&p.n&&p.n.toLowerCase();
 	if(p.n&&(p.t!=undefined))n.innerHTML=p.t;//n.appendChild(document.createTextNode(p.t));//changed:2017.03.18.06.04
 	if(p.n&&nl=='input')n.type=(p.a?p.a.type:0)||'text';
 	if(p.id)n.id=p.id;
@@ -81,17 +79,50 @@ bld:function sys_bld(params,parent){
 	if(p.s)for(var i in p.s)n.style[i]=p.s[i];
 	if(p.a)for(var i in p.a)if(i=='class')n.className=p.a[i];else n.setAttribute(i,n[i]=p.a[i]);
 	if(p.onBld)try{
-		p.onBld(p,n,parent)//should we take return value to determine if we should use p.c?
+		p.onBld(p,n,parent, stack)//should we take return value to determine if we should use p.c?
 	}catch(ex){console.error(ex,'sys.bld:p.onBld');}
-	else if(p.c){if(nl=='select')t.bldSlct(p,n);
-		else if(nl=='table')t.bldTbl (p,n);
+	
+	else If( p.code)
+{var code=p.code
+  ,a=p.arg||p.obj||p.arg={} 
+  ,vr=p['var']||'i' 
+  ,o=p.obj||p.p.arg
+  p.code=0
+  if(typeof a =='string')try{
+	a=eval(a)
+	}catch(ex){console.error('bld:code:prop:eval arg',ex)}
+	
+if( code.n == 'for' )
+ for (var i in a){
+  o[vr]=i
+  var x= a[i ],b=[x,i,a,code]
+    if( !stack ) stack=[ b ]
+  else stack.push( b )
+  sys. bld( params , parent , stack)
+  stack.pop(  )
+}//for i in p.arg
+else if ( code.n =='if' )
+{}
+else if ( code.n =='attrib' )
+{}
+else if ( code.n =='tag' )
+{}
+else if ( code.n =='setProp' )
+{}
+else //if ( code.n =='prop' )
+{sys.dct(a,n)
+}
+
+}//If( p.code )
+	else if(p.c){if(nl=='select')sys.bldSlct(p,n);
+		else if(nl=='table')sys.bldTbl (p,n);
 		else for(var i=0;i<p.c.length;i++)
-		 if(typeof(p.c[i])=='string')//t.dct(p.c[i],n);
+		 if(typeof(p.c[i])=='string')//sys.dct(p.c[i],n);
 			n.appendChild(document.createTextNode(p.c[i]));
 		else
-			t.bld(p.c[i],n);
+			sys.bld(p.c[i],n);
 	}
-	//if(p.clpsbl)n=t.createCollapsable(p.clpsbl,parent,p.id,n);else
+	//if(p.clpsbl)n=sys.createCollapsable(p.clpsbl,parent,p.id,n);else
 	if(parent)parent.appendChild(n);
 	}catch(ex){
 		console.error('sys.bld:ex',ex);
@@ -581,19 +612,8 @@ xhr:function sys_xhr(p){
 //   storage
 	}//introspection.storage
   }//introspection
-	,login:{bld:function(p){},submit:function(p){},wrong:function(p){}}
-	,main:{}
-	,project:{list:{},form:{},component:{}}
-	,building:{list:{},form:{},component:{}}
-	,floor:{list:{},form:{},component:{}}
-	,sheet:{list:{},form:{},component:{},help:{}}
-	,usr:{list:{},form:{},component:{}}
-	,report:{list:{},form:{},component:{}}
-	,search:{list:{},form:{},component:{}}
+
 }//gui
-
-
-
 
 }//sys
 
