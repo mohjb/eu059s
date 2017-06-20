@@ -1,162 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="203675e5-66fd-495b-b88a-27b232eb7acf" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/css/font-awesome.min.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/css/ie8.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/css/ie9.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/css/main.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/fonts/FontAwesome.otf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/fonts/fontawesome-webfont.eot" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/fonts/fontawesome-webfont.svg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/fonts/fontawesome-webfont.ttf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/fonts/fontawesome-webfont.woff" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/fonts/fontawesome-webfont.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/js/ie/html5shiv.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/js/ie/respond.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/js/jquery.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/js/main.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/js/skel.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/js/util.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/sass/base/_page.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/sass/base/_typography.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/sass/components/_author.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/sass/components/_blurb.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/sass/components/_box.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/sass/components/_button.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/sass/components/_form.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/sass/components/_icon.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/sass/components/_image.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/sass/components/_list.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/sass/components/_mini-post.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/sass/components/_post.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/sass/components/_section.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/sass/components/_table.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/sass/ie8.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/sass/ie9.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/sass/layout/_footer.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/sass/layout/_header.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/sass/layout/_intro.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/sass/layout/_main.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/sass/layout/_menu.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/sass/layout/_sidebar.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/sass/layout/_wrapper.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/sass/libs/_functions.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/sass/libs/_mixins.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/sass/libs/_skel.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/sass/libs/_vars.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/sass/main.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/README.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/config.rb" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/README.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/config.rb" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/css/cssRoboto.400.100.300.500.700.900.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/css/font-awesome.min.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/css/icon.family=Material+Icons.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/css/reset.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/css/style.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/css/vLmRVp.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/cssRoboto.400.100.300.500.700.900.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/font-awesome.min.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/icon.family=Material+Icons.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/index.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/index.jade" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/js/index.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/js/jquery.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/js/vLmRVp.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/license.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/nova/Member Login _ Nova Theme.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/nova/Member Login _ Nova Theme_files/comment-reply.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/nova/Member Login _ Nova Theme_files/et-ptemplates-frontend.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/nova/Member Login _ Nova Theme_files/et_flexslider.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/nova/Member Login _ Nova Theme_files/fancybox.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/nova/Member Login _ Nova Theme_files/ga.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/nova/Member Login _ Nova Theme_files/jquery-migrate.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/nova/Member Login _ Nova Theme_files/jquery.cycle.all.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/nova/Member Login _ Nova Theme_files/jquery.easing-1.3.pack.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/nova/Member Login _ Nova Theme_files/jquery.easing.1.3.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/nova/Member Login _ Nova Theme_files/jquery.fancybox.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/nova/Member Login _ Nova Theme_files/jquery.flexslider-min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/nova/Member Login _ Nova Theme_files/jquery.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/nova/Member Login _ Nova Theme_files/logo.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/nova/Member Login _ Nova Theme_files/page_templates.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/nova/Member Login _ Nova Theme_files/pagenavi-css.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/nova/Member Login _ Nova Theme_files/responsive.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/nova/Member Login _ Nova Theme_files/saved_resource" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/nova/Member Login _ Nova Theme_files/search_btn.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/nova/Member Login _ Nova Theme_files/shortcodes-sprite.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/nova/Member Login _ Nova Theme_files/shortcodes.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/nova/Member Login _ Nova Theme_files/shortcodes_responsive.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/nova/Member Login _ Nova Theme_files/style.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/nova/Member Login _ Nova Theme_files/superfish.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/nova/Member Login _ Nova Theme_files/wp-embed.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/nova/Member Login _ Nova Theme_files/wp-emoji-release.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/nova/ajax-loader.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/nova/astronomy-planets-globe-loaders.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/nova/gif-loading.GIF" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/nova/ie7style.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/nova/ie8style.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/nova/loader (1).gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/nova/loader.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/nova/loaderBlue.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/nova/logo.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/nova/progress.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/nova/shortcodes-sprite.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/reset.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/scss/style.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/style.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/css/vLmRVp.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/desktop.ini" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/index - Copy.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/index.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/index.jade" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/js/index.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/js/jquery.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/js/vLmRVp.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/license.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/nova/Member Login _ Nova Theme.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/nova/Member Login _ Nova Theme_files/comment-reply.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/nova/Member Login _ Nova Theme_files/et-ptemplates-frontend.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/nova/Member Login _ Nova Theme_files/et_flexslider.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/nova/Member Login _ Nova Theme_files/fancybox.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/nova/Member Login _ Nova Theme_files/ga.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/nova/Member Login _ Nova Theme_files/jquery-migrate.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/nova/Member Login _ Nova Theme_files/jquery.cycle.all.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/nova/Member Login _ Nova Theme_files/jquery.easing-1.3.pack.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/nova/Member Login _ Nova Theme_files/jquery.easing.1.3.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/nova/Member Login _ Nova Theme_files/jquery.fancybox.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/nova/Member Login _ Nova Theme_files/jquery.flexslider-min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/nova/Member Login _ Nova Theme_files/jquery.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/nova/Member Login _ Nova Theme_files/logo.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/nova/Member Login _ Nova Theme_files/page_templates.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/nova/Member Login _ Nova Theme_files/pagenavi-css.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/nova/Member Login _ Nova Theme_files/responsive.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/nova/Member Login _ Nova Theme_files/saved_resource" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/nova/Member Login _ Nova Theme_files/search_btn.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/nova/Member Login _ Nova Theme_files/shortcodes-sprite.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/nova/Member Login _ Nova Theme_files/shortcodes.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/nova/Member Login _ Nova Theme_files/shortcodes_responsive.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/nova/Member Login _ Nova Theme_files/style.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/nova/Member Login _ Nova Theme_files/superfish.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/nova/Member Login _ Nova Theme_files/wp-embed.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/nova/Member Login _ Nova Theme_files/wp-emoji-release.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/nova/ajax-loader.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/nova/astronomy-planets-globe-loaders.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/nova/gif-loading.GIF" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/nova/ie7style.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/nova/ie8style.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/nova/loader (1).gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/nova/loader.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/nova/loaderBlue.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/nova/logo.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/nova/progress.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/nova/shortcodes-sprite.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/flat-login-form/scss/style.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.vLmRVp.js" afterPath="" />
+    <list default="true" id="203675e5-66fd-495b-b88a-27b232eb7acf" name="Default" comment="cleanup of old files">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.js" afterPath="$PROJECT_DIR$/app.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application.appcache" afterPath="$PROJECT_DIR$/application.appcache" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/login.html" afterPath="$PROJECT_DIR$/login.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/login.index.js" afterPath="$PROJECT_DIR$/login.index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/login.style.css" afterPath="$PROJECT_DIR$/login.style.css" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -171,145 +21,225 @@
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="AppEU059S.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/eu059s/AppEU059S.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="3096" column="0" lean-forward="false" selection-start-line="3096" selection-start-column="0" selection-end-line="3096" selection-end-column="0" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#6009#6024#0" expanded="true" />
-                <element signature="e#6607#6616#0" expanded="true" />
-                <element signature="e#8393#8401#0" expanded="true" />
-                <element signature="e#29734#29758#0" expanded="true" />
-                <element signature="e#29821#29829#0" expanded="true" />
-                <element signature="e#29961#29976#0" expanded="true" />
-                <element signature="e#48355#48377#0" expanded="true" />
-                <element signature="e#65998#66005#0" expanded="true" />
-                <element signature="e#93789#93797#0" expanded="true" />
-                <element signature="e#94185#94200#0" expanded="true" />
-                <element signature="e#95538#95571#0" expanded="true" />
-                <element signature="e#95594#95627#0" expanded="true" />
-                <element signature="e#95650#95683#0" expanded="true" />
-                <element signature="class#Project#0;class#AppEU059S#0" expanded="false" />
-                <element signature="class#Building#0;class#AppEU059S#0" expanded="false" />
-                <element signature="class#Sheet#0;class#AppEU059S#0" expanded="false" />
-                <element signature="e#118349#118364#0" expanded="true" />
-                <element signature="e#118413#118428#0" expanded="true" />
-                <element signature="e#118475#118492#0" expanded="true" />
-                <element signature="e#136277#136292#0" expanded="true" />
-                <element signature="e#137832#137847#0" expanded="true" />
-                <element signature="method#main#0;class#AppEU059S#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="login.html" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/login.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="442">
-              <caret line="26" column="22" lean-forward="true" selection-start-line="26" selection-start-column="22" selection-end-line="26" selection-end-column="22" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="login.style.css" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/login.style.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding>
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-                <element signature="e#0#45650#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="login.index.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/login.index.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="18" column="29" lean-forward="false" selection-start-line="18" selection-start-column="29" selection-end-line="18" selection-end-column="29" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <splitter split-orientation="vertical" split-proportion="0.5">
+      <split-first>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+          <file leaf-file-name="AppEU059S.java" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/eu059s/AppEU059S.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="17">
+                  <caret line="3096" column="0" lean-forward="false" selection-start-line="3096" selection-start-column="0" selection-end-line="3096" selection-end-column="0" />
+                  <folding>
+                    <element signature="imports" expanded="true" />
+                    <element signature="e#6009#6024#0" expanded="true" />
+                    <element signature="e#6607#6616#0" expanded="true" />
+                    <element signature="e#8393#8401#0" expanded="true" />
+                    <element signature="e#29734#29758#0" expanded="true" />
+                    <element signature="e#29821#29829#0" expanded="true" />
+                    <element signature="e#29961#29976#0" expanded="true" />
+                    <element signature="e#48355#48377#0" expanded="true" />
+                    <element signature="e#65998#66005#0" expanded="true" />
+                    <element signature="e#93789#93797#0" expanded="true" />
+                    <element signature="e#94185#94200#0" expanded="true" />
+                    <element signature="e#95538#95571#0" expanded="true" />
+                    <element signature="e#95594#95627#0" expanded="true" />
+                    <element signature="e#95650#95683#0" expanded="true" />
+                    <element signature="class#Project#0;class#AppEU059S#0" expanded="false" />
+                    <element signature="class#Building#0;class#AppEU059S#0" expanded="false" />
+                    <element signature="class#Sheet#0;class#AppEU059S#0" expanded="false" />
+                    <element signature="e#118349#118364#0" expanded="true" />
+                    <element signature="e#118413#118428#0" expanded="true" />
+                    <element signature="e#118475#118492#0" expanded="true" />
+                    <element signature="e#136277#136292#0" expanded="true" />
+                    <element signature="e#137832#137847#0" expanded="true" />
+                    <element signature="method#main#0;class#AppEU059S#0" expanded="false" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="sys.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/sys.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="-1950">
+                  <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+                  <folding>
+                    <element signature="e#0#21238#0" expanded="false" />
+                    <element signature="e#0#21238#0" expanded="false" />
+                    <element signature="e#0#21238#0" expanded="false" />
+                    <element signature="e#0#21238#0" expanded="false" />
+                    <element signature="e#0#21238#0" expanded="false" />
+                    <element signature="e#0#21238#0" expanded="false" />
+                    <element signature="e#0#21238#0" expanded="false" />
+                    <element signature="e#0#21238#0" expanded="false" />
+                    <element signature="e#0#21238#0" expanded="false" />
+                    <element signature="e#0#21238#0" expanded="false" />
+                    <element signature="e#0#21238#0" expanded="false" />
+                    <element signature="e#0#21238#0" expanded="false" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="login.html" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/login.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="714">
+                  <caret line="42" column="25" lean-forward="false" selection-start-line="42" selection-start-column="25" selection-end-line="42" selection-end-column="25" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/index.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="793">
+                  <caret line="247" column="7" lean-forward="false" selection-start-line="247" selection-start-column="7" selection-end-line="247" selection-end-column="7" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="application.appcache" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/application.appcache">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="561">
+                  <caret line="33" column="0" lean-forward="false" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="login.style.css" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/login.style.css">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="0">
+                  <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+                  <folding>
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                    <element signature="e#0#45650#0" expanded="false" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="login.index.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/login.index.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="306">
+                  <caret line="18" column="29" lean-forward="false" selection-start-line="18" selection-start-column="29" selection-end-line="18" selection-end-column="29" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="app.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/app.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="940">
+                  <caret line="1287" column="25" lean-forward="false" selection-start-line="1287" selection-start-column="25" selection-end-line="1287" selection-end-column="25" />
+                  <folding>
+                    <element signature="e#0#33449#0" expanded="false" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-first>
+      <split-second>
+        <leaf>
+          <file leaf-file-name="app.js" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/app.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="724">
+                  <caret line="1250" column="0" lean-forward="true" selection-start-line="1250" selection-start-column="0" selection-end-line="1250" selection-end-column="0" />
+                  <folding>
+                    <element signature="e#0#33449#0" expanded="false" />
+                    <element signature="e#0#33449#0" expanded="false" />
+                    <element signature="e#0#33449#0" expanded="false" />
+                    <element signature="e#0#33449#0" expanded="false" />
+                    <element signature="e#0#33449#0" expanded="false" />
+                    <element signature="e#0#33449#0" expanded="false" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-second>
+    </splitter>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -358,17 +288,20 @@
         <option value="$PROJECT_DIR$/flat-login-form/css/font-awesome.min.css" />
         <option value="$PROJECT_DIR$/flat-login-form/css/cssRoboto.400.100.300.500.700.900.css" />
         <option value="$PROJECT_DIR$/flat-login-form/css/reset.css" />
-        <option value="$PROJECT_DIR$/login.html" />
         <option value="$PROJECT_DIR$/flat-login-form/css/icon.family=Material+Icons.css" />
         <option value="$PROJECT_DIR$/login.style.css" />
         <option value="$PROJECT_DIR$/login.index.js" />
+        <option value="$PROJECT_DIR$/application.appcache" />
+        <option value="$PROJECT_DIR$/login.html" />
+        <option value="$PROJECT_DIR$/app.js" />
+        <option value="$PROJECT_DIR$/index.html" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1592" />
-    <option name="y" value="-1028" />
-    <option name="width" value="1216" />
+    <option name="x" value="-2688" />
+    <option name="y" value="-8" />
+    <option name="width" value="1096" />
     <option name="height" value="1936" />
   </component>
   <component name="ProjectView">
@@ -538,10 +471,10 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1592" y="-1028" width="1216" height="1936" extended-state="6" />
+    <frame x="-2688" y="-8" width="1096" height="1936" extended-state="6" />
     <layout>
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26740238" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.29773158" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -580,7 +513,8 @@
     <MESSAGE value="must commit in a hurry" />
     <MESSAGE value="created the web-browser application-cache, the file application.appcache&#10;&#10;added atrribute manifest in the html tag in index.html &#10;&#10;duplicated indexOld.jsp&#10;&#10;in sys.js:&#10;changed the default url of xhr to xhr.jsp&#10;&#10;removed a big part, toJsonBld from undeer sys&#10;removed a lot of comments&#10;added gui under sys &#10;added introspection under sys.gui&#10;added storage under sys.gui.introspection&#10;added init under sys.gui.introspection.storage&#10;add resetList under sys.gui.introspection.storage&#10;add bldScreen under sys.gui.introspection.storage&#10;add login under sys.gui&#10;add main under sys.gui&#10;add project under sys.gui&#10;add building under sys.gui&#10;add floor under sys.gui&#10;add sheet under sys.gui&#10;add usr under sys.gui&#10;add report under sys.gui&#10;add search under sys.gui&#10;&#10;modified dbSchema, more elaborate indices, keys,unique&#10;added columns in dbSchema.usr&#10;added columns in dbSchema.projects&#10;added columns in dbSchema.buildings&#10;added columns in dbSchema.floors&#10;added columns in dbSchema.sheet&#10;changed columns in sheet to be sets&#10;added util under dbSchema&#10;&#10;&#10;in App.java&#10;added a lot of Dbg.p&#10;rename firstPage to bootstrap&#10;&#10;" />
     <MESSAGE value="created the web-browser application-cache, the file application.appcache&#10;&#10;added atrribute manifest in the html tag in index.html &#10;&#10;duplicated indexOld.jsp&#10;&#10;in sys.js:&#10;changed the default url of xhr to xhr.jsp&#10;&#10;removed a big part, toJsonBld from undeer sys&#10;removed a lot of comments&#10;added gui under sys &#10;added introspection under sys.gui&#10;added storage under sys.gui.introspection&#10;added init under sys.gui.introspection.storage&#10;add resetList under sys.gui.introspection.storage&#10;add bldScreen under sys.gui.introspection.storage&#10;add login under sys.gui&#10;add main under sys.gui&#10;add project under sys.gui&#10;add building under sys.gui&#10;add floor under sys.gui&#10;add sheet under sys.gui&#10;add usr under sys.gui&#10;add report under sys.gui&#10;add search under sys.gui&#10;&#10;modified dbSchema, more elaborate indices, keys,unique&#10;added columns in dbSchema.usr&#10;added columns in dbSchema.projects&#10;added columns in dbSchema.buildings&#10;added columns in dbSchema.floors&#10;added columns in dbSchema.sheet&#10;changed columns in sheet to be sets&#10;added util under dbSchema&#10;&#10;&#10;in App.java&#10;added a lot of Dbg.p&#10;rename firstPage to bootstrap" />
-    <option name="LAST_COMMIT_MESSAGE" value="created the web-browser application-cache, the file application.appcache&#10;&#10;added atrribute manifest in the html tag in index.html &#10;&#10;duplicated indexOld.jsp&#10;&#10;in sys.js:&#10;changed the default url of xhr to xhr.jsp&#10;&#10;removed a big part, toJsonBld from undeer sys&#10;removed a lot of comments&#10;added gui under sys &#10;added introspection under sys.gui&#10;added storage under sys.gui.introspection&#10;added init under sys.gui.introspection.storage&#10;add resetList under sys.gui.introspection.storage&#10;add bldScreen under sys.gui.introspection.storage&#10;add login under sys.gui&#10;add main under sys.gui&#10;add project under sys.gui&#10;add building under sys.gui&#10;add floor under sys.gui&#10;add sheet under sys.gui&#10;add usr under sys.gui&#10;add report under sys.gui&#10;add search under sys.gui&#10;&#10;modified dbSchema, more elaborate indices, keys,unique&#10;added columns in dbSchema.usr&#10;added columns in dbSchema.projects&#10;added columns in dbSchema.buildings&#10;added columns in dbSchema.floors&#10;added columns in dbSchema.sheet&#10;changed columns in sheet to be sets&#10;added util under dbSchema&#10;&#10;&#10;in App.java&#10;added a lot of Dbg.p&#10;rename firstPage to bootstrap" />
+    <MESSAGE value="cleanup of old files" />
+    <option name="LAST_COMMIT_MESSAGE" value="cleanup of old files" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -876,10 +810,57 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/application.appcache">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="561">
+          <caret line="33" column="0" lean-forward="false" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sys.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1950">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#21238#0" expanded="false" />
+            <element signature="e#0#21238#0" expanded="false" />
+            <element signature="e#0#21238#0" expanded="false" />
+            <element signature="e#0#21238#0" expanded="false" />
+            <element signature="e#0#21238#0" expanded="false" />
+            <element signature="e#0#21238#0" expanded="false" />
+            <element signature="e#0#21238#0" expanded="false" />
+            <element signature="e#0#21238#0" expanded="false" />
+            <element signature="e#0#21238#0" expanded="false" />
+            <element signature="e#0#21238#0" expanded="false" />
+            <element signature="e#0#21238#0" expanded="false" />
+            <element signature="e#0#21238#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/login.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="26" column="22" lean-forward="true" selection-start-line="26" selection-start-column="22" selection-end-line="26" selection-end-column="22" />
+        <state relative-caret-position="714">
+          <caret line="42" column="25" lean-forward="false" selection-start-line="42" selection-start-column="25" selection-end-line="42" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="940">
+          <caret line="1287" column="25" lean-forward="false" selection-start-line="1287" selection-start-column="25" selection-end-line="1287" selection-end-column="25" />
+          <folding>
+            <element signature="e#0#33449#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="793">
+          <caret line="247" column="7" lean-forward="false" selection-start-line="247" selection-start-column="7" selection-end-line="247" selection-end-column="7" />
           <folding />
         </state>
       </provider>

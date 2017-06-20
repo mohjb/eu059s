@@ -1,4 +1,4 @@
-app={
+old_app={
 init:function appInit(){
 	var a=[app.login],i=0;
 	app.login.aBld(a[i],document[a[i].n.toLowerCase()]);
@@ -1239,4 +1239,120 @@ init:function appMainInit(){for(var i=0,a=app.main.a;i<a.length;i++)
 }//dbSchema
 }//server
 }//app
+
 sys.bootStrap.addOnload(app.init,app);
+
+app=angular.module('app', ['ngSanitize','angular-md5']);
+
+app.controller('MainCtrl', function($scope) {
+    $scope.usr=null;
+    $scope.screen=null// null is equivalent to screen='login'
+})
+
+app.directive('component-login', [ function() {
+function link(scope,element,attrs){}
+   return {
+   	restrict: 'A'//'E'
+   	//,transclude: true,
+   	//,scope: {d:'d'}
+   	,templateUrl: 'component-login.html'
+   	,link: link
+     };//return
+   }//directive func
+ ]);
+
+app.directive('component-projects', [ function() {
+function link(scope,element,attrs){}
+   return {
+   	restrict: 'A'//'E'
+   	//,transclude: true,
+   	//,scope: {d:'d'}
+   	//,templateUrl: 'component-.html'
+   	,link: link
+     };//return
+   }//directive func
+ ]);
+
+app.directive('component-sheet', [ function() {
+function link(scope,element,attrs){}
+   return {
+   	restrict: 'A'//'E'
+   	//,transclude: true,
+   	//,scope: {d:'d'}
+   	//,templateUrl: 'component-.html'
+   	,link: link
+     };//return
+   }//directive func
+ ]);
+
+app.directive('component-search', [ function() {
+function link(scope,element,attrs){}
+   return {
+   	restrict: 'A'//'E'
+   	//,transclude: true,
+   	//,scope: {d:'d'}
+   	//,templateUrl: 'component-.html'
+   	,link: link
+     };//return
+   }//directive func
+ ]);
+
+app.directive('component-print', [ function() {
+function link(scope,element,attrs){}
+   return {
+   	restrict: 'A'//'E'
+   	//,transclude: true,
+   	//,scope: {d:'d'}
+   	//,templateUrl: 'component-.html'
+   	,link: link
+     };//return
+   }//directive func
+ ]);
+
+app.directive('component-config', [ function() {
+function link(scope,element,attrs){}
+   return {
+   	restrict: 'A'//'E'
+   	//,transclude: true,
+   	//,scope: {d:'d'}
+   	//,templateUrl: 'component-.html'
+   	,link: link
+     };//return
+   }//directive func
+ ]);
+
+app.directive('component-config-help', [ function() {
+function link(scope,element,attrs){}
+   return {
+   	restrict: 'A'//'E'
+   	//,transclude: true,
+   	//,scope: {d:'d'}
+   	//,templateUrl: 'component-.html'
+   	,link: link
+     };//return
+   }//directive func
+ ]);
+
+app.directive('component-users', [ function() {
+function link(scope,element,attrs){}
+   return {
+   	restrict: 'A'//'E'
+   	//,transclude: true,
+   	//,scope: {d:'d'}
+   	//,templateUrl: 'component-.html'
+   	,link: link
+     };//return
+   }//directive func
+ ]);
+
+app.directive('component-', [ function() {
+function link(scope,element,attrs){}
+   return {
+   	restrict: 'A'//'E'
+   	//,transclude: true,
+   	//,scope: {d:'d'}
+   	//,templateUrl: 'component-.html'
+   	,link: link
+     };//return
+   }//directive func
+ ]);
