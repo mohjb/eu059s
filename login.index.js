@@ -10,3 +10,12 @@ $('.toggle').click(function(){
     opacity: "toggle"
   }, "slow");
 });
+
+(function() {
+  var button, buttonStyles, materialIcons;
+
+  button = '<a href="../" class="at-button"><i class="material-icons">link</i></a>';
+
+  document.body.innerHTML += button;
+
+}).call(this);
