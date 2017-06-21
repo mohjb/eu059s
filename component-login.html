@@ -1,10 +1,5 @@
-<!DOCTYPE html>
-<html ><head>
-    <meta charset="UTF-8">
-    <title>EU059S Login</title>
-    <link rel="stylesheet" href="login.style.css">
-</head>
 <body style=" background-image: url(logo.xcf.png);    background-repeat: repeat;">
+<link rel="stylesheet" href="login.style.css">
 <img src="logo.png" style="text-align:center;display:block;"/>
 <!-- Form Mixin-->
 <!-- Input Mixin-->
@@ -18,14 +13,13 @@
     <div class="toggle"><i class="fa fa-times fa-pencil"></i>
         <div class="tooltip"><!--Click Me--></div>
     </div>
-    <div class="form">
+    <div class="form" ng-controller="loginCntrl">
         <h2>Login to your account</h2>
-        <form method="post" action="index.jsp">
-            <input type="text" name="Usr.un" placeholder="Username" autofocus />
-            <input type="password" name="Usr.pw" placeholder="Password"/>
-            <input type="hidden" name="op" value="login"/>
-            <button onclick="clkLogin(event)">Login</button>
-        </form>
+        <xform method="post" action="index.jsp">
+            <input type="text" ng-model="login_un" placeholder="Username" autofocus />
+            <input type="password" ng-model="login_pw" placeholder="Password"/>
+            <button ng-click="onClk(event)">Login</button>
+        </xform>
     </div>
     <div class="form">
         <h2>Create an account</h2>
