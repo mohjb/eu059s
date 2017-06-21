@@ -1,6 +1,4 @@
 
-sys.bootStrap.addOnload(app.init,app);
-
 app=angular.module('app', ['ngSanitize','angular-md5']);
 
 app.controller('MainCtrl', function($scope,md5) {
@@ -38,7 +36,7 @@ app.controller('MainCtrl', function($scope,md5) {
 		,{name:'lastModified'	,type:'date-time',readonly:1,indices:[{name:'lastModified',at:0}]}
 		],indices:{'lastModified':['lastModified']}
 		 ,unique:{'title':['un']}}
-	 ,entries:{moh:{un:'moh',pw:'',uid:0,firstName:'Mohammad',lastName:'Buhamad',email:'mbohamad@kisr.edu.kw',level:'fullAccess',notes:'',created:'2017/06/20T21:05',created:'2017/06/20T21:05'}}
+	 ,entries:{moh:{un:'moh',pw:'6f8f57715090da2632453988d9a1501b',uid:0,firstName:'Mohammad',lastName:'Buhamad',email:'mbohamad@kisr.edu.kw',level:'fullAccess',notes:'',created:'2017/06/20T21:05',created:'2017/06/20T21:05'}}
 	 }
 	,projects:{
 	 def:{name:'projects'
@@ -65,7 +63,7 @@ app.controller('MainCtrl', function($scope,md5) {
 	 ,unique:{'title':['p','title']}}
 	 ,entries:{}}//dbTbl Building
 	,floors:{
-	 def:{columns:[
+	 def:{name:'floors',columns:[
 		{name:'no',type:'Integer',pk:1}
 		,{name:'p',type:'Integer',readonly:1,fk:{entity:'projects',col:'no'}}
 		,{name:'b',type:'Integer',readonly:1,fk:{entity:'buildings',col:'no'}}
@@ -145,7 +143,7 @@ app.controller('MainCtrl', function($scope,md5) {
 		,{name:'lastModified',type:'date-time',indices:[{name:'lastModified',at:0}]}
 	]}
 	 ,entries:{}}
-	,log:{def:{},entries:{}}
+	,log:{def:{name:'log',cols:[]},entries:{}}
 }//tables
 ,util:{
 	initTbl:function(tbl,data){}
@@ -330,7 +328,7 @@ function link(scope,element,attrs){}
    	//,transclude: true,
    	//,scope: {d:'d'}
    	,templateUrl: 'component-login.html'
-   	,link: link
+   	//,link: link
      };//return
    }//directive func
  ]);
@@ -404,6 +402,7 @@ function link(scope,element,attrs){}
      };//return
    }//directive func
  ]);
+
 app.directive('component-config', [ function() {
 function link(scope,element,attrs){}
    return {

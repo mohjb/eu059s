@@ -1,9 +1,16 @@
 CACHE MANIFEST
-#version m13 h12 d6 , m40 ,m35 h23 d4 M3 , m42 h10 d28 M2 y2017
+#version y2017
+# m08 m03 h12
+# m54 h11 d21 M6
+# m13 h12 d6 , m40 ,m35 h23 d4 M3
+# m42 h10 d28 M2
+CACHE:
 index.html
+app.js
 sys.js
+component-login.html
 main.css
-login.css
+login.style.css
 logo.png
 ie9.css
 ie8.css
@@ -21,7 +28,7 @@ fontawesome-webfont.woff
 fontawesome-webfont.woff2
 fontawesome-webfont.ttf
 fontawesome-webfont.svg
-fontawesome-webfont.otf
+#fontawesome-webfont.otf
 login.font.woff2
 login.font.latin100.woff2
 login.font.latin300.woff2
@@ -32,9 +39,8 @@ login.font.latin700.woff2
 /angular-1.6.4/angular-sanitize.min.js
 /angular-1.6.4/angular-md5.js
 
-
-NETWORK
+NETWORK:
 xhr.jsp
 
-FALLBACK
+FALLBACK:
 xhr.jsp index.html
