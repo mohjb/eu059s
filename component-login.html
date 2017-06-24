@@ -1,38 +1,27 @@
-<body style=" background-image: url(logo.xcf.png);    background-repeat: repeat;">
+<script src="/angular-1.6.4/angular.js"></script>
+<script src="/angular-1.6.4/angular-md5.js"></script>
+<script src="app.js"></script>
+<div style=" background-image: url(logo.xcf.png);    background-repeat: repeat;" ng-controller="loginCntrl as sub">
 <link rel="stylesheet" href="login.style.css">
 <img src="logo.png" style="text-align:center;display:block;"/>
 <!-- Form Mixin-->
 <!-- Input Mixin-->
 <!-- Button Mixin-->
 <!-- Pen Title-->
-<div class="pen-title">
-    <h1>Visual Assessment</h1>
-</div>
+<div class="pen-title"><h1>Visual Assessment</h1></div>
 <!-- Form Module-->
 <div class="module form-module">
-    <div class="toggle"><i class="fa fa-times fa-pencil"></i>
-        <div class="tooltip"><!--Click Me--></div>
-    </div>
-    <div class="form" ng-controller="loginCntrl">
+    <div class="toggle"><i class="fa fa-times fa-pencil"></i><div class="tooltip"><!--Click Me--></div></div>
+    <div class="form" >
         <h2>Login to your account</h2>
         <xform method="post" action="index.jsp">
-            <input type="text" ng-model="login_un" placeholder="Username" autofocus />
-            <input type="password" ng-model="login_pw" placeholder="Password"/>
-            <button ng-click="onClk(event)">Login</button>
+            <input type="text" ng-model="un" placeholder="Username" autofocus />
+            <input type="password" ng-model="pw" placeholder="Password"/>
+            <button ng-click="clk(event)">Login</button>
         </xform>
-    </div>
-    <div class="form">
-        <h2>Create an account</h2>
-        <form>
-            <input type="text" placeholder="Username"/>
-            <input type="password" placeholder="Password"/>
-            <input type="email" placeholder="Email Address"/>
-            <input type="tel" placeholder="Phone Number"/>
-            <button>Register</button>
-        </form>
     </div>
     <div class="cta"><a href="#"><!--Forgot your password?--></a></div>
 </div>
 <script src='jquery.min.js'></script>
 <script src="login.index.js"></script>
-</body>
+</div>

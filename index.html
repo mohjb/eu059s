@@ -4,7 +4,7 @@
 <script src="/angular-1.6.4/angular-md5.js"></script>
 <script src="app.js"></script>
 </head><body ng-controller="MainCtrl">
-<div ng-if="!usr && screen=='login'" component-login="yes"></div>
+<div ng-if="!usr && ( !screen || screen=='login')" component-login="yes"></div>
 <div ng-if=" usr " component-header="yes"></div>
 <div ng-if=" usr && screen=='projects'" component-projects="yes"></div>
 <div ng-if=" usr && screen=='sheet'" component-sheet="yes"></div>
