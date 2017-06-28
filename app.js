@@ -1,47 +1,176 @@
-app=angular.module('app', ['ngSanitize','angular-md5'] );
+window.xa=app=
+angular.module('app', ['ngSanitize','angular-md5','ui.router'] )
+.config(function($stateProvider,$urlRouterProvider){
+    console.log('config',this,arguments);
 
-app.controller('MainCtrl', ['app' ,function($scope,app) {
-    $scope.usr=null;//app.usr=  // app.screen=
-    $scope.screen=null// null is equivalent to screen='login'
-}])
 
-app.controller('loginCntrl', ['app','angular-md5','db',function($scope,app,angularMd5,db) {
- console.log('app.controller:loginCntrl:($scope,app,md5,db,arguments,this)=',$scope,app,md5,db,arguments,this)
-    $scope.usr=null;
-    $scope.screen=null// null is equivalent to screen='login'
-    $scope.un=''
-    $scope.pw=''
-    $scope.msg=''
+    $urlRouterProvider.otherwise('/login');
+    $stateProvider.state('login',{
+      url:'/login',
+      templateUrl:'template-login.html'
+      ,controller:'loginCtrl'
+    })
+	.state('projects',{
+      url:'/projects',
+      templateUrl:'template-projects.html'
+      ,controller:'projectsCtrl'
+    })
+	.state('sheet',{
+      url:'/sheet',
+      templateUrl:'template-sheet.html'
+      ,controller:'sheetCtrl'
+    })
+	.state('search',{
+      url:'/search',
+      templateUrl:'template-search.html'
+      ,controller:'searchCtrl'
+    })
+	.state('query',{
+      url:'/query',
+      templateUrl:'template-query.html'
+      ,controller:'queryCtrl'
+    })
+	.state('print',{
+      url:'/print',
+      templateUrl:'template-print.html'
+      ,controller:'printCtrl'
+    })
+	.state('config',{
+      url:'/config',
+      templateUrl:'template-config.html'
+      ,controller:'configCtrl'
+    })
+	.state('config-help',{
+      url:'/config-help',
+      templateUrl:'template-config-help.html'
+      ,controller:'configHelpCtrl'
+    })
+	.state('users',{
+      url:'/users',
+      templateUrl:'template-users.html'
+      ,controller:'usersCtrl'
+    })
 
- a=document.getElementsByTagName('button')
 
-    if(a&&a[0]&& !a[0].onclick)
-    a[0].onclick=function(){console.log('loginCntrl:button.onclick',arguments,this);}
- $scope.clk=function(){
- console.log('loginCntrl:clk',arguments,this);
-	var u=db.usr.entries[$scope.un]
-	if(u && u.pw== angularMd5.createHash($scope.pw) ){
-		app.usr=u;
-		//TODO: DbLog.newEntry(login)
-		$scope.msg='login successful<br/>,'+(new Date)
-		$scope.screen=app.screen='projects'
-	}
-	else $scope.msg='invalid login <br/>,'+(new Date)
- }
+  })//config
 
-}])
+
+
 
 app.factory('app', [ function() {
-    var p=window.app||{}
+    var p=window.xa||{}
+    p.usr=0
     p.server={
         	Op:{//client facade reflection of server-Op,
         	login:'Usr.login'//function(){}
         	,logout:'Usr.logout'//function(){}
-
          }//Op
-
         }//server
+    p.logout=function(state){p.usr=0;state.go('login');}
     return function(message) {return p;}}]);
+
+
+app.controller('MainCtrl', //['app','md5',
+function($scope,app ) {
+	if(app instanceof Function)
+		app=app();
+	if(app){
+		app.usr=0
+		//var test=(new Date()).toString(),tst=md5.createHash(test)
+		console.log('controller:MainCntrl:version=',$scope.version='MainCntrl , app='+app //,'md5Test=',test,tst
+		)
+	}else{
+		$scope.usr=null;
+		console.log('controller:MainCntrl:version=',$scope.version='MainCntrl , no app')
+	}
+}//]
+)
+
+
+.controller('loginCtrl',function($scope,app,db,md5,$state) {//['app','angular-md5','db', // angularMd5
+	console.log('app.controller:loginCtrl:($scope,app,db,arguments,this)=',$scope,app,db,arguments,this) // md5,
+	//$scope.usr=null;
+	$scope.un=''
+	$scope.pw=''
+	$scope.msg=''
+	$scope.clk=
+	function calek(){
+		console.log('loginCtrl:clk',arguments,this);
+		//if(!db)db=window.app.db;//if(!db.usr)db=app.db
+		if(db  instanceof Function)db=db();
+		if(app instanceof Function)app=app();
+		var u=db.usr.entries[$scope.un]
+		if(!md5){console.error('controller:loginCtrl:function-clk:param-md5 not defined');md5={createHash:function(){}}}//,md5=app.md5||window.xa.md5||{createHash:function(){}}
+		if(u && u.pw == md5.createHash($scope.pw)){
+			app.usr=u;
+			//TODO: DbLog.newEntry(login)
+			$scope.msg='login successful,\n'+(new Date)
+			//$scope.screen=app.screen='projects'
+			$state.go('projects')
+		}
+		else $scope.msg='invalid login \n,'+(new Date)
+	}
+
+
+	//$scope.chng=function chng(){console.log('loginCtrl:chng',arguments,this);}
+
+
+	/* a=document.getElementsByTagName('button')
+	if(a&&a[0]&& !a[0].onclick)
+	a[0].onclick=function(){
+		console.log('loginCtrl:button.onclick',arguments,this);
+		calek()
+	}*/
+}//]
+)
+.controller('projectsCtrl',
+function($scope,app ) {
+	if(app instanceof Function)
+		app=app();
+	console.log('controller:Cntrl:',app ,arguments,this)
+	})
+.controller('sheetCtrl',
+function($scope,app ) {
+	if(app instanceof Function)
+		app=app();
+	console.log('controller:Cntrl:',app ,arguments,this)
+	})
+.controller('searchCtrl',
+function($scope,app ) {
+	if(app instanceof Function)
+		app=app();
+	console.log('controller:Cntrl:',app ,arguments,this)
+	})
+.controller('queryCtrl',
+function($scope,app ) {
+	if(app instanceof Function)
+		app=app();
+	console.log('controller:Cntrl:',app ,arguments,this)
+	})
+.controller('printCtrl',
+function($scope,app ) {
+	if(app instanceof Function)
+		app=app();
+	console.log('controller:Cntrl:',app ,arguments,this)
+	})
+.controller('configCtrl',
+function($scope,app ) {
+	if(app instanceof Function)
+		app=app();
+	console.log('controller:Cntrl:',app ,arguments,this)
+	})
+.controller('configHelpCtrl',
+function($scope,app ) {
+	if(app instanceof Function)
+		app=app();
+	console.log('controller:Cntrl:',app ,arguments,this)
+	})
+.controller('usersCtrl',
+function($scope,app ) {
+	if(app instanceof Function)
+		app=app();
+	console.log('controller:Cntrl:',app ,arguments,this)
+	})
 
 app.factory('db', ['app', function(app) {
     var db={
@@ -177,7 +306,9 @@ app.factory('db', ['app', function(app) {
             ,{name:'lastModified',type:'date-time',indices:[{name:'lastModified',at:0}]}
         ]}
          ,entries:{}}
-        ,log:{def:{name:'log',cols:[]},entries:{}}
+        ,log:{def:{name:'log',cols:[
+'no,logTime,uid,entity,pk,act,json,lastModified'
+        ]},entries:{}}
       ,util:{
         initTbl:function(tbl,data){}
         ,addRow:function(tbl,row){}
@@ -190,117 +321,3 @@ app.factory('db', ['app', function(app) {
     }//dbSchema
     if(app)app.db=db
     return function(message) {return db;}}]);
-
-app.directive('componentLogin', ['app', function(app) {
-function link(scope,element,attrs){console.log('directive:componentLogin.link:(scope,element,attrs,arguments,this)=',scope,element,attrs,arguments,this)}
-   var p={
-   	restrict: 'A'//'E'
-   	//,transclude: true,
-   	//,scope: {d:'d'}
-   	,templateUrl: 'component-login.html'
-   	//,link: link
-     };//return
-     console.log('directive:componentLogin:(p,arguments,this)=',p,arguments,this)
-     return p
-   }//directive func
- ]);
-
-app.directive('componentHeader', [ function() {
-function link(scope,element,attrs){}
-   return {
-   	restrict: 'A'//'E'
-   	,templateUrl: 'component-header.html'
-   	,link: link
-     };//return
-   }//directive func
- ]);
-
-app.directive('componentFooter', [ function() {
-function link(scope,element,attrs){}
-   return {
-   	restrict: 'A'//'E'
-   	,templateUrl: 'component-footer.html'
-   	,link: link
-     };//return
-   }//directive func
- ]);
-
-app.directive('componentProjects', [ function() {
-function link(scope,element,attrs){}
-   return {
-   	restrict: 'A'//'E'
-   	,templateUrl: 'component-projects.html'
-   	,link: link
-     };//return
-   }//directive func
- ]);
-
-app.directive('componentSheet', [ function() {
-function link(scope,element,attrs){}
-   return {
-   	restrict: 'A'//'E'
-   	,templateUrl: 'component-sheet.html'
-   	,link: link
-     };//return
-   }//directive func
- ]);
-
-app.directive('componentSearch', [ function() {
-function link(scope,element,attrs){}
-   return {
-   	restrict: 'A'//'E'
-   	,templateUrl: 'component-search.html'
-   	,link: link
-     };//return
-   }//directive func
- ]);
-
-app.directive('componentPrint', [ function() {
-function link(scope,element,attrs){}
-   return {
-   	restrict: 'A'//'E'
-   	,templateUrl: 'component-print.html'
-   	,link: link
-     };//return
-   }//directive func
- ]);
-
-app.directive('componentQuery', [ function() {
-function link(scope,element,attrs){}
-   return {
-   	restrict: 'A'//'E'
-   	,templateUrl: 'component-query.html'
-   ,link: link
-     };//return
-   }//directive func
- ]);
-
-app.directive('componentConfig', [ function() {
-function link(scope,element,attrs){}
-   return {
-   	restrict: 'A'//'E'
-   	,templateUrl: 'component-config.html'
-   ,link: link
-     };//return
-   }//directive func
- ]);
-
-app.directive('componentConfigHelp', [ function() {
-function link(scope,element,attrs){}
-   return {
-   	restrict: 'A'//'E'
-   	,templateUrl: 'component-config-help.html'
-   	,link: link
-     };//return
-   }//directive func
- ]);
-
-app.directive('componentUsers', [ function() {
-function link(scope,element,attrs){}
-   return {
-   	restrict: 'A'//'E'
-   	,templateUrl: 'component-users.html'
-   	,link: link
-     };//return
-   }//directive func
- ]);

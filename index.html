@@ -6,13 +6,6 @@
 </head><body ng-controller="MainCtrl">
 <div ng-if="!usr && ( !screen || screen=='login')" component-login="yes"></div>
 <div ng-if=" usr " component-header="yes"></div>
-<div ng-if=" usr && screen=='projects'" component-projects="yes"></div>
-<div ng-if=" usr && screen=='sheet'" component-sheet="yes"></div>
-<div ng-if=" usr && screen=='query'" component-query="yes"></div>
-<div ng-if=" usr && screen=='search'" component-search="yes"></div>
-<div ng-if=" usr && screen=='print'" component-print="yes"></div>
-<div ng-if=" usr && screen=='config'" component-config="yes"></div>
-<div ng-if=" usr && screen=='config-help'" component-config-help="yes"></div>
-<div ng-if=" usr && usr.admin && screen=='users'" component-users="yes"></div>
+
 <div ng-if=" usr " component-footer="yes"></div>
 </body></html>

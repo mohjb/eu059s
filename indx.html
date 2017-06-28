@@ -1,42 +1,21 @@
 <html ng-app="app"><head>
-    <script src="/angular-1.6.4/angular.js"></script>
-    <script src="/angular-1.6.4/angular-sanitize.min.js"></script>
-    <script src="/angular-1.6.4/angular-md5.js"></script>
-    <script src="app.js"></script>
-</head><body ng-controller="MainCtrl as main">
-<div ng-if="!usr && ( !screen || screen=='login')" x-component-login="no"
-    style=" background-image: url(logo.xcf.png);    background-repeat: repeat;" ng-controller="loginCntrl as sub">
-        <link rel="stylesheet" href="login.style.css">
-        <img src="logo.png" style="text-align:center;display:block;"/>
-        <!-- Form Mixin-->
-        <!-- Input Mixin-->
-        <!-- Button Mixin-->
-        <!-- Pen Title-->
-        <div class="pen-title"><h1>Visual Assessment</h1></div>
-        <!-- Form Module-->
-        <div class="module form-module">
-            <div class="toggle"><i class="fa fa-times fa-pencil"></i><div class="tooltip"><!--Click Me--></div></div>
-            <div class="form" >
-                <h2>Login to your account</h2>
-                <xform method="post" action="index.jsp">
-                    <input type="text" ng-model="un" placeholder="Username" autofocus />
-                    <input type="password" ng-model="pw" placeholder="Password"/>
-                    <button ng-click="clk(event)">Login</button>
-                </xform>
-            </div>
-            <div class="cta"><a href="#"><!--Forgot your password?--></a></div>
-        </div>
-        <script src='jquery.min.js'></script>
-        <script src="login.index.js"></script>
-</>
-<div ng-if=" usr " component-header="yes"></div>
-<div ng-if=" usr && screen=='projects'" component-projects="yes"></div>
-<div ng-if=" usr && screen=='sheet'" component-sheet="yes"></div>
-<div ng-if=" usr && screen=='query'" component-query="yes"></div>
-<div ng-if=" usr && screen=='search'" component-search="yes"></div>
-<div ng-if=" usr && screen=='print'" component-print="yes"></div>
-<div ng-if=" usr && screen=='config'" component-config="yes"></div>
-<div ng-if=" usr && screen=='config-help'" component-config-help="yes"></div>
-<div ng-if=" usr && usr.admin && screen=='users'" component-users="yes"></div>
-<div ng-if=" usr " component-footer="yes"></div>
+<script src="/angular-1.6.4/angular.js"></script>
+<script src="/angular-1.6.4/angular-sanitize.min.js"></script>
+<script src="/angular-1.6.4/angular-md5.js"></script>
+<script src="/angular-1.6.4/angular-ui-router.js"></script>
+<!--script src="template-login.js"></script>
+<script src="template-projects.js"></script>
+<script src="template-sheet.js"></script>
+<script src="template-search.js"></script>
+<script src="template-query.js"></script>
+<script src="template-print.js"></script>
+<script src="template-config.js"></script>
+<script src="template-config-help.js"></script>
+<script src="template-users.js"></script-->
+<script src="app.js"></script>
+</head><body ng-controller="MainCtrl">
+<div ng-if="app.usr" ng-include="template-header.html"></div>
+<main ui-view></main>
+<div ng-include='template-footer.html'></div>
 </body></html>
+

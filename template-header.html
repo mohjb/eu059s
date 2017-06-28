@@ -1,0 +1,625 @@
+<!-- 	void jsp01() throws IOException { -- >
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>EU059S Structural Assessment of Underground Water Reservoirs</title>
+		<meta charset="utf-8" serverVersion="2016/05/16/17:56:00"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-- >
+		
+		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+		<link rel="stylesheet" href="main.css" />
+<script src="app.js"></script><script>App.clkEdit=clkEdit=
+function clkEdit(evt){
+	var src=evt.target||event.srcElement
+	//,p=src;//console.log("clkEdit",evt,src)
+	//while(p&&p.nodeName!='ARTICLE'){p=p.parentNode;}
+
+	var p=document.getElementsByClassName('editForm')[0]
+	, a=p.getElementsByClassName('editable')
+	,b=src.innerText=='EDIT'
+	,v={},data
+	p.aEdit=a;src.innerText=b?'Save':'EDIT'
+	for(var i =0;i<a.length;i++)
+	{	a[i].contentEditable=b;
+		a[i].style.backgroundColor=b?'lightgray':''
+		v[a[i].getAttribute('name')]=a[i].innerText;
+	}data={op:'xhrEdit',entity:p.entity 
+		|| p.getAttribute('entity') ,pk:p.pk 
+		|| p.getAttribute('pk') ,v:v}
+	console.log('clkEdit:src=',src,' ,p=',p,' ,a='
+		,a,' ,b=',b,' ,v=',v ,' ,data=',data);
+	if(!b)
+		App.xhr({data:data})
+}//function clkEdit(evt)
+</script>
+	<!--/head>
+	<body-->
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+<!-- 			 //tl.o("						<h1><a href="#">Structural Assessment of Underground Water Reservoirs, EU059S</a></h1>\r\n"); -->
+						<nav class="links">
+							<ul>
+								<li><a href="?{{Prm.screen}}={{Prm.Screen.ProjectsList}}">Projects</a></li>
+								<li><a href="?{{Prm.screen}}={{Prm.Screen.UsersList
+			 }}">Users</a></li>
+								<li><a href="?{{Prm.screen}}={{Prm.Screen.ReportsMenu
+			 }}">Reports</a></li>
+								<li><a href="?{{Prm.screen}}={{Prm.Screen.LogMenu
+			 }}">Logs</a></li>
+								<li><a href="?{{Prm.screen}}={{Prm.Screen.ConfigMenu
+			 }}">Configurations</a></li>
+							</ul>
+						</nav>
+						<nav class="main">
+							<ul>
+								<li class="search">
+									<a class="fa-search" href="#search">Search</a>
+									<form id="search" method="get" action="?{{Prm.screen}}={{Prm.Screen.Search}}&{{Prm.op}}={{Prm.Op.query
+			 }}">
+										<input type="text" name="{{Prm.query
+			 }}" placeholder="Search" />
+									</form>
+								</li>
+								<li class="menu">
+									<a class="fa-bars" href="#menu">Menu</a>
+								</li>
+							</ul>
+						</nav>
+						<h1><a href="#">Structural Assessment of Underground <br/>Water Reservoirs, EU059S</a></h1>
+					</header>
+
+				<!-- Menu -->
+					<section id="menu">
+
+						<!-- Search -->
+							<section>
+								<form id="search" method="get" action="?{{Prm.screen}}={{Prm.Screen.Search}}&{{Prm.op}}={{Prm.Op.query
+			 }}">
+										<input type="text" name="{{Prm.query
+			 }}" placeholder="Search" />
+									</form>
+							</section>
+
+						<!-- Links -->
+							<section>
+								<ul class="links">
+									<li>
+										<a href="http://www.kisr.edu.kw">
+											<h3>KISR</h3>
+											<p>Kuwait Institute for Scientific Research</p>
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											<h3>EU</h3>
+											<p>Energy & Building Research Center</p>
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											<h3>TED</h3>
+											<p>Techno Economics Division</p>
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											<h3>EU059S</h3>
+											<p>Project:Structural Assessment of Underground Water Reservoirs</p>
+										</a>
+									</li>
+<!-- 	}//jsp01 -->
+
+<!-- 	void jspMenu() throws IOException{
+		App e=this;
+		if(e.screen==Prm.Screen.UsersList){ -->
+
+									<li>
+										<a href="#">
+											<h3>New User</h3>
+											<p><form method="post"><input type="hidden" name="{{Prm.op
+				 }}" value="{{Prm.Op.newUser
+				 }}"/><input type="submit" value="Create"/></form></p>
+										</a>
+									</li>
+<!-- 		}else if(e.screen==Prm.Screen.User){ -->
+
+									<li>
+										<a href="#">
+											<h3>Delete User</h3>
+											<p><form method="post"><input type="hidden" name="{{Prm.op
+				 }}" value="{{Prm.Op.deleteUser
+				 }}"/><input type="submit" value="Delete"/></form></p>
+										</a>
+									</li>
+<!-- 		}else if(e.screen==Prm.Screen.ProjectsList){ -->
+
+									<li>
+										<a href="#">
+											<h3>New Project</h3>
+											<p><form method="post"><input type="hidden" name="{{Prm.op
+				 }}" value="{{Prm.Op.newProject
+				 }}"/><input type="submit" value="Create"/></form></p>
+										</a>
+									</li>
+<!-- 		}else if(e.screen==Prm.Screen.ProjectScreen){ -->
+
+									<li>
+										<a href="#">
+											<h3>Delete Project</h3>
+											<p><form method="post"><input type="hidden" name="{{Prm.op
+				 }}" value="{{Prm.Op.deleteProject
+				 }}"/><input type="submit" value="Delete"/></form></p>
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											<h3>New Building</h3>
+											<p><form method="post"><input type="hidden" name="{{Prm.op
+				 }}" value="{{Prm.Op.newBuilding
+				 }}"/><input type="submit" value="Create"/></form></p>
+										</a>
+									</li>
+<!-- 		}else if(e.screen==Prm.Screen.BuildingScreen){ -->
+
+									<li>
+									<a href="#">
+										<h3>Delete Building</h3>
+										<p><form method="post"><input type="hidden" name="{{Prm.op
+				 }}" value="{{Prm.Op.deleteBuilding
+				 }}"/><input type="submit" value="Delete"/></form></p>
+									</a>
+								</li>
+								<li>
+									<a href="#">
+										<h3>New Floor</h3>
+										<p><form method="post"><input type="hidden" name="{{Prm.op
+				 }}" value="{{Prm.Op.newFloor
+				 }}"/><input type="submit" value="Create"/></form></p>
+									</a>
+								</li>
+<!-- 		}else if(e.screen==Prm.Screen.FloorScreen){ -->
+
+									<li>
+										<a href="#">
+											<h3>Delete Floor</h3>
+											<p><form method="post"><input type="hidden" name="{{Prm.op
+				 }}" value="{{Prm.Op.deleteFloor
+				 }}"/><input type="submit" value="Delete"/></form></p>
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											<h3>New Sheet</h3>
+											<p><form method="post"><input type="hidden" name="{{Prm.op
+				 }}" value="{{Prm.Op.newSheet
+				 }}"/><input type="submit" value="Create"/></form></p>
+										</a>
+									</li>
+<!-- 		}else if(e.screen==Prm.Screen.Sheet){ -->
+<li><a href="#"><h3>Delete Sheet</h3>
+<p><form method="post"><input type="hidden" name="{{Prm.op
+				 }}" value="{{Prm.Op.deleteSheet
+				 }}"/><input type="submit" value="Delete"/></form></p>
+</a></li>
+<!-- 		} -->
+
+								</ul>
+							</section>
+
+						<!-- Actions -->
+							<section>
+								<ul class="actions vertical">
+									<li><a href="?{{Prm.op}}={{Prm.Op.logout
+			 }}" class="button big fit">Logout</a></li>
+								</ul>
+							</section>
+
+					</section>
+<!-- 	}//jspMenu -->
+
+<!-- 	void jspMain() throws IOException{ -->
+<!-- Main --><div id="main">
+<!-- 	}//jspMain -->
+
+<!-- 	void jspScreenUsersList() throws IOException{ -->
+
+<h1>Users</h1><table><tr>User-Name</tr><tr>User-Level</tr><
+</table><a href="?{{Prm.op}}={{Prm.Op.newUser}}">New User</a>
+<!-- 	}//jspScreenUsersList -->
+
+<!-- 	void jspScreenConfig() throws IOException{ -->
+<h1>Config</h1> Change Password
+<!-- 	}//jspScreenConfig -->
+
+<!-- 	void jspScreenProjectsList() throws IOException{
+		App e=this;int serialNo=0;//Project p=new Project(); -->
+<h1>Projects</h1><table><tr><th>sn</th><th>Title</th><th>Desc</th><th>Created</th><th>by</th><th>Description</th><th>no. Buildings</th><th>no.Sheets</th></tr>
+<!-- 		for(TL.DB.Tbl row:e.proj.query(TL.DB.Tbl.where( )))try
+		{TL.DB.Tbl.Usr author=null; if(e.proj.json==null)e.proj.json=TL.Util.mapCreate();
+			try{author=usr(e.proj.json.get("author"));}
+			catch(Exception ex){tl.error(ex,"eu059s : project list for-loop:author ,proj=",e.proj);}
+			Object avatar=e.proj.json.get("avatar")
+			, uAvatar = author != null && author . json != null	? author . json . get ( "avatar" ):null
+			,authorName=author!=null && author.json!=null?author.json.get("name"):author!=null?author.un:"-";
+			++serialNo;// Object o=TL.Json.Parser.parse(json);Map l=(Map)((Map)o).get("labels"); -->
+
+<tr entity="projects" pk="{{e.proj.no}}"
+><td>{{serialNo}}</td>
+<td><h2 class="title"><a href="?{{Prm.screen}}={{Prm.Screen.ProjectScreen}}&{{Prm.projNo}}={{e.proj.no
+				 }}" name="title">{{e.proj.json.get("title")
+				 }}</a></h2></td>
+<td name="shortDesc">{{e.proj.json.get("shortDesc")
+				 }}</td>
+<td class="meta"><time class="published" datetime="{{e.proj.json.get("date")
+				 }}" name="date">{{e.proj.json.get("date")
+				 }}</time></td>
+<td><a href="#" class="author"><span class="name" name="author" title="author name">{{authorName!=null?authorName:author!=null&&author.un!=null?author.un : "n/a
+<img src="images/{{uAvatar==null?"avatar.jpg":uAvatar
+				 }}" alt="author image" /></a></td>
+<!-- 				 //tl.o("			< tr>\r\n"); -->
+<x-td><a href="#" x-class="image featured"><x-img src="images/{{avatar!=null?avatar:(serialNo<10?"pic0"+serialNo+".jpg":"pic"+serialNo+".jpg")
+				 }}" alt="" /></a></x-td>\r\n
+<td name="desc">e.proj.json.get("desc")</td>
+<td class="stats"><a title="number of buildings in this project" class="icon fa-heart" name="heart"
+	>TL.DB.q1int("select count(*) from buildings where p=?{{-1,e.proj.no)</a></td>
+<td><a title="number of sheets in this project" href="#" class="icon fa-comment" name="comment">TL.DB.q1int("select count(*) from sheets where p=?",-1,e.proj.no)</a></td footer></tr>
+<!-- 	}catch(Exception ex){tl.error(ex,"eu059s : Projects list for-loop ,proj=",e.proj);} -->
+</table><a href="?{{Prm.screen}}={{Prm.Screen.ProjectScreen}}&{{Prm.op}}={{Prm.Op.newProject}}">New Project</a>
+<!-- 	}//jspScreenProjectsList -->
+
+<!-- 	void jspScreenProject() throws IOException, SQLException {
+		App e=this;int serialNo=1;
+		serialNo=1;//if(e.proj.json==null)e.proj.json=TL.Util.mapCreate();TL.DB.Tbl.Usr author=null;try{author=usr(e.proj.json.get("author"));}catch(Exception ex){tl.error(ex,"eu059s : project-selected:author");}Object avatar=e.proj.json.get("avatar"),pTtl=e.proj.json.get("title"),uAvatar=author!=null && author.json!=null?author.json.get("avatar"):null,authorName=author!=null && author.json!=null?author.json.get("name"):author!=null?author.un:"-";
+ -->
+<h1>Project</h1><table><tr><th>Title</th><th>Desc</th><th>Created</th><th>by</th><th>Description</th><th>Actions</th><th>#Buildings</th><th>#Sheets</th></tr>
+<!-- 		try
+		{ //if(e.proj.json==null)e.proj.json=TL.Util.mapCreate();try{author=usr(e.proj.json.get("author"));} catch(Exception ex){tl.error(ex,"eu059s : project :author ,proj=",e.proj);}
+			String pTtl=title(e.proj); -->
+<tr entity="projects" pk={{e.proj.no,screen==Prm.Screen.ProjectScreen?" class="editForm"":"
+><td><h2 class="title"><a href="?"
+				 ,Prm.screen}}={{Prm.Screen.ProjectScreen}}&{{Prm.projNo}}={{e.proj.no
+				 }}" name="title""
+				 ,screen==Prm.Screen.ProjectScreen?" class="editable">
+				 ,pTtl}}</a></h2></td>
+<td name="shortDesc""
+				 ,screen==Prm.Screen.ProjectScreen?" class="editable" >
+				 ,e.proj.json.get("shortDesc")}}</td>
+<td class="meta"><time class="published" datetime="{{e.proj.json.get("date")
+				 }}" name="date">{{e.proj.json.get("date")}}</time></td>
+<td><a href="#" class="author"><span class="name" name="author" title="author name">"
+				 ,author(e.proj)//authorName!=null?authorName:author!=null&&author.un!=null?author.un : "n/a
+<img src="images/
+avatar.jpg"//uAvatar==null?"avatar.jpg":uAvatar
+				 }}" alt="author image" /></a></td>
+				 <!-- //,"<x-td><a href="#" x-class="image featured"><x-img src="images/{{avatar!=null?avatar:serialNo<10?"pic0"+serialNo+".jpg":"pic"+serialNo+".jpg"}}" alt="" /></a></x-td>\r\n -->
+<td name="desc"{{screen==Prm.Screen.ProjectScreen?" class="editable"":""}}>{{e.proj.json.get("desc")}}</td>
+<td footer class="actions"><a href="?{{Prm.screen}}={{Prm.Screen.ProjectScreen}}&{{Prm.projNo}}={{e.proj.no}}" class="button big">View</a>
+<!-- 			//  if(e.screen==Prm.Screen.ProjectScreen) -->
+<a onclick="clkEdit(event)" class="button big">Edit</a>
+<a onclick="confirm('delete project {{pTtl}} ?')" href="?{{Prm.screen}}={{Prm.Screen.ProjectsList}}&{{Prm.op}}={{Prm.Op.deleteProject}}&{{Prm.projNo}}={{e.proj.no}}" class="button big">Delete Project</a>
+<a href="?{{Prm.screen}}={{Prm.Screen.BuildingScreen}}&{{Prm.op}}={{Prm.Op.newBuilding}}&{{Prm.projNo}}={{e.proj.no}}" class="button big">New Building</a>
+
+</td>
+<td class="stats"><a title="number of buildings in this project" class="icon fa-heart" name="heart">{{
+TL.DB.q1int("select count(*) from buildings where p=?",-1,e.proj.no)}}</a></td>
+
+<td><a title="number of sheets in this project" href="#" class="icon fa-comment" name="comment">"
+				 ,TL.DB.q1int("select count(*) from sheets where p=?",-1,e.proj.no)
+				 ,"</a></td footer></tr>\r\n");
+		}catch(Exception ex){tl.error(ex,"eu059s : Projects list for-loop ,proj=",e.proj);}
+		tl.o("</table>");
+		jspScreenBuildingList();
+	}//jspScreenProj
+
+	void jspIntro() throws IOException{
+		tl.o("					</div>
+
+				<!-- Sidebar -->
+					<section x-id="sidebar">
+
+						<!-- Intro -->
+							<section id="intro">
+								<a href="#" class="logo"><img src="logo.png" alt="" /></a>
+								<header>
+									<h2>Visual Assessment</h2>
+									<p>Web-application</p>
+								</header>
+							</section>\r\n");
+	}//jspIntro
+
+	void jspScreenBuildingList() throws IOException, SQLException{
+		App e=this;int serialNo=0;
+
+		tl.o("<h1>Buildings</h1><table><tr><th>sn</th><th>Title</th><th>Notes</th><th>Created</th><th>by</th><th>#Floors</th><th>#Sheets</th></tr>");
+
+		for(TL.DB.Tbl row:e.bld.query(TL.DB.Tbl.where(Building.C.p,e.proj.no )))
+		{TL.DB.Tbl.Usr author=usr(e.bld.json.get("author"));
+			Object avatar=e.bld.json.get("avatar")
+			, uAvatar = author != null && author . json != null
+			? author . json . get ( "avatar" ):null
+			,authorName=author!=null && author.json!=null
+			?author.json.get("name"):author!=null?author.un:"-";
+			++serialNo;
+
+
+			tl.o("<tr xclass="mini-post building" entity="building" pk=",e.bld.no
+				 ,">\r\n
+<td>",serialNo
+				 ,"</td>\r\n
+<td><h3><a href="?",Prm.screen}}={{Prm.Screen.BuildingScreen}}&{{Prm.projNo}}={{e.proj.no}}&{{Prm.buildingNo}}={{e.bld.no
+				 ,"" name="title">",e.bld.json.get("title")
+				 ,"</a></h3></td>\r\n
+<td>",e.bld.json.get("notes")
+				 ,"</td>\r\n
+<td><time class="published" datetime="",tl.now ,'"','>',e.bld.json.get("date")
+				 ,"</time></td>\r\n
+<td><a href="#" class="author"><span class="name" name="author" title="author name">",authorName!=null?authorName:author!=null&&author.un!=null?author.un : "n/a
+</span><img src="images/",uAvatar==null?"avatar.jpg":uAvatar
+				 ,"" alt="author image" /></a></td>\r\n
+<td class="stats"><a title="number of floors in this building" class="icon fa-heart" name="heart">",TL.DB.q1int("select count(*) from floors where b=?",-1,e.bld.no)
+				 ,"</a></td>\r\n
+<td><a title="number of sheets in this building" href="#" class="icon fa-comment" name="comment">",TL.DB.q1int("select count(*) from sheets where b=?",-1,e.bld.no)
+				 ,"</a></td></tr>\r\n");
+		}tl.o("</table>");
+	}//jspScreenBuildingList    //jspScreenProject
+
+	void jspScreenBuilding()throws IOException, SQLException{
+		App e=this;int serialNo=1;
+		TL.DB.Tbl.Usr author=usr(e.bld.json.get("author"));
+		Object avatar=e.bld.json.get("avatar")
+		, uAvatar = author != null && author . json != null
+		? author . json . get ( "avatar" )
+		:null
+		,authorName=author!=null && author.json!=null
+		?author.json.get("name")
+		:author!=null?author.un
+		:"User";
+
+		tl.o("<h1>Building</h1><table><tr><th>Title</th><th>Notes</th><th>Created</th><th>by</th><th>Action</th><th>#Floors</th><th>#Sheets</th></tr>\n"
+			 ,"<tr xclass="mini-post building"
+			 ," editForm"//e.screen==Prm.Screen.BuildingScreen?" editForm":""
+			 ,"" entity="building" pk="",e.bld.no
+			 ,"">
+<td><h3><a href="?",Prm.screen}}={{Prm.Screen.BuildingScreen}}&{{Prm.buildingNo}}={{e.bld.no
+			 ,"" name="title" class="editable">",e.bld.json.get("title")
+			 ,"</a></h3></td>
+<td class="editable">",e.bld.json.get("notes")
+			 ,"</td>
+<td><time class="published" datetime="",tl.now ,'"','>',e.bld.json.get("date")
+			 ,"</time></td>
+<td><a href="#" class="author"><span class="name" name="author" title="author name">",authorName!=null?authorName:author!=null&&author.un!=null?author.un : "n/a"
+			 ,"</span><img src="images/",uAvatar==null?"avatar.jpg":uAvatar
+			 ,"" alt="author image" /></a></td>
+<td class="stats" >\r\n");
+		//if(e.screen==Prm.Screen.BuildingScreen)
+		{
+			tl.o("<button onclick="clkEdit(event)">EDIT</button>\r\n
+				<button ><a href="?",Prm.op}}={{Prm.Op.newFloor
+				 ,"">New Floor</a></button>\r\n
+				<button ><a href="?",Prm.op}}={{Prm.Op.deleteBuilding
+				 ,"">Delete Building</a></button>");
+		}
+		tl.o("</td>"
+			 ,"<td style="display:inline;	list-style: none;" ><a title="number of floors in this building" class="icon fa-heart" name="heart">",TL.DB.q1int("select count(*) from floors where b=?",-1,e.bld.no)
+			 ,"</a></td>
+<td style="display:inline;	list-style: none;" ><a title="number of sheets in this project" href="#" class="icon fa-comment" name="comment">",TL.DB.q1int("select count(*) from sheets where b=?",-1,e.bld.no)
+			 ,"</a></td></tr></table>\r\n");
+		//if(e.screen==Prm.Screen.BuildingScreen)
+		{serialNo=0;
+			tl.o("<h1>Floors</h1><table><tr><th>sn</th><th>Title</th><th>Notes</th><th>Created</th><th>by</th><th>#Sheets</th></tr>");
+			for(TL.DB.Tbl row:e.flr.query(TL.DB.Tbl.where(Floor.C.b,e.bld.no )))
+			{ author=usr(e.bld.json.get("author"));
+				avatar=e.bld.json.get("avatar");
+				uAvatar = author != null && author . json != null
+				? author . json . get ( "avatar" ):null;
+				authorName=author!=null && author.json!=null
+				?author.json.get("name"):author!=null?author.un:"-";
+				++serialNo;
+
+
+				tl.o("<tr xclass="mini-post floor" floorNo=",e.flr.no
+					 ,"><td>",serialNo
+					 ,"</td>\r\n"
+					 ,"<td><h3><a href="?",Prm.screen}}={{Prm.Screen.FloorScreen}}&{{Prm.floorNo}}={{e.flr.no
+					 ,"" name="title">",e.flr.json.get("title")
+					 ,"</a></h3></td>\r\n"
+					 ,"<td>",e.flr.json.get("notes")
+					 ,"</td>\r\n"
+					 ,"<td><time class="published" datetime="",tl.now ,'"','>',e.flr.json.get("date")
+					 ,"</time></td>\r\n"
+					 ,"<td><a href="#" class="author"><span class="name" name="author" title="author name">",authorName!=null?authorName:author!=null&&author.un!=null?author.un : "n/a"
+					 ,"<img src="images/",uAvatar==null?"avatar.jpg":uAvatar
+					 ,"" alt="author image" /></a></td>\r\n"
+					 ,"<td class="stats"><a title="number of sheets in this floor" href="#" class="icon fa-comment" name="comment">",TL.DB.q1int("select count(*) from sheets where f=?",-1,e.flr.no)
+					 ,"</a></td></tr>\r\n");
+			}tl.o("</table>\r\n");
+		}
+	}//jspNonBld
+
+	void jspScreenFloor() throws IOException,SQLException{
+		App e=this;
+		tl.o("<h1>Floor</h1><table><tr><th>Title</th><th>Notes</th><th>Created</th><th>by</th><th>Action</th><th>#Sheets</th></tr>"
+
+			 ,"<tr"// xclass="mini-post floor");
+			 ,//e.screen==Prm.Screen.FloorScreen?:""
+			 " class="editForm""
+			 ," entity="floor" pk="",e.flr.no,"">
+<td><h3><a href="?",Prm.screen}}={{Prm.Screen.FloorScreen
+			 }}&{{Prm.floorNo}}={{e.flr.no
+			 ,"" name="title" class="editable">"
+			 ,e.flr.json.get("title")
+			 ,"</a></h3></td>
+<td class="editable">"
+			 ,e.flr.json.get("notes")
+			 ,"</td>
+<td><time class="published" datetime=""
+			 ,tl.now ,'"','>',e.flr.json.get("date")
+			 ,"</time></td>
+<td><a href="#" class="author"><img src="images/"
+			 ,e.flr.json.get("avatar")
+			 ,"" alt="" /></a></td>"
+
+			 ,"<td><button onclick="clkEdit(event)">EDIT</button>
+<form method="post"><input type="hidden" name=""
+			 ,Prm.op,"" value="",Prm.Op.deleteFloor
+			 ,""/><input type="submit" value="Delete Floor"/></form>\r\n"
+
+			 ,"<form method="post"><input type="hidden" name=""
+			 ,Prm.op,"" value="",Prm.Op.newSheet
+			 ,""/><input type="submit" value="New Sheet"/></form></td>\r\n"
+
+			 ,"<td class="stats"><a title="number of sheets in this floor" href="#" class="icon fa-comment" name="comment">"
+			 ,TL.DB.q1int("select count(*) from sheets where f=?",-1,e.flr.no)
+			 ,"</a></td></tr></table>");
+		jspSheets();
+		//}//else , not floors
+	}
+
+	void jspPosts() throws IOException{
+		tl.o("								</div>
+							</section>
+
+						<!-- Posts List -->
+							<section>
+								<ul class="posts">\r\n");
+	}//jspPosts
+
+	void jspSheets()throws IOException, SQLException{//,int sIx
+		App e=this;int serialNo=0,sIx=screen.ordinal();
+		//final int i0=Prm.Screen.ProjectScreen.ordinal(),i1=Prm.Screen.BuildingScreen.ordinal();
+		for(TL.DB.Tbl row:e.sheet.query(TL.DB.Tbl.where(
+														sIx==0?Sheet.C.p
+														:sIx==1?Sheet.C.b
+														:Sheet.C.f
+														,
+														sIx==0?e.proj.no
+														:sIx==1?e.bld.no
+														:e.flr.no )))
+		{	int sn=((serialNo++)%12)+1;
+			if(serialNo==1)
+				tl.o("<h1>Sheets</h1>");
+
+			tl.o("\r\n
+		<li>\r\n
+			<article>\r\n
+				<header>\r\n
+					<h3><a href="?",Prm.screen}}={{Prm.Screen.Sheet}}&{{Prm.projNo}}={{e.sheet.p//e.proj.no);
+				 }}&{{Prm.buildingNo}}={{e.sheet.b//e.bld.no);
+				 }}&{{Prm.floorNo}}={{e.sheet.f//e.flr.no);
+				 }}&{{Prm.sheetNo}}={{e.sheet.no,'"','>',serialNo
+				 ,"</a></h3>\r\n
+					<time class="published" datetime="2015-10-15">",e.sheet.dt//get("datetime") );
+				 ,"</time>\r\n
+				</header>\r\n
+					<a href="#" class="image"><img src="images/pic",sn<10?"0":"",sn
+				 ,".jpg" alt="" /></a>\r\n
+			</article>\r\n
+		</li>\r\n
+		");
+		}//for row
+	}//jspSheets
+
+	void jspAbout_Footer() throws IOException{
+		tl.o("
+								</ul>
+							</section>
+
+						<!-- About -->
+							<section class="blurb">
+								<h2>About</h2>
+								<p>The Project is headed by Dr Zafer Sakka zsakka@kisr.edu.kw , The Web-application is implemented by Mohamad Buhamad mbohamad@kisr.edu.kw</p>
+								<ul class="actions">
+									<li><a href="#" class="button">Learn More</a></li>
+								</ul>
+							</section>
+
+						<!-- Footer -->
+							<section id="footer">
+								<ul class="icons">
+									<li><a href="#" class="fa-twitter"><span class="label">Twitter</span></a></li>
+									<li><a href="#" class="fa-facebook"><span class="label">Facebook</span></a></li>
+									<li><a href="#" class="fa-instagram"><span class="label">Instagram</span></a></li>
+									<li><a href="#" class="fa-rss"><span class="label">RSS</span></a></li>
+									<li><a href="#" class="fa-envelope"><span class="label">Email</span></a></li>
+								</ul>
+								<p class="copyright">&copy;K.I.S.R.</p>
+							</section>
+					</section>\r\n");
+	}//jspAbout_Footer
+
+	void jspSheet()throws IOException, SQLException{
+		App e=this;
+		if(e.sheet!=null && e.sheet.no!=null && (e.sheet.jsonRef==null || e.sheet.m==null || e.sheet.m.get(TL.DB.Tbl.Json.Jr)==null))
+			try{	if(e.sheet.jsonRef==null)
+				e.sheet.jsonRef=TL.DB.q1int(
+											"select `"+Sheet.C.jsonRef
+											+"` from `"+e.sheet.getName()
+											+"` where `"+Sheet.C.no
+											+"`=?", -1, e.sheet.no);
+				if(e.sheet.m==null)
+					e.sheet.m=TL.Util.mapCreate(TL.DB.Tbl.Json.Jr, e.sheet.jsonRef);
+				else
+					e.sheet.m.put(TL.DB.Tbl.Json.Jr, e.sheet.jsonRef);
+				//e.sheet.m=TL.DB.Tbl.Json.LoadRef(e.sheet.m);
+			}catch(Exception ex){
+				tl.error(ex,"eu059s.App:SheetScreen:load Sheet and Json map");}
+		Object ft="-";
+		try{
+			e.sheet.m=TL.DB.Tbl.Json.LoadRef(e.sheet.m);
+			ft=e.flr.json.get("title");}
+		catch(Exception ex){tl.error(ex,"eu059s:ex:");}
+
+		tl.o("
+<script>
+sheet=",e.sheet.toJson()
+			 ,"
+sheet.json=",tl.jo().clrSW().o(e.sheet.get()).toString()
+			 ,"
+
+sheet.json.p={no:",e.proj.no
+			 ,",title:",tl.jo().clrSW().o(e.proj.json.get("title")).toString()
+			 ,"}
+sheet.json.b={no:",e.bld.no
+			 ,",title:",tl.jo().clrSW().o(e.bld.json.get("title")).toString()
+			 ,"}
+sheet.json.f={no:",e.flr.no
+			 ,",title:",tl.jo().clrSW().o(ft).toString(),'}'
+			 ,"
+sheet.json.u={no:",e.sheet.u
+			 ,",title:");
+
+		TL.DB.Tbl.Usr author=null;
+		try{author=usr(e.sheet.u);}
+		catch(Exception ex){tl.error(ex,"eu059s : sheet: usr: ",e.sheet);}
+		Object authorName=author!=null && author.json!=null
+		?author.json.get("name"):author!=null?author.un:"-";
+
+		tl.o( tl.jo().clrSW().o( authorName ).toString(),'}'
+			 ,"
+setFormData(sheet)
+</script>\r\n");
+	}//jspSheet
+
+	void jsp03() throws IOException{
+		tl.o("
+			</div>
+
+		<!-- Scripts -->
+			<script src="jquery.min.js"></script>
+			<script src="skel.min.js"></script>
+			<script src="util.js"></script>
+			<!--[if lte IE 8]><script src="respond.min.js"></script><![endif]-->
+			<script src="main.js"></script>\r\n");
+	}
+
+	
+
+}//class App
+
+%>

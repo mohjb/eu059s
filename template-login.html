@@ -1,0 +1,29 @@
+<!--template-login.html: start , version2017.06.25.11.43-->
+<div style=" background-image: url(logo.xcf.png);    background-repeat: repeat;"
+     x-controllerNg="loginCtrl" >
+<link rel="stylesheet" href="login.style.css">
+<img src="logo.png" style="text-align:center;display:block;"/>
+<div class="pen-title">
+    <h1>Visual Assessment</h1>
+</div>
+
+
+<div class="module form-module">
+    <div class="toggle"><i class="fa fa-times fa-pencil"></i>
+        <div class="tooltip"><!--Click Me--></div>
+    </div>
+    <div class="form" >
+        <h2>Login to your account</h2>
+        <xform method="post" action="index.jsp">
+            <input type="text" ng-model="un" placeholder="Username" autofocus ng-change="chng()" />
+            <input type="password" ng-model="pw" placeholder="Password"  ng-change="chng()" />
+            <button ng-click="clk()" >Login</button>
+        </xform>
+    </div>
+{{msg}}
+    <div class="cta"><a href="#"><!--Forgot your password?--></a></div>
+</div>
+<script src='jquery.min.js'></script>
+<script src="login.index.js"></script>
+</div>
+<!--template-login.html: end-->
