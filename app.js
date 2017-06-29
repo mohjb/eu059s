@@ -1,5 +1,5 @@
-window.xa=app=
-angular.module('app', ['ngSanitize','angular-md5','ui.router'] )
+window.xa=app=(angular||{})
+.module('app', ['ngSanitize','angular-md5','ui.router'] )
 .config(function($stateProvider,$urlRouterProvider){
     console.log('config',this,arguments);
 
@@ -71,11 +71,12 @@ app.factory('app', [ function() {
 
 
 app.controller('MainCtrl', //['app','md5',
-function($scope,app ) {
+function($scope,app,$rootScope ) {
 	if(app instanceof Function)
 		app=app();
 	if(app){
-		app.usr=0
+		$rootScope.app=app
+		$scope.usrFlag=app.usr=0
 		//var test=(new Date()).toString(),tst=md5.createHash(test)
 		console.log('controller:MainCntrl:version=',$scope.version='MainCntrl , app='+app //,'md5Test=',test,tst
 		)
@@ -87,18 +88,20 @@ function($scope,app ) {
 )
 
 
-.controller('loginCtrl',function($scope,app,db,md5,$state) {//['app','angular-md5','db', // angularMd5
+.controller('loginCtrl',function($scope,app,db,md5,$state,$rootScope) {//['app','angular-md5','db', // angularMd5
 	console.log('app.controller:loginCtrl:($scope,app,db,arguments,this)=',$scope,app,db,arguments,this) // md5,
 	//$scope.usr=null;
 	$scope.un=''
 	$scope.pw=''
 	$scope.msg=''
+	$rootScope.$state=$scope.$state=$state
+	if(db  instanceof Function)db=db();
+	if(app instanceof Function)app=app();
+	$scope.app=app;
 	$scope.clk=
 	function calek(){
 		console.log('loginCtrl:clk',arguments,this);
 		//if(!db)db=window.app.db;//if(!db.usr)db=app.db
-		if(db  instanceof Function)db=db();
-		if(app instanceof Function)app=app();
 		var u=db.usr.entries[$scope.un]
 		if(!md5){console.error('controller:loginCtrl:function-clk:param-md5 not defined');md5={createHash:function(){}}}//,md5=app.md5||window.xa.md5||{createHash:function(){}}
 		if(u && u.pw == md5.createHash($scope.pw)){
@@ -127,6 +130,7 @@ function($scope,app ) {
 function($scope,app ) {
 	if(app instanceof Function)
 		app=app();
+	$scope.app=app
 	console.log('controller:Cntrl:',app ,arguments,this)
 	})
 .controller('sheetCtrl',

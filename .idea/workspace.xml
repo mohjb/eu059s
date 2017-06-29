@@ -1,71 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="203675e5-66fd-495b-b88a-27b232eb7acf" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Hgo13k-login.font.latin_normal_300_Roboto-Light_U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215,U+E0FF,U+EFFD,U+F000.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.RobotoThin-normal-100-U+0102-0103,U+1EA0-1EF9,U+20AB.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.RobotoThin-normal-100-U+0370-03FF.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.RobotoThin-normal-100-U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.RobotoThin-normal-100-U+0460-052F,U+20B4,U+2DE0-2DFF,U+A640-A69F.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.RobotoThin-normal-100-U+1F00-1FFF.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.cyrillic-ext_normal_300_Roboto-Light_U+0460-052F,U+20B4,U+2DE0-2DFF,U+A640-A69F.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.cyrillic-ext_normal_400_Roboto-Regular_U+0460-052F,U+20B4,U+2DE0-2DFF,U+A640-A69F.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.cyrillic-ext_normal_500_Roboto-Medium_U+0460-052F,U+20B4,U+2DE0-2DFF,U+A640-A69F.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.cyrillic-ext_normal_700_Roboto-Bold_U+0460-052F,U+20B4,U+2DE0-2DFF,U+A640-A69F.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.cyrillic-ext_normal_900_Roboto-Black_U+0460-052F,U+20B4,U+2DE0-2DFF,U+A640-A69F.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.cyrillic_normal_300_Roboto-Light_U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.cyrillic_normal_400_Roboto-Regular_U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.cyrillic_normal_500_Roboto-Medium_U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.cyrillic_normal_700_Roboto-Bold_U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.cyrillic_normal_900_Roboto-Black_U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.fallback_normal_400_MaterialIcons-Regular.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.greek-ext_normal_300_Roboto-Light_U+1F00-1FFF.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.greek-ext_normal_400_Roboto-Regular_U+1F00-1FFF.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.greek-ext_normal_500_Roboto-Medium_U+1F00-1FFF.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.greek-ext_normal_700_Roboto-Bold_U+1F00-1FFF.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.greek-ext_normal_900_Roboto-Black_U+1F00-1FFF.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.greek_normal_300_Roboto-Light_U+0370-03FF.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.greek_normal_400_Roboto-Regular_U+0370-03FF.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.greek_normal_500_Roboto-Medium_U+0370-03FF.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.greek_normal_700_Roboto-Bold_U+0370-03FF.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.greek_normal_900_Roboto-Black_U+0370-03FF.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.latin-ext_normal_100_Roboto-Thin_U+0100-024F,U+1E00-1EFF,U+20A0-20AB,U+20AD-20CF,U+2C60-2C7F,U+A720-A7FF.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.latin-ext_normal_300_Roboto-Light_U+0100-024F,U+1E00-1EFF,U+20A0-20AB,U+20AD-20CF,U+2C60-2C7F,U+A720-A7FF.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.latin-ext_normal_400_Roboto-Regular_U+0100-024F,U+1E00-1EFF,U+20A0-20AB,U+20AD-20CF,U+2C60-2C7F,U+A720-A7FF.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.latin-ext_normal_500_Roboto-Medium_U+0100-024F,U+1E00-1EFF,U+20A0-20AB,U+20AD-20CF,U+2C60-2C7F,U+A720-A7FF.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.latin-ext_normal_700_Roboto-Bold_U+0100-024F,U+1E00-1EFF,U+20A0-20AB,U+20AD-20CF,U+2C60-2C7F,U+A720-A7FF.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.latin-ext_normal_900_Roboto-Black_U+0100-024F,U+1E00-1EFF,U+20A0-20AB,U+20AD-20CF,U+2C60-2C7F,U+A720-A7FF.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.latin_normal_100_Roboto-Thin_U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215,U+E0FF,U+EFFD,U+F000.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.latin_normal_400_Roboto-Regular_U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215,U+E0FF,U+EFFD,U+F000.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.latin_normal_500_Roboto-Medium_U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215,U+E0FF,U+EFFD,U+F000.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.latin_normal_700_Roboto-Bold_U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215,U+E0FF,U+EFFD,U+F000.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.latin_normal_900_Roboto-Black_U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215,U+E0FF,U+EFFD,U+F000.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.vietnamese_normal_300_Roboto-Light_U+0102-0103,U+1EA0-1EF9,U+20AB.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.vietnamese_normal_400_Roboto-Regular_U+0102-0103,U+1EA0-1EF9,U+20AB.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.vietnamese_normal_500_Roboto-Medium_U+0102-0103,U+1EA0-1EF9,U+20AB.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.vietnamese_normal_700_Roboto-Bold_U+0102-0103,U+1EA0-1EF9,U+20AB.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/login.font.vietnamese_normal_900_Roboto-Black_U+0102-0103,U+1EA0-1EF9,U+20AB.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/index.jsp.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/template-config-help.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/template-config.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/template-footer.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/template-header.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/template-login.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/template-print.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/template-projects.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/template-query.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/template-search.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/template-sheet.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/template-users.html" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/component-login.html" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.js" afterPath="$PROJECT_DIR$/app.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application.appcache" afterPath="$PROJECT_DIR$/application.appcache" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.jsp" afterPath="$PROJECT_DIR$/index.jsp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/indx.html" afterPath="$PROJECT_DIR$/indx.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/login.style.css" afterPath="$PROJECT_DIR$/login.style.css" />
-    </list>
+    <list default="true" id="203675e5-66fd-495b-b88a-27b232eb7acf" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -88,6 +24,15 @@
                 <state relative-caret-position="46835">
                   <caret line="3096" column="0" lean-forward="false" selection-start-line="3096" selection-start-column="0" selection-end-line="3096" selection-end-column="0" />
                   <folding>
+                    <element signature="imports" expanded="false" />
+                    <element signature="e#13360#13361#0" expanded="false" />
+                    <element signature="e#13411#13412#0" expanded="false" />
+                    <element signature="e#13637#13638#0" expanded="false" />
+                    <element signature="e#13697#13698#0" expanded="false" />
+                    <element signature="e#13937#13938#0" expanded="false" />
+                    <element signature="e#14004#14005#0" expanded="false" />
+                    <element signature="e#14095#14096#0" expanded="false" />
+                    <element signature="e#14158#14159#0" expanded="false" />
                     <element signature="class#Project#0;class#AppEU059S#0" expanded="false" />
                     <element signature="class#Building#0;class#AppEU059S#0" expanded="false" />
                     <element signature="class#Sheet#0;class#AppEU059S#0" expanded="false" />
@@ -479,7 +424,8 @@
     <MESSAGE value="start of the new edition of the application project" />
     <MESSAGE value="changes in app.js&#10;-added static/hard-coded md5 password for test user&#10;-added names of table in definition in app.server.dbSchema&#10;&#10;changes in application.appcachr&#10;-added app.js&#10;-renamed entry component-login.html&#10;-fixed entry login-style.css&#10;&#10;changes in index.html&#10;-renamed html attribute &quot;x-manifest&quot; , for development purposes to avoid caching with source-code development changes" />
     <MESSAGE value="created file indx.html, without appCache , for development changes&#10;&#10;changes in app.js&#10;-created service named 'app'&#10;-created controller name 'loginCntrl'&#10;-created service ,named 'db'&#10;-created directive, named 'componentLogin'&#10;-created directive, named 'componentHeader'&#10;-created directive, named 'componentFooter'&#10;-created directive, named 'componentProjects'&#10;-created directive, named 'componentSheet'&#10;-created directive, named 'componentSearch'&#10;-created directive, named 'componentPrint'&#10;-created directive, named 'componentQuery'&#10;-created directive, named 'componentConfig'&#10;-created directive, named 'componentConfigHelp'&#10;-created directive, named 'componentUsers'&#10;&#10;changes in component-login.html&#10;-added 3 script-tags for angular, sanitize, and md5&#10;-changed models , un , and pw&#10;-removed signup div-tag&#10;&#10;changes in index.html" />
-    <option name="LAST_COMMIT_MESSAGE" value="created file indx.html, without appCache , for development changes&#10;&#10;changes in app.js&#10;-created service named 'app'&#10;-created controller name 'loginCntrl'&#10;-created service ,named 'db'&#10;-created directive, named 'componentLogin'&#10;-created directive, named 'componentHeader'&#10;-created directive, named 'componentFooter'&#10;-created directive, named 'componentProjects'&#10;-created directive, named 'componentSheet'&#10;-created directive, named 'componentSearch'&#10;-created directive, named 'componentPrint'&#10;-created directive, named 'componentQuery'&#10;-created directive, named 'componentConfig'&#10;-created directive, named 'componentConfigHelp'&#10;-created directive, named 'componentUsers'&#10;&#10;changes in component-login.html&#10;-added 3 script-tags for angular, sanitize, and md5&#10;-changed models , un , and pw&#10;-removed signup div-tag&#10;&#10;changes in index.html" />
+    <MESSAGE value="added ui-router to the application, for switching screens/state of the application(client-side views)" />
+    <option name="LAST_COMMIT_MESSAGE" value="added ui-router to the application, for switching screens/state of the application(client-side views)" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -539,6 +485,15 @@
         <state relative-caret-position="47141">
           <caret line="3096" column="0" lean-forward="false" selection-start-line="3096" selection-start-column="0" selection-end-line="3096" selection-end-column="0" />
           <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#13360#13361#0" expanded="false" />
+            <element signature="e#13411#13412#0" expanded="false" />
+            <element signature="e#13637#13638#0" expanded="false" />
+            <element signature="e#13697#13698#0" expanded="false" />
+            <element signature="e#13937#13938#0" expanded="false" />
+            <element signature="e#14004#14005#0" expanded="false" />
+            <element signature="e#14095#14096#0" expanded="false" />
+            <element signature="e#14158#14159#0" expanded="false" />
             <element signature="class#Project#0;class#AppEU059S#0" expanded="false" />
             <element signature="class#Building#0;class#AppEU059S#0" expanded="false" />
             <element signature="class#Sheet#0;class#AppEU059S#0" expanded="false" />
@@ -605,6 +560,15 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#13360#13361#0" expanded="false" />
+            <element signature="e#13411#13412#0" expanded="false" />
+            <element signature="e#13637#13638#0" expanded="false" />
+            <element signature="e#13697#13698#0" expanded="false" />
+            <element signature="e#13937#13938#0" expanded="false" />
+            <element signature="e#14004#14005#0" expanded="false" />
+            <element signature="e#14095#14096#0" expanded="false" />
+            <element signature="e#14158#14159#0" expanded="false" />
             <element signature="class#Project#0;class#AppEU059S#0" expanded="false" />
             <element signature="class#Building#0;class#AppEU059S#0" expanded="false" />
             <element signature="class#Sheet#0;class#AppEU059S#0" expanded="false" />
@@ -620,6 +584,15 @@
         <state relative-caret-position="45220">
           <caret line="3108" column="43" lean-forward="false" selection-start-line="3108" selection-start-column="9" selection-end-line="3108" selection-end-column="43" />
           <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#13360#13361#0" expanded="false" />
+            <element signature="e#13411#13412#0" expanded="false" />
+            <element signature="e#13637#13638#0" expanded="false" />
+            <element signature="e#13697#13698#0" expanded="false" />
+            <element signature="e#13937#13938#0" expanded="false" />
+            <element signature="e#14004#14005#0" expanded="false" />
+            <element signature="e#14095#14096#0" expanded="false" />
+            <element signature="e#14158#14159#0" expanded="false" />
             <element signature="class#Project#0;class#AppEU059S#0" expanded="false" />
             <element signature="class#Building#0;class#AppEU059S#0" expanded="false" />
             <element signature="class#Sheet#0;class#AppEU059S#0" expanded="false" />
@@ -633,6 +606,15 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#13360#13361#0" expanded="false" />
+            <element signature="e#13411#13412#0" expanded="false" />
+            <element signature="e#13637#13638#0" expanded="false" />
+            <element signature="e#13697#13698#0" expanded="false" />
+            <element signature="e#13937#13938#0" expanded="false" />
+            <element signature="e#14004#14005#0" expanded="false" />
+            <element signature="e#14095#14096#0" expanded="false" />
+            <element signature="e#14158#14159#0" expanded="false" />
             <element signature="class#Project#0;class#AppEU059S#0" expanded="false" />
             <element signature="class#Building#0;class#AppEU059S#0" expanded="false" />
             <element signature="class#Sheet#0;class#AppEU059S#0" expanded="false" />
@@ -659,6 +641,15 @@
         <state relative-caret-position="46835">
           <caret line="3096" column="0" lean-forward="false" selection-start-line="3096" selection-start-column="0" selection-end-line="3096" selection-end-column="0" />
           <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#13360#13361#0" expanded="false" />
+            <element signature="e#13411#13412#0" expanded="false" />
+            <element signature="e#13637#13638#0" expanded="false" />
+            <element signature="e#13697#13698#0" expanded="false" />
+            <element signature="e#13937#13938#0" expanded="false" />
+            <element signature="e#14004#14005#0" expanded="false" />
+            <element signature="e#14095#14096#0" expanded="false" />
+            <element signature="e#14158#14159#0" expanded="false" />
             <element signature="class#Project#0;class#AppEU059S#0" expanded="false" />
             <element signature="class#Building#0;class#AppEU059S#0" expanded="false" />
             <element signature="class#Sheet#0;class#AppEU059S#0" expanded="false" />

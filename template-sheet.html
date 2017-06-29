@@ -1,1 +1,52 @@
-<h1>Sheet</h1>
+<!--	void jspSheet()throws IOException, SQLException{
+		App e=this;
+		if(e.sheet!=null && e.sheet.no!=null && (e.sheet.jsonRef==null || e.sheet.m==null || e.sheet.m.get(TL.DB.Tbl.Json.Jr)==null))
+			try{	if(e.sheet.jsonRef==null)
+				e.sheet.jsonRef=TL.DB.q1int(
+											"select `"+Sheet.C.jsonRef
+											+"` from `"+e.sheet.getName()
+											+"` where `"+Sheet.C.no
+											+"`=?", -1, e.sheet.no);
+				if(e.sheet.m==null)
+					e.sheet.m=TL.Util.mapCreate(TL.DB.Tbl.Json.Jr, e.sheet.jsonRef);
+				else
+					e.sheet.m.put(TL.DB.Tbl.Json.Jr, e.sheet.jsonRef);
+				//e.sheet.m=TL.DB.Tbl.Json.LoadRef(e.sheet.m);
+			}catch(Exception ex){
+				tl.error(ex,"eu059s.App:SheetScreen:load Sheet and Json map");}
+		Object ft="-";
+		try{
+			e.sheet.m=TL.DB.Tbl.Json.LoadRef(e.sheet.m);
+			ft=e.flr.json.get("title");}
+		catch(Exception ex){tl.error(ex,"eu059s:ex:");}
+
+-->
+<script>
+sheet={{e.sheet.toJson()
+			 }}
+sheet.json={{tl.jo().clrSW().o(e.sheet.get()).toString()
+			 }}
+
+sheet.json.p={no:{{e.proj.no
+			 }},title:{{tl.jo().clrSW().o(e.proj.json.get("title")).toString()
+			 }}}
+sheet.json.b={no:{{e.bld.no
+			 }},title:{{tl.jo().clrSW().o(e.bld.json.get("title")).toString()
+			 }}
+sheet.json.f={no:{{e.flr.no
+			 }},title:{{tl.jo().clrSW().o(ft).toString(),'}'
+			 }}
+sheet.json.u={no:{{e.sheet.u
+			 }},title:");
+
+		TL.DB.Tbl.Usr author=null;
+		try{author=usr(e.sheet.u);}
+		catch(Exception ex){tl.error(ex,"eu059s : sheet: usr: ",e.sheet);}
+		Object authorName=author!=null && author.json!=null
+		?author.json.get("name"):author!=null?author.un:"-";
+
+		tl.o( tl.jo().clrSW().o( authorName ).toString(),'}'
+			 }}
+setFormData(sheet)
+</script>
+<!--	}//jspSheet-->

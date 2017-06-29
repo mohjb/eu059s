@@ -1,6 +1,8 @@
 <!--template-login.html: start , version2017.06.25.11.43-->
-<div style=" background-image: url(logo.xcf.png);    background-repeat: repeat;"
-     x-controllerNg="loginCtrl" >
+<div  style=" background-image: url(logo.xcf.png);    background-repeat: repeat;"
+     x-controllerNg="loginCtrl"
+     xx-if="if(app.usr && typeof($state)!='undefined')$state.go('projects');else return true;"
+     >
 <link rel="stylesheet" href="login.style.css">
 <img src="logo.png" style="text-align:center;display:block;"/>
 <div class="pen-title">

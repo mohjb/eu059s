@@ -14,8 +14,9 @@
 <script src="template-users.js"></script-->
 <script src="app.js"></script>
 </head><body ng-controller="MainCtrl">
-<div ng-if="app.usr" ng-include="template-header.html"></div>
+<pre style="display:none"> {{app}}</pre>
+<ng-include ng-if="app.usr || usrFlag" src="'template-header.html'"></ng-include>
 <main ui-view></main>
-<div ng-include='template-footer.html'></div>
+<ng-include ng-if="app.usr || usrFlag" src="'template-footer.html'"></ng-include>
 </body></html>
 
