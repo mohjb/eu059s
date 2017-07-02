@@ -3,35 +3,12 @@
 <title>EU059S Structural Assessment of Underground Water Reservoirs</title>
 		<meta charset="utf-8" serverVersion="2016/05/16/17:56:00"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-- >
+		<!--[if lte IE 8]><script src="html5shiv.js"></script><![endif]-- >
 		
-		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
-		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
-		<link rel="stylesheet" href="main.css" />
-<script>App.clkEdit=clkEdit=
-function clkEdit(evt){
-	var src=evt.target||event.srcElement
-	//,p=src;//console.log("clkEdit",evt,src)
-	//while(p&&p.nodeName!='ARTICLE'){p=p.parentNode;}
+		<!--[if lte IE 9]><link rel="stylesheet" href="css/ie9.css" /><![endif]-->
+		<!--[if lte IE 8]><link rel="stylesheet" href="css/ie8.css" /><![endif]-->
+		<link rel="stylesheet" href="css/main.css" />
 
-	var p=document.getElementsByClassName('editForm')[0]
-	, a=p.getElementsByClassName('editable')
-	,b=src.innerText=='EDIT'
-	,v={},data
-	p.aEdit=a;src.innerText=b?'Save':'EDIT'
-	for(var i =0;i<a.length;i++)
-	{	a[i].contentEditable=b;
-		a[i].style.backgroundColor=b?'lightgray':''
-		v[a[i].getAttribute('name')]=a[i].innerText;
-	}data={op:'xhrEdit',entity:p.entity 
-		|| p.getAttribute('entity') ,pk:p.pk 
-		|| p.getAttribute('pk') ,v:v}
-	console.log('clkEdit:src=',src,' ,p=',p,' ,a='
-		,a,' ,b=',b,' ,v=',v ,' ,data=',data);
-	if(!b)
-		App.xhr({data:data})
-}//function clkEdit(evt)
-</script>
 		<!-- Wrapper -->
 			<div id="wrapper">
 
@@ -42,7 +19,7 @@ function clkEdit(evt){
 							<ul>
 								<li><a href="#!/projects">Projects</a></li>
 								<li><a href="#!/users">Users</a></li>
-								<li><a href="#!/search" title="reports,query,search,print">Reports</a></li>
+								<li><a href="#!/search" title="reports,search">Reports</a></li>
 								<li><a href="#!/query" >Query</a></li>
 								<li><a href="#!/print" >Print</a></li>
 								<li><a href="#!/config" title="Logs, configuration, edit-help">Config</a></li>
@@ -51,142 +28,19 @@ function clkEdit(evt){
 						<nav class="main">
 							<ul>
 								<li class="search">
-									<a class="fa-search" sref="/search">Search</a>
-									<form id="search" method="get" action="?{{Prm.screen}}={{Prm.Screen.Search}}&{{Prm.op}}={{Prm.Op.query}}">
-										<input type="text" name="{{Prm.query}}" placeholder="Search" />
-									</form>
+									<a class="fa-search" sref="#!/search">Search</a>
+									<input type="text" ng-model="search" placeholder="Search" />
 								</li>
-								<li class="menu">
+								<!--li class="menu">
 									<a class="fa-bars" href="#menu">Menu</a>
-								</li>
+
+								</li-->
+								<li><a href="#" class="button big fit">Logout</a></li>
 							</ul>
 						</nav>
-						<h1 style="width:10%">Structural Assessment of Underground Water Reservoirs, EU059S</h1>
+						<h3 style="width:10%">Structural Assessment of Underground Water Reservoirs, EU059S</h3>
 					</header>
 
-				<!-- Menu -->
-					<section id="menu">
-						<!-- Search -->
-							<section>
-								<form id="search" method="get" action="?{{Prm.screen}}={{Prm.Screen.Search}}&{{Prm.op}}={{Prm.Op.query}}">
-										<input type="text" name="{{Prm.query}}" placeholder="Search" />
-									</form>
-							</section>
-
-						<!-- Links -->
-							<section>
-								<ul class="links">
-									<li>
-										<a href="http://www.kisr.edu.kw">
-											<h3>KISR</h3>
-											<p>Kuwait Institute for Scientific Research</p>
-										</a>
-									</li>
-									<li>
-										<a href="#">
-											<h3>EU</h3>
-											<p>Energy & Building Research Center</p>
-										</a>
-									</li>
-									<li>
-										<a href="#">
-											<h3>TED</h3>
-											<p>Techno Economics Division</p>
-										</a>
-									</li>
-									<li>
-										<a href="#">
-											<h3>EU059S</h3>
-											<p>Project:Structural Assessment of Underground Water Reservoirs</p>
-										</a>
-									</li>
-<!-- 	}//jsp01 -->
-
-<!-- 	void jspMenu() throws IOException{
-		App e=this;
-		if(e.screen==Prm.Screen.UsersList){ -->
-
-									<li>
-										<a href="#">
-											<h3>New User</h3>
-											<p><form method="post"><input type="hidden" name="{{Prm.op}}" value="{{Prm.Op.newUser}}"/><input type="submit" value="Create"/></form></p>
-										</a>
-									</li>
-<!-- 		}else if(e.screen==Prm.Screen.User){ -->
-
-									<li>
-										<a href="#">
-											<h3>Delete User</h3>
-											<p><form method="post"><input type="hidden" name="{{Prm.op}}" value="{{Prm.Op.deleteUser}}"/><input type="submit" value="Delete"/></form></p>
-										</a>
-									</li>
-<!-- 		}else if(e.screen==Prm.Screen.ProjectsList){ -->
-
-									<li>
-										<a href="#">
-											<h3>New Project</h3>
-											<p><form method="post"><input type="hidden" name="{{Prm.op}}" value="{{Prm.Op.newProject}}"/><input type="submit" value="Create"/></form></p>
-										</a>
-									</li>
-<!-- 		}else if(e.screen==Prm.Screen.ProjectScreen){ -->
-
-									<li>
-										<a href="#">
-											<h3>Delete Project</h3>
-											<p><form method="post"><input type="hidden" name="{{Prm.op}}" value="{{Prm.Op.deleteProject}}"/><input type="submit" value="Delete"/></form></p>
-										</a>
-									</li>
-									<li>
-										<a href="#">
-											<h3>New Building</h3>
-											<p><form method="post"><input type="hidden" name="{{Prm.op}}" value="{{Prm.Op.newBuilding}}"/><input type="submit" value="Create"/></form></p>
-										</a>
-									</li>
-<!-- 		}else if(e.screen==Prm.Screen.BuildingScreen){ -->
-
-									<li>
-									<a href="#">
-										<h3>Delete Building</h3>
-										<p><form method="post"><input type="hidden" name="{{Prm.op}}" value="{{Prm.Op.deleteBuilding}}"/><input type="submit" value="Delete"/></form></p>
-									</a>
-								</li>
-								<li>
-									<a href="#">
-										<h3>New Floor</h3>
-										<p><form method="post"><input type="hidden" name="{{Prm.op}}" value="{{Prm.Op.newFloor}}"/><input type="submit" value="Create"/></form></p>
-									</a>
-								</li>
-<!-- 		}else if(e.screen==Prm.Screen.FloorScreen){ -->
-
-									<li>
-										<a href="#">
-											<h3>Delete Floor</h3>
-											<p><form method="post"><input type="hidden" name="{{Prm.op}}" value="{{Prm.Op.deleteFloor}}"/><input type="submit" value="Delete"/></form></p>
-										</a>
-									</li>
-									<li>
-										<a href="#">
-											<h3>New Sheet</h3>
-											<p><form method="post"><input type="hidden" name="{{Prm.op}}" value="{{Prm.Op.newSheet}}"/><input type="submit" value="Create"/></form></p>
-										</a>
-									</li>
-<!-- 		}else if(e.screen==Prm.Screen.Sheet){ -->
-<li><a href="#"><h3>Delete Sheet</h3>
-<p><form method="post"><input type="hidden" name="{{Prm.op}}" value="{{Prm.Op.deleteSheet}}"/><input type="submit" value="Delete"/></form></p>
-</a></li>
-<!-- 		} -->
-
-								</ul>
-							</section>
-
-						<!-- Actions -->
-							<section>
-								<ul class="actions vertical">
-									<li><a href="?{{Prm.op}}={{Prm.Op.logout}}" class="button big fit">Logout</a></li>
-								</ul>
-							</section>
-
-					</section>
 <!-- 	}//jspMenu -- >
 
 

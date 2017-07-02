@@ -1,7 +1,218 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="203675e5-66fd-495b-b88a-27b232eb7acf" name="Default" comment="" />
+    <list default="true" id="203675e5-66fd-495b-b88a-27b232eb7acf" name="Default" comment="added ui-router to the application, for switching screens/state of the application(client-side views)">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/i1io/mysql.js4d00_eu059s.2017.01.24.14.16.sql.gz" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/images/avatar.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/images/logo.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/images/logo.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/images/pic01.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/images/pic02.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/images/pic03.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/images/pic04.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/images/pic05.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/images/pic06.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/images/pic07.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/images/pic08.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/images/pic09.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/images/pic10.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/images/pic11.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/images/pic12.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/css/kisr50.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/favicon.ico" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/FontAwesome.otf" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/Hgo13k-login.font.latin_normal_300_Roboto-Light_U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215,U+E0FF,U+EFFD,U+F000.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/fontawesome-webfont.eot" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/fontawesome-webfont.ttf" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/fontawesome-webfont.woff" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/fontawesome-webfont.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.RobotoThin-normal-100-U+0102-0103,U+1EA0-1EF9,U+20AB.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.RobotoThin-normal-100-U+0370-03FF.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.RobotoThin-normal-100-U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.RobotoThin-normal-100-U+0460-052F,U+20B4,U+2DE0-2DFF,U+A640-A69F.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.RobotoThin-normal-100-U+1F00-1FFF.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.cyrillic-ext_normal_300_Roboto-Light_U+0460-052F,U+20B4,U+2DE0-2DFF,U+A640-A69F.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.cyrillic-ext_normal_400_Roboto-Regular_U+0460-052F,U+20B4,U+2DE0-2DFF,U+A640-A69F.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.cyrillic-ext_normal_500_Roboto-Medium_U+0460-052F,U+20B4,U+2DE0-2DFF,U+A640-A69F.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.cyrillic-ext_normal_700_Roboto-Bold_U+0460-052F,U+20B4,U+2DE0-2DFF,U+A640-A69F.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.cyrillic-ext_normal_900_Roboto-Black_U+0460-052F,U+20B4,U+2DE0-2DFF,U+A640-A69F.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.cyrillic_normal_300_Roboto-Light_U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.cyrillic_normal_400_Roboto-Regular_U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.cyrillic_normal_500_Roboto-Medium_U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.cyrillic_normal_700_Roboto-Bold_U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.cyrillic_normal_900_Roboto-Black_U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.fallback_normal_400_MaterialIcons-Regular.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.greek-ext_normal_300_Roboto-Light_U+1F00-1FFF.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.greek-ext_normal_400_Roboto-Regular_U+1F00-1FFF.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.greek-ext_normal_500_Roboto-Medium_U+1F00-1FFF.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.greek-ext_normal_700_Roboto-Bold_U+1F00-1FFF.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.greek-ext_normal_900_Roboto-Black_U+1F00-1FFF.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.greek_normal_300_Roboto-Light_U+0370-03FF.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.greek_normal_400_Roboto-Regular_U+0370-03FF.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.greek_normal_500_Roboto-Medium_U+0370-03FF.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.greek_normal_700_Roboto-Bold_U+0370-03FF.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.greek_normal_900_Roboto-Black_U+0370-03FF.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.latin-ext_normal_100_Roboto-Thin_U+0100-024F,U+1E00-1EFF,U+20A0-20AB,U+20AD-20CF,U+2C60-2C7F,U+A720-A7FF.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.latin-ext_normal_300_Roboto-Light_U+0100-024F,U+1E00-1EFF,U+20A0-20AB,U+20AD-20CF,U+2C60-2C7F,U+A720-A7FF.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.latin-ext_normal_400_Roboto-Regular_U+0100-024F,U+1E00-1EFF,U+20A0-20AB,U+20AD-20CF,U+2C60-2C7F,U+A720-A7FF.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.latin-ext_normal_500_Roboto-Medium_U+0100-024F,U+1E00-1EFF,U+20A0-20AB,U+20AD-20CF,U+2C60-2C7F,U+A720-A7FF.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.latin-ext_normal_700_Roboto-Bold_U+0100-024F,U+1E00-1EFF,U+20A0-20AB,U+20AD-20CF,U+2C60-2C7F,U+A720-A7FF.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.latin-ext_normal_900_Roboto-Black_U+0100-024F,U+1E00-1EFF,U+20A0-20AB,U+20AD-20CF,U+2C60-2C7F,U+A720-A7FF.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.latin100.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.latin300.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.latin400.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.latin500.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.latin700.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.latin900.ttf" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.latin900.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.latin_normal_100_Roboto-Thin_U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215,U+E0FF,U+EFFD,U+F000.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.latin_normal_400_Roboto-Regular_U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215,U+E0FF,U+EFFD,U+F000.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.latin_normal_500_Roboto-Medium_U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215,U+E0FF,U+EFFD,U+F000.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.latin_normal_700_Roboto-Bold_U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215,U+E0FF,U+EFFD,U+F000.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.latin_normal_900_Roboto-Black_U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215,U+E0FF,U+EFFD,U+F000.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.vietnamese_normal_300_Roboto-Light_U+0102-0103,U+1EA0-1EF9,U+20AB.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.vietnamese_normal_400_Roboto-Regular_U+0102-0103,U+1EA0-1EF9,U+20AB.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.vietnamese_normal_500_Roboto-Medium_U+0102-0103,U+1EA0-1EF9,U+20AB.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.vietnamese_normal_700_Roboto-Bold_U+0102-0103,U+1EA0-1EF9,U+20AB.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.vietnamese_normal_900_Roboto-Black_U+0102-0103,U+1EA0-1EF9,U+20AB.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/railway.laExt.400.woff2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/i1io/_index__jsp.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/i1io/index.jsp" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/src/eu059s/AppEU059S.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/css/fragment.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/css/ie8.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/css/ie9.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/css/index.jsp.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/css/login.style.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/css/login.test.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/css/main.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/fontawesome-webfont.svg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/html5shiv.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/index.jsp" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/jquery.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/login.index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/main.1.jb.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/main.jb.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/main.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/respond.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/skel.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/sys.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/test.jsp" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/util.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/xhr.jsp" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/template-building.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/template-floor.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/template-project.html" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FontAwesome.otf" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Hgo13k-login.font.latin_normal_300_Roboto-Light_U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215,U+E0FF,U+EFFD,U+F000.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fontawesome-webfont.eot" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fontawesome-webfont.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fontawesome-webfont.ttf" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fontawesome-webfont.woff" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fontawesome-webfont.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fragment.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/html5shiv.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/i1io/_index__jsp.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/i1io/index.jsp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/i1io/mysql.js4d00_eu059s.2017.01.24.14.16.sql.gz" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ie8.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ie9.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/images/avatar.jpg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/images/logo.jpg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/images/logo.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/images/pic01.jpg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/images/pic02.jpg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/images/pic03.jpg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/images/pic04.jpg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/images/pic05.jpg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/images/pic06.jpg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/images/pic07.jpg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/images/pic08.jpg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/images/pic09.jpg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/images/pic10.jpg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/images/pic11.jpg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/images/pic12.jpg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/index.jsp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/index.jsp.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jquery.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/kisr50.jpg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.RobotoThin-normal-100-U+0102-0103,U+1EA0-1EF9,U+20AB.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.RobotoThin-normal-100-U+0370-03FF.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.RobotoThin-normal-100-U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.RobotoThin-normal-100-U+0460-052F,U+20B4,U+2DE0-2DFF,U+A640-A69F.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.RobotoThin-normal-100-U+1F00-1FFF.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.cyrillic-ext_normal_300_Roboto-Light_U+0460-052F,U+20B4,U+2DE0-2DFF,U+A640-A69F.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.cyrillic-ext_normal_400_Roboto-Regular_U+0460-052F,U+20B4,U+2DE0-2DFF,U+A640-A69F.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.cyrillic-ext_normal_500_Roboto-Medium_U+0460-052F,U+20B4,U+2DE0-2DFF,U+A640-A69F.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.cyrillic-ext_normal_700_Roboto-Bold_U+0460-052F,U+20B4,U+2DE0-2DFF,U+A640-A69F.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.cyrillic-ext_normal_900_Roboto-Black_U+0460-052F,U+20B4,U+2DE0-2DFF,U+A640-A69F.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.cyrillic_normal_300_Roboto-Light_U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.cyrillic_normal_400_Roboto-Regular_U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.cyrillic_normal_500_Roboto-Medium_U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.cyrillic_normal_700_Roboto-Bold_U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.cyrillic_normal_900_Roboto-Black_U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.fallback_normal_400_MaterialIcons-Regular.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.greek-ext_normal_300_Roboto-Light_U+1F00-1FFF.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.greek-ext_normal_400_Roboto-Regular_U+1F00-1FFF.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.greek-ext_normal_500_Roboto-Medium_U+1F00-1FFF.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.greek-ext_normal_700_Roboto-Bold_U+1F00-1FFF.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.greek-ext_normal_900_Roboto-Black_U+1F00-1FFF.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.greek_normal_300_Roboto-Light_U+0370-03FF.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.greek_normal_400_Roboto-Regular_U+0370-03FF.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.greek_normal_500_Roboto-Medium_U+0370-03FF.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.greek_normal_700_Roboto-Bold_U+0370-03FF.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.greek_normal_900_Roboto-Black_U+0370-03FF.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.latin-ext_normal_100_Roboto-Thin_U+0100-024F,U+1E00-1EFF,U+20A0-20AB,U+20AD-20CF,U+2C60-2C7F,U+A720-A7FF.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.latin-ext_normal_300_Roboto-Light_U+0100-024F,U+1E00-1EFF,U+20A0-20AB,U+20AD-20CF,U+2C60-2C7F,U+A720-A7FF.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.latin-ext_normal_400_Roboto-Regular_U+0100-024F,U+1E00-1EFF,U+20A0-20AB,U+20AD-20CF,U+2C60-2C7F,U+A720-A7FF.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.latin-ext_normal_500_Roboto-Medium_U+0100-024F,U+1E00-1EFF,U+20A0-20AB,U+20AD-20CF,U+2C60-2C7F,U+A720-A7FF.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.latin-ext_normal_700_Roboto-Bold_U+0100-024F,U+1E00-1EFF,U+20A0-20AB,U+20AD-20CF,U+2C60-2C7F,U+A720-A7FF.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.latin-ext_normal_900_Roboto-Black_U+0100-024F,U+1E00-1EFF,U+20A0-20AB,U+20AD-20CF,U+2C60-2C7F,U+A720-A7FF.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.latin100.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.latin300.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.latin400.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.latin500.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.latin700.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.latin900.ttf" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.latin900.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.latin_normal_100_Roboto-Thin_U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215,U+E0FF,U+EFFD,U+F000.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.latin_normal_400_Roboto-Regular_U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215,U+E0FF,U+EFFD,U+F000.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.latin_normal_500_Roboto-Medium_U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215,U+E0FF,U+EFFD,U+F000.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.latin_normal_700_Roboto-Bold_U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215,U+E0FF,U+EFFD,U+F000.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.latin_normal_900_Roboto-Black_U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215,U+E0FF,U+EFFD,U+F000.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.vietnamese_normal_300_Roboto-Light_U+0102-0103,U+1EA0-1EF9,U+20AB.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.vietnamese_normal_400_Roboto-Regular_U+0102-0103,U+1EA0-1EF9,U+20AB.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.vietnamese_normal_500_Roboto-Medium_U+0102-0103,U+1EA0-1EF9,U+20AB.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.vietnamese_normal_700_Roboto-Bold_U+0102-0103,U+1EA0-1EF9,U+20AB.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.vietnamese_normal_900_Roboto-Black_U+0102-0103,U+1EA0-1EF9,U+20AB.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.index.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.style.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/login.test.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/main.1.jb.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/main.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/main.jb.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/main.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/railway.laExt.400.woff2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/respond.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/skel.min.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/eu059s/AppEU059S.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/sys.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/test.jsp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/util.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/xhr.jsp" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.js" afterPath="$PROJECT_DIR$/app.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application.appcache" afterPath="$PROJECT_DIR$/application.appcache" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/indx.html" afterPath="$PROJECT_DIR$/indx.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/template-footer.html" afterPath="$PROJECT_DIR$/template-footer.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/template-header.html" afterPath="$PROJECT_DIR$/template-header.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/template-login.html" afterPath="$PROJECT_DIR$/template-login.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/template-projects.html" afterPath="$PROJECT_DIR$/template-projects.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/template-sheet.html" afterPath="$PROJECT_DIR$/template-sheet.html" />
+    </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -18,47 +229,11 @@
     <splitter split-orientation="vertical" split-proportion="0.44671202">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="AppEU059S.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/eu059s/AppEU059S.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="46835">
-                  <caret line="3096" column="0" lean-forward="false" selection-start-line="3096" selection-start-column="0" selection-end-line="3096" selection-end-column="0" />
-                  <folding>
-                    <element signature="imports" expanded="false" />
-                    <element signature="e#13360#13361#0" expanded="false" />
-                    <element signature="e#13411#13412#0" expanded="false" />
-                    <element signature="e#13637#13638#0" expanded="false" />
-                    <element signature="e#13697#13698#0" expanded="false" />
-                    <element signature="e#13937#13938#0" expanded="false" />
-                    <element signature="e#14004#14005#0" expanded="false" />
-                    <element signature="e#14095#14096#0" expanded="false" />
-                    <element signature="e#14158#14159#0" expanded="false" />
-                    <element signature="class#Project#0;class#AppEU059S#0" expanded="false" />
-                    <element signature="class#Building#0;class#AppEU059S#0" expanded="false" />
-                    <element signature="class#Sheet#0;class#AppEU059S#0" expanded="false" />
-                    <element signature="method#main#0;class#AppEU059S#0" expanded="false" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="sys.js" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/sys.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="17">
-                  <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-                  <folding>
-                    <element signature="e#0#21238#0" expanded="false" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
           <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/index.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="136">
-                  <caret line="8" column="0" lean-forward="false" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
+                <state relative-caret-position="153">
+                  <caret line="9" column="0" lean-forward="false" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
@@ -67,30 +242,8 @@
           <file leaf-file-name="application.appcache" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/application.appcache">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="136">
-                  <caret line="9" column="6" lean-forward="false" selection-start-line="9" selection-start-column="6" selection-end-line="9" selection-end-column="6" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="login.style.css" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/login.style.css">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="0">
-                  <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-                  <folding>
-                    <element signature="e#0#46296#0" expanded="false" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="login.index.js" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/login.index.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="306">
-                  <caret line="18" column="29" lean-forward="false" selection-start-line="18" selection-start-column="29" selection-end-line="18" selection-end-column="29" />
+                <state relative-caret-position="170">
+                  <caret line="10" column="6" lean-forward="false" selection-start-line="10" selection-start-column="6" selection-end-line="10" selection-end-column="6" />
                   <folding />
                 </state>
               </provider>
@@ -99,8 +252,8 @@
           <file leaf-file-name="app.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/app.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="255">
-                  <caret line="55" column="0" lean-forward="false" selection-start-line="55" selection-start-column="0" selection-end-line="55" selection-end-column="0" />
+                <state relative-caret-position="1122">
+                  <caret line="66" column="0" lean-forward="false" selection-start-line="66" selection-start-column="0" selection-end-line="66" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
@@ -123,8 +276,8 @@
           <file leaf-file-name="indx.html" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/indx.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="272">
-                  <caret line="16" column="33" lean-forward="false" selection-start-line="16" selection-start-column="33" selection-end-line="16" selection-end-column="33" />
+                <state relative-caret-position="136">
+                  <caret line="8" column="33" lean-forward="false" selection-start-line="8" selection-start-column="33" selection-end-line="8" selection-end-column="33" />
                   <folding />
                 </state>
               </provider>
@@ -133,8 +286,8 @@
           <file leaf-file-name="template-header.html" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/template-header.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-3689">
-                  <caret line="38" column="0" lean-forward="true" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
+                <state relative-caret-position="17">
+                  <caret line="11" column="0" lean-forward="false" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
@@ -201,6 +354,7 @@
         <option value="$PROJECT_DIR$/app.js" />
         <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/indx.html" />
+        <option value="$PROJECT_DIR$/template-header.html" />
       </list>
     </option>
   </component>
@@ -225,6 +379,9 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -239,9 +396,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -381,7 +535,7 @@
     <frame x="-8" y="-8" width="1216" height="1896" extended-state="6" />
     <layout>
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2589134" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2580645" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -446,21 +600,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/component-login.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="629">
-          <caret line="37" column="6" lean-forward="true" selection-start-line="37" selection-start-column="6" selection-end-line="37" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/component-login.html" />
     <entry file="file://$PROJECT_DIR$/login.style.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#46296#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -484,21 +629,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="47141">
           <caret line="3096" column="0" lean-forward="false" selection-start-line="3096" selection-start-column="0" selection-end-line="3096" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#13360#13361#0" expanded="false" />
-            <element signature="e#13411#13412#0" expanded="false" />
-            <element signature="e#13637#13638#0" expanded="false" />
-            <element signature="e#13697#13698#0" expanded="false" />
-            <element signature="e#13937#13938#0" expanded="false" />
-            <element signature="e#14004#14005#0" expanded="false" />
-            <element signature="e#14095#14096#0" expanded="false" />
-            <element signature="e#14158#14159#0" expanded="false" />
-            <element signature="class#Project#0;class#AppEU059S#0" expanded="false" />
-            <element signature="class#Building#0;class#AppEU059S#0" expanded="false" />
-            <element signature="class#Sheet#0;class#AppEU059S#0" expanded="false" />
-            <element signature="method#main#0;class#AppEU059S#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -506,9 +637,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#21238#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -525,9 +654,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#46296#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -559,21 +686,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#13360#13361#0" expanded="false" />
-            <element signature="e#13411#13412#0" expanded="false" />
-            <element signature="e#13637#13638#0" expanded="false" />
-            <element signature="e#13697#13698#0" expanded="false" />
-            <element signature="e#13937#13938#0" expanded="false" />
-            <element signature="e#14004#14005#0" expanded="false" />
-            <element signature="e#14095#14096#0" expanded="false" />
-            <element signature="e#14158#14159#0" expanded="false" />
-            <element signature="class#Project#0;class#AppEU059S#0" expanded="false" />
-            <element signature="class#Building#0;class#AppEU059S#0" expanded="false" />
-            <element signature="class#Sheet#0;class#AppEU059S#0" expanded="false" />
-            <element signature="method#main#0;class#AppEU059S#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -583,21 +696,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="45220">
           <caret line="3108" column="43" lean-forward="false" selection-start-line="3108" selection-start-column="9" selection-end-line="3108" selection-end-column="43" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#13360#13361#0" expanded="false" />
-            <element signature="e#13411#13412#0" expanded="false" />
-            <element signature="e#13637#13638#0" expanded="false" />
-            <element signature="e#13697#13698#0" expanded="false" />
-            <element signature="e#13937#13938#0" expanded="false" />
-            <element signature="e#14004#14005#0" expanded="false" />
-            <element signature="e#14095#14096#0" expanded="false" />
-            <element signature="e#14158#14159#0" expanded="false" />
-            <element signature="class#Project#0;class#AppEU059S#0" expanded="false" />
-            <element signature="class#Building#0;class#AppEU059S#0" expanded="false" />
-            <element signature="class#Sheet#0;class#AppEU059S#0" expanded="false" />
-            <element signature="method#main#0;class#AppEU059S#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -605,21 +704,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#13360#13361#0" expanded="false" />
-            <element signature="e#13411#13412#0" expanded="false" />
-            <element signature="e#13637#13638#0" expanded="false" />
-            <element signature="e#13697#13698#0" expanded="false" />
-            <element signature="e#13937#13938#0" expanded="false" />
-            <element signature="e#14004#14005#0" expanded="false" />
-            <element signature="e#14095#14096#0" expanded="false" />
-            <element signature="e#14158#14159#0" expanded="false" />
-            <element signature="class#Project#0;class#AppEU059S#0" expanded="false" />
-            <element signature="class#Building#0;class#AppEU059S#0" expanded="false" />
-            <element signature="class#Sheet#0;class#AppEU059S#0" expanded="false" />
-            <element signature="method#main#0;class#AppEU059S#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -640,21 +725,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="46835">
           <caret line="3096" column="0" lean-forward="false" selection-start-line="3096" selection-start-column="0" selection-end-line="3096" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#13360#13361#0" expanded="false" />
-            <element signature="e#13411#13412#0" expanded="false" />
-            <element signature="e#13637#13638#0" expanded="false" />
-            <element signature="e#13697#13698#0" expanded="false" />
-            <element signature="e#13937#13938#0" expanded="false" />
-            <element signature="e#14004#14005#0" expanded="false" />
-            <element signature="e#14095#14096#0" expanded="false" />
-            <element signature="e#14158#14159#0" expanded="false" />
-            <element signature="class#Project#0;class#AppEU059S#0" expanded="false" />
-            <element signature="class#Building#0;class#AppEU059S#0" expanded="false" />
-            <element signature="class#Sheet#0;class#AppEU059S#0" expanded="false" />
-            <element signature="method#main#0;class#AppEU059S#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -670,9 +741,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#46296#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -690,20 +759,11 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="17">
           <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#21238#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/component-login.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="27" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/component-login.html" />
     <entry file="file://$PROJECT_DIR$/app.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
@@ -714,32 +774,32 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/application.appcache">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="9" column="6" lean-forward="false" selection-start-line="9" selection-start-column="6" selection-end-line="9" selection-end-column="6" />
+        <state relative-caret-position="170">
+          <caret line="10" column="6" lean-forward="false" selection-start-line="10" selection-start-column="6" selection-end-line="10" selection-end-column="6" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" column="0" lean-forward="false" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
+        <state relative-caret-position="153">
+          <caret line="9" column="0" lean-forward="false" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/indx.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="16" column="33" lean-forward="false" selection-start-line="16" selection-start-column="33" selection-end-line="16" selection-end-column="33" />
+        <state relative-caret-position="136">
+          <caret line="8" column="33" lean-forward="false" selection-start-line="8" selection-start-column="33" selection-end-line="8" selection-end-column="33" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/template-header.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3689">
-          <caret line="38" column="0" lean-forward="true" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
+        <state relative-caret-position="17">
+          <caret line="11" column="0" lean-forward="false" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
           <folding />
         </state>
       </provider>

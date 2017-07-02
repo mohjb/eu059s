@@ -1,8 +1,10 @@
-
 <!-- 	void jspScreenProjectsList() throws IOException{
 		App e=this;int serialNo=0;//Project p=new Project(); -->
-<h1>Projects</h1><table><tr><th>sn</th><th>Title</th><th>Desc</th><th>Created</th><th>by</th><th>Description</th><th>no. Buildings</th><th>no.Sheets</th></tr>
-<!-- 		for(TL.DB.Tbl row:e.proj.query(TL.DB.Tbl.where( )))try
+<h1>Projects</h1>
+<table><tr>
+  <th >sn</th>
+  <th>Title</th><th>Desc</th><th>Created</th><th>by</th><th>Description</th><th>no. Buildings</th><th>no.Sheets</th></tr>
+	<!--for(TL.DB.Tbl row:e.proj.query(TL.DB.Tbl.where( )))try
 		{TL.DB.Tbl.Usr author=null; if(e.proj.json==null)e.proj.json=TL.Util.mapCreate();
 			try{author=usr(e.proj.json.get("author"));}
 			catch(Exception ex){tl.error(ex,"eu059s : project list for-loop:author ,proj=",e.proj);}
@@ -11,218 +13,22 @@
 			,authorName=author!=null && author.json!=null?author.json.get("name"):author!=null?author.un:"-";
 			++serialNo;// Object o=TL.Json.Parser.parse(json);Map l=(Map)((Map)o).get("labels"); -->
 
-<tr entity="projects" pk="{{e.proj.no}}"
-><td>{{serialNo}}</td>
-<td><h2 class="title"><a href="?{{Prm.screen}}={{Prm.Screen.ProjectScreen}}&{{Prm.projNo}}={{e.proj.no}}" name="title">{{e.proj.json.get("title")}}</a></h2></td>
-<td name="shortDesc">{{e.proj.json.get('shortDesc')}}</td>
-<td class="meta"><time class="published" datetime="{{e.proj.json.get('date')}}" name="date">{{e.proj.json.get('date')}}</time></td>
-<td><a href="#" class="author"><span class="name" name="author" title="author name">{{authorName!=null?authorName:author!=null&&author.un!=null?author.un : 'n/a'}}<img src="images/{{uAvatar==null?'avatar.jpg':uAvatar}}" alt="author image" /></a></td>
+<tr ng-repeat="proj in projects" entity="projects" pk="{{proj.no}}" >
+	<td ng-init="serialNo=$index+1">{{serialNo}}</td>
+	<td><h2 class="title"><a ng-click="app.proj=proj" href="#!/project" name="title">{{proj.title}}</a></h2></td>
+	<td name="shortDesc">{{proj.shortDesc}}</td>
+	<td class="meta"><time class="published" datetime="{{proj.date}}" name="date">{{proj.date}}</time></td>
+	<td><a href="javascript:void(0)" class="author"><span class="name" name="author" title="author name"
+		>{{proj.owner}}<img src="images/avatar.jpg" alt="author image" /></a></td>
 <!-- 				 //tl.o("			< tr> -->
-<x-td><a href="#" x-class="image featured"><x-img src="images/{{avatar!=null?avatar:(serialNo<10?'pic0'+serialNo+'.jpg':'pic'+serialNo+'.jpg')}}" alt="" /></a></x-td>
-<td name="desc">{{e.proj.json.get('desc')}}</td>
-<td class="stats"><a title="number of buildings in this project" class="icon fa-heart" name="heart"
-	>{{TL.DB.q1int("select count(*) from buildings where p=?-1:e.proj.no)}}</a></td>
-<td><a title="number of sheets in this project" href="#" class="icon fa-comment" name="comment">{{TL.DB.q1int("select count(*) from sheets where p=?-1:e.proj.no)}}</a></td footer></tr>
-<!-- 	}catch(Exception ex){tl.error(ex,"eu059s : Projects list for-loop ,proj=",e.proj);} -->
-</table><a href="?{{Prm.screen}}={{Prm.Screen.ProjectScreen}}&{{Prm.op}}={{Prm.Op.newProject}}">New Project</a>
+	<x-td><a href="javascript:void(0)" x-class="image featured"><x-img 
+		s-rc="images/{  proj.avatar?proj.avatar:(serialNo<10?'pic0'+serialNo+'.jpg':'pic'+serialNo+'.jpg') }" 
+		alt="" /></a></x-td>
+	<td name="desc">{{proj.desc}}</td>
+	<td class="stats"><a title="number of buildings in this project" class="icon fa-heart" name="heart"
+		>{{proj.buildings.length}}</a></td>
+	<td><a title="number of sheets in this project" href="javascript:void(0)" class="icon fa-comment" name="comment"
+		>{{sheetsCountInProj(proj) }}</a></td footer></tr>
+	<!-- 	}catch(Exception ex){tl.error(ex,"eu059s : Projects list for-loop ,proj=",e.proj);} -->
+</table><a ng-click="proj=app.proj=newProj()" href="#!/project">New Project</a>
 <!-- 	}//jspScreenProjectsList -->
-
-<!-- 	void jspScreenProject() throws IOException, SQLException {
-		App e=this;int serialNo=1;
-		serialNo=1;//if(e.proj.json==null)e.proj.json=TL.Util.mapCreate();TL.DB.Tbl.Usr author=null;try{author=usr(e.proj.json.get("author"));}catch(Exception ex){tl.error(ex,"eu059s : project-selected:author");}Object avatar=e.proj.json.get("avatar"),pTtl=e.proj.json.get("title"),uAvatar=author!=null && author.json!=null?author.json.get("avatar"):null,authorName=author!=null && author.json!=null?author.json.get("name"):author!=null?author.un:"-";
- -->
-<h1>Project</h1><table><tr><th>Title</th><th>Desc</th><th>Created</th><th>by</th><th>Description</th><th>Actions</th><th>#Buildings</th><th>#Sheets</th></tr>
-<!-- 		try
-		{ //if(e.proj.json==null)e.proj.json=TL.Util.mapCreate();try{author=usr(e.proj.json.get("author"));} catch(Exception ex){tl.error(ex,"eu059s : project :author ,proj=",e.proj);}
-			String pTtl=title(e.proj); -->
-<tr entity="projects" pk={{e.proj.no}} class="editForm"><td><h2 class="title"><a href="?{{Prm.screen}}={{Prm.Screen.ProjectScreen}}&{{Prm.projNo}}={{e.proj.no}}" name="title" class="editable">{{pTtl}}</a></h2></td>
-<td name="shortDesc" class="editable" >{{e.proj.json.get("shortDesc")}}</td>
-<td class="meta"><time class="published" datetime="{{e.proj.json.get('date')}}" name="date">{{e.proj.json.get("date")}}</time></td>
-<td><a href="#" class="author"><span class="name" name="author" title="author name">{{author(e.proj)}}<img src="images/avatar.jpg" alt="author image" /></a></td>
-				 <!-- // ,"< x-td><a href="#" x-class="image featured"><x-img src="images/{{avatar!=null?avatar:serialNo<10?"pic0"+serialNo+".jpg":"pic"+serialNo+".jpg"}}" alt="" /></a></x-td> -->
-<td name="desc" class="editable">{{e.proj.json.get("desc")}}</td>
-<td footer class="actions"><a href="?{{Prm.screen}}={{Prm.Screen.ProjectScreen}}&{{Prm.projNo}}={{e.proj.no}}" class="button big">View</a>
-<!-- 			//  if(e.screen==Prm.Screen.ProjectScreen) -->
-<a onclick="clkEdit(event)" class="button big">Edit</a>
-<a onclick="confirm('delete project {{pTtl}} ?')" href="?{{Prm.screen}}={{Prm.Screen.ProjectsList}}&{{Prm.op}}={{Prm.Op.deleteProject}}&{{Prm.projNo}}={{e.proj.no}}" class="button big">Delete Project</a>
-<a href="?{{Prm.screen}}={{Prm.Screen.BuildingScreen}}&{{Prm.op}}={{Prm.Op.newBuilding}}&{{Prm.projNo}}={{e.proj.no}}" class="button big">New Building</a>
-
-</td>
-<td class="stats"><a title="number of buildings in this project" class="icon fa-heart" name="heart">{{
-TL.DB.q1int("select count(*) from buildings where p=?",-1,e.proj.no)}}</a></td>
-
-<td><a title="number of sheets in this project" href="#" class="icon fa-comment" name="comment">{{
-				 TL.DB.q1int("select count(*) from sheets where p=?",-1,e.proj.no)
-				 }}</a></td footer></tr>
-	<!--	}catch(Exception ex){tl.error(ex,"eu059s : Projects list for-loop ,proj=",e.proj);}
-		tl.o("</table>");
-		jspScreenBuildingList();
-	}//jspScreenProj
-
-	void jspIntro() throws IOException{
-		tl.o("					</div>
-
-				<!-- Sidebar -->
-					<section x-id="sidebar">
-
-						<!-- Intro -->
-							<section id="intro">
-								<a href="#" class="logo"><img src="logo.png" alt="" /></a>
-								<header>
-									<h2>Visual Assessment</h2>
-									<p>Web-application</p>
-								</header>
-							</section><!--
-	}//jspIntro
-
-	void jspScreenBuildingList() throws IOException, SQLException{
-		App e=this;int serialNo=0;
--->
-<h1>Buildings</h1>
-<table>
-<tr><th>sn</th><th>Title</th><th>Notes</th><th>Created</th><th>by</th><th>#Floors</th><th>#Sheets</th>
-</tr>
-<!--
-		for(TL.DB.Tbl row:e.bld.query(TL.DB.Tbl.where(Building.C.p,e.proj.no )))
-		{TL.DB.Tbl.Usr author=usr(e.bld.json.get("author"));
-			Object avatar=e.bld.json.get("avatar")
-			, uAvatar = author != null && author . json != null
-			? author . json . get ( "avatar" ):null
-			,authorName=author!=null && author.json!=null
-			?author.json.get("name"):author!=null?author.un:"-";
-			++serialNo;
--->
-<tr xclass="mini-post building" entity="building" pk="{{e.bld.no}}">
-	<td>{{serialNo}}</td>
-	<td><h3><a href="?{{Prm.screen}}={{Prm.Screen.BuildingScreen}}&{{Prm.projNo}}={{e.proj.no}}&{{Prm.buildingNo}}={{e.bld.no}}" name="title">{{e.bld.json.get("title")}}</a></h3></td>
-	<td>{{e.bld.json.get("notes")}}</td>
-	<td><time class="published" datetime="{{tl.now }}">{{e.bld.json.get("date")}}</time></td>
-	<td><a href="#" class="author"><span class="name" name="author" title="author name">{{
-		authorName!=null?authorName:author!=null&&author.un!=null?author.un : "n/a}}
-	</span><img src="images/{{uAvatar==null?"avatar.jpg":uAvatar}}" alt="author image" /></a></td>
-  <td class="stats">
-	<a title="number of floors in this building" class="icon fa-heart" name="heart">{{
-	TL.DB.q1int("select count(*) from floors where b=?",-1,e.bld.no)}}</a></td>
-  <td><a title="number of sheets in this building" href="#" class="icon fa-comment" name="comment">{{
-	TL.DB.q1int("select count(*) from sheets where b=?",-1,e.bld.no)}}</a></td>
-</tr>
-<!--		}-->
-</table>
-<!--	}//jspScreenBuildingList    //jspScreenProject
-
-	void jspScreenBuilding()throws IOException, SQLException{
-		App e=this;int serialNo=1;
-		TL.DB.Tbl.Usr author=usr(e.bld.json.get("author"));
-		Object avatar=e.bld.json.get("avatar")
-		, uAvatar = author != null && author . json != null
-		? author . json . get ( "avatar" )
-		:null
-		,authorName=author!=null && author.json!=null
-		?author.json.get("name")
-		:author!=null?author.un
-		:"User";
--->
-<h1>Building</h1>
-<table>
-<tr><th>Title</th><th>Notes</th><th>Created</th><th>by</th><th>Action</th><th>#Floors</th><th>#Sheets</th>
-</tr>
-<tr xclass="mini-post building editForm" entity="building" pk="{{e.bld.no}}">
-<td><h3><a href="?{{Prm.screen}}={{Prm.Screen.BuildingScreen}}&{{Prm.buildingNo}}={{e.bld.no}}" name="title" class="editable">{{e.bld.json.get("title")}}</a></h3></td>
-<td class="editable">{{e.bld.json.get("notes")}}</td>
-<td><time class="published" datetime="{{tl.now }}">{{e.bld.json.get("date")}}</time></td>
-<td><a href="#" class="author"><span class="name" name="author" title="author name">{{authorName!=null?authorName:author!=null&&author.un!=null?author.un : "n/a"
-			 }}</span><img src="images/{{uAvatar==null?"avatar.jpg":uAvatar
-			 }}" alt="author image" /></a></td>
-<td class="stats" ><button onclick="clkEdit(event)">EDIT</button>
-				<button ><a href="?{{Prm.op}}={{Prm.Op.newFloor
-				 }}">New Floor</a></button>
-				<button ><a href="?{{Prm.op}}={{Prm.Op.deleteBuilding
-				 }}">Delete Building</a></button>
-</td>
-<td style="display:inline;	list-style: none;" ><a title="number of floors in this building" class="icon fa-heart" name="heart">{{TL.DB.q1int("select count(*) from floors where b=?",-1,e.bld.no)}}</a></td>
-<td style="display:inline;	list-style: none;" ><a title="number of sheets in this project" href="#" class="icon fa-comment" name="comment">{{TL.DB.q1int("select count(*) from sheets where b=?",-1,e.bld.no)}}</a>
-</td>
-</tr>
-</table>
-<!--		//if(e.screen==Prm.Screen.BuildingScreen)
-		{serialNo=0;
---><h1>Floors</h1><table><tr><th>sn</th><th>Title</th><th>Notes</th><th>Created</th><th>by</th><th>#Sheets</th></tr>
-<!--			for(TL.DB.Tbl row:e.flr.query(TL.DB.Tbl.where(Floor.C.b,e.bld.no )))
-			{ author=usr(e.bld.json.get("author"));
-				avatar=e.bld.json.get("avatar");
-				uAvatar = author != null && author . json != null
-				? author . json . get ( "avatar" ):null;
-				authorName=author!=null && author.json!=null
-				?author.json.get("name"):author!=null?author.un:"-";
-				++serialNo;
--->
-<tr xclass="mini-post floor" floorNo={{e.flr.no}}><td>{{serialNo}}</td>
-<td><h3><a href="?{{Prm.screen}}={{Prm.Screen.FloorScreen}}&{{Prm.floorNo}}={{e.flr.no}}" name="title">{{e.flr.json.get("title")}}</a></h3></td>
-<td>{{e.flr.json.get("notes")}}</td>
-<td><time class="published" datetime="{{tl.now ,'"','>',e.flr.json.get("date")}}</time></td>
-<td><a href="#" class="author"
-	><span class="name" name="author" title="author name"
-		>{{authorName!=null?authorName:author!=null&&author.un!=null?author.un : "n/a"
-		}}<img src="images/{{ uAvatar==null?'avatar.jpg':uAvatar}}" alt="author image" /></a></td>
-<td class="stats"
-	><a title="number of sheets in this floor" href="#" class="icon fa-comment" name="comment"
-		>{{TL.DB.q1int("select count(*) from sheets where f=?",-1,e.flr.no)}}</a></td></tr>
-<!--			}--></table>
-<!--		}
-	}//jspNonBld
-
-	void jspScreenFloor() throws IOException,SQLException{
-		App e=this;-->
-<h1>Floor</h1>
-<table><tr><th>Title</th><th>Notes</th><th>Created</th><th>by</th><th>Action</th><th>#Sheets</th></tr>
- <tr xclass="mini-post floor ,//e.screen==Prm.Screen.FloorScreen?:''" class="editForm" entity="floor" pk="{{e.flr.no}}">
-	<td><h3><a href="?{{Prm.screen}}={{Prm.Screen.FloorScreen}}&{{Prm.floorNo}}={{e.flr.no}}" name="title" class="editable">{{e.flr.json.get("title")}}</a></h3></td>
-	<td class="editable">{{e.flr.json.get("notes")}}</td>
-	<td><time class="published" datetime="{{tl.now }}">{{e.flr.json.get("date")}}</time></td>
-	<td><a href="#" class="author"><img src="images/{{e.flr.json.get('avatar')}}" alt="" /></a></td>
-	<td><button onclick="clkEdit(event)">EDIT</button>
-		<form method="post"><input type="hidden" name="{{Prm.op}}" value="{{Prm.Op.deleteFloor}}"/><input type="submit" value="Delete Floor"/></form>
-		<form method="post"><input type="hidden" name="{{Prm.op}}" value="{{Prm.Op.newSheet}}"   /><input type="submit" value="New Sheet"/></form>
-	</td>
-	<td class="stats"><a title="number of sheets in this floor" href="#" class="icon fa-comment" name="comment">{{
-		TL.DB.q1int("select count(*) from sheets where f=?",-1,e.flr.no)}}</a></td>
- </tr>
-</table>
-<!--		jspSheets();
-		//}//else , not floors
-	}
-
-	void jspPosts() throws IOException{-->
-</div>
-</section>
-
-<!-- Posts List -->
-<section>
-  <ul class="posts">
-<!--	}//jspPosts
-
-	void jspSheets()throws IOException, SQLException{//,int sIx
-		App e=this;int serialNo=0,sIx=screen.ordinal();
-		//final int i0=Prm.Screen.ProjectScreen.ordinal(),i1=Prm.Screen.BuildingScreen.ordinal();
-		for(TL.DB.Tbl row:e.sheet.query(TL.DB.Tbl.where(
-			sIx==0?Sheet.C.p
-			:sIx==1?Sheet.C.b
-			:Sheet.C.f
-			,
-			sIx==0?e.proj.no
-			:sIx==1?e.bld.no
-			:e.flr.no )))
-		{	int sn=((serialNo++)%12)+1;
-			if(serialNo==1)-->
-  <h1>Sheets</h1>
-	<li>
-		<article>
-			<header>
-				<h3><a href="?{{Prm.screen}}={{Prm.Screen.Sheet}}&{{Prm.projNo}}={{e.sheet.p}}&{{Prm.buildingNo}}={{e.sheet.b//e.bld.no);}}&{{Prm.floorNo}}={{e.sheet.f}}&{{Prm.sheetNo}}={{e.sheet.no}}">{{serialNo}}</a></h3>
-				<time class="published" datetime="2015-10-15">{{e.sheet.dt}}</time>
-			</header>
-			<a href="#" class="image"><img src="images/pic{{sn<10?0:''}}{{sn}}.jpg" alt="" /></a>
-		</article>
-	</li>
-<!--	}//for row
-	}//jspSheets

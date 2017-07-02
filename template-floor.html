@@ -1,0 +1,56 @@
+<!--void jspScreenFloor() throws IOException,SQLException{
+		App e=this;-->
+<h1><a href="#!/project" >{{proj.title}}</a></h1>
+<h2><a href="#!/building">{{ bld.title }}</a></h2>
+<h3>Floor</h3>
+<table><tr><th>Title</th><th>Notes</th><th>Created</th><th>by</th><th>Action</th><th>#Sheets</th></tr>
+ <tr xclass="mini-post floor" class="editForm" entity="floor" >
+	<td><input ng-change="chng()" ng-model="flr.title" class="editable" oldVal="{{flr.title}}" /></td>
+	<td class="editable"><input ng-change="chng()" ng-model="flr.notes" /></td>
+	<td><time class="published" datetime="{{ flr.date }}">{{ flr.date }}</time></td>
+	<td><a href="javascript:void(0)" class="author"><img src="assets/images/avatar.jpg" alt="" /></a></td>
+	<td class="actions" >
+		<a ng-click="confirm('delete floor '+flr.title+' ?')" href="javascript:void(0)" class="button big">Delete Floor</a>
+		<a href="#!/floor" ng-click="app.sht=sht=newSht()" class="button big">New Sheet</a>
+	</td>
+	<td class="stats"><a title="number of sheets in this floor" href="javascript:void(0)" class="icon fa-comment" name="comment">{{flr.sheets.length}}</a></td>
+ </tr>
+</table>
+<!--		jspSheets();
+		//}//else , not floors
+	}
+	void jspPosts() throws IOException{-->
+</div>
+</section>
+
+<!-- Posts List -->
+<section>
+  <ul class="posts">
+<!--	}//jspPosts
+	void jspSheets()throws IOException, SQLException{//,int sIx
+		App e=this;int serialNo=0,sIx=screen.ordinal();
+		//final int i0=Prm.Screen.ProjectScreen.ordinal(),i1=Prm.Screen.BuildingScreen.ordinal();
+		for(TL.DB.Tbl row:e.sheet.query(TL.DB.Tbl.where(
+			sIx==0?Sheet.C.p
+			:sIx==1?Sheet.C.b
+			:Sheet.C.f
+			,
+			sIx==0?e.proj.no
+			:sIx==1?e.bld.no
+			:e.flr.no )))
+		{	int sn=((serialNo++)%12)+1;
+			if(serialNo==1)-->
+  <h1 >Sheets</h1>
+	<li ng-repeat="sht in flr.sheets">
+		<article >
+			<header>
+				<h3><a ng-click="app.sht=sht" href="#!/sheet">{{$index+1}}</a></h3>
+				<time class="published" datetime="{{sht.datet}}">{{sht.datet}}</time>
+			</header>
+			<a href="javascript:void(0)" class="image" ><img src="assets/images/pic{{ ($index%12)+1<10?'0'+((($index%12)+1).toString()):(($index%12)+1) }}.jpg" alt="" /></a>
+		</article>
+	</li>
+	</ul>
+</section>
+<!--	}//for row
+	}//jspSheets-->
