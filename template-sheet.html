@@ -64,106 +64,125 @@
 			padding-left: 11px;
 			padding-right: 0;
 		}
+.txtOff{background-color:lightgray}
+.txtOn{background-color:none}
+		.st01{/* style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;" */
+		font-family:'Times New Roman' , 'serif'
+		}
+
+		.st02{/*style="width:54.9pt;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt"*/
+			width:54.9pt;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt
+		}
+
+		.st03{border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt}
+		.st04{/*style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;;"*/
+			font-family:&quot;Times New Roman&quot;,&quot;serif&quot;;
+		}
+		.st05{border:solid black 1.0pt;border-top:none;}
+
+		.st06{border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt}
+		.st07{border:none;border-right:solid black 1.0pt}
+		.s8{vertical-align:top}
 	</style>
 	<div class="WordSection1">
-		<table class="MsoTableGrid" border="1" cellspacing="0" cellpadding="0" width="601" style="width:450.9pt;border-collapse:collapse;border:none">
+		<table class="MsoTableGrid" border="1" cellspacing="0" cellpadding="0" style="width:450.9pt;border-collapse:collapse;border:none">
 			<tbody>
 				<tr>
-					<td width="601" colspan="28" valign="top" style="width:450.9pt;border:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt">
+					<td colspan="28" class="s8" style="width:450.9pt;border:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt">
 						<p>
 							<b>
 								<u>
-									<span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">General information</span>
+									<span class="st01">General information</span>
 								</u>
 							</b>
 						</p>
 					</td>
 				</tr>
 				<tr>
-					<td width="73" valign="top" style="width:54.9pt;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt">
-						<span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">Project</span>
+					<td width="73" class="s8 st02 st05">
+						<span class="st01">Project</span>
 					</td>
-					<td width="138" colspan="5" valign="top" style="width:103.5pt;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt">
+					<td colspan="5" style="width:103.5pt;" class="s8 st03">
 						<a href="#!/project" class="data">{{ proj.title }}</a>
 					</td>
-					<td width="66" colspan="6" valign="top" style="width:49.5pt;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt">
-						<span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">Building</span>
+					<td colspan="6" style="width:49.5pt;" class="s8 st03">
+						<span class="st01">Building</span>
 					</td>
-					<td width="160" colspan="11" valign="top" style="width:119.7pt;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt">
+					<td colspan="11" style="width:119.7pt;" class="s8 st03">
 						<a href="#!/building" class="data">{{ bld.title }}</a>
 					</td>
-					<td width="50" colspan="4" valign="top" style="width:37.8pt;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt">
-						<span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;;">Date</span>
+					<td colspan="4" style="width:37.8pt;" class="s8 st03">
+						<span class="st04">Date</span>
 					</td>
-					<td width="114" valign="top" style="width:85.5pt;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt">
-						<input no="02" readonly="" type="datetime-local" class="data" ng-change="chng()" ng-model="sht.date">
-						<input no="2.0" type="hidden" class="data" ng-change="chng()" ng-model="sht.lastModified" />
+					<td style="width:85.5pt;" class="s8 st03">
+						<input no="02" readonly="" type="datetime-local" class="data" ng-blur="blr()" ng-change="chng()" ng-model="sht.date">
+						<input no="2.0" type="hidden" class="data" ng-blur="blr()" ng-change="chng()" ng-model="sht.lastModified" />
 					</td>
 				</tr>
 				<tr>
-					<td width="73" valign="top" style="width:54.9pt;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt">
-						<span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">Floor</span>
+					<td width="73" class="s8 st02 st05">
+						<span class="st01">Floor</span>
 					</td>
-					<td width="53" colspan="2" valign="top" style="width:39.85pt;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt">
+					<td colspan="2" style="width:39.85pt;" class="s8 st03">
 						<a href="#!/floor" no="03" name="f" class="data">{{ flr.title }}</a>
 					</td>
-					<td width="102" colspan="5" valign="top" style="width:76.5pt;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt">
-						<span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">Serial number</span>
+					<td colspan="5" style="width:76.5pt;" class="s8 st03">
+						<span class="st01">Serial number</span>
 					</td>
-					<td width="60" colspan="5" valign="top" style="width:45.25pt;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt">
-						<input no="04" readonly ng-change="chng()" ng-model="sht.no" class="data"/>
+					<td colspan="5" style="width:45.25pt;" class="s8 st03">
+						<input no="04" readonly ng-blur="blr()" ng-change="chng()" ng-model="sht.no" class="data"/>
 					</td>
-					<td width="120" colspan="7" valign="top" style="width:89.75pt;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt">
-						<span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">Inspector`s name</span>
+					<td colspan="7" style="width:89.75pt;" class="s8 st03">
+						<span class="st01">Inspector`s name</span>
 					</td>
-					<td width="193" colspan="8" valign="top" style="width:144.65pt;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt">
-						<input ng-change="chng()" ng-model="sht.Inspector"/><a href="#!/user" no="05" name="u" class="data">{{ sht.owner }}</a>
+					<td colspan="8" style="width:144.65pt;" class="s8 st03">
+						<input ng-blur="blr()" ng-change="chng()" ng-model="sht.Inspector"/><a href="#!/user" no="05" name="u" class="data">{{ sht.owner }}</a>
 					</td>
 				</tr>
 				<tr style="height:10.25pt">
-					<td width="73" rowspan="2" valign="top" style="width:54.9pt;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;height:10.25pt">
-						<span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">Type of member</span>
+					<td rowspan="2" style="width:54.9pt;padding:0in 5.4pt 0in 5.4pt;height:10.25pt" class="s8 st05">
+						<span class="st01">Type of member</span>
 					</td>
-					<td width="131" colspan="4" valign="top" style="width:98.35pt;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:10.25pt">
-						<!--
-
-<td([^\>]*)>[^<]*<p>]*>\s*<span[^>]*>\s*<input([^>]*)>\s*<span[^>]*>[^<]*</span>\s*</span>\s*<span[^>]*>\s*</span>\s*<span[^>]*>([^<]*)</span>\s*</p>\s*</td>
-
-
-<td\1><input\2><label for="">\3</label></td>
-
-	-->
-						<input no="06" type="checkbox" id="TypeofMemberBeam" ng-change="chng()" ng-model="sht.TypeofMember.Beam" class="data"/>
+					<td colspan="4" style="width:98.35pt;padding:0in 5.4pt 0in 5.4pt;height:10.25pt" class="s8 st06">
+						<input no="06" type="checkbox" id="TypeofMemberBeam" ng-blur="blr()" ng-change="chng()" ng-model="sht.TypeofMember.Beam" class="data"/>
 						<label for="TypeofMemberBeam">Beam</label>
 					</td>
-					<td width="91" colspan="9" valign="top" style="width:67.95pt;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:10.25pt">
-						<input no="07" type="checkbox" id="TypeofMemberColunm" ng-change="chng()" ng-model="sht.TypeofMember.Colunm" class="data"/>
+					<td colspan="9" style="width:67.95pt;padding:0in 5.4pt 0in 5.4pt;height:10.25pt" class="s8 st06">
+						<input no="07" type="checkbox" id="TypeofMemberColunm" ng-blur="blr()" ng-change="chng()" ng-model="sht.TypeofMember.Colunm" class="data"/>
 						<label for="TypeofMemberColunm" xid="TypeofMember">Column</label>
 					</td>
-					<td width="66" colspan="5" valign="top" style="width:49.5pt;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:10.25pt">
-						<input no="08" type="checkbox" id="TypeofMemberSlab" ng-change="chng()" ng-model="sht.TypeofMember.Slab" class="data"/>
+					<td colspan="5" style="width:49.5pt;padding:0in 5.4pt 0in 5.4pt;height:10.25pt" class="s8 st06">
+						<input no="08" type="checkbox" id="TypeofMemberSlab" ng-blur="blr()" ng-change="chng()" ng-model="sht.TypeofMember.Slab" class="data"/>
 						<label for="TypeofMemberSlab" xid="TypeofMember">Slab</label>
 					</td>
-					<td width="72" colspan="3" valign="top" style="width:.75in;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:10.25pt">
-						<input no="09" type="checkbox" id="TypeofMemberStairs" ng-change="chng()" ng-model="sht.TypeofMember.Stairs" class="data"/>
+					<td colspan="3" style="width:.75in;padding:0in 5.4pt 0in 5.4pt;height:10.25pt" class="s8 st06">
+						<input no="09" type="checkbox" id="TypeofMemberStairs" ng-blur="blr()" ng-change="chng()" ng-model="sht.TypeofMember.Stairs" class="data"/>
 						<label for="TypeofMemberStairs" xid="TypeofMember">Stairs</label>
 					</td>
-					<td width="168" colspan="6" valign="top" style="width:126.2pt;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:10.25pt">
-						<input no="10" type="checkbox" id="TypeofMemberMansory" ng-change="chng()" ng-model="sht.TypeofMember.Mansory" class="data"/>
+					<td colspan="6" style="width:126.2pt;padding:0in 5.4pt 0in 5.4pt;height:10.25pt" class="s8 st06">
+						<input no="10" type="checkbox" id="TypeofMemberMansory" ng-blur="blr()" ng-change="chng()" ng-model="sht.TypeofMember.Mansory" class="data"/>
 						<label for="TypeofMemberMansory" xid="TypeofMember">Masonry wall</label>
 					</td>
 				</tr>
 				<tr style="height:10.25pt">
-					<td width="131" colspan="4" valign="top" style="width:98.35pt;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:10.25pt">
-						<input no="11" type="checkbox" id="TypeofMemberRC" ng-change="chng()" ng-model="sht.TypeofMember.RC" class="data"/>
+					<td colspan="4" style="width:98.35pt;padding:0in 5.4pt 0in 5.4pt;height:10.25pt" class="s8 st06">
+						<input no="11" type="checkbox" id="TypeofMemberRC" ng-blur="blr()" ng-change="chng()" ng-model="sht.TypeofMember.RC" class="data"/>
 						<label for="TypeofMemberRC" xid="TypeofMember">RC Wall</label>
 					</td>
-					<td width="108" colspan="11" valign="top" style="width:81.0pt;border:none;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:10.25pt">
-						<input no="12" type="checkbox" id="TypeofMemberFoundation" ng-change="chng()" ng-model="sht.TypeofMember.Foundation" class="data"/>
+
+					<td colspan="11" style="width:81.0pt;padding:0in 5.4pt 0in 5.4pt;height:10.25pt" class="s8 st07">
+						<input no="12" type="checkbox" id="TypeofMemberFoundation" ng-blur="blr()" ng-change="chng()" ng-model="sht.TypeofMember.Foundation" class="data"/>
 						<label for="TypeofMemberFoundation" xid="TypeofMember">Foundation</label>
 					</td>
-					<td width="289" colspan="12" valign="top" style="width:216.65pt;border:none;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:10.25pt">
-						<input no="13" id="TypeofMemberOther" ng-change="chng()" ng-model="sht.TypeofMember.Other" type="checkbox" class="data switch" onchange="var x=document.getElementById('TypeofMemberOtherText'),h=this.checked;x.readOnly=!h;x.style.backgroundColor=h?'':'lightgray';if(h){if(this.xVal!=undefined)x.value=this.xVal;}else{this.xVal=x.value;x.value='';}"/>
+					<td colspan="12" style="width:216.65pt;padding:0in 5.4pt 0in 5.4pt;height:10.25pt" class="s8 st07">
+						<input no="13" 
+							id="TypeofMemberOther" 
+							ng-blur="blr()" 
+							ng-change="chng()" 
+							ng-model="sht.TypeofMember.Other" 
+							type="checkbox" 
+							class="data switch" 
+							/>
 						<style>
 							label:after {
 								display: none
@@ -186,78 +205,93 @@
 								display: inherit
 							}
 						</style>
-						<input no="14" ng-change="chng()" ng-model="sht.TypeofMemberOtherText" readonly style="background-color:lightgray" class="data"/>
+						<input no="14" 
+							ng-blur="blr()" 
+							ng-change="chng()" 
+							ng-model="sht.TypeofMemberOtherText" 
+							ng-readonly="! sht.TypeofMember.Other"
+							id="TypeofMemberOtherText"
+							ng-class="sht.TypeofMember.Other? 'txtOn' : 'txtOff' "
+ 
+							class="data"/>
 					</td>
 				</tr>
 				<tr style="height:31.4pt">
-					<td width="73" style="width:54.9pt;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;height:31.4pt">
-						<span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">Location</span>
+					<td style="width:54.9pt;padding:0in 5.4pt 0in 5.4pt;height:31.4pt" class="st05">
+						<span class="st01">Location</span>
 					</td>
-					<td width="528" colspan="27" valign="top" style="width:5.5in;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:10 5.4pt 0in 5.4pt;height:31.4pt">
-						<input no="15" ng-change="chng()" ng-model="sht.location" style="width: 95%;" class="data"/>
+					<td colspan="27" style="width:5.5in;padding:10 5.4pt 0in 5.4pt;height:31.4pt" class="s8 st06">
+						<input no="15" ng-blur="blr()" ng-change="chng()" ng-model="sht.location" style="width: 95%;" class="data"/>
 					</td>
 				</tr>
 				<tr style="height:10.5pt">
-					<td width="73" rowspan="2" style="width:54.9pt;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;height:10.5pt">
-						<span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;;">Exposure</span>
+					<td rowspan="2" style="width:54.9pt;padding:0in 5.4pt 0in 5.4pt;height:10.5pt" class="st05">
+						<span class="st04">Exposure</span>
 					</td>
-					<td width="176" colspan="9" valign="top" style="width:132.0pt;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:10.5pt">
-						<input no="16" id="exposure.wetDry1" ng-change="chng()" ng-model="sht.exposure.wetDry" type="checkbox" value="1" class="data"/>
+					<td colspan="9" style="width:132.0pt;padding:0in 5.4pt 0in 5.4pt;height:10.5pt" class="s8 st06">
+						<input no="16" id="exposure.wetDry1" ng-blur="blr()" ng-change="chng()" ng-model="sht.exposure.wetDry" type="checkbox" value="1" class="data"/>
 						<label for="exposure.wetDry1">Wetting and drying</label>
 					</td>
-					<td width="176" colspan="11" valign="top" style="width:132.0pt;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:10.5pt">
-						<input no="17" id="exposure.chemical" ng-change="chng()" ng-model="sht.exposure.chemical" type="checkbox" value="2" class="data"/>
+					<td colspan="11" style="width:132.0pt;padding:0in 5.4pt 0in 5.4pt;height:10.5pt" class="s8 st06">
+						<input no="17" id="exposure.chemical" ng-blur="blr()" ng-change="chng()" ng-model="sht.exposure.chemical" type="checkbox" value="2" class="data"/>
 						<label for="exposure.chemical">Chemical attack</label>
 					</td>
-					<td width="176" colspan="7" valign="top" style="width:132.0pt;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:10.5pt">
-						<input no="18" id="exposure.erosion" ng-change="chng()" ng-model="sht.exposure.erosion" type="checkbox" value="3" class="data"/>
+					<td colspan="7" style="width:132.0pt;padding:0in 5.4pt 0in 5.4pt;height:10.5pt" class="s8 st06">
+						<input no="18" id="exposure.erosion" ng-blur="blr()" ng-change="chng()" ng-model="sht.exposure.erosion" type="checkbox" value="3" class="data"/>
 						<label for="exposure.erosion">Abrasion/ erosion</label>
 					</td>
 				</tr>
 				<tr style="height:10.5pt">
-					<td width="176" colspan="9" valign="top" style="width:132.0pt;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:10.5pt">
-						<input no="19" id="exposure.elec" ng-change="chng()" ng-model="sht.exposure.elec" type="checkbox" value="4" class="data"/>
+					<td colspan="9" style="width:132.0pt;padding:0in 5.4pt 0in 5.4pt;height:10.5pt" class="s8 st06">
+						<input no="19" id="exposure.elec" ng-blur="blr()" ng-change="chng()" ng-model="sht.exposure.elec" type="checkbox" value="4" class="data"/>
 						<label for="exposure.elec">Electric conductivity</label>
 					</td>
-					<td width="352" colspan="18" valign="top" style="width:264.0pt;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:10.5pt">
-						<input no="20" id="exposure.heat" ng-change="chng()" ng-model="sht.exposure.heat" type="checkbox" value="5" class="data"/>
+					<td colspan="18" style="width:264.0pt;padding:0in 5.4pt 0in 5.4pt;height:10.5pt" class="s8 st06">
+						<input no="20" id="exposure.heat" ng-blur="blr()" ng-change="chng()" ng-model="sht.exposure.heat" type="checkbox" value="5" class="data"/>
 						<label for="exposure.heat">Heat from adjacent sources</label>
 					</td>
 				</tr>
 				<tr style="height:10.5pt">
-					<td width="73" rowspan="2" style="width:54.9pt;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;height:10.5pt">
-						<span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;;">Loading condition</span>
+					<td rowspan="2" style="width:54.9pt;padding:0in 5.4pt 0in 5.4pt;height:10.5pt" class="st05">
+						<span class="st04">Loading condition</span>
 					</td>
-					<td width="138" colspan="5" valign="top" style="width:103.5pt;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:10.5pt">
-						<input no="21" id="LoadingCondition.Dead" ng-change="chng()" ng-model="sht.LoadingCondition.Dead" type="checkbox" value="1" class="data"/>
+					<td colspan="5" style="width:103.5pt;padding:0in 5.4pt 0in 5.4pt;height:10.5pt" class="s8 st06">
+						<input no="21" id="LoadingCondition.Dead" ng-blur="blr()" ng-change="chng()" ng-model="sht.LoadingCondition.Dead" type="checkbox" value="1" class="data"/>
 						<label for="LoadingCondition.Dead">Dead</label>
 					</td>
-					<td width="138" colspan="12" valign="top" style="width:103.5pt;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:10.5pt">
-						<input no="22" id="LoadingCondition.Live" ng-change="chng()" ng-model="sht.LoadingCondition.Live" type="checkbox" value="2" class="data"/>
+					<td colspan="12" style="width:103.5pt;padding:0in 5.4pt 0in 5.4pt;height:10.5pt" class="s8 st06">
+						<input no="22" id="LoadingCondition.Live" ng-blur="blr()" ng-change="chng()" ng-model="sht.LoadingCondition.Live" type="checkbox" value="2" class="data"/>
 						<label for="LoadingCondition.Live">Live</label>
 					</td>
-					<td width="135" colspan="8" valign="top" style="width:101.0pt;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:10.5pt">
-						<input no="23" id="LoadingCondition.Impact" ng-change="chng()" ng-model="sht.LoadingCondition.Impact" type="checkbox" value="3" class="data"/>
+					<td colspan="8" style="width:101.0pt;padding:0in 5.4pt 0in 5.4pt;height:10.5pt" class="s8 st06">
+						<input no="23" id="LoadingCondition.Impact" ng-blur="blr()" ng-change="chng()" ng-model="sht.LoadingCondition.Impact" type="checkbox" value="3" class="data"/>
 						<label for="LoadingCondition.Impact">Impact</label>
 					</td>
-					<td width="117" colspan="2" valign="top" style="width:88.0pt;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:10.5pt">
-						<input no="24" id="LoadingCondition.Vibration" ng-change="chng()" ng-model="sht.LoadingCondition.Vibration" type="checkbox" value="4" class="data"/>
+					<td colspan="2" style="width:88.0pt;padding:0in 5.4pt 0in 5.4pt;height:10.5pt" class="s8 st06">
+						<input no="24" id="LoadingCondition.Vibration" ng-blur="blr()" ng-change="chng()" ng-model="sht.LoadingCondition.Vibration" type="checkbox" value="4" class="data"/>
 						<label for="LoadingCondition.Vibration">Vibration</label>
 					</td>
 				</tr>
 				<tr style="height:10.5pt">
-					<td width="138" colspan="5" valign="top" style="width:103.5pt;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:10.5pt">
-						<input no="25" id="LoadingCondition.Traffic" ng-change="chng()" ng-model="sht.LoadingCondition.Traffic" type="checkbox" value="5" class="data"/>
+					<td colspan="5" style="width:103.5pt;padding:0in 5.4pt 0in 5.4pt;height:10.5pt" class="s8 st06">
+						<input no="25" id="LoadingCondition.Traffic" ng-blur="blr()" ng-change="chng()" ng-model="sht.LoadingCondition.Traffic" type="checkbox" value="5" class="data"/>
 						<label for="LoadingCondition.Traffic">Traffic</label>
 					</td>
-					<td width="138" colspan="12" valign="top" style="width:103.5pt;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:10.5pt">
-						<input no="26" id="LoadingCondition.Seismic" ng-change="chng()" ng-model="sht.LoadingCondition.Seismic" type="checkbox" value="6" class="data"/>
+					<td colspan="12" style="width:103.5pt;padding:0in 5.4pt 0in 5.4pt;height:10.5pt" class="s8 st06">
+						<input no="26" id="LoadingCondition.Seismic" ng-blur="blr()" ng-change="chng()" ng-model="sht.LoadingCondition.Seismic" type="checkbox" value="6" class="data"/>
 						<label for="LoadingCondition.Seismic">Seismic</label>
 					</td>
-					<td width="252" colspan="10" valign="top" style="width:189.0pt;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:10.5pt">
+					<td colspan="10" style="width:189.0pt;padding:0in 5.4pt 0in 5.4pt;height:10.5pt" class="s8 st06">
 						<p style="margin:0">
-							<input no="27" id="LoadingCondition.Other" ng-change="chng()" ng-model="sht.LoadingCondition.Other" type="checkbox" value="7" class="data switch " 
-							onchange="var x=document.getElementById('LoadingCondition.Other'),h=this.checked;x.readOnly=!h;x.style.backgroundColor=h?'':'lightgray';if(h){if(this.xVal!=undefined)x.value=this.xVal;}else{this.xVal=x.value;x.value='';}">
+							<input no="27" 
+								id="LoadingCondition.Other" 
+								ng-blur="blr()" 
+								ng-change="chng()" 
+								ng-model="sht.LoadingCondition.Other" 
+								type="checkbox" 
+								value="7" 
+								class="data switch " 
+							old_chng="var x=document.getElementById('LoadingCondition.Other'),h=this.checked;x.readOnly=!h;x.style.backgroundColor=h?'':'lightgray';if(h){if(this.xVal!=undefined)x.value=this.xVal;}else{this.xVal=x.value;x.value='';}">
 							<style>
 								label:after {
 									display: none
@@ -280,272 +314,257 @@
 									display: inherit
 								}
 							</style>
-							<input no="28" ng-change="chng()" ng-model="sht.LoadingConditionOther" class="data" readonly style="background-color: lightgray;">
-							<script>
-								var a = document.getElementById('LoadingCondition.Other')
-								  , LoadingConditionPrev = null
-								  , LoadingConditionF = function() {
-									var v = this.value
-									  , p = LoadingConditionPrev
-									  , w = v == 7 ? this : p && p.value == 7 ? p : {};
-									//console.log('LoadingConditionF:',v)
-
-									var x = document.getElementById('LoadingConditionOther')[0]
-									  , h = w.checked;
-									x.readOnly = !h;
-									x.style.backgroundColor = h ? '' : 'lightgray';
-									if (h) {
-										if (w.xVal != undefined)
-											x.value = w.xVal;
-									} else if (p == w) {
-										w.xVal = x.value;
-										x.value = '';
-									}
-									if (this !== p)
-										LoadingConditionPrev = this;
-								};
-								//for (var i = 0; i < a.length; i++) {
-									a.onclick = LoadingConditionF	//}
-							</script>
+							<input no="28" 
+								ng-blur="blr()" 
+								ng-change="chng()" 
+								ng-model="sht.LoadingConditionOther" 
+								ng-class="(sht.LoadingCondition.Other ?'txtOff':'txtOn')+' data'" 
+								ng-readonly="! sht.LoadingCondition.Other"
+								id="LoadingConditionOther"/>
 					</td>
 				</tr>
 				<tr style="height:10.5pt">
-					<td width="289" colspan="13" valign="top" style="width:216.5pt;border-top:none;border-left:solid black 1.0pt;border-bottom:none;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:10.5pt">
+					<td colspan="13" class="s8" style="width:216.5pt;border-top:none;border-left:solid black 1.0pt;border-bottom:none;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:10.5pt">
 						<b>
 							<u>
-								<span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">General condition</span>
+								<span class="st01">General condition</span>
 							</u>
 						</b>
 					</td>
-					<td width="313" colspan="15" valign="top" style="width:234.4pt;border:none;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:10.5pt">
+					<td colspan="15" style="width:234.4pt;padding:0in 5.4pt 0in 5.4pt;height:10.5pt" class="s8 st07">
 						<b>
 							<u>
-								<span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">Distress indicator</span>
+								<span class="st01">Distress indicator</span>
 							</u>
 						</b>
 					</td>
 				</tr>
 				<tr style="height:10.5pt">
-					<td width="102" colspan="2" rowspan="2" style="width:76.85pt;border-top:none;border-left:solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;padding:0in 5.4pt 0in 5.4pt;height:10.5pt">
-						<input no="29" id="GeneralCondition1" ng-change="chng()" ng-model="sht.GeneralCondition" type="radio" value="Good" class="data"/>
+					<td colspan="2" rowspan="2" style="width:76.85pt;border-top:none;border-left:solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;padding:0in 5.4pt 0in 5.4pt;height:10.5pt">
+						<input no="29" id="GeneralCondition1" ng-blur="blr()" ng-change="chng()" ng-model="sht.GeneralCondition" type="radio" value="Good" class="data"/>
 						<label for="GeneralCondition1">
 							<i>Good</i>
 						</label>
 					</td>
-					<td width="112" colspan="5" rowspan="2" style="width:84.05pt;border:none;border-bottom:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:10.5pt">
-						<input no="30" id="GeneralCondition2" ng-change="chng()" ng-model="sht.GeneralCondition" type="radio" value="Satisfactory" class="data"/>
+					<td colspan="5" rowspan="2" style="width:84.05pt;border:none;border-bottom:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:10.5pt">
+						<input no="30" id="GeneralCondition2" ng-blur="blr()" ng-change="chng()" ng-model="sht.GeneralCondition" type="radio" value="Satisfactory" class="data"/>
 						<label for="GeneralCondition2">
 							<i>Satisfactory</i>
 						</label>
 					</td>
-					<td width="74" colspan="6" rowspan="2" style="width:55.6pt;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:10.5pt">
-						<input no="31" id="GeneralCondition3" ng-change="chng()" ng-model="sht.GeneralCondition" type="radio" value="Poor" class="data"/>
+					<td colspan="6" rowspan="2" style="width:55.6pt;padding:0in 5.4pt 0in 5.4pt;height:10.5pt" class="st06">
+						<input no="31" id="GeneralCondition3" ng-blur="blr()" ng-change="chng()" ng-model="sht.GeneralCondition" type="radio" value="Poor" class="data"/>
 						<label for="GeneralCondition3">
 							<i>Poor</i>
 						</label>
 					</td>
-					<td width="180" colspan="12" valign="top" style="width:135.05pt;border:none;padding:0in 5.4pt 0in 5.4pt;height:10.5pt">
-						<input no="32" type="checkbox" id="Distress.Cracking" ng-change="chng()" ng-model="sht.Distress.Cracking" class="data"/>
+					<td colspan="12" class="s8" style="width:135.05pt;border:none;padding:0in 5.4pt 0in 5.4pt;height:10.5pt">
+						<input no="32" type="checkbox" id="Distress.Cracking" ng-blur="blr()" ng-change="chng()" ng-model="sht.Distress.Cracking" class="data"/>
 						<label for="Distress.Cracking" xid="Distress">Cracking</label>
 					</td>
-					<td width="132" colspan="3" valign="top" style="width:99.35pt;border:none;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:10.5pt">
-						<input no="33" type="checkbox" id="Distress.Staining" ng-change="chng()" ng-model="sht.Distress.Staining" class="data"/>
+					<td colspan="3" style="width:99.35pt;padding:0in 5.4pt 0in 5.4pt;height:10.5pt" class="s8 st07">
+						<input no="33" type="checkbox" id="Distress.Staining" ng-blur="blr()" ng-change="chng()" ng-model="sht.Distress.Staining" class="data"/>
 						<label for="Distress.Staining" xid="Distress">Staining</label>
 					</td>
 				</tr>
 				<tr style="height:15.5pt">
-					<td width="180" colspan="12" valign="top" style="width:135.05pt;border:none;border-bottom:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:15.5pt">
-						<input no="34" type="checkbox" id="Distress.Surface" ng-change="chng()" ng-model="sht.Distress.Surface" class="data"/>
+					<td colspan="12" class="s8" style="width:135.05pt;border:none;border-bottom:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:15.5pt">
+						<input no="34" type="checkbox" id="Distress.Surface" ng-blur="blr()" ng-change="chng()" ng-model="sht.Distress.Surface" class="data"/>
 						<label for="Distress.Surface">Surface deposits</label>
 					</td>
-					<td width="132" colspan="3" valign="top" style="width:99.35pt;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:15.5pt">
-						<input no="35" type="checkbox" id="Distress.Leaking" ng-change="chng()" ng-model="sht.Distress.Leaking" class="data"/>
+					<td colspan="3" style="width:99.35pt;padding:0in 5.4pt 0in 5.4pt;height:15.5pt" class="s8 st06">
+						<input no="35" type="checkbox" id="Distress.Leaking" ng-blur="blr()" ng-change="chng()" ng-model="sht.Distress.Leaking" class="data"/>
 						<label for="Distress.Leaking">Leaking</label>
 					</td>
 				</tr>
 				<tr style="height:17.95pt">
-					<td width="150" colspan="4" rowspan="13" valign="top" style="width:112.75pt;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;height:17.95pt">
+					<td colspan="4" rowspan="13" style="width:112.75pt;padding:0in 5.4pt 0in 5.4pt;height:17.95pt" class="s8 st05">
 						<b>
 							<u>
-								<span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">Cracking</span>
+								<span class="st01">Cracking</span>
 							</u>
 						</b>
 						<b>
-							<span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">Pattern</span>
+							<span class="st01">Pattern</span>
 						</b>
-						<input no="36" type="checkbox" id="Cracking.Checking" ng-change="chng()" ng-model="sht.Cracking.Checking" class="data"/>
+						<input no="36" type="checkbox" id="Cracking.Checking" ng-blur="blr()" ng-change="chng()" ng-model="sht.Cracking.Checking" class="data"/>
 						<label for="Cracking.Checking" xid="Cracking">Checking</label>
-						<input no="37" type="checkbox" id="Cracking.Craze" ng-change="chng()" ng-model="sht.Cracking.Craze" class="data"/>
+						<input no="37" type="checkbox" id="Cracking.Craze" ng-blur="blr()" ng-change="chng()" ng-model="sht.Cracking.Craze" class="data"/>
 						<label for="Cracking.Craze" xid="Cracking">Craze
 				</label>
-						<input no="38" type="checkbox" id="Cracking.D-cracks" ng-change="chng()" ng-model="sht.Cracking.D_cracks" class="data"/>
+						<input no="38" type="checkbox" id="Cracking.D-cracks" ng-blur="blr()" ng-change="chng()" ng-model="sht.Cracking.D_cracks" class="data"/>
 						<label for="Cracking.D-cracks" xid="Cracking">D-cracks</label>
-						<input no="39" type="checkbox" id="Cracking.Diagnol" ng-change="chng()" ng-model="sht.Cracking.Diagnol" class="data"/>
+						<input no="39" type="checkbox" id="Cracking.Diagnol" ng-blur="blr()" ng-change="chng()" ng-model="sht.Cracking.Diagnol" class="data"/>
 						<label for="Cracking.Diagnol" xid="Cracking">Diagonal
 				</label>
-						<input no="40" type="checkbox" id="Cracking.Hairline" ng-change="chng()" ng-model="sht.Cracking.Hairline" class="data"/>
+						<input no="40" type="checkbox" id="Cracking.Hairline" ng-blur="blr()" ng-change="chng()" ng-model="sht.Cracking.Hairline" class="data"/>
 						<label for="Cracking.Hairline" xid="Cracking">Hairline
 				</label>
-						<input no="41" type="checkbox" id="Cracking.Longitudinal" ng-change="chng()" ng-model="sht.Cracking.Longitudinal" class="data"/>
+						<input no="41" type="checkbox" id="Cracking.Longitudinal" ng-blur="blr()" ng-change="chng()" ng-model="sht.Cracking.Longitudinal" class="data"/>
 						<label for="Cracking.Longitudinal" xid="TypeofMember">Longitudinal
 				</label>
-						<input no="42" type="checkbox" id="Cracking.Map" ng-change="chng()" ng-model="sht.Cracking.Map" class="data"/>
+						<input no="42" type="checkbox" id="Cracking.Map" ng-blur="blr()" ng-change="chng()" ng-model="sht.Cracking.Map" class="data"/>
 						<label for="Cracking.Map" xid="Cracking">Map
 				</label>
-						<input no="43" type="checkbox" id="Cracking.Pattern" ng-change="chng()" ng-model="sht.Cracking.Pattern" class="data"/>
+						<input no="43" type="checkbox" id="Cracking.Pattern" ng-blur="blr()" ng-change="chng()" ng-model="sht.Cracking.Pattern" class="data"/>
 						<label for="Cracking.Pattern" xid="Cracking">Pattern
 				</label>
-						<input no="44" type="checkbox" id="Cracking.Plastic" ng-change="chng()" ng-model="sht.Cracking.Plastic" class="data"/>
+						<input no="44" type="checkbox" id="Cracking.Plastic" ng-blur="blr()" ng-change="chng()" ng-model="sht.Cracking.Plastic" class="data"/>
 						<label for="Cracking.Plastic" xid="Cracking">Plastic
 					shrinkage </label>
-						<input no="45" type="checkbox" id="Cracking.Random" ng-change="chng()" ng-model="sht.Cracking.Random" class="data"/>
+						<input no="45" type="checkbox" id="Cracking.Random" ng-blur="blr()" ng-change="chng()" ng-model="sht.Cracking.Random" class="data"/>
 						<label for="Cracking.Random" xid="Cracking">Random
 				</label>
-						<input no="46" type="checkbox" id="Cracking.Shrinkage" ng-change="chng()" ng-model="sht.Cracking.Shrinkage" class="data"/>
+						<input no="46" type="checkbox" id="Cracking.Shrinkage" ng-blur="blr()" ng-change="chng()" ng-model="sht.Cracking.Shrinkage" class="data"/>
 						<label for="Cracking.Shrinkage" xid="Cracking">Shrinkage
 				</label>
-						<input no="47" type="checkbox" id="Cracking.Temperature" ng-change="chng()" ng-model="sht.Cracking.Temperature" class="data"/>
+						<input no="47" type="checkbox" id="Cracking.Temperature" ng-blur="blr()" ng-change="chng()" ng-model="sht.Cracking.Temperature" class="data"/>
 						<label for="Cracking.Temperature" xid="Cracking">Temperature
 				</label>
-						<input no="48" type="checkbox" id="Cracking.Transverse" ng-change="chng()" ng-model="sht.Cracking.Transverse" class="data"/>
+						<input no="48" type="checkbox" id="Cracking.Transverse" ng-blur="blr()" ng-change="chng()" ng-model="sht.Cracking.Transverse" class="data"/>
 						<label for="Cracking.Transverse" xid="Cracking">Transverse</label>
 						<b>
-							<span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">&nbsp;</span>
+							<span class="st01">&nbsp;</span>
 						</b>
 						<b>
-							<span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">Other Attributes</span>
+							<span class="st01">Other Attributes</span>
 						</b>
 						<span style="font-family:Symbol">
 							<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 						</span>
 						<span dir="LTR"></span>
-						<span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">
-						Width<input no="49" ng-change="chng()" ng-model="sht.width" style="width: 50px;" id="widthNumber" type="number" min="0" step="0.05" class="data"/>mm
+						<span class="st01">
+						Width<input no="49" ng-blur="blr()" ng-change="chng()" ng-model="sht.width" style="width: 50px;" id="widthNumber" type="number" min="0" step="0.05" class="data"/>mm
 						</span>
-						<input no="50" type="checkbox" id="Leaching" ng-change="chng()" ng-model="sht.Leaching" class="data"/>
+						<input no="50" type="checkbox" id="Leaching" ng-blur="blr()" ng-change="chng()" ng-model="sht.Leaching" class="data"/>
 						<label for="Leaching">Leaching</label>
-						<input no="51" type="radio" value="Working" id="WorkingOrDormant1" ng-change="chng()" ng-model="sht.WorkingOrDormant" class="data"/>
+						<input no="51" type="radio" value="Working" id="WorkingOrDormant1" ng-blur="blr()" ng-change="chng()" ng-model="sht.WorkingOrDormant" class="data"/>
 						<label for="WorkingOrDormant1">Working</label>
-						<input no="52" type="radio" value="Dormant" id="WorkingOrDormant2" ng-change="chng()" ng-model="sht.WorkingOrDormant" class="data"/>
+						<input no="52" type="radio" value="Dormant" id="WorkingOrDormant2" ng-blur="blr()" ng-change="chng()" ng-model="sht.WorkingOrDormant" class="data"/>
 						<label for="WorkingOrDormant2">Dormant</label>
 					</td>
-					<td width="294" colspan="20" valign="top" style="width:220.85pt;border-top:none;border-left:none;border-bottom:solid black 0.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:17.95pt">
+					<td colspan="20" class="s8" style="width:220.85pt;border-top:none;border-left:none;border-bottom:solid black 0.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:17.95pt">
 						<b>
 							<u>
-								<span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">Distresses</span>
+								<span class="st01">Distresses</span>
 							</u>
 						</b>
 					</td>
-					<td width="156" colspan="4" rowspan="9" valign="top" style="width:117.3pt;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:17.95pt">
+					<td colspan="4" rowspan="9" style="width:117.3pt;padding:0in 5.4pt 0in 5.4pt;height:17.95pt" class="s8 st06">
 						<b>
 							<u>
-								<span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">Textural features</span>
+								<span class="st01">Textural features</span>
 							</u>
 						</b>
 						<br/>
-						<input no="53" type="checkbox" id="Textural.AirVoid" ng-change="chng()" ng-model="sht.Textural.AirVoid" class="data"/>
+						<input no="53" type="checkbox" id="Textural.AirVoid" ng-blur="blr()" ng-change="chng()" ng-model="sht.Textural.AirVoid" class="data"/>
 						<label for="Textural.AirVoid" xid="Textural">Air void</label>
 						<br/>
-						<input no="54" type="checkbox" id="Textural.Blistering" ng-change="chng()" ng-model="sht.Textural.Blistering" class="data"/>
+						<input no="54" type="checkbox" id="Textural.Blistering" ng-blur="blr()" ng-change="chng()" ng-model="sht.Textural.Blistering" class="data"/>
 						<label for="Textural.Blistering" xid="Textural">Blistering</label>
 						<br/>
-						<input no="55" type="checkbox" id="Textural.Bugholes" ng-change="chng()" ng-model="sht.Textural.Bugholes" class="data"/>
+						<input no="55" type="checkbox" id="Textural.Bugholes" ng-blur="blr()" ng-change="chng()" ng-model="sht.Textural.Bugholes" class="data"/>
 						<label for="Textural.Bugholes" xid="Textural">Bugholes</label>
 						<br/>
-						<input no="56" type="checkbox" id="Textural.ColdJoints" ng-change="chng()" ng-model="sht.Textural.ColdJoints" class="data"/>
+						<input no="56" type="checkbox" id="Textural.ColdJoints" ng-blur="blr()" ng-change="chng()" ng-model="sht.Textural.ColdJoints" class="data"/>
 						<label for="Textural.ColdJoints" xid="Textural">Cold joint</label>
 						<br/>
-						<input no="57" type="checkbox" id="Textural.ColdLines" ng-change="chng()" ng-model="sht.Textural.ColdLines" class="data"/>
+						<input no="57" type="checkbox" id="Textural.ColdLines" ng-blur="blr()" ng-change="chng()" ng-model="sht.Textural.ColdLines" class="data"/>
 						<label for="Textural.ColdLines" xid="Textural">Cold-joint lines</label>
 						<br/>
-						<input no="58" type="checkbox" id="Textural.Discoloration" ng-change="chng()" ng-model="sht.Textural.Discoloration" class="data"/>
+						<input no="58" type="checkbox" id="Textural.Discoloration" ng-blur="blr()" ng-change="chng()" ng-model="sht.Textural.Discoloration" class="data"/>
 						<label for="Textural.Discoloration" xid="Textural">Discoloration</label>
 						<br/>
-						<input no="59" type="checkbox" id="Textural.Honeycomb" ng-change="chng()" ng-model="sht.Textural.Honeycomb" class="data"/>
+						<input no="59" type="checkbox" id="Textural.Honeycomb" ng-blur="blr()" ng-change="chng()" ng-model="sht.Textural.Honeycomb" class="data"/>
 						<label for="Textural.Honeycomb" xid="Textural">Honeycomb</label>
 						<br/>
-						<input no="60" type="checkbox" id="Textural.Incrustation" ng-change="chng()" ng-model="sht.Textural.Incrustation" class="data"/>
+						<input no="60" type="checkbox" id="Textural.Incrustation" ng-blur="blr()" ng-change="chng()" ng-model="sht.Textural.Incrustation" class="data"/>
 						<label for="Textural.Incrustation" xid="Textural">Incrustation</label>
 						<br/>
-						<input no="61" type="checkbox" id="Textural.Laitance" ng-change="chng()" ng-model="sht.Textural.Laitance" class="data"/>
+						<input no="61" type="checkbox" id="Textural.Laitance" ng-blur="blr()" ng-change="chng()" ng-model="sht.Textural.Laitance" class="data"/>
 						<label for="Textural.Laitance" xid="Textural">Laitance</label>
 						<br/>
-						<input no="62" type="checkbox" id="Textural.SandPocket" ng-change="chng()" ng-model="sht.Textural.SandPocket" class="data"/>
+						<input no="62" type="checkbox" id="Textural.SandPocket" ng-blur="blr()" ng-change="chng()" ng-model="sht.Textural.SandPocket" class="data"/>
 						<label for="Textural.SandPocket" xid="Textural">Sand pocket</label>
 						<br/>
-						<input no="63" type="checkbox" id="Textural.SandStreak" ng-change="chng()" ng-model="sht.Textural.SandStreak" class="data"/>
+						<input no="63" type="checkbox" id="Textural.SandStreak" ng-blur="blr()" ng-change="chng()" ng-model="sht.Textural.SandStreak" class="data"/>
 						<label for="Textural.SandStreak" xid="Textural">Sand streak</label>
 						<br/>
-						<input no="64" type="checkbox" id="Textural.Segregation" ng-change="chng()" ng-model="sht.Textural.Segregation" class="data"/>
+						<input no="64" type="checkbox" id="Textural.Segregation" ng-blur="blr()" ng-change="chng()" ng-model="sht.Textural.Segregation" class="data"/>
 						<label for="Textural.Segregation" xid="Textural">Segregation</label>
 						<br/>
-						<input no="65" type="checkbox" id="Textural.Staining" ng-change="chng()" ng-model="sht.Textural.Staining" class="data"/>
+						<input no="65" type="checkbox" id="Textural.Staining" ng-blur="blr()" ng-change="chng()" ng-model="sht.Textural.Staining" class="data"/>
 						<label for="Textural.Staining" xid="Textural">Staining</label>
 						<br/>
-						<input no="66" type="checkbox" id="Textural.Stalactite" ng-change="chng()" ng-model="sht.Textural.Stalactite" class="data"/>
+						<input no="66" type="checkbox" id="Textural.Stalactite" ng-blur="blr()" ng-change="chng()" ng-model="sht.Textural.Stalactite" class="data"/>
 						<label for="Textural.Stalactite" xid="Textural">Stalactite</label>
 						<br/>
-						<input no="67" type="checkbox" id="Textural.Stalagmite" ng-change="chng()" ng-model="sht.Textural.Stalagmite" class="data"/>
+						<input no="67" type="checkbox" id="Textural.Stalagmite" ng-blur="blr()" ng-change="chng()" ng-model="sht.Textural.Stalagmite" class="data"/>
 						<label for="Textural.Stalagmite" xid="Textural">Stalagmite</label>
 						<br/>
-						<input no="68" type="checkbox" id="Textural.Stratification" ng-change="chng()" ng-model="sht.Textural.Stratification" class="data"/>
+						<input no="68" type="checkbox" id="Textural.Stratification" ng-blur="blr()" ng-change="chng()" ng-model="sht.Textural.Stratification" class="data"/>
 						<label for="Textural.Stratification" xid="Textural">Stratification</label>
 					</td>
 				</tr>
 				<tr style="height:64.0pt">
-					<td width="147" colspan="11" valign="top" style="width:110.35pt;border:none;border-bottom:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:64.0pt">
-						<input no="69" type="checkbox" id="Distresses.Chalking" ng-change="chng()" ng-model="sht.Distresses.Chalking" class="data"/>
+					<td colspan="11" class="s8" style="width:110.35pt;border:none;border-bottom:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:64.0pt">
+						<input no="69" type="checkbox" id="Distresses.Chalking" ng-blur="blr()" ng-change="chng()" ng-model="sht.Distresses.Chalking" class="data"/>
 						<label for="Distresses.Chalking" xid="Distresses">Chalking</label>
 						<br/>
-						<input no="70" type="checkbox" id="Distresses.Deflection" ng-change="chng()" ng-model="sht.Distresses.Deflection" class="data"/>
+						<input no="70" type="checkbox" id="Distresses.Deflection" ng-blur="blr()" ng-change="chng()" ng-model="sht.Distresses.Deflection" class="data"/>
 						<label for="Distresses.Deflection" xid="Distresses">Deflection</label>
 						<br/>
-						<input no="71" type="checkbox" id="Distresses.Delamination" ng-change="chng()" ng-model="sht.Distresses.Delamination" class="data"/>
+						<input no="71" type="checkbox" id="Distresses.Delamination" ng-blur="blr()" ng-change="chng()" ng-model="sht.Distresses.Delamination" class="data"/>
 						<label for="Distresses.Delamination" xid="Distresses">Delamination</label>
 						<br/>
-						<input no="72" type="checkbox" id="Distresses.Distortion" ng-change="chng()" ng-model="sht.Distresses.Distortion" class="data"/>
+						<input no="72" type="checkbox" id="Distresses.Distortion" ng-blur="blr()" ng-change="chng()" ng-model="sht.Distresses.Distortion" class="data"/>
 						<label for="Distresses.Distortion" xid="Distresses">Distortion</label>
 						<br/>
-						<input no="73" type="checkbox" id="Distresses.Dusting" ng-change="chng()" ng-model="sht.Distresses.Dusting" class="data"/>
+						<input no="73" type="checkbox" id="Distresses.Dusting" ng-blur="blr()" ng-change="chng()" ng-model="sht.Distresses.Dusting" class="data"/>
 						<label for="Distresses.Dusting" xid="Distresses">Dusting</label>
 						<br/>
-						<input no="74" type="checkbox" id="Distresses.Exfoliation" ng-change="chng()" ng-model="sht.Distresses.Exfoliation" class="data"/>
+						<input no="74" type="checkbox" id="Distresses.Exfoliation" ng-blur="blr()" ng-change="chng()" ng-model="sht.Distresses.Exfoliation" class="data"/>
 						<label for="Distresses.Exfoliation" xid="Distresses">Exfoliation</label>
 						<br/>
-						<input no="75" type="checkbox" id="Distresses.Leakage" ng-change="chng()" ng-model="sht.Distresses.Leakage" class="data"/>
+						<input no="75" type="checkbox" id="Distresses.Leakage" ng-blur="blr()" ng-change="chng()" ng-model="sht.Distresses.Leakage" class="data"/>
 						<label for="Distresses.Leakage" xid="Distresses">Leakage</label>
 						<br/>
-						<input no="76" type="checkbox" id="Distresses.Peeling" ng-change="chng()" ng-model="sht.Distresses.Peeling" class="data"/>
+						<input no="76" type="checkbox" id="Distresses.Peeling" ng-blur="blr()" ng-change="chng()" ng-model="sht.Distresses.Peeling" class="data"/>
 						<label for="Distresses.Peeling" xid="Distresses">Peeling</label>
 						<br/>
-						<input no="77" type="checkbox" id="Distresses.Warping" ng-change="chng()" ng-model="sht.Distresses.Warping" class="data"/>
+						<input no="77" type="checkbox" id="Distresses.Warping" ng-blur="blr()" ng-change="chng()" ng-model="sht.Distresses.Warping" class="data"/>
 						<label for="Distresses.Warping" xid="Distresses">Warping</label>
 					</td>
-					<td width="147" colspan="9" valign="top" style="width:110.5pt;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:64.0pt">
-						<input no="78" type="checkbox" id="Distresses.Curling" ng-change="chng()" ng-model="sht.Distresses.Curling" class="data"/>
+					<td colspan="9" style="width:110.5pt;padding:0in 5.4pt 0in 5.4pt;height:64.0pt" class="s8 st06">
+						<input no="78" type="checkbox" id="Distresses.Curling" ng-blur="blr()" ng-change="chng()" ng-model="sht.Distresses.Curling" class="data"/>
 						<label for="Distresses.Curling" xid="Distresses">Curling</label>
-						<input no="79" type="checkbox" id="Distresses.Deformation" ng-change="chng()" ng-model="sht.Distresses.Deformation" class="data"/>
+						<input no="79" type="checkbox" id="Distresses.Deformation" ng-blur="blr()" ng-change="chng()" ng-model="sht.Distresses.Deformation" class="data"/>
 						<label for="Distresses.Deformation" xid="Distresses">Deformation</label>
-						<input no="80" type="checkbox" id="Distresses.Disintegration" ng-change="chng()" ng-model="sht.Distresses.Disintegration" class="data"/>
+						<input no="80" type="checkbox" id="Distresses.Disintegration" ng-blur="blr()" ng-change="chng()" ng-model="sht.Distresses.Disintegration" class="data"/>
 						<label for="Distresses.Disintegration" xid="Distresses">Disintegration</label>
-						<input no="81" type="checkbox" id="Distresses.DrummyArea" ng-change="chng()" ng-model="sht.Distresses.DrummyArea" class="data"/>
+						<input no="81" type="checkbox" id="Distresses.DrummyArea" ng-blur="blr()" ng-change="chng()" ng-model="sht.Distresses.DrummyArea" class="data"/>
 						<label for="Distresses.DrummyArea" xid="Distresses">Drummy area</label>
-						<input no="82" type="checkbox" id="Distresses.Efflorescence" ng-change="chng()" ng-model="sht.Distresses.Efflorescence" class="data"/>
+						<input no="82" type="checkbox" id="Distresses.Efflorescence" ng-blur="blr()" ng-change="chng()" ng-model="sht.Distresses.Efflorescence" class="data"/>
 						<label for="Distresses.Efflorescence" xid="Distresses">Efflorescence</label>
-						<input no="83" type="checkbox" id="Distresses.Exudation" ng-change="chng()" ng-model="sht.Distresses.Exudation" class="data"/>
+						<input no="83" type="checkbox" id="Distresses.Exudation" ng-blur="blr()" ng-change="chng()" ng-model="sht.Distresses.Exudation" class="data"/>
 						<label for="Distresses.Exudation" xid="Distresses">Exudation</label>
-						<input no="84" type="checkbox" id="Distresses.MortarFlaking" ng-change="chng()" ng-model="sht.Distresses.MortarFlaking" class="data"/>
+						<input no="84" type="checkbox" id="Distresses.MortarFlaking" ng-blur="blr()" ng-change="chng()" ng-model="sht.Distresses.MortarFlaking" class="data"/>
 						<label for="Distresses.MortarFlaking" xid="Distresses">Mortar flaking</label>
-						<input no="85" type="checkbox" id="Distresses.Pitting" ng-change="chng()" ng-model="sht.Distresses.Pitting" class="data"/>
+						<input no="85" type="checkbox" id="Distresses.Pitting" ng-blur="blr()" ng-change="chng()" ng-model="sht.Distresses.Pitting" class="data"/>
 						<label for="Distresses.Pitting" xid="Distresses">Pitting</label>
-						<span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">&nbsp;</span>
+						<span class="st01">&nbsp;</span>
 					</td>
 				</tr>
 				<tr style="height:.25in">
-					<td width="294" colspan="20" valign="top" style="width:220.85pt;border:none;border-right:solid black 1.0pt;">
+					<td colspan="20" style="width:220.85pt;" class="s8 st07">
 						<script>
 							function onChangeJointDefi(evt) {
-								var x, t = evt.target || event.srcElement, a = document.getElementsByClassName('JointDeficiencies'), h = t.checked, n, old = t.old;
+								var x
+								, t = evt.target || event.srcElement
+								, a = document.getElementsByClassName('JointDeficiencies')
+								, h = t.checked
+								, n
+								, old = t.old;
 								if (!old)
 									old = t.old = {}
 								//x.style.backgroundColor=h?'':'lightgray';x.readOnly=!h;
@@ -563,35 +582,37 @@
 								}
 							}
 						</script>
-						<input no="86" type="checkbox" id="Joint Deficiencies" ng-change="chng()" ng-model="sht.JointDeficiencies" onchange="onChangeJointDefi(event)" class="switch data" style="opacity:1">
+						<input no="86" type="checkbox" id="Joint Deficiencies" ng-blur="blr()" ng-change="chng()" ng-model="sht.JointDeficiencies" onchange="onChangeJointDefi(event)" class="switch data" style="opacity:1">
 						<label for="Joint Deficiencies" style="margin-left:5px;position:static; height:0;padding-top:1px;padding-bottom:1px;margin-bottom:1px;">Joint deficiencies</label>
 					</td>
 				</tr>
 				<tr style="height:.25in">
-					<td width="123" colspan="7" valign="top" style="width:92.2pt;border:none;padding:0in 5.4pt 0in 5.4pt;height:.25in">
-						<input no="87" type="checkbox" disabled class="JointDeficiencies data" id="JointDeficiencies.Spall" ng-change="chng()" ng-model="sht.JointDeficiencies.Spall">
+					<td colspan="7" class="s8" style="width:92.2pt;border:none;padding:0in 5.4pt 0in 5.4pt;height:.25in">
+						<input no="87" type="checkbox" disabled class="JointDeficiencies data" id="JointDeficiencies.Spall" ng-blur="blr()" ng-change="chng()" ng-model="sht.JointDeficiencies.Spall">
 						<label for="JointDeficiencies.Spall">Spall</label>
 					</td>
-					<td width="172" colspan="13" valign="top" style="width:128.65pt;border:none;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:.25in">
-						<input no="88" type="checkbox" disabled class="JointDeficiencies data" id="JointDeficiencies.SealantFailure" ng-change="chng()" ng-model="sht.JointDeficiencies.SealantFailure">
+					<td colspan="13" style="width:128.65pt;padding:0in 5.4pt 0in 5.4pt;height:.25in" class="s8 st07">
+						<input no="88" type="checkbox" disabled class="JointDeficiencies data" id="JointDeficiencies.SealantFailure" ng-blur="blr()" ng-change="chng()" ng-model="sht.JointDeficiencies.SealantFailure">
 						<label for="JointDeficiencies.SealantFailure">Sealant failure</label>
 					</td>
 				</tr>
 				<tr style="height:.25in">
-					<td width="123" colspan="7" valign="top" style="width:92.2pt;border:none;border-bottom:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:.25in">
-						<input no="89" type="checkbox" disabled class="JointDeficiencies data" id="JointDeficiencies.Leakage" ng-change="chng()" ng-model="sht.JointDeficiencies.Leakage">
+					<td colspan="7" class="s8" style="width:92.2pt;border:none;border-bottom:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:.25in">
+						<input no="89" type="checkbox" disabled class="JointDeficiencies data" id="JointDeficiencies.Leakage" ng-blur="blr()" ng-change="chng()" ng-model="sht.JointDeficiencies.Leakage">
 						<label for="Leakage">Leakage</label>
 					</td>
-					<td width="172" colspan="13" valign="top" style="width:128.65pt;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:.25in">
-						<input no="90" type="checkbox" disabled class="JointDeficiencies data" id="JointDeficiencies.Fault" ng-change="chng()" ng-model="sht.JointDeficiencies.Fault">
+					<td colspan="13" style="width:128.65pt;padding:0in 5.4pt 0in 5.4pt;height:.25in" class="s8 st06">
+						<input no="90" type="checkbox" disabled class="JointDeficiencies data" id="JointDeficiencies.Fault" ng-blur="blr()" ng-change="chng()" ng-model="sht.JointDeficiencies.Fault">
 						<label for="Fault">Fault</label>
 					</td>
 				</tr>
 				<tr style="height:16.6pt">
-					<td width="294" colspan="20" valign="top" style="width:220.85pt;border:none;border-right:solid black 1.0pt;padding:30px 5.4pt 0in 5.4pt;">
+					<td colspan="20" style="width:220.85pt;padding:30px 5.4pt 0in 5.4pt;" class="s8 st07">
 						<script>
 							function onChangePopout(evt) {
-								var x, t = evt.target || event.srcElement, a = document.getElementsByClassName('PopoutSize'), h = t.checked, n;
+								var x, t = evt.target || event.srcElement
+								, a = document.getElementsByClassName('PopoutSize')
+								, h = t.checked, n;
 								//x.style.backgroundColor=h?'':'lightgray';x.readOnly=!h;
 								for (var i = 0; i < a.length; i++) {
 									x = a[i];
@@ -607,7 +628,14 @@
 								}
 							}
 						</script>
-						<input no="91" type="checkbox" id="Popout" ng-change="chng()" ng-model="sht.Popout" onchange="onChangePopout(event)" class="data switch"/>
+						<input no="91" 
+							type="checkbox" 
+							id="Popout" 
+							ng-blur="blr()" 
+							ng-change="chng()" 
+							ng-model="sht.Popout" 
+							onchange="onChangePopout(event)" 
+							class="data switch"/>
 						<style>
 							label:after {
 								display: none
@@ -633,24 +661,27 @@
 					</td>
 				</tr>
 				<tr style="height:12.0pt">
-					<td width="98" colspan="5" valign="top" style="width:73.5pt;border:none;border-bottom:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:12.0pt">
-						<input no="92" id="PopoutSize1" ng-change="chng()" ng-model="sht.PopoutSize" type="radio" value="Small" disabled class="PopoutSize data"/>
+					<td colspan="5" class="s8" style="width:73.5pt;border:none;border-bottom:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:12.0pt">
+						<input no="92" id="PopoutSize1" ng-blur="blr()" ng-change="chng()" ng-model="sht.PopoutSize" type="radio" value="Small" disabled class="PopoutSize data"/>
 						<label for="PopoutSize1">Small</label>
 					</td>
-					<td width="98" colspan="8" valign="top" style="width:73.5pt;border:none;border-bottom:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:12.0pt">
-						<input no="93" id="PopoutSize2" ng-change="chng()" ng-model="sht.PopoutSize" type="radio" value="Medium" disabled class="PopoutSize data"/>
+					<td colspan="8" class="s8" style="width:73.5pt;border:none;border-bottom:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:12.0pt">
+						<input no="93" id="PopoutSize2" ng-blur="blr()" ng-change="chng()" ng-model="sht.PopoutSize" type="radio" value="Medium" disabled class="PopoutSize data"/>
 						<label for="PopoutSize2">Medium</label>
 					</td>
-					<td width="98" colspan="7" valign="top" style="width:73.85pt;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:12.0pt">
-						<input no="94" id="PopoutSize" ng-change="chng()" ng-model="sht.PopoutSize" type="radio" value="Large" disabled class="PopoutSize data"/>
+					<td colspan="7" style="width:73.85pt;padding:0in 5.4pt 0in 5.4pt;height:12.0pt" class="s8 st06">
+						<input no="94" id="PopoutSize" ng-blur="blr()" ng-change="chng()" ng-model="sht.PopoutSize" type="radio" value="Large" disabled class="PopoutSize data"/>
 						<label for="PopoutSize">Large</label>
 					</td>
 				</tr>
 				<tr style="height:12.0pt">
-					<td width="294" colspan="20" valign="top" style="width:220.85pt;border:none;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:12.0pt">
+					<td colspan="20" style="width:220.85pt;padding:0in 5.4pt 0in 5.4pt;height:12.0pt" class="s8 st07">
 						<script>
 							function onChangeScaling(evt) {
-								var x, t = evt.target || event.srcElement, a = document.getElementsByClassName('Scaling'), h = t.checked, n;
+								var x
+								, t = evt.target || event.srcElement
+								, a = document.getElementsByClassName('Scaling')
+								, h = t.checked, n;
 								//x.style.backgroundColor=h?'':'lightgray';x.readOnly=!h;
 								for (var i = 0; i < a.length; i++) {
 									x = a[i];
@@ -666,7 +697,14 @@
 								}
 							}
 						</script>
-						<input no="95" type="checkbox" id="isScaling" ng-change="chng()" ng-model="sht.isScaling" onchange="onChangeScaling(event)" class="data switch">
+						<input no="95" 
+							type="checkbox" 
+							id="isScaling" 
+							ng-blur="blr()" 
+							ng-change="chng()" 
+							ng-model="sht.isScaling" 
+							onchange="onChangeScaling(event)" 
+							class="data switch">
 						<style>
 							label:after {
 								display: none
@@ -692,54 +730,57 @@
 					</td>
 				</tr>
 				<tr style="height:12.0pt">
-					<td width="147" colspan="11" valign="top" style="width:110.35pt;border:none;padding:0in 5.4pt 0in 5.4pt;height:12.0pt">
-						<input no="96" id="Scaling1" ng-change="chng()" ng-model="sht.Scaling" type="radio" value="Light" disabled class="Scaling data"/>
+					<td colspan="11" class="s8" style="width:110.35pt;border:none;padding:0in 5.4pt 0in 5.4pt;height:12.0pt">
+						<input no="96" id="Scaling1" ng-blur="blr()" ng-change="chng()" ng-model="sht.Scaling" type="radio" value="Light" disabled class="Scaling data"/>
 						<label for="Scaling1">Light</label>
 					</td>
-					<td width="147" colspan="9" valign="top" style="width:110.5pt;border:none;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:12.0pt">
-						<input no="97" id="Scaling2" ng-change="chng()" ng-model="sht.Scaling" type="radio" value="Medium" disabled class="Scaling data"/>
+					<td colspan="9" style="width:110.5pt;padding:0in 5.4pt 0in 5.4pt;height:12.0pt" class="s8 st07">
+						<input no="97" id="Scaling2" ng-blur="blr()" ng-change="chng()" ng-model="sht.Scaling" type="radio" value="Medium" disabled class="Scaling data"/>
 						<label for="Scaling2">Medium</label>
 					</td>
 				</tr>
 				<tr style="height:8.75pt">
-					<td width="147" colspan="11" valign="top" style="width:110.35pt;border:none;padding:0in 5.4pt 0in 5.4pt;height:8.75pt">
-						<input no="98" id="Scaling3" ng-change="chng()" ng-model="sht.Scaling" type="radio" value="Severe" disabled class="Scaling data"/>
+					<td colspan="11" class="s8" style="width:110.35pt;border:none;padding:0in 5.4pt 0in 5.4pt;height:8.75pt">
+						<input no="98" id="Scaling3" ng-blur="blr()" ng-change="chng()" ng-model="sht.Scaling" type="radio" value="Severe" disabled class="Scaling data"/>
 						<label for="Scaling3">Severe</label>
 					</td>
-					<td width="147" colspan="9" valign="top" style="width:110.5pt;border:none;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:8.75pt">
-						<input no="99" id="Scaling4" ng-change="chng()" ng-model="sht.Scaling" type="radio" value="Very_severe" disabled class="Scaling data"/>
+					<td colspan="9" style="width:110.5pt;padding:0in 5.4pt 0in 5.4pt;height:8.75pt" class="s8 st07">
+						<input no="99" id="Scaling4" ng-blur="blr()" ng-change="chng()" ng-model="sht.Scaling" type="radio" value="Very_severe" disabled class="Scaling data"/>
 						<label for="Scaling4">Very severe</label>
 					</td>
-					<td width="156" colspan="4" rowspan="4" valign="top" style="width:117.3pt;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:8.75pt">
+					<td colspan="4" rowspan="4" style="width:117.3pt;padding:0in 5.4pt 0in 5.4pt;height:8.75pt" class="s8 st06">
 						<b>
 							<u>
-								<span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">Reinforcement</span>
+								<span class="st01">Reinforcement</span>
 							</u>
 						</b>
 						<br/>
-						<input no="100" type="checkbox" id="Reinforcement.Exposed" ng-change="chng()" ng-model="sht.Reinforcement.Exposed" class="data"/>
+						<input no="100" type="checkbox" id="Reinforcement.Exposed" ng-blur="blr()" ng-change="chng()" ng-model="sht.Reinforcement.Exposed" class="data"/>
 						<label for="Reinforcement.Exposed" >Exposed</label>
 						<br/>
-						<input no="101" type="checkbox" id="Reinforcement.Corroded" ng-change="chng()" ng-model="sht.Reinforcement.Corroded" class="data"/>
+						<input no="101" type="checkbox" id="Reinforcement.Corroded" ng-blur="blr()" ng-change="chng()" ng-model="sht.Reinforcement.Corroded" class="data"/>
 						<label for="Reinforcement.Corroded" >Corroded</label>
 						<br/>
-						<input no="102" type="checkbox" id="Reinforcement.Snapped" ng-change="chng()" ng-model="sht.Reinforcement.Snapped" class="data"/>
+						<input no="102" type="checkbox" id="Reinforcement.Snapped" ng-blur="blr()" ng-change="chng()" ng-model="sht.Reinforcement.Snapped" class="data"/>
 						<label for="Reinforcement.Snapped" >Snapped</label>
 					</td>
 				</tr>
 				<tr style="height:8.75pt">
-					<td width="147" colspan="11" valign="top" style="width:110.35pt;border:none;border-bottom:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:8.75pt">
-						<span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">&nbsp;</span>
+					<td colspan="11" class="s8" style="width:110.35pt;border:none;border-bottom:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:8.75pt">
+						<span class="st01">&nbsp;</span>
 					</td>
-					<td width="147" colspan="9" valign="top" style="width:110.5pt;border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:8.75pt">
-						<span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;">&nbsp;</span>
+					<td colspan="9" style="width:110.5pt;padding:0in 5.4pt 0in 5.4pt;height:8.75pt" class="s8 st06">
+						<span class="st01">&nbsp;</span>
 					</td>
 				</tr>
 				<tr style="height:7.0pt">
-					<td width="294" colspan="20" valign="top" style="width:220.85pt;border:none;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:7.0pt">
+					<td colspan="20" style="width:220.85pt;padding:0in 5.4pt 0in 5.4pt;height:7.0pt" class="s8 st07">
 						<script>
 							function onChangeSpall(evt) {
-								var x, t = evt.target || event.srcElement, a = document.getElementsByClassName('SpallSize'), h = t.checked, n;
+								var x
+								, t = evt.target || event.srcElement
+								, a = document.getElementsByClassName('SpallSize')
+								, h = t.checked, n;
 								//x.style.backgroundColor=h?'':'lightgray';x.readOnly=!h;
 								for (var i = 0; i < a.length; i++) {
 									x = a[i];
@@ -755,7 +796,14 @@
 								}
 							}
 						</script>
-						<input no="103" type="checkbox" id="isSpall" ng-change="chng()" ng-model="sht.isSpall" onchange="onChangeSpall(event)" class="data switch">
+						<input no="103" 
+							type="checkbox" 
+							id="isSpall" 
+							ng-blur="blr()" 
+							ng-change="chng()" 
+							ng-model="sht.isSpall" 
+							onchange="onChangeSpall(event)" 
+							class="data switch">
 						<style>
 							label:after {
 								display: none
@@ -781,23 +829,23 @@
 					</td>
 				</tr>
 				<tr style="height:17.5pt">
-					<td width="145" colspan="10" valign="top" style="width:108.45pt;border:none;padding:0in 5.4pt 0in 5.4pt;height:17.5pt">
-						<input no="104" id="SpallSize1" ng-change="chng()" ng-model="sht.SpallSize" type="radio" value="Small" disabled class="SpallSize data"/>
+					<td colspan="10" class="s8" style="width:108.45pt;border:none;padding:0in 5.4pt 0in 5.4pt;height:17.5pt">
+						<input no="104" id="SpallSize1" ng-blur="blr()" ng-change="chng()" ng-model="sht.SpallSize" type="radio" value="Small" disabled class="SpallSize data"/>
 						<label for="SpallSize1">Small</label>
 					</td>
-					<td width="150" colspan="10" valign="top" style="width:112.4pt;border:none;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:17.5pt">
-						<input no="105" id="SpallSize2" ng-change="chng()" ng-model="sht.SpallSize" type="radio" value="Large" disabled class="SpallSize data"/>
+					<td colspan="10" style="width:112.4pt;padding:0in 5.4pt 0in 5.4pt;height:17.5pt" class="s8 st07">
+						<input no="105" id="SpallSize2" ng-blur="blr()" ng-change="chng()" ng-model="sht.SpallSize" type="radio" value="Large" disabled class="SpallSize data"/>
 						<label for="SpallSize2">Large</label>
 					</td>
 				</tr>
 				<tr style="height:53.5pt">
-					<td width="601" colspan="28" valign="top" style="width:450.9pt;border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;height:53.5pt">
+					<td colspan="28" style="width:450.9pt;padding:0in 5.4pt 0in 5.4pt;height:53.5pt" class="s8 st05">
 						<b>
 							<u>
-								<span style="font-family:&quot;Times New Roman&quot;,&quot;serif&quot;;">Notes:</span>
+								<span class="st04">Notes:</span>
 							</u>
 						</b>
-						<textarea no="107" ng-change="chng()" ng-model="sht.notes" class="data" style="width:95%"></textarea>
+						<textarea no="107" ng-blur="blr()" ng-change="chng()" ng-model="sht.notes" class="data" style="width:95%"></textarea>
 					</td>
 				</tr>
 				<tr height="0">
@@ -832,24 +880,23 @@
 				</tr>
 			</tbody>
 		</table>
-		<input type="button" onclick="" value="Previous"/>
-		<input type="button" onclick="" value="Delete"/>
-		<input type="button" onclick="" value="New"/>
-		<input type="button" onclick="" value="Next"/>
+		<input type="button" ng-click="sht=app.sht=shtPrev()" value="Previous"/>
+		<input type="button" ng-click="del();location.hash='#!/floor'" value="Delete"/>
+		<input type="button" ng-click="sht=app.sht=shtNew()" value="New"/>
+		<input type="button" ng-click="sht=app.sht=shtNext()" value="Next"/>
 		<form action="index.jsp?version=2016/05/31" method="post" onsubmit="onSbmt" enctype="multipart/form-data">
-			<input type="file" ng-change="chng()" ng-model="sht.img1" accept="image/*;capture=camera" class="data"/>
+			<input type="file" ng-blur="blr()" ng-change="chng()" ng-model="sht.img1" accept="image/*;capture=camera" class="data"/>
 			<img id="img1" style="width:95%"/>
 			<hr/>
-			<input type="file" ng-change="chng()" ng-model="sht.img2" accept="image/*;capture=camera" class="data"/>
+			<input type="file" ng-blur="blr()" ng-change="chng()" ng-model="sht.img2" accept="image/*;capture=camera" class="data"/>
 			<img id="img2" style="width:95%"/>
 			<hr/>
-			<input type="file" ng-change="chng()" ng-model="sht.img3" accept="image/*;capture=camera" class="data"/>
+			<input type="file" ng-blur="blr()" ng-change="chng()" ng-model="sht.img3" accept="image/*;capture=camera" class="data"/>
 			<img id="img3" style="width:95%"/>
 			<hr/>
-			<input type="file" ng-change="chng()" ng-model="sht.img4" accept="image/*;capture=camera" class="data"/>
+			<input type="file" ng-blur="blr()" ng-change="chng()" ng-model="sht.img4" accept="image/*;capture=camera" class="data"/>
 			<img id="img4" style="width:95%"/>
 			<hr/>
 		</form>
-
 	</div>
 </div>

@@ -1,34 +1,30 @@
-<!-- 	void jspScreenProjectsList() throws IOException{
-		App e=this;int serialNo=0;//Project p=new Project(); -->
 <h1>Projects</h1>
 <table><tr>
   <th >sn</th>
   <th>Title</th><th>Desc</th><th>Created</th><th>by</th><th>Description</th><th>no. Buildings</th><th>no.Sheets</th></tr>
-	<!--for(TL.DB.Tbl row:e.proj.query(TL.DB.Tbl.where( )))try
-		{TL.DB.Tbl.Usr author=null; if(e.proj.json==null)e.proj.json=TL.Util.mapCreate();
-			try{author=usr(e.proj.json.get("author"));}
-			catch(Exception ex){tl.error(ex,"eu059s : project list for-loop:author ,proj=",e.proj);}
-			Object avatar=e.proj.json.get("avatar")
-			, uAvatar = author != null && author . json != null	? author . json . get ( "avatar" ):null
-			,authorName=author!=null && author.json!=null?author.json.get("name"):author!=null?author.un:"-";
-			++serialNo;// Object o=TL.Json.Parser.parse(json);Map l=(Map)((Map)o).get("labels"); -->
 
-<tr ng-repeat="proj in projects" entity="projects" pk="{{proj.no}}" >
-	<td ng-init="serialNo=$index+1">{{serialNo}}</td>
-	<td><h2 class="title"><a ng-click="app.proj=proj" href="#!/project" name="title">{{proj.title}}</a></h2></td>
-	<td name="shortDesc">{{proj.shortDesc}}</td>
-	<td class="meta"><time class="published" datetime="{{proj.date}}" name="date">{{proj.date}}</time></td>
-	<td><a href="javascript:void(0)" class="author"><span class="name" name="author" title="author name"
-		>{{proj.owner}}<img src="images/avatar.jpg" alt="author image" /></a></td>
-<!-- 				 //tl.o("			< tr> -->
-	<x-td><a href="javascript:void(0)" x-class="image featured"><x-img 
-		s-rc="images/{  proj.avatar?proj.avatar:(serialNo<10?'pic0'+serialNo+'.jpg':'pic'+serialNo+'.jpg') }" 
-		alt="" /></a></x-td>
-	<td name="desc">{{proj.desc}}</td>
-	<td class="stats"><a title="number of buildings in this project" class="icon fa-heart" name="heart"
-		>{{proj.buildings.length}}</a></td>
-	<td><a title="number of sheets in this project" href="javascript:void(0)" class="icon fa-comment" name="comment"
-		>{{sheetsCountInProj(proj) }}</a></td footer></tr>
-	<!-- 	}catch(Exception ex){tl.error(ex,"eu059s : Projects list for-loop ,proj=",e.proj);} -->
+<tr ng-repeat="proj in projects" entity="projects" pk="{{proj.no}}" ng-click="app.proj=proj;location.hash='#!/project'" href="#!/project">
+	<td ng-init="serialNo=$index+1"><a ng-click="app.proj=proj;" href="#!/project">{{serialNo}}</td>
+	<td><h2 class="title"><a ng-click="app.proj=proj;" href="#!/project">{{proj.title}}</h2></td>
+	<td name="shortDesc"><a ng-click="app.proj=proj;" href="#!/project">{{proj.shortDesc}}</td>
+	<td class="meta"
+		><a ng-click="app.proj=proj;" href="#!/project" class="author"
+			><time class="published" datetime="{{proj.date}}" name="date"
+				>{{proj.date}}</time></td>
+	<td><a ng-click="app.proj=proj;" href="#!/project"
+		><span class="name" name="author" title="author name"
+			>{{proj.owner}}<img src="assets/images/avatar.jpg" alt="author image" /></td>
+
+	<td name="desc"><a ng-click="app.proj=proj;" href="#!/project"
+		>{{proj.desc}}</td>
+	<td class="stats icon fa-heart" name="heart"
+		title="number of buildings in this project" 
+		ng-click="app.proj=proj;location.hash='#!/project'"
+		>{{proj.buildings.length}}</td>
+	<td ng-click="app.proj=proj;location.hash='#!/project'" 
+		title="number of sheets in this project"
+		class="icon fa-comment" name="comment"
+		>{{sheetsCountInProj(proj) }}</td footer>
+</tr>
+
 </table><a ng-click="proj=app.proj=newProj()" href="#!/project">New Project</a>
-<!-- 	}//jspScreenProjectsList -->

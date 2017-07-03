@@ -1,60 +1,117 @@
-
-<!-- 	void jspScreenProject() throws IOException, SQLException {
-		App e=this;int serialNo=1;
-		serialNo=1;//if(e.proj.json==null)e.proj.json=TL.Util.mapCreate();TL.DB.Tbl.Usr author=null;try{author=usr(e.proj.json.get("author"));}catch(Exception ex){tl.error(ex,"eu059s : project-selected:author");}Object avatar=e.proj.json.get("avatar"),pTtl=e.proj.json.get("title"),uAvatar=author!=null && author.json!=null?author.json.get("avatar"):null,authorName=author!=null && author.json!=null?author.json.get("name"):author!=null?author.un:"-";
- -->
 <h1>Project</h1>
 <table>
  <tr>
-    <th>Title</th><th>Desc</th><th>Created</th><th>by</th><th>Description</th><th>Actions</th><th>#Buildings</th><th>#Sheets</th></tr>
-<!-- 		try
-		{ //if(e.proj.json==null)e.proj.json=TL.Util.mapCreate();try{author=usr(e.proj.json.get("author"));} catch(Exception ex){tl.error(ex,"eu059s : project :author ,proj=",e.proj);}
-			String pTtl=title(e.proj); -->
+    <th>Title</th>
+    <th>Desc</th>
+    <th>Created</th>
+    <th>by</th>
+    <th>Description</th>
+    <th>Actions</th>
+    <th>#Buildings</th>
+    <th>#Sheets</th></tr>
 <tr entity="projects" class="editForm">
-	<td><input ng-model="proj.title" ng-change="chng()" class="editable title" oldVal="{{proj.title}}" /></td>
-	<td><input ng-model="proj.shortDesc" class="editable" ng-change="chng()" /></td>
-	<td class="meta"><time class="published" datetime="{{proj.date}}" name="date">{{proj.date}}</time></td>
-	<td><a href="javascript:void(0)" class="author"><span class="name" name="author" title="author name">{{proj.owner}}<img src="assets/images/avatar.jpg" alt="author image" /></a></td>
-		<!-- // ,"< x-td><a href="javascript:void(0)" x-class="image featured"><x-img src="images/{ {avatar!=null?avatar:serialNo<10?"pic0"+serialNo+".jpg":"pic"+serialNo+".jpg"} }" alt="" /></a></x-td> -->
-	<td><input ng-model="proj.desc" class="editable" ng-change="chng()" /></td>
+	<!--td><input n g - m o del="proj.title" n g - c hange="chng()" class="editable title" oldVal="{{proj.title}}" /></td-->
+	<td ><input 
+		ng-model="proj.title" 
+		ng-blur="blr()" 
+		ng-change="chng()" 
+		class="editable title" 
+		oldVal="{{proj.title}}" 
+		style="border:none;background:none"
+		/></td>
+	<td><input 
+		ng-model="proj.shortDesc" 
+		class="editable" 
+		ng-blur="blr()" 
+		ng-change="chng()" /></td>
+	<td class="meta"
+		><time 
+			class="published" 
+			datetime="{{proj.date}}" 
+			name="date"
+			>{{proj.date}}</time></td>
+	<td><a href="javascript:void(0)" 
+		class="author"
+			><span 
+				class="name" 
+				name="author" 
+				title="author name"
+			>{{proj.owner}}<img 
+				src="assets/images/avatar.jpg" 
+				alt="author image" /></a></td>
+	<td><input 
+		ng-model="proj.desc" 
+		class="editable" 
+		ng-blur="blr()" 
+		ng-change="chng()" /></td>
 	<td footer class="actions">
-		<a ng-click="confirm('delete project '+proj.title+' ?')" href="javascript:void(0)" class="button big">Delete Project</a>
-		<a href="#!/building" ng-click="app.bld=bld=newBld()" class="button big">New Building</a>
-	</td>
-	<td class="stats"><a title="number of buildings in this project" class="icon fa-heart" name="heart">{{proj.buildings.length}}</a></td>
-	<td><a title="number of sheets in this project" href="javascript:void(0)" class="icon fa-comment" name="comment">{{sheetsCountInProj(proj)}}</a></td >
+		<a 
+			ng-click="'confirm(\'delete project '+proj.title+' ?\')'" 
+			href="javascript:void(0)" 
+			class="button big">Delete Project</a>
+		<a 
+			href="#!/building" 
+			ng-click="app.bld=bld=newBld()" 
+			class="button big">New Building</a></td>
+	<td class="stats"
+		><a 
+		title="number of buildings in this project" 
+		class="icon fa-heart" 
+		name="heart"
+		>{{proj.buildings.length}}</a></td>
+	<td><a 
+		title="number of sheets in this project" 
+		href="javascript:void(0)" 
+		class="icon fa-comment" 
+		name="comment"
+		>{{sheetsCountInProj(proj)}}</a></td >
 </tr></table>
-	<!--	}catch(Exception ex){tl.error(ex,"eu059s : Projects list for-loop ,proj=",e.proj);}
-		tl.o("</table>");
-		jspScreenBuildingList();
-	}//jspScreenProj
 
-	void jspScreenBuildingList() throws IOException, SQLException{
-		App e=this;int serialNo=0;
--->
 <h1>Buildings</h1>
 <table>
-<tr ><th>sn</th><th>Title</th><th>Notes</th><th>Created</th><th>by</th><th>#Floors</th><th>#Sheets</th>
+<tr ><th>sn</th>
+	<th>Title</th>
+	<th>Notes</th>
+	<th>Created</th>
+	<th>by</th>
+	<th>#Floors</th>
+	<th>#Sheets</th>
 </tr>
-<!--
-		for(TL.DB.Tbl row:e.bld.query(TL.DB.Tbl.where(Building.C.p,e.proj.no )))
-		{TL.DB.Tbl.Usr author=usr(e.bld.json.get("author"));
-			Object avatar=e.bld.json.get("avatar")
-			, uAvatar = author != null && author . json != null
-			? author . json . get ( "avatar" ):null
-			,authorName=author!=null && author.json!=null
-			?author.json.get("name"):author!=null?author.un:"-";
-			++serialNo;
--->
 <tr xclass="mini-post building" ng-repeat="bld in proj.buildings">
-	<td ng-init="serialNo=$index+1">{{serialNo}}</td>
-	<td><h3><a ng-click="app.bld=bld" href="#!/building" name="title">{{bld.title}}</a></h3></td>
+	<td ng-init="serialNo=$index+1"
+		>{{serialNo}}</td>
+	<td><h3><a 
+		ng-click="app.bld=bld" 
+		href="#!/building" 
+		name="title"
+		>{{bld.title}}</a></h3></td>
 	<td>{{bld.notes}}</td>
-	<td><time class="published" datetime="{{bld.date }}">{{bld.date}}</time></td>
-	<td><a href="javascript:void(0)" class="author"><span class="name" name="author" title="author name">{{bld.owner}}</span><img src="assets/images/avatar.jpg" alt="author image" /></a></td>
-	<td class="stats"><a title="number of floors in this building" class="icon fa-heart" name="heart">{{bld.floors.length}}</a></td>
-	<td><a title="number of sheets in this building" href="javascript:void(0)" class="icon fa-comment" name="comment">{{ sheetsCountInBld(bld) }}</a></td>
+	<td><time 
+		class="published" 
+		datetime="{{bld.date }}"
+		>{{bld.date}}</time></td>
+	<td><a 
+			href="javascript:void(0)" 
+			class="author"
+		><span 
+			class="name" 
+			name="author" 
+			title="author name"
+			>{{bld.owner}}</span
+		><img 
+			src="assets/images/avatar.jpg" 
+			alt="author image" /></a></td>
+	<td class="stats"
+		><a 
+			title="number of floors in this building" 
+			class="icon fa-heart" 
+			name="heart"
+		>{{bld.floors.length}}</a></td>
+	<td><a 
+			title="number of sheets in this building" 
+			href="javascript:void(0)" 
+			class="icon fa-comment" 
+			name="comment"
+		>{{ sheetsCountInBld(bld) }}</a></td>
 </tr>
-<!--		}-->
 </table>
-<!--	}//jspScreenBuildingList    //jspScreenProject-->

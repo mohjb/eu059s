@@ -1,12 +1,10 @@
-<!--void jspScreenFloor() throws IOException,SQLException{
-		App e=this;-->
 <h1><a href="#!/project" >{{proj.title}}</a></h1>
 <h2><a href="#!/building">{{ bld.title }}</a></h2>
 <h3>Floor</h3>
 <table><tr><th>Title</th><th>Notes</th><th>Created</th><th>by</th><th>Action</th><th>#Sheets</th></tr>
  <tr xclass="mini-post floor" class="editForm" entity="floor" >
-	<td><input ng-change="chng()" ng-model="flr.title" class="editable" oldVal="{{flr.title}}" /></td>
-	<td class="editable"><input ng-change="chng()" ng-model="flr.notes" /></td>
+	<td><input ng-blur="blr()" ng-change="chng()" ng-model="flr.title" class="editable" oldVal="{{flr.title}}" /></td>
+	<td class="editable"><input ng-blur="blr()" ng-change="chng()" ng-model="flr.notes" /></td>
 	<td><time class="published" datetime="{{ flr.date }}">{{ flr.date }}</time></td>
 	<td><a href="javascript:void(0)" class="author"><img src="assets/images/avatar.jpg" alt="" /></a></td>
 	<td class="actions" >
@@ -16,30 +14,12 @@
 	<td class="stats"><a title="number of sheets in this floor" href="javascript:void(0)" class="icon fa-comment" name="comment">{{flr.sheets.length}}</a></td>
  </tr>
 </table>
-<!--		jspSheets();
-		//}//else , not floors
-	}
-	void jspPosts() throws IOException{-->
 </div>
 </section>
 
 <!-- Posts List -->
 <section>
   <ul class="posts">
-<!--	}//jspPosts
-	void jspSheets()throws IOException, SQLException{//,int sIx
-		App e=this;int serialNo=0,sIx=screen.ordinal();
-		//final int i0=Prm.Screen.ProjectScreen.ordinal(),i1=Prm.Screen.BuildingScreen.ordinal();
-		for(TL.DB.Tbl row:e.sheet.query(TL.DB.Tbl.where(
-			sIx==0?Sheet.C.p
-			:sIx==1?Sheet.C.b
-			:Sheet.C.f
-			,
-			sIx==0?e.proj.no
-			:sIx==1?e.bld.no
-			:e.flr.no )))
-		{	int sn=((serialNo++)%12)+1;
-			if(serialNo==1)-->
   <h1 >Sheets</h1>
 	<li ng-repeat="sht in flr.sheets">
 		<article >
@@ -52,5 +32,3 @@
 	</li>
 	</ul>
 </section>
-<!--	}//for row
-	}//jspSheets-->

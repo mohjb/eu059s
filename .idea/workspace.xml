@@ -1,215 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="203675e5-66fd-495b-b88a-27b232eb7acf" name="Default" comment="added ui-router to the application, for switching screens/state of the application(client-side views)">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/i1io/mysql.js4d00_eu059s.2017.01.24.14.16.sql.gz" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/images/avatar.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/images/logo.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/images/logo.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/images/pic01.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/images/pic02.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/images/pic03.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/images/pic04.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/images/pic05.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/images/pic06.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/images/pic07.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/images/pic08.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/images/pic09.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/images/pic10.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/images/pic11.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/images/pic12.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/css/kisr50.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/favicon.ico" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/FontAwesome.otf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/Hgo13k-login.font.latin_normal_300_Roboto-Light_U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215,U+E0FF,U+EFFD,U+F000.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/fontawesome-webfont.eot" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/fontawesome-webfont.ttf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/fontawesome-webfont.woff" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/fontawesome-webfont.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.RobotoThin-normal-100-U+0102-0103,U+1EA0-1EF9,U+20AB.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.RobotoThin-normal-100-U+0370-03FF.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.RobotoThin-normal-100-U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.RobotoThin-normal-100-U+0460-052F,U+20B4,U+2DE0-2DFF,U+A640-A69F.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.RobotoThin-normal-100-U+1F00-1FFF.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.cyrillic-ext_normal_300_Roboto-Light_U+0460-052F,U+20B4,U+2DE0-2DFF,U+A640-A69F.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.cyrillic-ext_normal_400_Roboto-Regular_U+0460-052F,U+20B4,U+2DE0-2DFF,U+A640-A69F.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.cyrillic-ext_normal_500_Roboto-Medium_U+0460-052F,U+20B4,U+2DE0-2DFF,U+A640-A69F.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.cyrillic-ext_normal_700_Roboto-Bold_U+0460-052F,U+20B4,U+2DE0-2DFF,U+A640-A69F.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.cyrillic-ext_normal_900_Roboto-Black_U+0460-052F,U+20B4,U+2DE0-2DFF,U+A640-A69F.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.cyrillic_normal_300_Roboto-Light_U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.cyrillic_normal_400_Roboto-Regular_U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.cyrillic_normal_500_Roboto-Medium_U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.cyrillic_normal_700_Roboto-Bold_U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.cyrillic_normal_900_Roboto-Black_U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.fallback_normal_400_MaterialIcons-Regular.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.greek-ext_normal_300_Roboto-Light_U+1F00-1FFF.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.greek-ext_normal_400_Roboto-Regular_U+1F00-1FFF.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.greek-ext_normal_500_Roboto-Medium_U+1F00-1FFF.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.greek-ext_normal_700_Roboto-Bold_U+1F00-1FFF.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.greek-ext_normal_900_Roboto-Black_U+1F00-1FFF.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.greek_normal_300_Roboto-Light_U+0370-03FF.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.greek_normal_400_Roboto-Regular_U+0370-03FF.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.greek_normal_500_Roboto-Medium_U+0370-03FF.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.greek_normal_700_Roboto-Bold_U+0370-03FF.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.greek_normal_900_Roboto-Black_U+0370-03FF.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.latin-ext_normal_100_Roboto-Thin_U+0100-024F,U+1E00-1EFF,U+20A0-20AB,U+20AD-20CF,U+2C60-2C7F,U+A720-A7FF.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.latin-ext_normal_300_Roboto-Light_U+0100-024F,U+1E00-1EFF,U+20A0-20AB,U+20AD-20CF,U+2C60-2C7F,U+A720-A7FF.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.latin-ext_normal_400_Roboto-Regular_U+0100-024F,U+1E00-1EFF,U+20A0-20AB,U+20AD-20CF,U+2C60-2C7F,U+A720-A7FF.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.latin-ext_normal_500_Roboto-Medium_U+0100-024F,U+1E00-1EFF,U+20A0-20AB,U+20AD-20CF,U+2C60-2C7F,U+A720-A7FF.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.latin-ext_normal_700_Roboto-Bold_U+0100-024F,U+1E00-1EFF,U+20A0-20AB,U+20AD-20CF,U+2C60-2C7F,U+A720-A7FF.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.latin-ext_normal_900_Roboto-Black_U+0100-024F,U+1E00-1EFF,U+20A0-20AB,U+20AD-20CF,U+2C60-2C7F,U+A720-A7FF.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.latin100.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.latin300.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.latin400.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.latin500.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.latin700.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.latin900.ttf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.latin900.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.latin_normal_100_Roboto-Thin_U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215,U+E0FF,U+EFFD,U+F000.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.latin_normal_400_Roboto-Regular_U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215,U+E0FF,U+EFFD,U+F000.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.latin_normal_500_Roboto-Medium_U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215,U+E0FF,U+EFFD,U+F000.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.latin_normal_700_Roboto-Bold_U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215,U+E0FF,U+EFFD,U+F000.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.latin_normal_900_Roboto-Black_U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215,U+E0FF,U+EFFD,U+F000.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.vietnamese_normal_300_Roboto-Light_U+0102-0103,U+1EA0-1EF9,U+20AB.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.vietnamese_normal_400_Roboto-Regular_U+0102-0103,U+1EA0-1EF9,U+20AB.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.vietnamese_normal_500_Roboto-Medium_U+0102-0103,U+1EA0-1EF9,U+20AB.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.vietnamese_normal_700_Roboto-Bold_U+0102-0103,U+1EA0-1EF9,U+20AB.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.vietnamese_normal_900_Roboto-Black_U+0102-0103,U+1EA0-1EF9,U+20AB.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/login.font.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/railway.laExt.400.woff2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/i1io/_index__jsp.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/i1io/index.jsp" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/src/eu059s/AppEU059S.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/css/fragment.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/css/ie8.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/css/ie9.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/css/index.jsp.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/css/login.style.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/css/login.test.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/css/main.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fonts/fontawesome-webfont.svg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/html5shiv.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/index.jsp" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/jquery.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/login.index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/main.1.jb.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/main.jb.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/main.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/respond.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/skel.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/sys.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/test.jsp" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/util.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/xhr.jsp" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/template-building.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/template-floor.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/template-project.html" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/FontAwesome.otf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Hgo13k-login.font.latin_normal_300_Roboto-Light_U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215,U+E0FF,U+EFFD,U+F000.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fontawesome-webfont.eot" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fontawesome-webfont.svg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fontawesome-webfont.ttf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fontawesome-webfont.woff" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fontawesome-webfont.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fragment.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/html5shiv.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/i1io/_index__jsp.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/i1io/index.jsp" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/i1io/mysql.js4d00_eu059s.2017.01.24.14.16.sql.gz" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ie8.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ie9.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/images/avatar.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/images/logo.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/images/logo.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/images/pic01.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/images/pic02.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/images/pic03.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/images/pic04.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/images/pic05.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/images/pic06.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/images/pic07.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/images/pic08.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/images/pic09.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/images/pic10.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/images/pic11.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/images/pic12.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/index.jsp" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/index.jsp.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/jquery.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/kisr50.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.RobotoThin-normal-100-U+0102-0103,U+1EA0-1EF9,U+20AB.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.RobotoThin-normal-100-U+0370-03FF.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.RobotoThin-normal-100-U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.RobotoThin-normal-100-U+0460-052F,U+20B4,U+2DE0-2DFF,U+A640-A69F.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.RobotoThin-normal-100-U+1F00-1FFF.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.cyrillic-ext_normal_300_Roboto-Light_U+0460-052F,U+20B4,U+2DE0-2DFF,U+A640-A69F.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.cyrillic-ext_normal_400_Roboto-Regular_U+0460-052F,U+20B4,U+2DE0-2DFF,U+A640-A69F.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.cyrillic-ext_normal_500_Roboto-Medium_U+0460-052F,U+20B4,U+2DE0-2DFF,U+A640-A69F.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.cyrillic-ext_normal_700_Roboto-Bold_U+0460-052F,U+20B4,U+2DE0-2DFF,U+A640-A69F.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.cyrillic-ext_normal_900_Roboto-Black_U+0460-052F,U+20B4,U+2DE0-2DFF,U+A640-A69F.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.cyrillic_normal_300_Roboto-Light_U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.cyrillic_normal_400_Roboto-Regular_U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.cyrillic_normal_500_Roboto-Medium_U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.cyrillic_normal_700_Roboto-Bold_U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.cyrillic_normal_900_Roboto-Black_U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.fallback_normal_400_MaterialIcons-Regular.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.greek-ext_normal_300_Roboto-Light_U+1F00-1FFF.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.greek-ext_normal_400_Roboto-Regular_U+1F00-1FFF.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.greek-ext_normal_500_Roboto-Medium_U+1F00-1FFF.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.greek-ext_normal_700_Roboto-Bold_U+1F00-1FFF.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.greek-ext_normal_900_Roboto-Black_U+1F00-1FFF.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.greek_normal_300_Roboto-Light_U+0370-03FF.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.greek_normal_400_Roboto-Regular_U+0370-03FF.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.greek_normal_500_Roboto-Medium_U+0370-03FF.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.greek_normal_700_Roboto-Bold_U+0370-03FF.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.greek_normal_900_Roboto-Black_U+0370-03FF.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.latin-ext_normal_100_Roboto-Thin_U+0100-024F,U+1E00-1EFF,U+20A0-20AB,U+20AD-20CF,U+2C60-2C7F,U+A720-A7FF.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.latin-ext_normal_300_Roboto-Light_U+0100-024F,U+1E00-1EFF,U+20A0-20AB,U+20AD-20CF,U+2C60-2C7F,U+A720-A7FF.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.latin-ext_normal_400_Roboto-Regular_U+0100-024F,U+1E00-1EFF,U+20A0-20AB,U+20AD-20CF,U+2C60-2C7F,U+A720-A7FF.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.latin-ext_normal_500_Roboto-Medium_U+0100-024F,U+1E00-1EFF,U+20A0-20AB,U+20AD-20CF,U+2C60-2C7F,U+A720-A7FF.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.latin-ext_normal_700_Roboto-Bold_U+0100-024F,U+1E00-1EFF,U+20A0-20AB,U+20AD-20CF,U+2C60-2C7F,U+A720-A7FF.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.latin-ext_normal_900_Roboto-Black_U+0100-024F,U+1E00-1EFF,U+20A0-20AB,U+20AD-20CF,U+2C60-2C7F,U+A720-A7FF.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.latin100.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.latin300.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.latin400.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.latin500.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.latin700.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.latin900.ttf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.latin900.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.latin_normal_100_Roboto-Thin_U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215,U+E0FF,U+EFFD,U+F000.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.latin_normal_400_Roboto-Regular_U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215,U+E0FF,U+EFFD,U+F000.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.latin_normal_500_Roboto-Medium_U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215,U+E0FF,U+EFFD,U+F000.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.latin_normal_700_Roboto-Bold_U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215,U+E0FF,U+EFFD,U+F000.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.latin_normal_900_Roboto-Black_U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215,U+E0FF,U+EFFD,U+F000.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.vietnamese_normal_300_Roboto-Light_U+0102-0103,U+1EA0-1EF9,U+20AB.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.vietnamese_normal_400_Roboto-Regular_U+0102-0103,U+1EA0-1EF9,U+20AB.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.vietnamese_normal_500_Roboto-Medium_U+0102-0103,U+1EA0-1EF9,U+20AB.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.vietnamese_normal_700_Roboto-Bold_U+0102-0103,U+1EA0-1EF9,U+20AB.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.vietnamese_normal_900_Roboto-Black_U+0102-0103,U+1EA0-1EF9,U+20AB.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.font.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.index.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.style.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/login.test.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/main.1.jb.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/main.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/main.jb.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/main.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/railway.laExt.400.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/respond.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/skel.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/eu059s/AppEU059S.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/sys.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/test.jsp" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/util.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/xhr.jsp" afterPath="" />
+    <list default="true" id="203675e5-66fd-495b-b88a-27b232eb7acf" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/template-sheet-min.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.js" afterPath="$PROJECT_DIR$/app.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application.appcache" afterPath="$PROJECT_DIR$/application.appcache" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/indx.html" afterPath="$PROJECT_DIR$/indx.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/template-footer.html" afterPath="$PROJECT_DIR$/template-footer.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/template-header.html" afterPath="$PROJECT_DIR$/template-header.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/template-login.html" afterPath="$PROJECT_DIR$/template-login.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/css/main.css" afterPath="$PROJECT_DIR$/css/main.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/template-building.html" afterPath="$PROJECT_DIR$/template-building.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/template-floor.html" afterPath="$PROJECT_DIR$/template-floor.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/template-project.html" afterPath="$PROJECT_DIR$/template-project.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/template-projects.html" afterPath="$PROJECT_DIR$/template-projects.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/template-sheet.html" afterPath="$PROJECT_DIR$/template-sheet.html" />
     </list>
@@ -380,8 +179,8 @@
     </navigator>
     <panes>
       <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -539,11 +338,11 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.6984479" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.6984479" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.105417274" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -571,6 +370,7 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <MESSAGE value="must commit in a hurry" />
     <MESSAGE value="created the web-browser application-cache, the file application.appcache&#10;&#10;added atrribute manifest in the html tag in index.html &#10;&#10;duplicated indexOld.jsp&#10;&#10;in sys.js:&#10;changed the default url of xhr to xhr.jsp&#10;&#10;removed a big part, toJsonBld from undeer sys&#10;removed a lot of comments&#10;added gui under sys &#10;added introspection under sys.gui&#10;added storage under sys.gui.introspection&#10;added init under sys.gui.introspection.storage&#10;add resetList under sys.gui.introspection.storage&#10;add bldScreen under sys.gui.introspection.storage&#10;add login under sys.gui&#10;add main under sys.gui&#10;add project under sys.gui&#10;add building under sys.gui&#10;add floor under sys.gui&#10;add sheet under sys.gui&#10;add usr under sys.gui&#10;add report under sys.gui&#10;add search under sys.gui&#10;&#10;modified dbSchema, more elaborate indices, keys,unique&#10;added columns in dbSchema.usr&#10;added columns in dbSchema.projects&#10;added columns in dbSchema.buildings&#10;added columns in dbSchema.floors&#10;added columns in dbSchema.sheet&#10;changed columns in sheet to be sets&#10;added util under dbSchema&#10;&#10;&#10;in App.java&#10;added a lot of Dbg.p&#10;rename firstPage to bootstrap&#10;&#10;" />
     <MESSAGE value="created the web-browser application-cache, the file application.appcache&#10;&#10;added atrribute manifest in the html tag in index.html &#10;&#10;duplicated indexOld.jsp&#10;&#10;in sys.js:&#10;changed the default url of xhr to xhr.jsp&#10;&#10;removed a big part, toJsonBld from undeer sys&#10;removed a lot of comments&#10;added gui under sys &#10;added introspection under sys.gui&#10;added storage under sys.gui.introspection&#10;added init under sys.gui.introspection.storage&#10;add resetList under sys.gui.introspection.storage&#10;add bldScreen under sys.gui.introspection.storage&#10;add login under sys.gui&#10;add main under sys.gui&#10;add project under sys.gui&#10;add building under sys.gui&#10;add floor under sys.gui&#10;add sheet under sys.gui&#10;add usr under sys.gui&#10;add report under sys.gui&#10;add search under sys.gui&#10;&#10;modified dbSchema, more elaborate indices, keys,unique&#10;added columns in dbSchema.usr&#10;added columns in dbSchema.projects&#10;added columns in dbSchema.buildings&#10;added columns in dbSchema.floors&#10;added columns in dbSchema.sheet&#10;changed columns in sheet to be sets&#10;added util under dbSchema&#10;&#10;&#10;in App.java&#10;added a lot of Dbg.p&#10;rename firstPage to bootstrap" />
@@ -579,7 +379,8 @@
     <MESSAGE value="changes in app.js&#10;-added static/hard-coded md5 password for test user&#10;-added names of table in definition in app.server.dbSchema&#10;&#10;changes in application.appcachr&#10;-added app.js&#10;-renamed entry component-login.html&#10;-fixed entry login-style.css&#10;&#10;changes in index.html&#10;-renamed html attribute &quot;x-manifest&quot; , for development purposes to avoid caching with source-code development changes" />
     <MESSAGE value="created file indx.html, without appCache , for development changes&#10;&#10;changes in app.js&#10;-created service named 'app'&#10;-created controller name 'loginCntrl'&#10;-created service ,named 'db'&#10;-created directive, named 'componentLogin'&#10;-created directive, named 'componentHeader'&#10;-created directive, named 'componentFooter'&#10;-created directive, named 'componentProjects'&#10;-created directive, named 'componentSheet'&#10;-created directive, named 'componentSearch'&#10;-created directive, named 'componentPrint'&#10;-created directive, named 'componentQuery'&#10;-created directive, named 'componentConfig'&#10;-created directive, named 'componentConfigHelp'&#10;-created directive, named 'componentUsers'&#10;&#10;changes in component-login.html&#10;-added 3 script-tags for angular, sanitize, and md5&#10;-changed models , un , and pw&#10;-removed signup div-tag&#10;&#10;changes in index.html" />
     <MESSAGE value="added ui-router to the application, for switching screens/state of the application(client-side views)" />
-    <option name="LAST_COMMIT_MESSAGE" value="added ui-router to the application, for switching screens/state of the application(client-side views)" />
+    <MESSAGE value="many features were added and many tests were successful,&#10; all unamed functions now have names&#10;   3 new states are added, template-project.html &#10;      , template-building.html , template-floor.html&#10;   template-sheet.html now has the form for the data&#10;   the service db is now more mature&#10;   the projects-controller is more mature , and serves four templates&#10;   many properties have been added to the scope of projects-controller:&#10;    db has been added to the scope&#10;    projects , from db.ls&#10;    proj,bld,flr,sht from app&#10;    function chng , a mature function, and host numerous features&#10;       , force a uniqueness rule for titles&#10;    function blr , unused&#10;    function sheetsCountInProj&#10;    function sheetsCountInBld&#10;    function getNewNo&#10;    function withTitle&#10;    function setTitle , unused&#10;    function newProj&#10;    function newBld&#10;    function newFlr&#10;    function newSht&#10;  the controller-sheet has been started to be implemented&#10;    function chng&#10;    function blr , unused&#10;  the service-db has a huge number of additions and chages&#10;    prefix&#10;    ls&#10;    intrvl&#10;    intrvlTm&#10;    onDirty&#10;    onBlur , unused&#10;    lsSave&#10;    lsLoad&#10;    serverDefinitions , now encompasses table definitions&#10; &#10; many files have been moved into sub-directories,&#10;   all font-files have been moved into dub-folder &quot;fonts&quot;, and css files&#10;       have been updated to reference the new relative-url&#10;   sub-dir:css , moved files:main.css , login.style.css , ie9.css &#10;      , ie8.css&#10;   sub-dir:js , moved files: sys.js , html5shiv.js , jquery.min.js &#10;     , skel.min.js , util.js , respond.min.js , main.js , login.index.js&#10;   &#10; new favicon.ico has been added , with the kisr logo in 16x16 pixels&#10; &#10;in index.html, link-tag for favicon.ico has been added&#10;in indx.html , link-tag for favicon.ico has been added" />
+    <option name="LAST_COMMIT_MESSAGE" value="many features were added and many tests were successful,&#10; all unamed functions now have names&#10;   3 new states are added, template-project.html &#10;      , template-building.html , template-floor.html&#10;   template-sheet.html now has the form for the data&#10;   the service db is now more mature&#10;   the projects-controller is more mature , and serves four templates&#10;   many properties have been added to the scope of projects-controller:&#10;    db has been added to the scope&#10;    projects , from db.ls&#10;    proj,bld,flr,sht from app&#10;    function chng , a mature function, and host numerous features&#10;       , force a uniqueness rule for titles&#10;    function blr , unused&#10;    function sheetsCountInProj&#10;    function sheetsCountInBld&#10;    function getNewNo&#10;    function withTitle&#10;    function setTitle , unused&#10;    function newProj&#10;    function newBld&#10;    function newFlr&#10;    function newSht&#10;  the controller-sheet has been started to be implemented&#10;    function chng&#10;    function blr , unused&#10;  the service-db has a huge number of additions and chages&#10;    prefix&#10;    ls&#10;    intrvl&#10;    intrvlTm&#10;    onDirty&#10;    onBlur , unused&#10;    lsSave&#10;    lsLoad&#10;    serverDefinitions , now encompasses table definitions&#10; &#10; many files have been moved into sub-directories,&#10;   all font-files have been moved into dub-folder &quot;fonts&quot;, and css files&#10;       have been updated to reference the new relative-url&#10;   sub-dir:css , moved files:main.css , login.style.css , ie9.css &#10;      , ie8.css&#10;   sub-dir:js , moved files: sys.js , html5shiv.js , jquery.min.js &#10;     , skel.min.js , util.js , respond.min.js , main.js , login.index.js&#10;   &#10; new favicon.ico has been added , with the kisr logo in 16x16 pixels&#10; &#10;in index.html, link-tag for favicon.ico has been added&#10;in indx.html , link-tag for favicon.ico has been added" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -601,22 +402,8 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/component-login.html" />
-    <entry file="file://$PROJECT_DIR$/login.style.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/login.index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="18" column="29" lean-forward="false" selection-start-line="18" selection-start-column="29" selection-end-line="18" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/login.style.css" />
+    <entry file="file://$PROJECT_DIR$/login.index.js" />
     <entry file="file://$PROJECT_DIR$/app.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -625,22 +412,8 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/eu059s/AppEU059S.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="47141">
-          <caret line="3096" column="0" lean-forward="false" selection-start-line="3096" selection-start-column="0" selection-end-line="3096" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sys.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/eu059s/AppEU059S.java" />
+    <entry file="file://$PROJECT_DIR$/sys.js" />
     <entry file="file://$PROJECT_DIR$/login.html" />
     <entry file="file://$PROJECT_DIR$/application.appcache">
       <provider selected="true" editor-type-id="text-editor">
@@ -650,22 +423,8 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/login.style.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/login.index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="18" column="29" lean-forward="false" selection-start-line="18" selection-start-column="29" selection-end-line="18" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/login.style.css" />
+    <entry file="file://$PROJECT_DIR$/login.index.js" />
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4199">
@@ -682,32 +441,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/eu059s/AppEU059S.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/eu059s/AppEU059S.java" />
     <entry file="file://$PROJECT_DIR$/Jan/index.html" />
     <entry file="file://$PROJECT_DIR$/Jan/application.appcache" />
-    <entry file="file://$PROJECT_DIR$/src/eu059s/AppEU059S.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45220">
-          <caret line="3108" column="43" lean-forward="false" selection-start-line="3108" selection-start-column="9" selection-end-line="3108" selection-end-column="43" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/eu059s/AppEU059S.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/eu059s/AppEU059S.java" />
+    <entry file="file://$PROJECT_DIR$/src/eu059s/AppEU059S.java" />
     <entry file="file://$PROJECT_DIR$/Feb/index.jsp" />
     <entry file="file://$PROJECT_DIR$/src/eu059s/feb/App.java" />
     <entry file="file://$PROJECT_DIR$/Jan/indexOld.jsp" />
@@ -721,14 +459,7 @@
     <entry file="file://$PROJECT_DIR$/../../../logs/tomcat9-stdout.2017-02-26.log" />
     <entry file="file://$PROJECT_DIR$/Jan/test.jsp" />
     <entry file="file://$PROJECT_DIR$/../../../logs/tomcat9-stderr.2017-02-26.log" />
-    <entry file="file://$PROJECT_DIR$/src/eu059s/AppEU059S.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="46835">
-          <caret line="3096" column="0" lean-forward="false" selection-start-line="3096" selection-start-column="0" selection-end-line="3096" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/eu059s/AppEU059S.java" />
     <entry file="file://$PROJECT_DIR$/Jan/index.html" />
     <entry file="file://$PROJECT_DIR$/Jan/sys.js" />
     <entry file="file://$PROJECT_DIR$/Jan/application.appcache" />
@@ -737,32 +468,11 @@
     <entry file="file://$PROJECT_DIR$/flat-login-form/css/font-awesome.min.css" />
     <entry file="file://$PROJECT_DIR$/flat-login-form/css/cssRoboto.400.100.300.500.700.900.css" />
     <entry file="file://$PROJECT_DIR$/flat-login-form/css/reset.css" />
-    <entry file="file://$PROJECT_DIR$/login.style.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/login.style.css" />
     <entry file="file://$PROJECT_DIR$/flat-login-form/css/icon.family=Material+Icons.css" />
-    <entry file="file://$PROJECT_DIR$/login.index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="18" column="29" lean-forward="false" selection-start-line="18" selection-start-column="29" selection-end-line="18" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/login.index.js" />
     <entry file="file://$PROJECT_DIR$/login.html" />
-    <entry file="file://$PROJECT_DIR$/sys.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/sys.js" />
     <entry file="file://$PROJECT_DIR$/component-login.html" />
     <entry file="file://$PROJECT_DIR$/app.js">
       <provider selected="true" editor-type-id="text-editor">

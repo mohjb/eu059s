@@ -1,23 +1,11 @@
-<!--void jspScreenBuilding()throws IOException, SQLException{
-		App e=this;int serialNo=1;
-		TL.DB.Tbl.Usr author=usr(e.bld.json.get("author"));
-		Object avatar=e.bld.json.get("avatar")
-		, uAvatar = author != null && author . json != null
-		? author . json . get ( "avatar" )
-		:null
-		,authorName=author!=null && author.json!=null
-		?author.json.get("name")
-		:author!=null?author.un
-		:"User";
--->
 <h1><a href="#!/project">{{proj.title}}</a></h1>
 <h2>Building</h2>
 <table>
 <tr><th>Title</th><th>Notes</th><th>Created</th><th>by</th><th>Action</th><th>#Floors</th><th>#Sheets</th>
 </tr>
 <tr xclass="mini-post building editForm" entity="building" >
-	<td><input ng-model="bld.title" class="editable title" ng-change="chng()" oldVal="{{bld.title}}"/></td>
-	<td class="editable"><input ng-model="bld.notes" class="editable" ng-change="chng()"/></td>
+	<td><input ng-model="bld.title" class="editable title" ng-blur="blr()" ng-change="chng()" oldVal="{{bld.title}}"/></td>
+	<td class="editable"><input ng-model="bld.notes" class="editable" ng-blur="blr()" ng-change="chng()"/></td>
 	<td><time class="published" datetime="{{bld.date }}">{{bld.date}}</time></td>
 	<td><a href="javascript:void(0)" class="author"><span class="name" name="author" title="author name">{{bld.owner}}</span><img src="assets/images/avatar.jpg" alt="author image" /></a></td>
 	<td class="actions" >
@@ -28,29 +16,11 @@
 	<td class="stats" style="display:inline;	list-style: none;" ><a title="number of sheets in this building" href="javascript:void(0)" class="icon fa-comment" name="comment">{{ sheetsCountInBld(bld) }}</a></td>
 </tr>
 </table>
-<!--		//if(e.screen==Prm.Screen.BuildingScreen)
-		{serialNo=0;
---><h1>Floors</h1>
-<pre style="display:none">bld= {{ bld }} 
 
-
-.floors= {{ bld.floors }} 
-
-
-.len= {{ bld.floors.length }} 
-</pre>
+<h1>Floors</h1>
 <table>
  <tr >
 	<th>sn</th><th>Title</th><th>Notes</th><th>Created</th><th>by</th><th>#Sheets</th></tr>
-<!--			for(TL.DB.Tbl row:e.flr.query(TL.DB.Tbl.where(Floor.C.b,e.bld.no )))
-			{ author=usr(e.bld.json.get("author"));
-				avatar=e.bld.json.get("avatar");
-				uAvatar = author != null && author . json != null
-				? author . json . get ( "avatar" ):null;
-				authorName=author!=null && author.json!=null
-				?author.json.get("name"):author!=null?author.un:"-";
-				++serialNo;
--->
 <tr xclass="mini-post floor" ng-repeat="f in bld.floors" >
 	<td ng-init="serialNo=$index+1">{{serialNo}}</td>
 	<td><h3><a ng-click="app.flr=f" href="#!/floor" name="title">{{f.title}}</a></h3></td>
@@ -59,6 +29,4 @@
 	<td><a href="javascript:void(0)" class="author"><span class="name" name="author" title="author name"
 		>{{ f.owner }}<img src="assets/images/avatar.jpg" alt="author image" /></a></td>
 	<td class="stats"><a title="number of sheets in this floor" href="javascript:void(0)" class="icon fa-comment" name="comment">{{ f.sheets.length }}</a></td></tr>
-<!--			}--></table>
-<!--		}
-	}//jspNonBld-->
+</table>
